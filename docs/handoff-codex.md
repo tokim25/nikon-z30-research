@@ -13,63 +13,47 @@ notes.
 
 ## State
 
-Session started 2026-10-15 on `codex/tracking-input-route`, branched from
-`main` at `cc817de166999f7ec47491e551d732738e918a6f`. The fresh checkout is
-`work/nikon-z30-research` under this chat workspace. No tracking entry point
-has been verified in this session.
+Caller analysis started 2026-10-15 on `codex/tracking-sampler-callers`, from
+`main` at `cc817de166999f7ec47491e551d732738e918a6f`. No tracking entry point
+has been verified. Prior [PR #13](https://github.com/tokim25/nikon-z30-research/pull/13)
+records static MMIO sampling candidates `0x1029d8aa` and `0x1029d8ea`;
+that PR is not part of this branch's base.
 
-Read AGENTS.md, handoff.md, native-guides-simulator.md, roadmap.md,
-hardware-readiness.md, collaboration.md, build-phase-gate.md, facts.md and
-tracking-entry-research.md before analysis. The previous static report rejects
-the Bluetooth/HCI convergence lead. That is prior evidence, not a finding
-reproduced by this session.
-
-Baseline validation passed: 40 tests and the tracked-artifact check. The
-requested `python` commands could not start because that executable is absent;
-the equivalent `python3` commands passed:
-
-```sh
-PYTHONPATH=src python3 -m unittest discover -s tests -v
-python3 .github/scripts/check_artifacts.py
-```
-
-The owner confirmed restricted inputs under
+The owner confirmed private inputs under
 `/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.
-The verified module is `private-inputs/eg2090_0120a0.bi`; simulator checkout is
-`z30-qemu`; recovered originals are `recovered-m1`; static-analysis Python is
-`analysis-env/bin/python`. Existing files must stay unchanged. New private
-scripts and run directories use the owner's required `codex-` or `codex_`
-prefix. No restricted material belongs in this checkout.
+Use `private-inputs/eg2090_0120a0.bi`, `z30-qemu`, `recovered-m1`, and
+`analysis-env/bin/python` only at those confirmed locations. Existing files
+stay unchanged. New private helpers and outputs use `codex_` or `codex-`
+prefixes outside the checkout.
 
-Hash and size matched the verified module. Simulator revision matched
-`0ba0c3547ccbec09e7c861eaca35db8e82795f15` and its checkout stayed clean.
-The new [bounded sampling report](tracking-input-sampler.md) records the first
-finding: candidate routines `0x1029d8aa` and `0x1029d8ea` read `0x2016c010`.
-The source-comment addresses and a diagnostic offset hypothesis failed.
-No simulator execution, native control calls or firmware modifications ran.
+Caller analysis completed in [the consumer report](tracking-sampler-consumers.md).
+The first sampler has a bounded caller at `0x1028b040`, followed by debounce-like
+filtering and a conditional callback path. Registration connects callback
+`0x10396cde` to slot `0xc1807ecc`; its record contains identifier `0x4206101e`.
+Record delivery and runtime callback execution remain unverified.
 
-Private scripts in the confirmed WORK directory:
-`codex_tracking_input_audit_private.py` and its six synthetic tests reproduce
-GUI source patterns without importing or executing the GUI. All six passed.
-These are source-pattern checks, not reachability or runtime proof.
-`codex_input_sampler_verify_private.py` reproduces bounded static evidence;
-its first successful run is `private-inputs/codex-input-sampler-verified-01`.
-Earlier `codex-input-*` directories retain exploratory raw output privately.
-Two Codex subagents reviewed source landmarks and the audit's claim wording.
+Public Linux register definitions and the simulator's register table strongly
+support HDMI-status attribution as inference. Deprioritize this lead for
+tracking. No simulator run, native control call, firmware modification or
+hardware operation occurred. The module hash matched; the pinned simulator
+checkout stayed clean. Two Codex subagents independently reviewed peripheral
+attribution and caller semantics.
+
+Private reproduction: `codex_sampler_consumer_verify_private.py` passed with
+output `private-inputs/codex-sampler-consumer-verified-01`. The broader original
+helper `codex_tracking_static_private.py` records branch candidates, pointer
+occurrences and bounded windows in new `codex-` directories. Neither helper nor
+its raw output belongs in Git. See the report for exact fresh-run commands.
+
+Validation: all 40 repository tests passed with `python3`; tracked-artifact
+and encoded-data checks passed. Changes contain documentation only.
 
 ## Next step
 
-Trace static callers of `0x1029d8aa` and `0x1029d8ea`, then identify their
-output consumers and peripheral purpose. Do not call them button samplers or
-live-view handlers until that connection is established. The GUI refresh
-substitution was rechecked in source; it is not an input landmark.
-
-Follow a source-supported input landmark through static callers and state
-checks before proposing any simulator control call. Record addresses,
-observations, inference, confidence and a reproduction command in a tracking
-report and append-only facts entry. A candidate address alone does not meet
-the tracking-entry gate. Publish each supported finding as a small PR after
-validation and manual diff review; leave merging to the owner.
+Trace registration and callers of menu dispatcher `0x103ce96e` to a shared
+event router, then check for a separate live-view branch. Keep results menu-only
+until that connection is demonstrated; do not call the dispatcher as a live-view
+input substitute.
 
 ## Notes for the next session
 

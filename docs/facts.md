@@ -42,4 +42,15 @@ AF attribution are unverified. The simulator comment's `0x102595de` /
 using the confirmed WORK path and a new output directory.
 [Evidence and limits](tracking-input-sampler.md).
 
+F-010. Static caller `0x1028b040` supplies a pointer to a destination byte to sampler
+`0x1029d8aa`; a final normalized state change can reach the callback slot at
+`0xc1807ecc`. Setter `0x1028b134` receives callback `0x10396cde` from
+`0x10396f98`; the callback constructs a record containing `0x4206101e`.
+Observed bounded call/data-flow structure, high confidence. Debounce-like
+filtering and HDMI-status attribution are inference, high confidence; no button,
+live-view or AF connection is established. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex_sampler_consumer_verify_private.py" --output "$WORK/private-inputs/codex-sampler-consumer-review-01"`,
+using the confirmed WORK path and a fresh output directory.
+[Evidence, public register comparison and limits](tracking-sampler-consumers.md).
+
 Written by Codex in collaboration with Tony Kim.
