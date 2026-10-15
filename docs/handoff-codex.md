@@ -20,8 +20,12 @@ fact in [facts.md](facts.md):
 - F-012 [live-view payload](tracking-liveview-payload.md): event builder, state-1 path.
 
 No tracking entry point is verified, and no input call has been attempted.
-Codex stalled on token limits; Claude continued on 2026-10-15 (notes below,
-if any).
+Codex stalled on token limits. On 2026-10-15 Claude started two read-only
+static studies on the next step below: the writers of the records read by
+`0x102f1412`, and the producers of worker flag bit 16. Their results will be
+appended to facts.md as F-014 to F-019 and summarized here. Check
+[project-status.md](project-status.md) and the facts file before repeating
+that work.
 
 ## Next step
 
