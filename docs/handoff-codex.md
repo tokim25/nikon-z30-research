@@ -13,48 +13,47 @@ notes.
 
 ## State
 
-Menu input research started 2026-10-15 on `codex/tracking-menu-router`, from
-`main` at `cc817de166999f7ec47491e551d732738e918a6f`. No tracking entry point
-has been verified. Prior findings are in
-[PR #13](https://github.com/tokim25/nikon-z30-research/pull/13) and
-[PR #14](https://github.com/tokim25/nikon-z30-research/pull/14). Neither PR is
-part of this branch's base. The MMIO sampler lead now favors HDMI status
-handling, as an inference, and is no longer the main tracking lead.
+Live-view payload research started 2026-10-15 on
+`codex/tracking-liveview-payload`, from main. Prior static routing evidence is
+in [PR #15](https://github.com/tokim25/nikon-z30-research/pull/15): shared router
+`0x104b912c`, conditional type-3 send at `0x102f2c22`, and state-1 input branch
+`0x102f7448`. No tracking entry point or normal button delivery is verified.
 
-The owner confirmed private inputs under
+Confirmed private WORK:
 `/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.
-Use `private-inputs/eg2090_0120a0.bi`, `z30-qemu`, `recovered-m1`, and
-`analysis-env/bin/python` only there. Keep existing files unchanged. New private
-helpers and output folders use `codex_` or `codex-` prefixes outside Git.
+Read existing inputs only. New private scripts and outputs use `codex_` or
+`codex-` prefixes outside Git. Do not change the simulator or firmware.
 
-The [shared event-router report](tracking-ui-event-router.md) records a static
-connection: `0x104b912c` chooses a callback using state byte `object + 0x74`.
-State 1 selects menu handler `0x103cf78e` or live-view-setup handler
-`0x102f79ac`. Their type-3 branches reach `0x103cf696` and `0x102f7448`.
-The live-view worker conditionally sends type 3 at `0x102f2c22`, with a stack
-payload. No physical button, reticle or AF action has been verified.
+The [payload report](tracking-liveview-payload.md) records the new findings.
+The actual builder is `0x102f2ad2`, called by worker loop `0x102f2ca8`.
+The planned `0x102f2990` builder attribution was wrong; that initializer returns
+before event building. The builder prepares 188 bytes, but parsers also use
+separate records. Do not treat this size as a complete input contract.
 
-Both initializers select state 0; the live-view state-0 handler ignores type 3.
-Other code writes live-view state 1 at `0x102f5810` and 4 at `0x102f61b0`.
-Their conditions are unknown. Do not treat the selector as a boolean or change
-it manually. The setter also clears two fields when called with zero.
+Record-fetch helper `0x102f1412` uses base `0xc2008ea0`, a 400-byte stride and
+wrapped indexing in mode 0. Mode 1 returns separate record `0xc200a7a0`.
+Their producers and meaning remain unknown. Earlier type-9 handling can pass
+the payload pointer to more helpers; effects on data and selected state remain
+unresolved. No input calls have been attempted.
 
-Private verifier `codex_ui_route_verify_private.py` passed, with output at
-`private-inputs/codex-ui-route-verified-02`. Other `codex-menu-*` and
-`codex-ui-*` folders contain exploratory raw output outside Git. Early linear
-windows crossed data tables; only checked code blocks and resolved table
-destinations support the report. Two subagents checked mapping and routing.
-The module hash matched and simulator checkout stayed clean at the pinned
-revision. No simulator or native controls were run; no firmware was modified.
+State-1 chain: worker flag bit 16 -> type 2 -> selector-0 handler case 2 ->
+object `+0x30` getter -> `0x102f57e2` -> selector-1 write `0x102f5810`.
+This is static control flow. Flag production, helper behavior and runtime
+delivery remain unverified. State 4 is also a stock value; do not force states.
+
+Private verifier `codex_liveview_payload_verify_private.py` passed with output
+`private-inputs/codex-liveview-payload-verified-01`. All raw output stays outside
+Git. Two subagents checked parser and state claims. Module identity matched;
+the pinned simulator stayed clean. No guest controls, hardware or firmware edits.
 
 All 40 repository tests passed with `python3`. Tracked-artifact and encoded-data
-checks passed. Only documentation is being published.
+checks passed. Publication contains documentation only.
 
 ## Next step
 
-Map the live-view worker's type-3 payload and its use by `0x102f7448`, including
-the conditions that select state 1. Establish that contract before proposing
-a simulator input call. Current results map code paths, not tracking activation.
+Trace the producer of records read by `0x102f1412` and determine whether and how
+they represent an OK-button press, keeping prior type-9 handling and state
+dependencies explicit. Do not propose a simulator input call yet.
 
 ## Notes for the next session
 
