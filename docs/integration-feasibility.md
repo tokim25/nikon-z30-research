@@ -50,16 +50,18 @@ The upstream UI notes describe menu experiments and clearly qualify their
 [test scope near line 170](https://github.com/WonderLantern/wonder-lantern-z30/blob/10e7335977d613075e4e5feed1e3ac331ba90a8a/docs/ui-qemu.md#L170).
 We did not reproduce those experiments. No upstream builder, checker, or module
 was executed. The local firmware was neither decoded nor modified in this phase.
-The prior milestone ZIP is still unavailable.
+The prior milestone ZIP was unavailable during this source-only review. It was
+subsequently [recovered and verified locally](milestone-1-recovery.md); that later
+phase decoded the firmware in memory without modifying it.
 
 ## Next steps and stop conditions
 
 1. Trace the histogram's existing display path using source references first.
    Record where it leads, what each function is believed to do, and what evidence
    would disprove that interpretation. Stop before claiming arbitrary drawing.
-2. Recover the earlier research ZIP before repeating its decoded analysis.
-   Inspect its contents locally; import only reviewed original tools and notes.
-   Do not import firmware, extracted bytes, or installable patches.
+2. The earlier research ZIP has now been recovered and its core verification
+   repeated. Keep its originals local; publish only reviewed summaries, not
+   firmware excerpts or installable patches.
 3. If source evidence is insufficient, define a separate read-only firmware
    analysis plan with identity checks and local-only intermediate data. Record
    unknowns instead of guessing function signatures or reusing menu event IDs.

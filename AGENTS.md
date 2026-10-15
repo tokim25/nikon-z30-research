@@ -6,7 +6,7 @@ This directory is the project root. Never initialize Git in a parent directory.
 
 - Respect explicit exclusive file ownership assigned by the coordinating session. Do not modify another agent's files or revert unrelated changes.
 - Use `apply_patch` for edits. Read applicable nested instructions before editing.
-- This is a new scaffold. Prior milestone files have not been recovered; never describe new code as recovered milestone code.
+- This is a new scaffold. Milestone 1 originals were recovered and verified locally; see docs/milestone-1-recovery.md. Never describe newly written code as recovered code. Keep the recovered tools and raw reports outside Git because some include firmware excerpts.
 - Do not commit, push, or publish issues until the coordinating session explicitly declares integration ready and authorizes the relevant publication step.
 
 ## Research and publication

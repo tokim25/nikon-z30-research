@@ -1,6 +1,6 @@
 # Nikon Z30 research
 
-An offline Python research scaffold for documenting reproducible methods and testing them with synthetic data. This is newly created work: prior milestone files have not been recovered, and this repository does not represent their recovery.
+An offline Python research scaffold for documenting reproducible methods and testing them with synthetic data. This is newly created code. The earlier research archive has now been recovered and checked locally; see the [Milestone 1 recovery report](docs/milestone-1-recovery.md). Its original tools and raw reports remain outside Git.
 
 ## Boundaries
 

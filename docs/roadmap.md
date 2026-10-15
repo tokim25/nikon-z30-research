@@ -35,6 +35,6 @@ The two reviewed bodies under `docs/issues/` were published on 2026-10-15: [#1: 
 The first source audit is complete: [findings and evidence](integration-feasibility.md).
 Neither feature has a supported camera integration path yet. The next task is a
 read-only trace of the existing display path; tracking needs a verified entry
-point and the previous milestone ZIP remains unavailable.
+point. The previous milestone ZIP is now recovered; [its verification results](milestone-1-recovery.md) restore the known display landmarks without importing raw firmware excerpts.
 
-Audit the pinned upstream revision recorded in research.md for documented display services, input dispatch, and module-lifecycle limits. Produce a sourced map of candidate integration points and missing evidence, with an explicit go/no-go decision for further offline analysis. Do not run the upstream patch builder, generate installable payloads, or connect hardware. This step determines whether the host models have a plausible integration path before investing in camera-specific implementation. Prior milestone ZIP recovery remains outstanding; request it if its original tools or decoded evidence are needed.
+Follow the display landmarks from the recovered analysis and record evidence gaps before camera-specific implementation. Do not run the upstream patch builder, generate installable payloads, or connect hardware. Raw local evidence must be reviewed and summarized before publication.

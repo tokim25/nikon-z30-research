@@ -1,6 +1,6 @@
 # Nikon Z30: source evidence and offline research boundaries
 
-Reviewed: 2026-10-15. This is newly written research, not recovered milestone code. Prior milestone files were unavailable. No earlier implementation, test result, address, or feasibility claim is accepted as established without independently inspectable evidence.
+Reviewed: 2026-10-15. This is newly written research. The earlier milestone archive has since been recovered and checked locally; [reproduction results and publication limits](milestone-1-recovery.md) distinguish those originals from this scaffold.
 
 ## Method and evidence labels
 
@@ -51,7 +51,7 @@ W2 separately reports a decoded EG identity:
 
 On 2026-10-15, the coordinator independently measured the recovered attachment locally using the new verify CLI: size 34,496,798 bytes and SHA-256 `1a5449ef505f1f347ed4e066a6a3f588ea542240680e83f4ebcae3b16da3434a`. Both match the upstream-reported original package identity. This establishes identity consistency with that report, not authenticity or trusted provenance. It is not a Git commit hash or an independently verified Nikon-published checksum.
 
-The decoded EG size and digest remain upstream reports only; decoded-module checks have not been independently verified. W2 distinguishes offline checks from complete camera behavior; matching the package identity cannot establish display or autofocus correctness on hardware. Recovery of this attachment does not constitute recovery of prior milestone code.
+The recovered verifier has now reproduced the decoded EG size, digest, component integrity checks, and six known locations against the local input. See the [recovery report](milestone-1-recovery.md). This is a fresh execution of the recovered implementation, not an independently written decoder. Neither matching identities nor integrity checks establish display or autofocus correctness on hardware.
 
 ## Proposed research questions
 
@@ -71,4 +71,4 @@ Readable strings, menu names, symbol guesses, or a successful simulated transiti
 
 ## What remains unverified
 
-No recovered milestone code; no complete source audit at the pinned upstream revision; no independently verified decoded-module checks or firmware authenticity; no camera rendering hook, event API, autofocus integration, or native panoramic capture path; no hardware reproduction of upstream results. The coordinator's local package size/hash measurement establishes the identity consistency described above. The roadmap and issue acceptance criteria are specifications, not evidence that all their tests have passed.
+Still unverified: a complete source audit at the pinned upstream revision, firmware authenticity, a camera rendering service, tracking event API, autofocus integration, native panoramic capture, and hardware reproduction of upstream results. The recovered tool's package and module checks have passed locally. The repository's host simulations have separate tests; neither result proves camera behavior.
