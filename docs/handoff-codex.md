@@ -20,18 +20,33 @@ fact in [facts.md](facts.md):
 - F-012 [live-view payload](tracking-liveview-payload.md): event builder, state-1 path.
 
 No tracking entry point is verified, and no input call has been attempted.
-Codex stalled on token limits. On 2026-10-15 Claude started two read-only
-static studies on the next step below: the writers of the records read by
-`0x102f1412`, and the producers of worker flag bit 16. Their results will be
-appended to facts.md as F-014 to F-019 and summarized here. Check
-[project-status.md](project-status.md) and the facts file before repeating
-that work.
+Codex stalled on token limits. Claude continued on 2026-10-15 with read-only
+helper studies, recorded as F-014 to F-019 (helper results, not re-verified):
+
+- Bit 16 is set by the live-view mode-enter routine, not by a control (F-014).
+- State 1 needs only a processed mode switch to live view (F-015).
+- Type 9 looks like a settings resync (F-016).
+- Input codes reach mode switches through a table (F-017).
+- The simulator has no button model (F-018), and a stock refresh never runs
+  the live-view task (F-019).
+
+Key routing in live view is in F-020: the key dispatcher walks a screen
+stack, and the live-view screen's key table was not found. One Claude study is
+still running, on the writers of the records read by `0x102f1412`. Its result
+will appear as F-021. Check facts.md before repeating it.
 
 ## Next step
 
-Trace the producer of the records that `0x102f1412` reads and decide whether
-they can represent an OK-button press. Keep type-9 handling and state
-dependencies explicit. Propose no simulator input call yet.
+1. Find what fills the screen-object group array at `0xc2006594`, resolve the
+   live-view screen to its key table, and read its entries for 0x27E, 0x2a3,
+   0x2a8 and the default 0x31e. Decode `0x102f1cae`, which `0x102f1e10` calls.
+2. Trace the per-object task loop at `0x10235576` and what wakes it, and
+   decode the table rows for internal codes 0x24e to 0x252 with their guards.
+3. Writers of the records `0x102f1412` reads, unless F-021 answers it.
+4. Observation only: log the sampler, router and worker addresses over 20 to
+   30 virtual seconds in a live-view session.
+
+Propose no simulator input call yet.
 
 ## To resume
 

@@ -9,10 +9,11 @@ Codex: [handoff-codex.md](handoff-codex.md). Claude: [handoff.md](handoff.md).
 
 ## Open pull requests, in merge order
 
-1. #18 rolls up Codex's four tracking branches (#13 to #16). Merge it first,
-   then close #13 to #16 as superseded.
-2. #17 adds the thread-aware call helper. Merge after #18. It touches
-   facts.md near the same lines, so rebase it first.
+1. The tracking research record (F-014 to F-019) is in review. Merge it
+   before any Codex pull request that edits facts.md.
+
+Merged on 2026-10-15: #17 (thread-aware call helper) and #18 (Codex tracking
+rollup). Pull requests #13 to #16 are superseded by #18 and can be closed.
 
 ## Sessions in flight
 
@@ -24,9 +25,10 @@ Codex: [handoff-codex.md](handoff-codex.md). Claude: [handoff.md](handoff.md).
 
 ## Fact numbers
 
-F-013 is taken by #17. F-014 to F-019 are reserved for the Claude tracking
-research. Other sessions start at F-020. Before adding a fact, check main and
-open pull requests for the next free number.
+F-013 was taken by #17 and F-014 to F-020 by the tracking research record.
+F-021 is reserved for the Claude study still running. Other sessions start at
+F-022. Before adding a fact, check main and open pull
+requests for the next free number.
 
 ## Owner decisions
 
