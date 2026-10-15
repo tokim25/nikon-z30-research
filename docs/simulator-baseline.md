@@ -47,6 +47,13 @@ The reached `0x10453d14` prepares a request structure and calls `0x104b74f4`,
 whose entry branches to `0x104b740a`. That downstream path still needs runtime
 tracing. Neither address is an established rectangle API.
 
+Subsequent bounded runs observed `0x104b74f4`, `0x104b740a`, `0x103c3810`,
+and `0x103c3568` in that order during a stock refresh. A separate run observed
+`0x103c0bc0`, `0x103c0ac2`, `0x103c05d2`, and `0x103c1b54`. These deepen the
+runtime path into object/display processing; they do not establish a callable
+rectangle interface or validated object layout. The [repeatable probe](simulator-probe.md)
+keeps raw experiment output separate from publishable findings.
+
 ## Remaining milestone acceptance checks
 
 - Identify a native drawing operation and validate its arguments, ownership,
@@ -58,7 +65,11 @@ tracing. Neither address is an established rectangle API.
 - Verify unrelated UI stays intact and the firmware input hash is unchanged.
 - Publish only original tooling, synthetic tests, and reviewed summaries.
 
-Next investigation: follow the observed request into its downstream display
-worker and identify how existing native drawing objects are rendered. The
-baseline removes simulator setup as an obstacle; drawing integration remains
-research, not a finished feature or a promised hardware capability.
+Update 2026-10-15: the request path is traced in
+[native-dispatch-chain.md](native-dispatch-chain.md), and the stock refresh
+draws no border rectangles in the simulator ([native-border-gate.md](native-border-gate.md)).
+One native call of the rectangle wrapper reaches a lower backend with correct
+geometry but changes no visible pixels ([native-rectangle-call.md](native-rectangle-call.md)).
+The first acceptance item is not verified. State and next step are in
+[handoff.md](handoff.md). Drawing integration remains research, not a
+finished feature or a promised hardware capability.
