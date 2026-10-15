@@ -27,7 +27,14 @@ first. Update it before you stop, even when a session ends early.
 
 ## Research and publication
 
-- All analysis is offline. Never flash hardware or create an installation workflow.
+- All analysis is offline. Never flash hardware or create an installation
+  workflow. **Never touch the owner's real camera**, in any form.
+- Local, simulator-only experimentation is allowed for testing a hypothesis:
+  you may try code or byte changes in a throwaway local copy of the firmware
+  and run it only in the pinned QEMU simulator on this machine. This does not
+  open the build phase. A modified copy, its diff, or anything derived from
+  it stays outside the repository and is never committed, pushed, or
+  attached to an issue; summarize the result in prose instead.
 - Never publish Nikon firmware, extracted bytes, dumps, installable patches, credentials, or proprietary artifacts in any repository surface.
 - Use synthetic fixtures only. Do not embed real bytes as hex, base64, strings, or generated test data.
 - Keep restricted inputs outside the repository. `.gitignore` and automated checks are defense in depth, not publication permission.
