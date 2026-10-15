@@ -31,8 +31,9 @@ height 2, color 0xffffffff).
 
 ## Limits
 
-The loop is not a deployable hook, and it hangs in about 10 to 15 percent of
-calls ([guide-color-and-stress.md](guide-color-and-stress.md)). The 720 by 480
+The loop is not a deployable hook. It hung in about 10 to 15 percent of calls
+([guide-color-and-stress.md](guide-color-and-stress.md)) until the call helper
+was made thread-aware (fact F-013 in [facts.md](facts.md)). The 720 by 480
 area is the synthetic scene's. Menus do not work ([guides-ui-states.md](guides-ui-states.md)).
 
 Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.

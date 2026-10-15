@@ -74,4 +74,12 @@ contents, prior type-9 effects and tracking meaning remain unverified. Repro:
 using confirmed WORK and a fresh output directory.
 [Evidence and limits](tracking-liveview-payload.md).
 
+F-013. Supersedes the cause open in F-007. The hangs came from the simulator
+tools' call helper, which treats the first stop reply after a resume as
+completion without checking which thread stopped. A thread-aware helper
+(`guest_call_safe.py`) that resumes on unrelated stops ran 112 fires (224
+calls) in 8 sessions with no hangs, against 10 to 15 percent before. Observed,
+high that the hangs are gone in this setup; the mechanism is inferred, medium.
+Issue #7.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
