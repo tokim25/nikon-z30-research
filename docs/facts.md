@@ -31,3 +31,17 @@ Observed, root cause unknown. [guide-color-and-stress.md](guide-color-and-stress
 F-008. No tracking entry point has been verified. Open.
 
 Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
+
+F-011. Router `0x104b912c` selects a callback at
+`object + 0x78 + 4 × byte(object + 0x74)` and passes event type and payload.
+In the initialized object map, selector 1 leads to menu handler `0x103cf78e`
+or live-view-setup handler `0x102f79ac`; their type-3 branches reach
+`0x103cf696` and `0x102f7448`, respectively. Observed static code/data links,
+high confidence; normal delivery, payload format and tracking meaning remain
+unverified. Live-view initialization selects 0, and another path selects 1;
+the transition conditions are unresolved. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex_ui_route_verify_private.py" --output "$WORK/private-inputs/codex-ui-route-review-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-ui-event-router.md).
+
+Written by Codex in collaboration with Tony Kim.
