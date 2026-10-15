@@ -25,9 +25,9 @@ rollup). Pull requests #13 to #16 are superseded by #18 and can be closed.
 
 ## Fact numbers
 
-F-013 was taken by #17 and F-014 to F-019 by the tracking research record.
-F-020 and F-021 are reserved for two Claude studies still running. Other
-sessions start at F-022. Before adding a fact, check main and open pull
+F-013 was taken by #17 and F-014 to F-020 by the tracking research record.
+F-021 is reserved for the Claude study still running. Other sessions start at
+F-022. Before adding a fact, check main and open pull
 requests for the next free number.
 
 ## Owner decisions

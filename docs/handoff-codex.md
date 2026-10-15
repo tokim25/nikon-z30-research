@@ -30,17 +30,20 @@ helper studies, recorded as F-014 to F-019 (helper results, not re-verified):
 - The simulator has no button model (F-018), and a stock refresh never runs
   the live-view task (F-019).
 
-Two Claude studies are still running: the writers of the records read by
-`0x102f1412`, and how key code 0x27E is routed in live view. Their results
-will appear as F-020 and F-021. Check facts.md before repeating them.
+Key routing in live view is in F-020: the key dispatcher walks a screen
+stack, and the live-view screen's key table was not found. One Claude study is
+still running, on the writers of the records read by `0x102f1412`. Its result
+will appear as F-021. Check facts.md before repeating it.
 
 ## Next step
 
-1. Trace the writers of the records `0x102f1412` reads, and decide whether any
-   field can be an OK press (unless F-020 already answers it).
+1. Find what fills the screen-object group array at `0xc2006594`, resolve the
+   live-view screen to its key table, and read its entries for 0x27E, 0x2a3,
+   0x2a8 and the default 0x31e. Decode `0x102f1cae`, which `0x102f1e10` calls.
 2. Trace the per-object task loop at `0x10235576` and what wakes it, and
    decode the table rows for internal codes 0x24e to 0x252 with their guards.
-3. Observation only: log the sampler, router and worker addresses over 20 to
+3. Writers of the records `0x102f1412` reads, unless F-021 answers it.
+4. Observation only: log the sampler, router and worker addresses over 20 to
    30 virtual seconds in a live-view session.
 
 Propose no simulator input call yet.

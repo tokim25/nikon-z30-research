@@ -119,4 +119,15 @@ worker, or the enter routine: 14 addresses were observed and none fired. The
 selector-1 path through normal tasks is therefore unobserved. Observed, high.
 Helper-agent result.
 
+F-020. The key dispatcher `0x103ce96e` is a screen-stack dispatcher. It takes
+the top of the UI screen stack (pointer at `0xc181e4f0`) and looks up the code
+in a per-screen key table of 16-byte entries (handler, guard, parameter).
+Codes from 0x248 up, including OK 0x27E, go only to the top screen. A key
+filter `0x104e2cbc` diverts 0x27E to a live-view routine `0x102f1e10` for some
+screens. Physical-button states appear to reach the menu through a type-10
+event into this dispatcher and live view through type 3 into `0x102f7448`.
+Observed dispatch mechanics, high. Why OK does nothing in live view is not
+settled: the live-view screen's group, id and key table were not found.
+Inferred, low. Helper-agent result, not re-verified.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
