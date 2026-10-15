@@ -82,4 +82,41 @@ calls) in 8 sessions with no hangs, against 10 to 15 percent before. Observed,
 high that the hangs are gone in this setup; the mechanism is inferred, medium.
 Issue #7.
 
+F-014. Worker flag bit 16 is set by the live-view mode-enter routine
+`0x102f2990` itself (call site `0x102f2a10`, right after its state-0 write at
+`0x102f2a04`). A scan of all 288 direct callers of the group-set wrapper
+`0x10462894` found five such setters, one per mode object (live view, menu and
+three others). No timer, interrupt or physical-control setter was found.
+Observed, high. Task-context reading is inferred, medium. Helper-agent result,
+not re-verified.
+
+F-015. State 1 is written by `0x102f57e2` (write at `0x102f5810`) with no
+focus or mode test. The condition is that a mode-change request targeting the
+live-view object (code high half 0x100000) passes dispatcher `0x10462970`,
+which returns early when the current object's selector is 2 or 3. Observed
+code, high. Combined meaning inferred, medium. Helper-agent result.
+
+F-016. Event type 9 is sent on every worker iteration (`0x102f2c14`). In state
+1 its handler `0x102f7942` runs a gate, then property resync helpers, and does
+not write the selector. No dereference of the payload was found, but not all
+helpers were read. Observed shape, medium; "ignores the payload" is inferred,
+medium-low. Helper-agent result.
+
+F-017. A table of 16-byte UI-event rows (552 of them, in the initial-data
+area) links internal codes 0x24e to 0x252 to handlers that call mode
+dispatcher `0x10462970` with targets 0x10000, 0x100000, 0x108000 and 0x40000.
+An input map maps input codes 0x15, 0x17, 0x1a, 0x1c, 0x1f to those internal
+codes, and 0x1b to 0x27e, the menu OK code. Which physical control is which
+input code was not established. Inferred, medium. Helper-agent result.
+
+F-018. The simulator has no model of buttons, dials, touch or HDMI status.
+A one-byte read of `0x2016c010` returns constant 0; the four I2C buses reply
+NACK; no input state is writable from the host, whose only channel is the
+debugger stub. Observed in the simulator source, high. Helper-agent result.
+
+F-019. A stock refresh in the simulator does not run the live-view task, its
+worker, or the enter routine: 14 addresses were observed and none fired. The
+selector-1 path through normal tasks is therefore unobserved. Observed, high.
+Helper-agent result.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
