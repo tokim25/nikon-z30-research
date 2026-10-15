@@ -38,6 +38,9 @@ See [the workflow](docs/workflow.md) for integration, publication, and Codex ses
 
 ## Offline models and demos
 
+Read the [camera-integration findings](docs/integration-feasibility.md) for what
+the upstream code supports, what is still unknown, and the next research step.
+
 - [XPan framing documentation](docs/xpan.md) — geometry and synthetic display-guide demo; [issue #1 and acceptance criteria](https://github.com/tokim25/nikon-z30-research/issues/1).
 - [Subject-tracking documentation](docs/tracking.md) — mock interaction model and demo; [issue #2 and acceptance criteria](https://github.com/tokim25/nikon-z30-research/issues/2).
 
