@@ -31,3 +31,15 @@ Observed, root cause unknown. [guide-color-and-stress.md](guide-color-and-stress
 F-008. No tracking entry point has been verified. Open.
 
 Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
+
+F-009. Candidate routines `0x1029d8aa` and `0x1029d8ea` contain byte reads
+from MMIO `0x2016c010` at `0x1029d8c6` and `0x1029d906`, respectively.
+Observed in bounded static decode, high confidence. Bit-1 and high-nibble
+output semantics are static inference, high confidence; button, live-view and
+AF attribution are unverified. The simulator comment's `0x102595de` /
+`0x1025961e` attribution was not reproduced. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex_input_sampler_verify_private.py" --output "$WORK/private-inputs/codex-input-sampler-review-01"`,
+using the confirmed WORK path and a new output directory.
+[Evidence and limits](tracking-input-sampler.md).
+
+Written by Codex in collaboration with Tony Kim.
