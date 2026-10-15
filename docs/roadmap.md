@@ -47,3 +47,13 @@ from actual drawing, with branch-table-aware analysis.
 The [second trace](display-refresh-path.md) connects an aggregate child-state
 check to a shared refresh-request mechanism. Next: inspect the refresh service
 and its code-pointer target, keeping dispatch separate from pixel rendering.
+
+## Active milestone — Native XPan guides in the simulator
+
+The user authorized offline simulator work through native guide rendering and
+clean on/off behavior. The [native display baseline](simulator-baseline.md)
+now runs successfully on macOS using unchanged firmware, assisted startup,
+and synthetic color bars. Runtime observations confirm the refresh path.
+Native XPan drawing remains incomplete; the baseline is not milestone success.
+Follow the acceptance checklist in that report. No hardware or installable
+firmware work is authorized by this milestone.
