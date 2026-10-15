@@ -3,62 +3,39 @@
 Codex owns this file. Update it whenever work is in progress, so a fresh
 session can resume. Rules are in [collaboration.md](collaboration.md).
 
-## Current lane
+## Lane
 
-Tracking entry-point research: find where the original firmware starts and
-ends the subject-tracking reticle, and what state it needs. Static analysis,
-simulator observation, tests and tooling. Documented behavior is in
-[tracking.md](tracking.md), and earlier leads are in the tracking research
-notes.
+Tracking entry-point research: where the original firmware starts and ends the
+subject-tracking reticle, and what state it needs. Static analysis, simulator
+observation, tests and tooling.
 
 ## State
 
-Live-view payload research started 2026-10-15 on
-`codex/tracking-liveview-payload`, from main. Prior static routing evidence is
-in [PR #15](https://github.com/tokim25/nikon-z30-research/pull/15): shared router
-`0x104b912c`, conditional type-3 send at `0x102f2c22`, and state-1 input branch
-`0x102f7448`. No tracking entry point or normal button delivery is verified.
+Four findings are merged here, each with a private verifier script and a
+fact in [facts.md](facts.md):
 
-Confirmed private WORK:
-`/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.
-Read existing inputs only. New private scripts and outputs use `codex_` or
-`codex-` prefixes outside Git. Do not change the simulator or firmware.
+- F-009 [input sampler lead](tracking-input-sampler.md): MMIO byte reads.
+- F-010 [sampler consumers](tracking-sampler-consumers.md): caller and callback.
+- F-011 [event router](tracking-ui-event-router.md): shared menu and live-view router.
+- F-012 [live-view payload](tracking-liveview-payload.md): event builder, state-1 path.
 
-The [payload report](tracking-liveview-payload.md) records the new findings.
-The actual builder is `0x102f2ad2`, called by worker loop `0x102f2ca8`.
-The planned `0x102f2990` builder attribution was wrong; that initializer returns
-before event building. The builder prepares 188 bytes, but parsers also use
-separate records. Do not treat this size as a complete input contract.
-
-Record-fetch helper `0x102f1412` uses base `0xc2008ea0`, a 400-byte stride and
-wrapped indexing in mode 0. Mode 1 returns separate record `0xc200a7a0`.
-Their producers and meaning remain unknown. Earlier type-9 handling can pass
-the payload pointer to more helpers; effects on data and selected state remain
-unresolved. No input calls have been attempted.
-
-State-1 chain: worker flag bit 16 -> type 2 -> selector-0 handler case 2 ->
-object `+0x30` getter -> `0x102f57e2` -> selector-1 write `0x102f5810`.
-This is static control flow. Flag production, helper behavior and runtime
-delivery remain unverified. State 4 is also a stock value; do not force states.
-
-Private verifier `codex_liveview_payload_verify_private.py` passed with output
-`private-inputs/codex-liveview-payload-verified-01`. All raw output stays outside
-Git. Two subagents checked parser and state claims. Module identity matched;
-the pinned simulator stayed clean. No guest controls, hardware or firmware edits.
-
-All 40 repository tests passed with `python3`. Tracked-artifact and encoded-data
-checks passed. Publication contains documentation only.
+No tracking entry point is verified, and no input call has been attempted.
+Codex stalled on token limits; Claude continued on 2026-10-15 (notes below,
+if any).
 
 ## Next step
 
-Trace the producer of records read by `0x102f1412` and determine whether and how
-they represent an OK-button press, keeping prior type-9 handling and state
-dependencies explicit. Do not propose a simulator input call yet.
+Trace the producer of the records that `0x102f1412` reads and decide whether
+they can represent an OK-button press. Keep type-9 handling and state
+dependencies explicit. Propose no simulator input call yet.
 
-## Notes for the next session
+## To resume
 
-- Record each finding in facts.md as an append-only entry, marked observed or
-  inferred.
-- Keep raw output, firmware and screenshots outside the checkout.
+1. Read AGENTS.md, collaboration.md, facts.md, then the four reports above.
+2. Run the tests and both checks with `python3`.
+3. Private WORK is
+   `/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.
+   Re-run a `codex_*_verify_private.py` script into a fresh output folder.
+4. Branch `codex/<topic>` from main; one finding per PR.
 
-Written by Codex in collaboration with Tony Kim; incorporates the prior Claude handoff.
+Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

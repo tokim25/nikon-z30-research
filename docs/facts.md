@@ -30,8 +30,6 @@ Observed, root cause unknown. [guide-color-and-stress.md](guide-color-and-stress
 
 F-008. No tracking entry point has been verified. Open.
 
-Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
-
 F-009. Candidate routines `0x1029d8aa` and `0x1029d8ea` contain byte reads
 from MMIO `0x2016c010` at `0x1029d8c6` and `0x1029d906`, respectively.
 Observed in bounded static decode, high confidence. Bit-1 and high-nibble
@@ -76,4 +74,4 @@ contents, prior type-9 effects and tracking meaning remain unverified. Repro:
 using confirmed WORK and a fresh output directory.
 [Evidence and limits](tracking-liveview-payload.md).
 
-Written by Codex in collaboration with Tony Kim.
+Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
