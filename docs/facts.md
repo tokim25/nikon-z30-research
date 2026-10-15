@@ -31,3 +31,16 @@ Observed, root cause unknown. [guide-color-and-stress.md](guide-color-and-stress
 F-008. No tracking entry point has been verified. Open.
 
 Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
+
+F-012. Builder `0x102f2ad2` prepares a 4-byte header and 184-byte status region
+for conditional type-3 dispatch. Reviewed parsers also fetch separate records
+through `0x102f1412`; the producer extent is not a complete safe-call contract.
+Worker flag bit 16 can route type 2 through selector-0 handler `0x102f61d2`
+to `0x102f57e2`, which writes selector 1 at `0x102f5810`. Observed static links,
+high confidence; ring-like storage is inference. Flag production, record
+contents, prior type-9 effects and tracking meaning remain unverified. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex_liveview_payload_verify_private.py" --output "$WORK/private-inputs/codex-liveview-payload-review-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-liveview-payload.md).
+
+Written by Codex in collaboration with Tony Kim.

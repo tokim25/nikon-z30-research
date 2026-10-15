@@ -13,14 +13,47 @@ notes.
 
 ## State
 
-Nothing in progress. No tracking entry point has been verified.
+Live-view payload research started 2026-10-15 on
+`codex/tracking-liveview-payload`, from main. Prior static routing evidence is
+in [PR #15](https://github.com/tokim25/nikon-z30-research/pull/15): shared router
+`0x104b912c`, conditional type-3 send at `0x102f2c22`, and state-1 input branch
+`0x102f7448`. No tracking entry point or normal button delivery is verified.
+
+Confirmed private WORK:
+`/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.
+Read existing inputs only. New private scripts and outputs use `codex_` or
+`codex-` prefixes outside Git. Do not change the simulator or firmware.
+
+The [payload report](tracking-liveview-payload.md) records the new findings.
+The actual builder is `0x102f2ad2`, called by worker loop `0x102f2ca8`.
+The planned `0x102f2990` builder attribution was wrong; that initializer returns
+before event building. The builder prepares 188 bytes, but parsers also use
+separate records. Do not treat this size as a complete input contract.
+
+Record-fetch helper `0x102f1412` uses base `0xc2008ea0`, a 400-byte stride and
+wrapped indexing in mode 0. Mode 1 returns separate record `0xc200a7a0`.
+Their producers and meaning remain unknown. Earlier type-9 handling can pass
+the payload pointer to more helpers; effects on data and selected state remain
+unresolved. No input calls have been attempted.
+
+State-1 chain: worker flag bit 16 -> type 2 -> selector-0 handler case 2 ->
+object `+0x30` getter -> `0x102f57e2` -> selector-1 write `0x102f5810`.
+This is static control flow. Flag production, helper behavior and runtime
+delivery remain unverified. State 4 is also a stock value; do not force states.
+
+Private verifier `codex_liveview_payload_verify_private.py` passed with output
+`private-inputs/codex-liveview-payload-verified-01`. All raw output stays outside
+Git. Two subagents checked parser and state claims. Module identity matched;
+the pinned simulator stayed clean. No guest controls, hardware or firmware edits.
+
+All 40 repository tests passed with `python3`. Tracked-artifact and encoded-data
+checks passed. Publication contains documentation only.
 
 ## Next step
 
-Read AGENTS.md, collaboration.md and facts.md. Run the tests and both checks.
-Confirm the restricted-input paths with the owner. Then pick one open lead,
-open a `codex/<topic>` branch, and write the plan in this file before running
-anything.
+Trace the producer of records read by `0x102f1412` and determine whether and how
+they represent an OK-button press, keeping prior type-9 handling and state
+dependencies explicit. Do not propose a simulator input call yet.
 
 ## Notes for the next session
 
@@ -28,4 +61,4 @@ anything.
   inferred.
 - Keep raw output, firmware and screenshots outside the checkout.
 
-Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
+Written by Codex in collaboration with Tony Kim; incorporates the prior Claude handoff.
