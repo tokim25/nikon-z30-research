@@ -13,47 +13,48 @@ notes.
 
 ## State
 
-Caller analysis started 2026-10-15 on `codex/tracking-sampler-callers`, from
+Menu input research started 2026-10-15 on `codex/tracking-menu-router`, from
 `main` at `cc817de166999f7ec47491e551d732738e918a6f`. No tracking entry point
-has been verified. Prior [PR #13](https://github.com/tokim25/nikon-z30-research/pull/13)
-records static MMIO sampling candidates `0x1029d8aa` and `0x1029d8ea`;
-that PR is not part of this branch's base.
+has been verified. Prior findings are in
+[PR #13](https://github.com/tokim25/nikon-z30-research/pull/13) and
+[PR #14](https://github.com/tokim25/nikon-z30-research/pull/14). Neither PR is
+part of this branch's base. The MMIO sampler lead now favors HDMI status
+handling, as an inference, and is no longer the main tracking lead.
 
 The owner confirmed private inputs under
 `/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.
 Use `private-inputs/eg2090_0120a0.bi`, `z30-qemu`, `recovered-m1`, and
-`analysis-env/bin/python` only at those confirmed locations. Existing files
-stay unchanged. New private helpers and outputs use `codex_` or `codex-`
-prefixes outside the checkout.
+`analysis-env/bin/python` only there. Keep existing files unchanged. New private
+helpers and output folders use `codex_` or `codex-` prefixes outside Git.
 
-Caller analysis completed in [the consumer report](tracking-sampler-consumers.md).
-The first sampler has a bounded caller at `0x1028b040`, followed by debounce-like
-filtering and a conditional callback path. Registration connects callback
-`0x10396cde` to slot `0xc1807ecc`; its record contains identifier `0x4206101e`.
-Record delivery and runtime callback execution remain unverified.
+The [shared event-router report](tracking-ui-event-router.md) records a static
+connection: `0x104b912c` chooses a callback using state byte `object + 0x74`.
+State 1 selects menu handler `0x103cf78e` or live-view-setup handler
+`0x102f79ac`. Their type-3 branches reach `0x103cf696` and `0x102f7448`.
+The live-view worker conditionally sends type 3 at `0x102f2c22`, with a stack
+payload. No physical button, reticle or AF action has been verified.
 
-Public Linux register definitions and the simulator's register table strongly
-support HDMI-status attribution as inference. Deprioritize this lead for
-tracking. No simulator run, native control call, firmware modification or
-hardware operation occurred. The module hash matched; the pinned simulator
-checkout stayed clean. Two Codex subagents independently reviewed peripheral
-attribution and caller semantics.
+Both initializers select state 0; the live-view state-0 handler ignores type 3.
+Other code writes live-view state 1 at `0x102f5810` and 4 at `0x102f61b0`.
+Their conditions are unknown. Do not treat the selector as a boolean or change
+it manually. The setter also clears two fields when called with zero.
 
-Private reproduction: `codex_sampler_consumer_verify_private.py` passed with
-output `private-inputs/codex-sampler-consumer-verified-01`. The broader original
-helper `codex_tracking_static_private.py` records branch candidates, pointer
-occurrences and bounded windows in new `codex-` directories. Neither helper nor
-its raw output belongs in Git. See the report for exact fresh-run commands.
+Private verifier `codex_ui_route_verify_private.py` passed, with output at
+`private-inputs/codex-ui-route-verified-02`. Other `codex-menu-*` and
+`codex-ui-*` folders contain exploratory raw output outside Git. Early linear
+windows crossed data tables; only checked code blocks and resolved table
+destinations support the report. Two subagents checked mapping and routing.
+The module hash matched and simulator checkout stayed clean at the pinned
+revision. No simulator or native controls were run; no firmware was modified.
 
-Validation: all 40 repository tests passed with `python3`; tracked-artifact
-and encoded-data checks passed. Changes contain documentation only.
+All 40 repository tests passed with `python3`. Tracked-artifact and encoded-data
+checks passed. Only documentation is being published.
 
 ## Next step
 
-Trace registration and callers of menu dispatcher `0x103ce96e` to a shared
-event router, then check for a separate live-view branch. Keep results menu-only
-until that connection is demonstrated; do not call the dispatcher as a live-view
-input substitute.
+Map the live-view worker's type-3 payload and its use by `0x102f7448`, including
+the conditions that select state 1. Establish that contract before proposing
+a simulator input call. Current results map code paths, not tracking activation.
 
 ## Notes for the next session
 
