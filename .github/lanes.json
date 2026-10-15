@@ -1,0 +1,26 @@
+{
+  "claude": [
+    "docs/native-*",
+    "docs/guide*",
+    "docs/display-*",
+    "docs/simulator-*",
+    "docs/handoff.md",
+    "src/nikon_z30_research/simulator_probe.py",
+    "tests/test_simulator_probe.py"
+  ],
+  "codex": [
+    "docs/tracking*",
+    "docs/handoff-codex.md",
+    "src/nikon_z30_research/tracking*",
+    "tests/test_tracking*"
+  ],
+  "shared": [
+    "docs/facts.md",
+    "docs/roadmap.md",
+    "docs/collaboration.md",
+    "docs/build-phase-gate.md",
+    "docs/hardware-readiness.md",
+    "AGENTS.md",
+    ".github/*"
+  ]
+}
