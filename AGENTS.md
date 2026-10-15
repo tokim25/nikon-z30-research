@@ -2,6 +2,20 @@
 
 This directory is the project root. Never initialize Git in a parent directory.
 
+## Start here
+
+Before anything else, read your lane's handoff file. It records the current
+state, the single next step, and how to resume after a stalled session.
+
+- Codex: [docs/handoff-codex.md](docs/handoff-codex.md), tracking research.
+- Claude: [docs/handoff.md](docs/handoff.md), simulator drawing work.
+
+Then read [docs/project-status.md](docs/project-status.md) for open pull
+requests, merge order, sessions in flight and reserved fact numbers, followed
+by [docs/collaboration.md](docs/collaboration.md) and
+[docs/facts.md](docs/facts.md). If your handoff file is out of date, fix it
+first. Update it before you stop, even when a session ends early.
+
 ## Scope and collaboration
 
 - Respect explicit exclusive file ownership assigned by the coordinating session. Do not modify another agent's files or revert unrelated changes.
