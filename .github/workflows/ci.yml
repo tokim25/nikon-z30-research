@@ -14,12 +14,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
       - name: Check tracked artifacts
         run: python .github/scripts/check_artifacts.py
+      - name: Check for encoded data
+        run: python .github/scripts/check_byte_dumps.py
+      - name: Check lane ownership
+        env:
+          GITHUB_HEAD_REF: ${{ github.head_ref }}
+          GITHUB_BASE_REF: ${{ github.base_ref }}
+        run: python .github/scripts/check_lane_ownership.py
       - name: Run unit tests
         env:
           PYTHONPATH: src
