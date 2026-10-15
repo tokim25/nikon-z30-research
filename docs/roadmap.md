@@ -28,4 +28,8 @@ Exit criterion: a sourced feasibility assessment or an explicit unresolved findi
 
 ## Publication and handoff
 
-The two reviewed bodies under `docs/issues/` were published on 2026-10-15 in the private repository as open implementation issues: [#1: XPan-style framing](https://github.com/tokim25/nikon-z30-research/issues/1) and [#2: one-step subject tracking](https://github.com/tokim25/nikon-z30-research/issues/2). Their acceptance criteria remain future work. Completion of a simulated model demonstrates only that model; record tests actually run separately from planned acceptance criteria.
+The two reviewed bodies under `docs/issues/` were published on 2026-10-15: [#1: XPan-style framing](https://github.com/tokim25/nikon-z30-research/issues/1) and [#2: one-step subject tracking](https://github.com/tokim25/nikon-z30-research/issues/2). The original host simulations are implemented, with 24 tests passing in coordinator integration. See [XPan evidence](xpan.md) and [tracking evidence](tracking.md). Completion demonstrates only the simulations, not camera functionality.
+
+## Next session: camera-integration feasibility
+
+Audit the pinned upstream revision recorded in research.md for documented display services, input dispatch, and module-lifecycle limits. Produce a sourced map of candidate integration points and missing evidence, with an explicit go/no-go decision for further offline analysis. Do not run the upstream patch builder, generate installable payloads, or connect hardware. This step determines whether the host models have a plausible integration path before investing in camera-specific implementation. Prior milestone ZIP recovery remains outstanding; request it if its original tools or decoded evidence are needed.

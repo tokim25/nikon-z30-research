@@ -6,6 +6,7 @@ import json
 
 from .firmware import inspect_firmware, verify_firmware
 from .geometry import centered_crop
+from .xpan import write_demo
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -20,9 +21,23 @@ def main(argv: list[str] | None = None) -> int:
     crop = commands.add_parser("crop", help="Compute largest exact centered 65:24 crop")
     crop.add_argument("width", type=int)
     crop.add_argument("height", type=int)
+    demo = commands.add_parser("xpan-demo", help="Write a synthetic host simulation as HTML or PPM")
+    demo.add_argument("output", help="New output path; existing files are never overwritten")
+    demo.add_argument("--width", type=int, default=650)
+    demo.add_argument("--height", type=int, default=450)
+    demo.add_argument("--left", type=int, default=24)
+    demo.add_argument("--top", type=int, default=24)
+    demo.add_argument("--orientation", type=int, choices=(0, 90, 180, 270), default=0)
+    demo.add_argument("--no-guides", action="store_true")
     args = parser.parse_args(argv)
     try:
-        if args.command == "crop":
+        if args.command == "xpan-demo":
+            guide = write_demo(args.output, args.width, args.height, args.left, args.top,
+                               args.orientation, not args.no_guides)
+            result = {"label": "host simulation", "output": args.output,
+                      "guides_enabled": not args.no_guides, "guide": asdict(guide),
+                      "limitation": "No camera display hook or native capture behavior validated"}
+        elif args.command == "crop":
             result = asdict(centered_crop(args.width, args.height))
         else:
             firmware = inspect_firmware(args.path)

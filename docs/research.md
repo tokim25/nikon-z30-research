@@ -24,7 +24,7 @@ Public web access was used only to read primary-source documentation. Analysis a
 | W1 | [WonderLantern repository README](https://github.com/WonderLantern/wonder-lantern-z30) | Mutable `main`; commit SHA not resolved | Declared project scope, presets, input identity |
 | W2 | [WonderLantern build documentation](https://github.com/WonderLantern/wonder-lantern-z30/blob/main/docs/build.md) | Mutable `main`; commit SHA not resolved | Reported source and decoded-module identities; offline validation boundaries |
 
-GitHub's rendered pages did not expose a usable commit SHA in the retrieved content. The web API lookup failed, and a terminal API lookup failed DNS resolution. No source revision hash is asserted. Search-index and live-page snapshots differed, so this review must not be presented as an atomic repository snapshot. A future source audit should pin a commit and recheck each claim before implementation reuse.
+The initial browser review did not resolve a revision. A subsequent GitHub API check on 2026-10-15 resolved `main` to [10e7335977d613075e4e5feed1e3ac331ba90a8a](https://github.com/WonderLantern/wonder-lantern-z30/commit/10e7335977d613075e4e5feed1e3ac331ba90a8a), committed 2026-10-13. The coordinator read [build.md at that revision](https://github.com/WonderLantern/wonder-lantern-z30/blob/10e7335977d613075e4e5feed1e3ac331ba90a8a/docs/build.md) and confirmed both reported identities below. Other initial browser claims have not all been re-audited at that revision; this is not an atomic audit of the entire source tree. No upstream code was executed.
 
 ## Verified documentation and upstream reports
 
@@ -71,4 +71,4 @@ Readable strings, menu names, symbol guesses, or a successful simulated transiti
 
 ## What remains unverified
 
-No recovered milestone code; no pinned upstream commit; no independently verified decoded-module checks or firmware authenticity; no camera rendering hook, event API, autofocus integration, or native panoramic capture path; no hardware reproduction of upstream results. The coordinator's local package size/hash measurement establishes the identity consistency described above. The roadmap and issue acceptance criteria are specifications, not evidence that all their tests have passed.
+No recovered milestone code; no complete source audit at the pinned upstream revision; no independently verified decoded-module checks or firmware authenticity; no camera rendering hook, event API, autofocus integration, or native panoramic capture path; no hardware reproduction of upstream results. The coordinator's local package size/hash measurement establishes the identity consistency described above. The roadmap and issue acceptance criteria are specifications, not evidence that all their tests have passed.

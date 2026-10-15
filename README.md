@@ -35,3 +35,10 @@ Replace `FULL_64_CHARACTER_HASH` with the complete expected SHA-256 hexadecimal 
 The crop command computes basic centered geometry at an exact integer 65:24 ratio. It may trim width as well as height: 3840 × 2160 yields 3835 × 1416. It does not render a live overlay, modify an image, or change camera behavior.
 
 See [the workflow](docs/workflow.md) for integration, publication, and Codex session rules, and [the roadmap](docs/roadmap.md) for proposed work.
+
+## Offline models and demos
+
+- [XPan framing documentation](docs/xpan.md) — geometry and synthetic display-guide demo; [issue #1 and acceptance criteria](https://github.com/tokim25/nikon-z30-research/issues/1).
+- [Subject-tracking documentation](docs/tracking.md) — mock interaction model and demo; [issue #2 and acceptance criteria](https://github.com/tokim25/nikon-z30-research/issues/2).
+
+Both host simulations are implemented, and all 24 tests passed the coordinator's integration review. These results validate the host models; they do not establish camera display integration, autofocus accuracy, or hardware compatibility.
