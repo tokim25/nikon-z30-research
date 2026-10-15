@@ -38,3 +38,8 @@ read-only trace of the existing display path; tracking needs a verified entry
 point. The previous milestone ZIP is now recovered; [its verification results](milestone-1-recovery.md) restore the known display landmarks without importing raw firmware excerpts.
 
 Follow the display landmarks from the recovered analysis and record evidence gaps before camera-specific implementation. Do not run the upstream patch builder, generate installable payloads, or connect hardware. Raw local evidence must be reviewed and summarized before publication.
+
+The [first read-only display trace](display-path-trace.md) now connects the
+widget path to shared state routines and confirms their descriptor table link.
+Next: trace consumers of those state flags to distinguish refresh decisions
+from actual drawing, with branch-table-aware analysis.
