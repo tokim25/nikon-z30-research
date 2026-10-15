@@ -21,6 +21,7 @@
     "docs/build-phase-gate.md",
     "docs/hardware-readiness.md",
     "AGENTS.md",
-    ".github/*"
+    ".github/*",
+    "docs/project-status.md"
   ]
 }
