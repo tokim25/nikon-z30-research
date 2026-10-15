@@ -42,7 +42,7 @@ was a queue-and-wait gate (global 0xc1808744) that deadlocked a call made from
 the display worker's own breakpoint. Private script that produced the result:
 `native_fill_loop8_private.py` (arguments: run name, 0, 0, color, cycles).
 The call hangs are fixed: the debugger call helper now checks which thread
-stopped (`src/nikon_z30_research/guest_call_safe.py`, fact F-009). The private
+stopped (`src/nikon_z30_research/guest_call_safe.py`, fact F-013). The private
 loop using it is `native_fill_loop9_private.py` with `robust_call_private.py`.
 Repeats, colors, alpha and thickness are checked. Still open: menu states
 (issue #8) and a call site that needs no debugger (issue #9). The loop is a

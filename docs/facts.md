@@ -30,7 +30,7 @@ Observed, root cause unknown. [guide-color-and-stress.md](guide-color-and-stress
 
 F-008. No tracking entry point has been verified. Open.
 
-F-009. Supersedes the cause open in F-007. The hangs came from the simulator
+F-013. Supersedes the cause open in F-007. The hangs came from the simulator
 tools' call helper, which treats the first stop reply after a resume as
 completion without checking which thread stopped. A thread-aware helper
 (`guest_call_safe.py`) that resumes on unrelated stops ran 112 fires (224
