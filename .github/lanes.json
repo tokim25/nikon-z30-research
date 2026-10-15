@@ -6,7 +6,9 @@
     "docs/simulator-*",
     "docs/handoff.md",
     "src/nikon_z30_research/simulator_probe.py",
-    "tests/test_simulator_probe.py"
+    "tests/test_simulator_probe.py",
+    "src/nikon_z30_research/guest_call*",
+    "tests/test_guest_call*"
   ],
   "codex": [
     "docs/tracking*",
