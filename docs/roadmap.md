@@ -43,3 +43,7 @@ The [first read-only display trace](display-path-trace.md) now connects the
 widget path to shared state routines and confirms their descriptor table link.
 Next: trace consumers of those state flags to distinguish refresh decisions
 from actual drawing, with branch-table-aware analysis.
+
+The [second trace](display-refresh-path.md) connects an aggregate child-state
+check to a shared refresh-request mechanism. Next: inspect the refresh service
+and its code-pointer target, keeping dispatch separate from pixel rendering.

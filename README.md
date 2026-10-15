@@ -42,6 +42,7 @@ Read the [camera-integration findings](docs/integration-feasibility.md) for what
 the upstream code supports, what is still unknown, and the next research step.
 The [first display-path trace](docs/display-path-trace.md) adds a verified link
 between the histogram widget path and shared display-state routines.
+The [follow-up trace](docs/display-refresh-path.md) reaches a shared refresh request.
 
 - [XPan framing documentation](docs/xpan.md) — geometry and synthetic display-guide demo; [issue #1 and acceptance criteria](https://github.com/tokim25/nikon-z30-research/issues/1).
 - [Subject-tracking documentation](docs/tracking.md) — mock interaction model and demo; [issue #2 and acceptance criteria](https://github.com/tokim25/nikon-z30-research/issues/2).
