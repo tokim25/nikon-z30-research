@@ -56,4 +56,16 @@ now runs successfully on macOS using unchanged firmware, assisted startup,
 and synthetic color bars. Runtime observations confirm the refresh path.
 Native XPan drawing remains incomplete; the baseline is not milestone success.
 Follow the acceptance checklist in that report. No hardware or installable
-firmware work is authorized by this milestone.
+firmware work is authorized by this milestone. Current position and next
+step: [handoff.md](handoff.md).
+
+## Authorized continuation through readiness review
+
+The user subsequently authorized continued offline work through five further
+milestones: native framing reliability, a verified tracking entry point,
+one-step native activation in simulation, combined native checks, and a final
+hardware-readiness decision. Their acceptance gates and honest current status
+are maintained in [the readiness checkpoint](hardware-readiness.md).
+An interim no-go is not completion of the preceding milestones. Native drawing
+and tracking interfaces remain research dependencies; additional approval is
+not required to continue the authorized offline investigation.
