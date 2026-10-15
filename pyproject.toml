@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nikon-z30-research"
+version = "0.1.0"
+description = "Fresh offline research utilities; no firmware decoding or modification"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+z30-research = "nikon_z30_research.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
