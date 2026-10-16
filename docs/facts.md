@@ -1089,4 +1089,30 @@ short window around each of the ten stores and the two main-code readers.
 Method: owner-run read-only scan, SHA-256 checked first; addresses only, no
 firmware bytes recorded.
 
+F-083. What the ten stores of F-082 do, from an owner-run decode on
+2026-10-16. (1) `0x100fc0b8` is inside a reset routine that writes pairs of
+bytes at low offsets (`+0x11`, `+0x12`, `+0x15` to `+0x1c`) and a copy of each
+pair `0x140` higher (`+0x151` to `+0x15c`), so the area `+0x151` to `+0x15c`
+is a shadow of the bytes at `+0x11` to `+0x1c`. (2) `0x10367fd2` is inside a
+routine that copies settings one byte at a time from a source structure
+(register r8) into this structure: a run from r8 offsets `0x430` to `0x448`
+(stride 4) goes into `+0x153` to `+0x15a`, then `ldrb r0, [r8, #0x2cc]` goes
+into `+0x15b`, then r8 `+0x44c` goes into `+0x15c`. The `0x2cc` source breaks
+the stride, which fits an unrelated setting copied in between. (3) The
+stores at `0x11dc04fe`, `0x11e46296`, `0x11dc17e6` and `0x11e4757e` write a
+register or the value 1 to `+0x15b` through a base loaded from `[object +
+0xe4]`, followed by a store of 1 to `+0x15c`, which reads like marking an
+entry as set or changed; and the stores at `0x11de6eba`, `0x11e6ccee`,
+`0x11deef16` and `0x11e74d46` clear it in reset code. (4) The two main-code
+readers, `0x101df8b8` and `0x101e00da`, read `+0x15b` in loops of 18 entries
+(three-byte steps), so the offset is also one entry of an 18-entry array, and
+the value there may not be the image area in every structure that uses the
+offset. Observed (the code). Inferred, confidence low to medium: for the
+structure at `0xc2016a68`, the mirror byte `+0x15b` is filled from `+0x2cc` of
+the source structure by the routine around `0x10367fd2`, so the real stored
+image-area setting is at `+0x2cc` of that source. Not yet read: the start of
+that routine, which structure r8 is, who calls it, and who writes `+0x2cc`.
+Method: owner-run read-only decode; instructions only, no firmware bytes
+recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
