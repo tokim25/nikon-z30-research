@@ -112,9 +112,10 @@ condition 1 is met. The paper design is written (xpan-bars-design.md). F-089 fou
 activation in `0x102f2990`, generic activate `0x102355ee`); "area changes" has
 none. F-090: `0x104b9116` is a selector setter, `0x104b912c` dispatches through a
 handler table at `object + 0x78` (data); the call at `0x1030f9ce` is "list
-built", not "choice picked". Next: owner reviews the design; then find what
-runs when the area is picked, and read the handler tables of the live-view
-object. Avoid write watchpoints on the
+built", not "choice picked". Owner requirement: the bars must update at once when the area
+is changed from the i menu with live view still on screen. Next: find what runs
+when an item is picked there (the item-pick stubs near the area builder and the
+callee `0x1030cc68`), then read the handler tables of the live-view object. Avoid write watchpoints on the
 simulator link; they left it out of step once. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the

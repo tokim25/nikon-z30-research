@@ -17,11 +17,19 @@ looks exactly like the original camera.
 |---|---|
 | Still shooting, live view, XPan selected | On |
 | Still shooting, live view, DX or 16:9 selected | Off (original look) |
-| Any menu open, including the "i" menu | Off, so nothing is covered |
+| Any full-screen menu open | Off, so nothing is covered |
+| Image area changed from the "i" menu while live view stays on screen | Update at once: on for XPan, off for anything else |
 | Back from a menu to live view with XPan selected | On again |
 | Playback of a photo | Off |
 | Movie mode | Off in version 1 (stills only) |
 | Camera switched off and on with XPan selected | On when live view appears |
+
+## Owner requirement (2026-10-16)
+
+The owner will change the image area from the "i" menu while live view stays
+on screen, so the bars must turn on or off right away when the choice changes,
+not only the next time live view starts. That makes "the area changes" a
+required trigger moment, not an optional one.
 
 ## What must never happen
 
