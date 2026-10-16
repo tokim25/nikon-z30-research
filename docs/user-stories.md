@@ -15,7 +15,8 @@ the normal area turns it off.
 - Done when: XPan appears as a choice in "Choose image area" next to the
   existing ones; picking it turns XPan on; picking another turns it off and
   everything returns to normal; and the "i" menu can open that same list.
-- Status: works only in the simulator, switched by a test tool. **Not yet
+- Status: works only in the simulator, switched by a test tool. First finding
+  (F-053): the menu text is in a packed string table. **Not yet
   researched:** whether a new choice can be added to that menu, how the menu
   list is built, and how the "i" menu points to it. This is now the first
   thing to find out.

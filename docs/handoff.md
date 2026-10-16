@@ -47,6 +47,16 @@ the same way, ask the owner to run it. `$WORK/analysis-env` may already hold
 `capstone`; use it instead of a new environment. No firmware bytes are kept
 in the repo.
 
+## Update 2026-10-16: XPan as a menu choice
+
+Owner decisions are in user-stories.md. First research (F-053): the "Choose
+image area" text sits in a packed UTF-16 string blob near `0x10e88c22`.
+Next: find the code that builds the image-area list (look for readers of the
+blob near those addresses), and how the "i" quick menu opens that list. Same
+read-only method; if a run is blocked, ask the owner to run it. Open
+question for the owner: replace an existing choice (such as 1:1) or add a
+new one.
+
 ## Where things live
 
 Restricted inputs sit under the workspace `work/` folder: the EG module, the
