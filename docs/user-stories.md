@@ -107,9 +107,12 @@ Nikon's is shared.
    readouts stay inside the XPan strip, not over the black bars.
 3. **Label:** yes. The menus show a short label, for example "65:24".
 
-Note: earlier research (image-area-tables.md) says the owner was fine with
-XPan replacing an existing choice such as 1:1. Still to confirm: replace one
-(simpler) or add a new one (harder)?
+### Replace, not add (answered 2026-10-16)
+
+XPan **replaces the 1:1 choice** in "Choose image area". It may keep the
+label "1:1" in places where changing the text is hard; the short label
+"65:24" is wanted wherever it is easy. The menu then still has the same
+number of choices, which is the simpler change.
 
 ## What stays true
 

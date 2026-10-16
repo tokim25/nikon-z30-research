@@ -53,9 +53,15 @@ Owner decisions are in user-stories.md. First research (F-053): the "Choose
 image area" text sits in a packed UTF-16 string blob near `0x10e88c22`.
 Next: find the code that builds the image-area list (look for readers of the
 blob near those addresses), and how the "i" quick menu opens that list. Same
-read-only method; if a run is blocked, ask the owner to run it. Open
-question for the owner: replace an existing choice (such as 1:1) or add a
-new one.
+read-only method; if a run is blocked, ask the owner to run it. Owner
+decision: XPan REPLACES the 1:1 choice (area 4), may keep the "1:1" label
+where hard to change. So the work is rewriting what area 4 means, not adding
+a list entry. Known obstacles from image-area-tables.md: the 1:1 records
+hold square sizes (3712, 2784, 1856 and sensor readout 3728 squared) that
+must become 5200 by 1920 style rectangles; the Retouch Trim code forces
+width equal to height for the 1:1 slot (separate feature, may be left alone);
+one menu interlock is 1:1 specific (F-033). Next: map every reader of area 4
+and the per-area crop-window tables.
 
 ## Where things live
 
