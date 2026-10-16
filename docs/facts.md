@@ -509,4 +509,27 @@ saved-file size rows. Not yet found: the code that builds the list, or how
 the "i" menu points at it. Method: read-only string search, SHA-256 checked
 first; only short UI labels are recorded, no firmware bytes.
 
+F-054. The 38 entries of the per-area table at `0x12049a7c` (F-033,
+`image-area-tables.md`) read as seven groups of five slots plus three more.
+Slot 4 of each group is the 1:1 area; slots 1 and 3 point to all-zero
+records, so only slots 0 (DX), 2 (16:9) and 4 (1:1) carry data. The 1:1
+records are square in every group: sensor readout 3728 by 3728 (groups 0 and
+2), output sizes 3712 by 3712 (and 2784, 1856 squared for medium and small),
+and tiny margin records `(16, 8)`/`(8, 8)` elsewhere. Their widths are well
+under the 5568-wide DX readout, so a 5200 by 1920 XPan record would fit inside
+the DX readout. The records sit at `0x115a4d6c` onward, right after a
+parameter block whose base literal is `0x115a4c80`. A cluster of small
+helpers at `0x1020bfc8` to `0x1020c0a0` each return the address of one entry
+in that block (steps of `+4`, `+8`, `+0xc`, `+0x14`, `+0x28`, and so on up to
+`+0xcc`). A scan found 117 direct callers of those helpers spread from
+`0x10098e24` to well past `0x101d5c38`, plus six pointer-table references, so
+reads of the block are widespread, not confined to the capture code. Observed
+static decode and scan on 2026-10-16. Inferred, confidence medium: replacing
+the 1:1 slot is largely a data rewrite of its records (and the matching
+crop-window tables), but the helpers serve many tables, so each of the 117
+callers would have to be checked for 1:1 assumptions (for example width equal
+to height). Not yet done: sorting those callers by which table they read.
+Method: read-only Thumb decode and scan, SHA-256 checked first; sizes are
+Nikon's published numbers and no firmware bytes are recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
