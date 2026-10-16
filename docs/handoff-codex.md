@@ -3,65 +3,79 @@
 Codex owns this file. Update it whenever work is in progress, so a fresh
 session can resume. Rules are in [collaboration.md](collaboration.md).
 
+## Read this first: the lane is paused
+
+The owner has paused tracking entry-point and button-mapping research. Do
+not resume tracing which button reaches the tracking feature, including any
+item in "Where the trail was left" below, without the owner's explicit
+say-so in this conversation first. This is not a lane-ownership question;
+it is a standing instruction from the owner.
+
 ## Lane
 
-Tracking entry-point research: where the original firmware starts and ends the
-subject-tracking reticle, and what state it needs. Static analysis, simulator
-observation, tests and tooling.
+Tracking entry-point research: where the original firmware starts and ends
+the subject-tracking reticle, and what state it needs. Static analysis,
+simulator observation, tests and tooling.
 
 ## State
 
-Four findings are merged here, each with a private verifier script and a
-fact in [facts.md](facts.md):
-
-- F-009 [input sampler lead](tracking-input-sampler.md): MMIO byte reads.
-- F-010 [sampler consumers](tracking-sampler-consumers.md): caller and callback.
-- F-011 [event router](tracking-ui-event-router.md): shared menu and live-view router.
-- F-012 [live-view payload](tracking-liveview-payload.md): event builder, state-1 path.
-
 No tracking entry point is verified, and no input call has been attempted.
-Codex stalled on token limits. Claude continued on 2026-10-15 with read-only
-helper studies, recorded as F-014 to F-019 (helper results, not re-verified):
+Findings merged so far, each marked observed or inferred in
+[facts.md](facts.md):
 
-- Bit 16 is set by the live-view mode-enter routine, not by a control (F-014).
-- State 1 needs only a processed mode switch to live view (F-015).
-- Type 9 looks like a settings resync (F-016).
-- Input codes reach mode switches through a table (F-017).
-- The simulator has no button model (F-018), and a stock refresh never runs
-  the live-view task (F-019).
+- F-009 to F-012: an MMIO input sampler, its consumers, the shared
+  menu/live-view event router, and the live-view event builder.
+- F-014 to F-021: where the live-view flag that starts tracking is set, what
+  state 1 requires, and (F-021) a working traced example of a physical
+  button bit reaching an internal event.
+- F-023, F-024: the input map is fully decoded; the four candidate guard
+  functions turned out to be ordinary navigation buttons, not AE-L/AF-L. A
+  named switch, `ID_SW0_AEAF_LOCK`, has its own dedicated bit (mask 0x2000),
+  separate from the d-pad. The owner confirmed the button exists on the
+  camera body.
 
-Key routing in live view is in F-020. F-021 shows that neither store
-`0x102f1412` reads is a button record, but traces internal code 0x1b (event
-0x27e, OK) back to a physical packet byte: a working example of a button
-reaching an internal event.
+## Wider project context, outside this lane
 
-The owner added a goal: map AE-L/AF-L to the tracking entry point (flag bit
-16 -> state 1, F-014/F-015), research and spec only. The owner confirmed the
-button exists on the body. F-023 rules out the guarded navigation rows. F-024
-finds the lead: a named switch `ID_SW0_AEAF_LOCK` with its own bit (mask
-0x2000). Another session owns F-022 and the menu-state work.
+- The owner opened a build phase for their own, non-distributed camera
+  ([build-phase-gate.md](build-phase-gate.md)). This authorizes writing a
+  real patcher and a recovery plan; it does not authorize flashing
+  anything, and does not change the pause on this lane's research.
+- A firmware version-and-hash gate is merged
+  (`src/nikon_z30_research/verified_firmware.py`).
+- [hardware-readiness.md](hardware-readiness.md) was reviewed and still
+  says NO-GO. It names the unverified tracking entry point as one of two
+  remaining blockers, alongside a missing recovery plan.
+- Another session owns F-022 and the guide/menu-state work
+  (`docs/guides-ui-states.md`, `docs/native-*`, `docs/guide*`); do not edit
+  those files.
 
-## Next step
+## Where the trail was left (paused, not a to-do list)
 
-1. Find the routine that scans the SW0 switch word and reads bit 13 (mask
-   0x2000), for example a test against immediate 0x2000 or a bit-13 case in a
-   jump table, and follow it to an input code or event. Then find press and
-   release handling, and whether it meets `0x102f2990`. Priority.
+If and when the owner resumes this lane, this is where research stopped:
+
+1. Find the routine that scans the SW0 switch word, reads bit 13 (mask
+   0x2000), and follows it to an input code or event. Then find press and
+   release handling, and whether it meets `0x102f2990`.
 2. Resolve the live-view screen's key table from group array `0xc2006594`,
    and read its entries for 0x27E, 0x2a3, 0x2a8 and the default 0x31e.
 3. Trace task loop `0x10235576` and the code tables for 0x24e to 0x252.
 4. Trace upward from `0x1030705a` to the message framework and packet
    sender, for issue #11.
 
-Propose no simulator input call yet.
+None of this is authorized to start without the owner asking for it again.
 
 ## To resume
 
-1. Read AGENTS.md, collaboration.md, facts.md, then the four reports above.
+1. Read this whole file first, then AGENTS.md, collaboration.md,
+   project-status.md and facts.md. Confirm with the owner whether this lane
+   stays paused before doing anything else.
 2. Run the tests and both checks with `python3`.
 3. Private WORK is
    `/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.
    Re-run a `codex_*_verify_private.py` script into a fresh output folder.
-4. Branch `codex/<topic>` from main; one finding per PR.
+4. F-025 to F-029 are reserved for this lane; check project-status.md for
+   the actual next free number, since other lanes have used numbers past
+   F-029 while this one was paused.
+5. Branch `codex/<topic>` from main; one finding per PR.
 
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
