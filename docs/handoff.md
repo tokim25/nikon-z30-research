@@ -29,11 +29,3 @@ pinned simulator and run folders in `private-inputs/`. Private scripts there:
 `native_fill_loop9_private.py` with `robust_call_private.py`,
 `menu_retest_private.py`, `geom_probe_private.py` (run name, firmware path),
 `dimtable_scan_private.py`. Keep their output private.
-
-## Constraints
-
-Local simulator-only experiments on a throwaway copy are allowed (AGENTS.md).
-Never touch the real camera. Nothing from a modified copy goes in the repo.
-The build phase stays closed. Publish through pull requests the owner merges.
-
-Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
