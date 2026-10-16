@@ -1308,4 +1308,27 @@ image area. Repro of (1): confirmed WORK, run
 with a fresh output directory; the script stays under WORK and is not
 committed. No firmware changed.
 
+F-092. Driving the simulated menu to pick "1:1" in "Choose image area" hangs,
+even with the thread-aware call helper. On 2026-10-16, a session navigated
+from the stock menu to Photo Shooting Menu > Choose image area (confirmed by
+screenshots matching the real menu text and layout: DX framed as current,
+1:1 highlighted) and pressed the menu OK key (`0x27e` through
+`0x103ce96e`). The call did not complete even with a timeout and retried
+stops (`timed_out: true, ignored_stops: 1`), the same symptom the
+thread-aware helper was built to work around (see `guest_call_safe.py`), but
+it did not resolve this one. The simulator process exited afterward; no
+process was left running, and the firmware file hash was confirmed unchanged.
+Observed runtime. Inferred, confidence medium: this specific key press,
+confirming a 1:1 or 16:9 pick, triggers a path the simulator cannot step
+through cleanly, separate from the general call-hang issue already
+documented. Consequence for the design: "the area changes" cannot currently
+be tested by driving the simulated menu either, the same limit noted for
+direct memory writes (F-091). Not tried: picking 16:9 instead, or pressing OK
+with a different method (for example sending the key without waiting for
+completion). Repro: confirmed WORK, run
+`PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/claude-menu-session-private.py" --output "$WORK/private-inputs/claude-menu-session-NN"`
+with a fresh output directory and drive it with a second small script that
+appends to its `cmd.txt`; scripts stay under WORK and are not committed. No
+firmware changed.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
