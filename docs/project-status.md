@@ -5,16 +5,19 @@ the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
 
-Main carries facts through **F-106**. F-101 merged via PR #119; F-102/F-103
-via PR #123; F-104 via PR #124; F-105 via PR #126. The SD-card-detect/
-enumeration thread (F-102, F-104) is retired per owner direction (see
-AGENTS.md's "Priority" section and handoff-codex.md). F-106 (direct test
-of the capture-descriptor vs. shots-remaining-estimator hypothesis --
-leans toward the estimator/property-dispatch reading at medium confidence,
-with one open thread: who writes the global slot F-106 found at
-`0xc18a6890`) is on `claude/f106-hypothesis-b-evidence`. The owner
-approves merges; nobody merges their own PRs. Check main again before
-allocating F-107.
+Main carries facts through **F-107**. F-101 merged via PR #119; F-102/F-103
+via PR #123; F-104 via PR #124; F-105 via PR #126; F-106 via PR #127. The
+SD-card-detect/enumeration thread (F-102, F-104) is retired per owner
+direction (see AGENTS.md's "Priority" section and handoff-codex.md).
+Lane 2's capture-descriptor question leans toward the settings/property-
+dispatch reading at medium confidence (F-106), accepted as the working
+answer; one open thread remains (who writes the global slot at
+`0xc18a6890`) but is not being actively pursued. F-107 (Lane 1: resolves
+the close-handler mode-state chain one level further, past where a prior
+session stopped three times via the safety classifier, down to a single
+byte at `0xc181f6fc` whose writer is still unfound) is on
+`claude/f107-close-handler-state`. The owner approves merges; nobody
+merges their own PRs. Check main again before allocating F-108.
 
 ## Feature state
 
