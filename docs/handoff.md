@@ -32,8 +32,8 @@ initializer `0x104b5fd4` has two direct callers, `0x10452e56` and
 clip-only setter. F-047 traced the chain upward: table slot `0x11fa38fc` -> handler
 `0x102ae5e8` (flag at +0x10) -> wrapper `0x10452f34` -> `0x10452d86` ->
 initializer. F-048: the flag is the word at `0xc1821c20`, part of a module-wide state
-object (about 80 loaders in `0x102ae5a8`..`0x102afca0`). Still to do: pick
-out the writers of that one word, which event owns the
+object (about 80 loaders in `0x102ae5a8`..`0x102afca0`). F-049: two static patterns found no writer of that word (negative
+result, medium confidence). Still to do: find the writer another way, which event owns the
 table slot, and what `0x104ed666`/`0x104ed67a` do; then decide whether any
 step is a clip-only path.
 
