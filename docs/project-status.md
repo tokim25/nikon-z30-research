@@ -9,26 +9,28 @@ Codex: [handoff-codex.md](handoff-codex.md). Claude: [handoff.md](handoff.md).
 
 ## Open pull requests, in merge order
 
-1. The tracking research record (F-014 to F-019) is in review. Merge it
-   before any Codex pull request that edits facts.md.
+1. #20 (F-021 and the AE-L/AF-L goal) then #24 (F-023, F-024), stacked on it.
+   Both are tracking research, waiting for the owner's review.
+2. #25 (image-area research, F-030 to F-033) is independent.
+3. #26 is this status hub.
 
-Merged on 2026-10-15: #17 (thread-aware call helper) and #18 (Codex tracking
-rollup). Pull requests #13 to #16 are superseded by #18 and can be closed.
+Merged: #17, #18, #19, #21, #22 and #23. #13 to #16 are superseded by #18.
+Local, simulator-only firmware experimentation is now allowed in AGENTS.md.
 
 ## Sessions in flight
 
-- Claude, simulator: issue #8 (guides in menu states). Branches `claude/*`.
-- Claude, tracking: read-only static research for issue #10, continuing the
-  next step in the Codex handoff. Findings go to facts.md and the notes in
-  the Codex handoff.
+- Claude, simulator: issue #8 (guides in menu states) and the guide docs,
+  owned by one session. Branches `claude/*`.
+- Claude, tracking and button mapping: paused by the owner. #20 and #24 stand
+  as they are. Do not resume without the owner's say-so.
 - Codex: stalled on token limits. Resumes from its handoff file.
 
 ## Fact numbers
 
-F-013 was taken by #17 and F-014 to F-020 by the tracking research record.
-F-021 is reserved for the Claude study still running. Other sessions start at
-F-022. Before adding a fact, check main and open pull
-requests for the next free number.
+F-001 to F-024 are used, and F-030 to F-033 belong to the image-area
+research (#25). F-025 to F-029 are reserved for the tracking lane. The next
+free number after that is F-034. Before adding a fact, check main and open
+pull requests for the next free number.
 
 ## Owner decisions
 

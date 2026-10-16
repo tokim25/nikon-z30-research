@@ -34,6 +34,6 @@ pinned simulator and run folders in `private-inputs/`. Private scripts there:
 
 Local simulator-only experiments on a throwaway copy are allowed (AGENTS.md).
 Never touch the real camera. Nothing from a modified copy goes in the repo.
-The build phase stays closed.
+The build phase stays closed. Publish through pull requests the owner merges.
 
 Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
