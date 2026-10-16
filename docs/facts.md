@@ -419,4 +419,21 @@ function in the same range, found among those loaders. Not yet done: telling
 the writers of that one word apart from the many other users. Method:
 read-only literal-pool scan, SHA-256 checked first; no bytes recorded here.
 
+F-049. No writer that sets the handler flag at `0xc1821c20` (F-047, F-048)
+was found by two static patterns. (1) The only code that loads the literal
+`0xc1821c10` (the structure base itself) is the function at `0x102afc8e`,
+which uses the structure at offset `+0x14`, not `+0x10`. (2) Of six places in
+`0x102ae500` to `0x102b0000` that load `0xc1821c2c` and subtract `0x1c` to
+reach the base (`0x102ae5fa`, `0x102aea22`, `0x102aea72`, `0x102af1be`,
+`0x102afaa8`, `0x102afae8`), only the handler at `0x102ae5fa` touches `+0x10`,
+and it only reads and clears it. No literal for `0xc1821c20` exists in the
+scanned image. Observed static scan on 2026-10-16; confidence medium, since
+the scan misses writers that receive the structure as a pointer argument,
+use other base registers, or live outside the scanned range. Inferred: the
+flag is set through a pointer passed from elsewhere, or from code outside
+`0x102ae500` to `0x102b0000`. Next: trace what the first call `0x102bd612` and
+callers of the other module functions pass, or look for stores through the
+table-registered handlers' neighbors. Method: read-only Thumb scan,
+SHA-256 checked first; no bytes recorded here.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
