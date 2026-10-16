@@ -30,21 +30,25 @@ helper studies, recorded as F-014 to F-019 (helper results, not re-verified):
 - The simulator has no button model (F-018), and a stock refresh never runs
   the live-view task (F-019).
 
-Key routing in live view is in F-020: the key dispatcher walks a screen
-stack, and the live-view screen's key table was not found. One Claude study is
-still running, on the writers of the records read by `0x102f1412`. Its result
-will appear as F-021. Check facts.md before repeating it.
+Key routing in live view is in F-020. F-021 shows that neither store
+`0x102f1412` reads is a button record, but traces internal code 0x1b (event
+0x27e, OK) back to a physical packet byte: a working example of a button
+reaching an internal event.
+
+The owner added a goal: map AE-L/AF-L to the tracking entry point (flag bit
+16 -> state 1, F-014/F-015), research and spec only. A study on that is
+running; its result starts at F-022. Check facts.md first.
 
 ## Next step
 
-1. Find what fills the screen-object group array at `0xc2006594`, resolve the
-   live-view screen to its key table, and read its entries for 0x27E, 0x2a3,
-   0x2a8 and the default 0x31e. Decode `0x102f1cae`, which `0x102f1e10` calls.
-2. Trace the per-object task loop at `0x10235576` and what wakes it, and
-   decode the table rows for internal codes 0x24e to 0x252 with their guards.
-3. Writers of the records `0x102f1412` reads, unless F-021 answers it.
-4. Observation only: log the sampler, router and worker addresses over 20 to
-   30 virtual seconds in a live-view session.
+1. AE-L/AF-L: find its input code and press/release handling (likely through
+   decoder `0x102f0e38` from F-021), and whether its handler shares a
+   dispatch point with `0x102f2990`. Priority; the rest wait on it.
+2. Resolve the live-view screen's key table from group array `0xc2006594`,
+   and read its entries for 0x27E, 0x2a3, 0x2a8 and the default 0x31e.
+3. Trace task loop `0x10235576` and the code tables for 0x24e to 0x252.
+4. Trace upward from `0x1030705a` to the message framework and packet
+   sender, for issue #11.
 
 Propose no simulator input call yet.
 

@@ -130,6 +130,20 @@ Observed dispatch mechanics, high. Why OK does nothing in live view is not
 settled: the live-view screen's group, id and key table were not found.
 Inferred, low. Helper-agent result, not re-verified.
 
+F-021. The ring at `0xc2008ea0` and the single record at `0xc200a7a0` (read
+by `0x102f1412`) are not button-press records. The ring holds typed 60-byte
+events (touch/drag/sync-shaped, written only by `0x102f0a36`); the single
+record is a 0x18c-byte copy of a separate global input snapshot, written only
+by `0x102f0d14`. That snapshot is built from a 5-byte packet decoded by
+`0x1030705a`, whose byte 0-2 become key-mask words and bytes 3-4 become
+signed deltas (dial-shaped). Decoder `0x102f0e38` maps mask-group-1 bit 0 to
+internal code 0x1b, which the known input map (F-017) sends to event 0x27e,
+the same code the menu dispatcher treats as OK. Observed data flow, high;
+packet source (a front-panel controller) and which physical button maps to
+which mask bit are inferred, medium-low. A passive stock-refresh trace saw
+none of these addresses fire, so the live-view input path is dormant absent
+real input. Helper-agent result, not re-verified.
+
 F-022. Menu states cannot show the guides. With the thread-aware helper for
 both the key event and the nested call: up, down and Back complete with no
 bars; OK hangs when any nested call, even a no-op one, is made at the first of
