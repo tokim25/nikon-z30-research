@@ -17,6 +17,18 @@ distribute the result to anyone. This authorizes starting the work listed
 below. It does not by itself authorize flashing a camera; see "Hardware
 access" below.
 
+## Owner-approved test order
+
+When every hardware-access condition below has passed and the owner gives
+separate approval to flash the camera, test builds in this order:
+
+1. XPan live-view bars and the saved RAW/JPEG crop together.
+2. AE-L/AF-L subject tracking by itself.
+3. Both features together.
+
+This order is a test-plan decision. It does not approve a build for hardware
+or waive any recovery, version, hash, or readiness requirement.
+
 ## What this opens
 
 - Writing a patcher and the actual feature code meant for the camera, not

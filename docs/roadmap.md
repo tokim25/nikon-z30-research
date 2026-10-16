@@ -15,6 +15,13 @@ Two things, both from the owner:
 
 First version: stills only, RAW and JPEG, only the XPan crop kept.
 
+## Planned camera-test sequence
+
+After the hardware gate passes and the owner separately approves flashing,
+the first test build combines the XPan live-view bars with the saved RAW/JPEG
+crop. The second build tests AE-L/AF-L subject tracking by itself. The third
+build combines XPan and tracking. Hardware remains NO-GO until the gate passes.
+
 ## 0. XPan as a menu choice (how you turn it on)
 
 You want XPan to be a choice in the camera's "Choose image area" menu,
