@@ -1569,10 +1569,14 @@ non-live-view `0x250` close. Inferred, medium confidence: the guarded close
 and selector-1 sites cover a real return to live view without enabling the
 mask in playback or another base screen. A natural caller of `0x102f57e2`
 was not observed because the assisted fixture's live-view worker is dormant.
+A diagnostic stock type-2 dispatch did reach `0x102f57e2`, `0x102f5810`,
+the new wrapper, guard and mask helper in order, then returned with selector
+1, stack count zero and the 1:1 mask on. This observes the full internal
+route, high confidence, but not its natural worker trigger.
 Repro: confirmed WORK, private scripts
 `codex-xpan-guarded-hook-build-private.py`,
 `codex-xpan-hook-run-private.py`,
 `codex-xpan-menu-event-return-private.py`, and
-`codex-menu-exit-observe-private.py`, always with fresh `codex-` output.
+`codex-xpan-live-ready-probe-private.py`, always with fresh `codex-` output.
 
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

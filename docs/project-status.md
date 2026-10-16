@@ -20,6 +20,8 @@ in this assisted simulator setup. A broad menu-close hook was tested and
 rejected because it enabled the mask on a non-live-view transition screen.
 The replacement requires an empty screen stack and live-view selector 1; it
 passed the same area and cycle controls and stayed off in that transition.
+The exact selector-1 wrapper also passed through the stock internal type-2
+dispatcher; only the natural worker caller remains unobserved.
 Natural startup, a true menu return to live view and the unavailable `i`-menu
 path remain unverified.
 
@@ -28,9 +30,9 @@ crop or NEF metadata writer is verified. The later structure-pack trace
 does not close that gap. Physical AE-L/AF-L input delivery and a tracking
 entry point remain unverified.
 
-Single next step: find a simulator input path that reaches the live-view-ready
-transition at `0x102f57e2` after the menu closes, then confirm that the guarded
-hook restores the mask without an audited activation call.
+Single next step: find a stock menu-close event sequence that reaches
+`0x102f57e2` without a direct diagnostic call, then confirm that the guarded
+hook restores the mask.
 
 ## Decisions and limits
 

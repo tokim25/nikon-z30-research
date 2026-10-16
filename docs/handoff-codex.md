@@ -92,6 +92,9 @@ instead. The full design doc is [xpan-bars-design.md](xpan-bars-design.md)
 - The live-view trigger now sits at `0x102f5810`, where `0x102f57e2` sets
   selector 1. The guarded build passed the area controls and ten signal
   cycles, and stayed off after the non-live-view close control.
+- A diagnostic call through the stock type-2 dispatcher reached that full
+  live-view-ready path and returned with selector 1, stack count zero and the
+  1:1 mask on. The natural worker trigger remains dormant in the fixture.
 - Full evidence, repro commands and limits are in
   [native-xpan-liveview-hook.md](native-xpan-liveview-hook.md). A true menu
   return to live view, the natural startup caller and the exact `i`-menu
@@ -99,10 +102,10 @@ instead. The full design doc is [xpan-bars-design.md](xpan-bars-design.md)
 
 ### Single next step for Lane 1
 
-Find a simulator input path that reaches `0x102f57e2` after the menu closes,
-then confirm that the guarded hook restores the mask without an audited
-activation call. The exposed Back key cannot close the final menu screen,
-and the tested internal close events do not request live view.
+Find a stock menu-close event sequence that reaches `0x102f57e2` without a
+direct diagnostic call, then confirm that the guarded hook restores the mask.
+The exposed Back key cannot close the final menu screen, and the tested
+internal close events do not request live view.
 
 ## Lane 2: saved-crop (does a saved RAW/JPEG actually come out cropped?)
 

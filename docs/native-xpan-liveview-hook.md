@@ -121,6 +121,10 @@ These checks used the private loader overlay:
   entry but left the live-view selector at 4. The guard kept the mask off.
   The rejected unguarded version had turned it on in the same non-live-view
   state.
+- A diagnostic call through the stock live-view object's type-2 dispatcher
+  reached `0x102f57e2`, its selector-1 call at `0x102f5810`, the new wrapper,
+  the guard and the mask helper in that order. The call returned with selector
+  1, an empty stack and the 1:1 mask on.
 
 The original firmware hash remained
 `8a99ced2d8220729ba067587b0624bf30c81757abc5d728768134b1c7fd457fa`, and
@@ -134,8 +138,8 @@ simulator's exposed Back key cannot close the last menu screen. Internal
 events `0x24e` and `0x250` close it, but both request mode `0x10000` and do
 not reach the live-view-ready transition. Their physical-button identities
 are unknown. The assisted fixture also bypasses the natural caller of
-`0x102f57e2`, so the hook at its selector-1 call is statically checked but
-not observed through that caller.
+`0x102f57e2`. The hook was observed through a diagnostic stock type-2
+dispatch, but the dormant worker did not send that event naturally.
 
 The simulator exposes no `i` button. The immediate-update test therefore
 called the exact stock row callbacks while live view remained active; it did
@@ -171,6 +175,7 @@ PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex-xpan-hook
 PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex-xpan-guarded-hook-build-private.py" --firmware "$WORK/private-inputs/eg2090_0120a0.bi" --output "$WORK/private-inputs/codex-xpan-guarded-overlay-reproduce-01"
 PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex-xpan-hook-run-private.py" --overlay "$WORK/private-inputs/codex-xpan-guarded-overlay-reproduce-01" --output "$WORK/private-inputs/codex-xpan-guarded-direct-reproduce-01" --direct-only
 PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex-xpan-menu-event-return-private.py" --overlay "$WORK/private-inputs/codex-xpan-guarded-overlay-reproduce-01" --exit-event 0x250 --output "$WORK/private-inputs/codex-xpan-guarded-close-reproduce-01"
+PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex-xpan-live-ready-probe-private.py" --overlay "$WORK/private-inputs/codex-xpan-guarded-overlay-reproduce-01" --output "$WORK/private-inputs/codex-xpan-live-ready-reproduce-01"
 ```
 
 The simulated OK press sometimes hangs. If that happens, stop the disposable
@@ -178,8 +183,7 @@ process and rerun with a new output directory.
 
 ## Single next step
 
-Find a simulator input path that reaches the live-view-ready transition at
-`0x102f57e2` after the menu closes, then confirm that the guarded hook restores
-the mask without an audited activation call.
+Find a stock menu-close event sequence that reaches `0x102f57e2` without a
+direct diagnostic call, then confirm that the guarded hook restores the mask.
 
 Written by Codex in collaboration with Claude and Tony Kim.
