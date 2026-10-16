@@ -67,9 +67,11 @@ by a byte at input +0x26 (no square test inside it). F-057: seven callers; in th
 `[object+0x3a4]+0x208`, so the area byte is at `[object+0x3a4]+0x22e`.
 F-058: five stores of that byte; one is a fixed 1, the rest fill a 12-cell grid
 in the higher code region (`0x11dc....` to `0x11e7....`). F-059: the grid values come from a text-keyed settings store (`0x11df06b8`).
-Next: find the key that names the image area (search strings around the
-store's key tables, try spellings like Area, Crop, ImgArea), and who writes
-it on a menu pick; read the other six callers, read helpers `0x1020c128`
+F-060: 354 `eDSID_` setting names; none mention image area. Next: read what
+`Setting_ImageSize` holds (the area may live inside it), map names to ids,
+and find who writes it on a menu pick; also note the i-menu slots and the
+AE-L/AF-L button setting `Setting_FuncAeAfLockButtonShooting` (a possible
+tracking route); read the other six callers, read helpers `0x1020c128`
 and `0x1020c17e` and check `0x101d5ad0`, then the other big users (helper
 `0x1020bfda`, 38 callers; `0x1020bfc8`, 23) then check each reader of the 1:1 slot
 for width-equals-height assumptions, and find the per-area crop-window tables.

@@ -628,4 +628,24 @@ which key names the image area (an earlier search for `ImageArea` and
 from pieces), and who writes it when the menu is used. Method: read-only
 decode, SHA-256 checked first; no bytes recorded here.
 
+F-060. The firmware holds a run of 354 setting names, each prefixed
+`eDSID_`, in one block from `0x11c99170` to `0x11c9db60` (the earlier hits at
+`0x11c991a8` and `0x11c9bda8` are part of it). They name settings in the
+camera's settings store (F-059). Observed static string search on 2026-10-16.
+Three findings matter to the owner's goals. (1) The "i" quick menu is
+customizable in the data: names `Setting_CustomizeImenuStill_UpperRowLeft1`
+to `...6` and `...BottomRowLeft1` to `...6`, with Movie twins, give twelve
+slots per kind. (2) There is a setting for the AE-L/AF-L button's job:
+`Setting_FuncAeAfLockButtonShooting` and `Setting_FuncAeAfLockButtonMovie`.
+The camera already lets that button be reassigned, so a tracking function
+could be a new choice in that list, a different route from the input-routing
+research. (3) No name in the list mentions image area, crop or aspect. The
+only image-related names are `Setting_ImageSize`, `Setting_ImageCombination`,
+`Setting_MovieSize`, `Setting_RawRecord` and `Setting_JpegPolicy`. So the
+"Choose image area" choice is either stored under another name, not in this
+list, or kept in the size setting. Inferred, confidence low. Not yet done:
+reading what `Setting_ImageSize` holds, and finding where the list's names
+map to numeric setting ids. Method: read-only string search, SHA-256 checked
+first; only short setting names are recorded, no firmware bytes.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
