@@ -149,4 +149,21 @@ sizes. Observed static layout, high. Which record drives live view, capture or
 thumbnails is not traced, so a 1:1 replacement may need several records.
 Inferred, low. [image-area-tables.md](image-area-tables.md)
 
+F-031. Corrects F-030's first store. The run of size pairs at `0x10750658` is
+the Retouch Trim editor's table: 110 entries indexed by orientation, source
+group and five aspects, each the largest crop that fits, rounded to multiples
+of 16. A data-only 65:24 swap would fail: `0x10597440` hard-codes the five
+ratios and forces width equal to height for 1:1, labels are 5-byte slots, and
+the counts are compile-time bounds. Observed static, high. Helper result.
+[image-area-tables.md](image-area-tables.md)
+
+F-032. The pointer-table records (RAM copy at `0xc18c7de8`) feed capture and
+readout geometry, output sizes, margins, thumbnails and movie sizes; 1:1 is
+area 4. Live-view render-object offsets `0x320` and `0x324` are the display
+surface size, not image size, which corrects the earlier reading. The live-view
+image size comes from a frame-size table at `0x1073db04`, with no path found
+from the image-area records. Observed static, high. That the path is absent:
+moderate, as 58 callers were not all traced. Helper result.
+[image-area-tables.md](image-area-tables.md)
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
