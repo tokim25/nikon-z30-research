@@ -5,17 +5,20 @@ the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
 
-Main carries facts through **F-108**. F-101 merged via PR #119; F-102/F-103
+Main carries facts through **F-109**. F-101 merged via PR #119; F-102/F-103
 via PR #123; F-104 via PR #124; F-105 via PR #126; F-106 via PR #127;
-F-107 via PR #128. The SD-card-detect/enumeration thread (F-102, F-104) is
-retired per owner direction (see AGENTS.md's "Priority" section and
-handoff-codex.md). Lane 2's capture-descriptor question leans toward the
-settings/property-dispatch reading at medium confidence (F-106), accepted
-as the working answer. F-108 (Lane 1: finds the natural live-view trigger
--- internal event `0x4100012` -- resolving the mode-state question a
-prior session stopped three times on) is on
-`claude/f108-liveview-trigger-found`. The owner approves merges; nobody
-merges their own PRs. Check main again before allocating F-109.
+F-107 via PR #128; F-108 via PR #129. The SD-card-detect/enumeration
+thread (F-102, F-104) is retired per owner direction (see AGENTS.md's
+"Priority" section and handoff-codex.md). Lane 2's capture-descriptor
+question is accepted as settled toward the settings/property-dispatch
+reading (F-106). Lane 1's mode-state chain is resolved through F-108;
+F-109 closes the one remaining thread (who posts the live-view trigger
+event) as a deliberately-dropped simulator-reachability question, not a
+real-firmware gap -- see handoff-codex.md for the owner judgment call
+this leaves open (whether build-gate condition 1 is already satisfied).
+F-109 is on `claude/f109-event-origin-deadend`. The owner approves
+merges; nobody merges their own PRs. Check main again before allocating
+F-110.
 
 ## Feature state
 

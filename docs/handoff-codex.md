@@ -18,7 +18,7 @@ project's own simulator. A card-detect/SD-command-enumeration thread
 (F-102, F-104) was explored this session and retired for exactly this
 reason — see "Lane 2" below for where it stopped and why.
 
-Main carries facts through **F-108**; check main before allocating F-109.
+Main carries facts through **F-109**; check main before allocating F-110.
 Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,
@@ -166,16 +166,29 @@ corroboration this is the real trigger, not a coincidental write. No
 classifier stop encountered anywhere in this chain. Full detail in
 facts.md F-108.
 
-**Current single next step for Lane 1:** find what *posts* internal event
-`0x4100012` -- a physical control, an internal state transition, or
-something else -- to confirm it is reachable through the camera's normal
-live-view-entry path (not just this one dispatcher branch), and to see
-whether the simulator can be made to post it directly (neither of its two
-testable close events, `0x24e`/`0x250`, is this one). If it can be posted
-in the simulator, the existing guarded hook in
-[native-xpan-liveview-hook.md](native-xpan-liveview-hook.md) can finally be
-tested against a true natural trigger instead of a diagnostic call --
-closing out build-gate condition 1 for Lane 1 for real.
+**Closed, deliberately, not pursued further (F-109):** who posts event
+`0x4100012` was checked by four independent full-image methods (direct
+calls, tail branches, raw pointer-table words, table-branch jump tables)
+-- all four found nothing. Not escalated to ARM-mode scanning or manual
+UI-pump archaeology, because the question itself had drifted into
+simulator-reachability territory (can the simulator's limited key set
+post this event) rather than a real-firmware question -- the real camera
+obviously already delivers this event through ordinary use (F-090), and
+F-108's hook sites sit downstream of it, not upstream. A real build does
+not need this answered.
+
+**Where Lane 1 actually stands for the real build:** the instruction
+space and native-execution mechanism are proven (F-101,
+native-xpan-liveview-hook.md), and the natural trigger's mechanism is now
+fully understood end to end (F-107, F-108) even though the simulator
+can't be made to exercise it directly. Whether that combination already
+satisfies build-gate condition 1's second branch ("that hook's risk is
+fully understood") rather than its first ("the simulator shows the
+feature working") is an owner judgment call, not something to resolve by
+further tracing -- flagging it here rather than deciding it. If the
+owner agrees it's satisfied, the real next step is updating
+[hardware-readiness.md](hardware-readiness.md)'s Lane 1 row rather than
+more simulator work.
 
 ## Lane 2: saved-crop (does a saved RAW/JPEG actually come out cropped?)
 
