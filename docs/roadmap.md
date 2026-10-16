@@ -54,6 +54,7 @@ and refusing it in modes that cannot track are all still unproven.
 - No combined feature test exists, and no installable firmware exists.
 - Hardware remains NO-GO. A recovery plan is drafted but not credible yet
   ([recovery-plan.md](recovery-plan.md)).
+- What you should be able to do on the camera: [user-stories.md](user-stories.md).
 - See [the Codex handoff](handoff-codex.md), [the Claude handoff](handoff.md)
   and [the readiness checkpoint](hardware-readiness.md) for details.
 
