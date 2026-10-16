@@ -875,4 +875,27 @@ table of numeric values, and what `0x10484d90` checks. Method: owner-run
 read-only decode, SHA-256 checked first; addresses and instruction reading
 only, no firmware bytes recorded.
 
+F-073. What the area-choice builder of F-072 reads, from an owner-run
+read on 2026-10-16. Its literals are: the source table of numeric values at
+`0x10740eb0` (in the main image, read as four words by the routine, not yet
+printed); the settings structure at RAM `0xc2016a68` (the current-value byte
+is then at `0xc2016bc3`); the output list holder at RAM `0xc1828be4` (stored
+copy at `0x11faa878`, first word `0x1900`; a count at `+0xc` and a 16-bit
+array at `+0x20`); the output table at RAM `0xc2019624`; the 16-bit id array
+at RAM `0xc1870eb0` (stored `0x11ff2b44`); and the string-number list at RAM
+`0xc1870eb8` (stored `0x11ff2b4c`). The 16-bit id array reads `0x15aa`,
+`0x123c`, `0x123e`, so the header id is `0x15aa`, and the two choices carry
+ids `0x123c` (pass 0, string 1454, the 1:1 label) and `0x123e` (pass 1,
+string 1455, the 16:9 label), while the DX label (string 737) is the list's
+first word and goes to a header slot. The checking function `0x10484d90` is
+only a one-instruction branch to `0x1052d7c2`; the block around it is a run of
+branch thunks and short wrappers that test bit 4 of a flag byte and call
+`0x104bd3c0` before tail-calling another routine (`0x104762ca`, `0x104762ce`,
+`0x104762d2` and `0x104762d6` for the first four). Observed. Inferred,
+confidence medium: the item ids `0x123c` and `0x123e` identify the 1:1 and
+16:9 entries in the menu, and the real check is at `0x1052d7c2`. Not yet
+read: the four words at `0x10740eb0`, the code at `0x1052d7c2`, and what
+uses the item ids. Method: owner-run read-only scan and decode, SHA-256
+checked first; addresses and numbers only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
