@@ -92,10 +92,10 @@ F-075/F-076: the chain is two veneers to a wrapper stub at `0x104270a4` that
 passes the code, a pointer and a line number to the shared routine
 `0x101993de`, which is the real availability test; `0x1052d7c6` is an event
 dispatcher, unrelated. F-077: the chain ends in a generic settings lookup, parked. The concrete plan is
-`xpan-replace-1to1-plan.md`; step 1 is partly done: F-078 (area is the first
-byte) and F-079 (XPan-shaped records work for the large size; medium and small
-broke). Next: read how the medium and small paths use the index 9 and 19
-records, then repeat the test. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
+`xpan-replace-1to1-plan.md`; step 1 is done for the crop-window builder: F-078,
+F-079, F-080 (full-length XPan records give 65:24 at all three sizes). Next:
+step 2, tie the black bars in live view to the stored value 4, and find which
+readers of the size block use the records for live view and capture. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
 AE-L/AF-L button setting `Setting_FuncAeAfLockButtonShooting` (a possible

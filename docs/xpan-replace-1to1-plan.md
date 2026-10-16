@@ -46,8 +46,11 @@ when the choice is offered keep working without code changes.
   square window from square records (F-078).
 - Repointing the 1:1 records at XPan-shaped ones made the large-size window
   5208 by 1928, close to 65:24, with DX and 16:9 unchanged (F-079).
-- The medium and small sizes gave nonsense with my guessed records, so their
-  layout must be read before step 1 is done.
+- The medium and small sizes gave nonsense because my test record was too
+  short. With full-length records all three sizes follow (large 5208 by 1928,
+  medium 3900 by 1440, small 3906 by 1446); see F-080. Step 1 is done for the
+  crop-window builder. It shows nothing yet about live view, capture or saved
+  files.
 
 ## Order of work
 
