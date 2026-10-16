@@ -65,7 +65,3 @@ phase decoded the firmware in memory without modifying it.
 3. If source evidence is insufficient, define a separate read-only firmware
    analysis plan with identity checks and local-only intermediate data. Record
    unknowns instead of guessing function signatures or reusing menu event IDs.
-
-Proceed to camera-specific implementation only after documenting the required
-calls, allowed execution context, display or input ownership, and cleanup.
-Hardware work and installable outputs remain outside this project's scope.
