@@ -1,9 +1,10 @@
 # Recovery plan (draft)
 
-Status: draft, written 2026-10-16. This is condition 2 of the
-[build-phase gate](build-phase-gate.md). It is **not yet a credible plan**:
-it lists what a plan must answer and what is still unknown. Nothing here
-authorizes touching a real camera. The owner does any hardware step alone.
+Status: draft, written 2026-10-16. This is the recovery and residual-risk
+record used by the [build-phase gate](build-phase-gate.md). It lists what is
+known, what is unknown, and what the owner would have to accept if no
+independent recovery method can be verified. Nothing here authorizes touching
+a real camera. The owner does any hardware step alone.
 
 ## The risk in plain words
 
@@ -49,17 +50,24 @@ firmware that would be broken, so it cannot be counted on as the way back.
   reports describe only retrying an update or resetting the camera, which
   applies to a camera that still starts.
 
-## What a credible plan must contain before the gate counts it as met
+## Acceptable pre-test outcomes
 
-- A written, step-by-step way back to the verified original that does not
-  use the update menu, with a source for each step (not a guess).
-- Proof the way back was checked on something other than the owner's only
-  camera, or a clear statement that it was not and the owner accepts that.
-- A stop rule: the exact conditions under which the owner abandons a try.
+The preferred outcome is a written, sourced recovery method that does not
+depend on the ordinary update menu and has been checked on something other
+than the owner's only camera.
+
+If no such method can be verified, the project may still reach **READY FOR
+AN EXPERIMENTAL HARDWARE TEST**, but only when all of these are recorded:
+
+- No claim that the build is safe or recoverable.
+- A stop rule stating the exact conditions under which the owner abandons the
+  test.
 - Fully charged battery and stable power as written preconditions.
 - A copy of the verified original kept offline, with its hash written down
   next to it.
-- A plain statement of the worst case: the camera may not recover.
+- A plain statement that recovery may require Nikon service and that the
+  camera may never recover.
+- The owner's separate acceptance of that risk for the exact build and test.
 
 ## Rules that already apply
 
@@ -67,12 +75,14 @@ firmware that would be broken, so it cannot be counted on as the way back.
 - No Nikon bytes, dumps or patched images go in the repository or anywhere
   public.
 - Hardware access also needs [hardware-readiness.md](hardware-readiness.md)
-  to stop saying NO-GO, and the owner's separate, explicit go-ahead.
+  to say **READY FOR AN EXPERIMENTAL HARDWARE TEST**, and the owner's
+  separate, explicit go-ahead.
 
 ## Next
 
 Collect sources for the five unknowns above, labelling each answer observed,
-inferred or unverified in [facts.md](facts.md). Until items 1 and 2 have
-evidence, this condition stays unmet.
+inferred or unverified in [facts.md](facts.md). If items 1 and 2 remain
+unknown, document that limit and the resulting service-or-total-loss risk
+instead of claiming recovery is available.
 
 Written by Claude (Opus 5.5) in collaboration with Tony Kim.

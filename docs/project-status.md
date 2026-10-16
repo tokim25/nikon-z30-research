@@ -8,6 +8,8 @@ the current integration map and next step. Older paused-lane notes are stale.
 Main carried F-001 through F-100 when this branch started. F-101 is allocated
 to the live-view hook finding on `codex/xpan-liveview-hook-space`. The owner
 approves merges; Codex merges none. Check main again before allocating F-102.
+The documentation-only branch `codex/hardware-risk-criteria` starts from the
+F-101 branch and allocates no fact number.
 
 ## Feature state
 
@@ -42,5 +44,11 @@ this session stayed offline in static analysis and disposable simulator
 processes. Original restricted inputs and the pinned simulator remain
 unchanged. No firmware, raw logs, screenshots or extracted data enter Git.
 The repository stays private; every change goes through owner-reviewed PRs.
+
+The owner removed absolute hardware safety as an acceptance criterion on
+2026-10-16 because it cannot be proved before the first hardware test. The
+replacement gate uses three states: simulator accepted, ready for an
+experimental hardware test, and hardware validated. Missing recovery must be
+recorded as an accepted service-or-total-loss risk, never as proof of safety.
 
 Written by Codex in collaboration with Claude and Tony Kim.
