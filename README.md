@@ -1,5 +1,27 @@
 # Nikon Z30 research
 
+## What this is
+
+This project studies how a Nikon Z30 camera's internal software, called
+firmware, works. The goal is to understand two features: a framing guide for
+wide panoramic photos, and a way to track a moving subject.
+
+All of this research happens on a computer, inside a program called a
+simulator. A simulator copies how the camera's hardware behaves, so the
+camera's own software can run without a real camera attached. Nothing here is
+ever installed on, or connects to, an actual Nikon camera.
+
+The firmware itself belongs to Nikon, and it is never published here. This
+repository holds only original written notes, test code, and small scripts
+used to study the firmware. Any file the camera made stays outside this
+project, on a private computer.
+
+The work is research, not a finished product. It records what was tested,
+what the evidence shows, and what remains unknown. It does not produce
+something a person could install on their own camera.
+
+## For contributors
+
 An offline Python research scaffold for documenting reproducible methods and testing them with synthetic data. This is newly created code. The earlier research archive has now been recovered and checked locally; see the [Milestone 1 recovery report](docs/milestone-1-recovery.md). Its original tools and raw reports remain outside Git.
 
 ## Boundaries
