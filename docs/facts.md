@@ -807,4 +807,21 @@ confidence medium (the offset is assumed to hold for the pool). Next: search
 for code that loads values in `0xc187036c` to `0xc187136c`. Method: arithmetic
 on recorded addresses plus the owner-run scan; no firmware bytes recorded.
 
+F-070. The RAM copy of the pool is referenced directly by code. An owner-run
+scan on 2026-10-16 found 416 32-bit words in the image whose values fall in
+the predicted RAM range `0xc187036c` to `0xc187136c` (F-069), and 406
+pc-relative loads of them. The first 60 (sorted by address) all sit in a code
+module that starts near `0x1030bf08` and runs at least to `0x1030ea14`, and
+point at items inside the pool. This confirms F-069: the stored-to-RAM offset
+`+0xaf87e36c` holds for the pool, and menu code reaches its lists by direct
+RAM address. One of the loaded values is `0xc1870e80`, loaded into r8 by code
+at `0x1030c880`; it is `0x38` bytes before the area-label list at RAM
+`0xc1870eb8`, which is the start of the record whose header words precede the
+list (stored address `0x11ff2b14`, F-067). Observed. Inferred, confidence
+medium: the code near `0x1030c880` builds or reads the menu record that holds
+the image-area label list. The full 416-word list was not printed (the scan
+shows only 60). Next: decode the code around `0x1030c880` and list the words
+and loaders in `0xc1870e00` to `0xc1870f40`. Method: owner-run read-only scan,
+SHA-256 checked first; addresses only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
