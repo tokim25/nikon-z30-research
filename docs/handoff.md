@@ -101,9 +101,11 @@ probably copied from `+0x2cc` of a source structure (r8) by the routine around
 F-085: the useful store copies `r8+0x408` into `+0x2cc`, in a routine starting
 near `0x10367260`. F-086: the routine has 20 callers and the source byte is stored only by the
 settings-store module (`0x11dcd08e`, `0x11dcd14c`, `0x11dcd198`, `0x11dcd674`,
-plus a duplicate copy at `0x11e52...`). Next: owner runs a decode around those
-stores and the loads `0x11dcd662`, `0x11dcdbfa`, `0x1037416c`, and resolves the
-routine's two literal addresses. Avoid write watchpoints on the
+plus a duplicate copy at `0x11e52...`). F-087 corrects this: those stores are a buffer-ready flag in an unrelated
+object. The source structure is `0xc2018a2c` (image area at `+0x408`), the
+writer is a generic setter not found by offset. A data-only replacement does
+not need the writer; the live-view bars do need a hook. Next: decide whether
+to look for a hook point in the live-view path (build-gate condition 1). Avoid write watchpoints on the
 simulator link; they left it out of step once. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
