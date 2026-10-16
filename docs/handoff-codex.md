@@ -16,9 +16,10 @@ repeated and restored. It is not natural startup, saved RAW cropping or an
 installable firmware feature. Physical AE-L/AF-L input and tracking remain
 unverified. The previous full trail is in PR #41.
 
-Current branch: `codex/tracking-queued-bank-route`. F-038 records the
-[queued input route](tracking-queued-bank-route.md). Single next step: trace
-its incoming property-event producer; no physical button mapping is verified.
+Current branch: `codex/tracking-input-bank-selection`. F-043 records a
+[populated bank selection](tracking-input-bank-selection.md). PR #44 holds
+F-038's queue route. Single next step: identify incoming event-ID semantics;
+logical ID 41 is not proven to be AE-L/AF-L.
 
 Confirmed WORK:
 `/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.

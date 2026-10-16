@@ -324,5 +324,13 @@ physical identity, press/release and tracking unverified. Repro:
 `"$WORK/analysis-env/bin/python" "$WORK/codex-agent-queued-input-verify-private.py" --output "$WORK/private-inputs/codex-queued-route-reproduce-01"`,
 using confirmed WORK and a fresh output directory.
 [Evidence and limits](tracking-queued-bank-route.md).
+F-043. Query `0x103a3cb0` selects input bank 1 via byte store
+`0x103a3cdc`. Initialized bank `0xc18c9afc`, row 11, associates logical
+ID 41 with mask `0x2000`; the query sends tag/ID pairs as code `0x2082`.
+Observed static links, high confidence. Execution, physical SW0/button
+identity, transport and tracking remain unverified. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex-agent-input-bank-verify-private.py" --output "$WORK/private-inputs/codex-input-bank-reproduce-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-input-bank-selection.md).
 
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
