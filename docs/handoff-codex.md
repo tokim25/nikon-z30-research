@@ -16,10 +16,11 @@ repeated and restored. It is not natural startup, saved RAW cropping or an
 installable firmware feature. Physical AE-L/AF-L input and tracking remain
 unverified. The previous full trail is in PR #41.
 
-Current branch: `codex/tracking-input-bank-selection`. F-043 records a
-[populated bank selection](tracking-input-bank-selection.md). PR #44 holds
-F-038's queue route. Single next step: identify incoming event-ID semantics;
-logical ID 41 is not proven to be AE-L/AF-L.
+Current branch: `codex/tracking-registry-mode-state`. F-041 records
+[registry/selector observations](tracking-registry-mode-state.md). The empty
+menu stack did not prevent live-view selector 1. Next: trace the type-3 input
+contract without substituting menu key injection. PR #44 holds F-038 and
+PR #45 holds F-043, whose physical input meaning is still unverified.
 
 Confirmed WORK:
 `/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.
