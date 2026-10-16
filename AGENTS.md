@@ -16,6 +16,33 @@ by [docs/collaboration.md](docs/collaboration.md) and
 [docs/facts.md](docs/facts.md). If your handoff file is out of date, fix it
 first. Update it before you stop, even when a session ends early.
 
+## Priority: stay hyper-focused on the real build
+
+Owner direction, 2026-10-16: this project exists to test modded firmware on
+the owner's own real camera (personal, non-distributed, risk explicitly
+accepted — see [docs/build-phase-gate.md](docs/build-phase-gate.md)). Before
+starting or continuing any research thread, in either lane, ask: **does this
+lead toward a concrete patch, hook point, or build decision for the real
+firmware, or is it only explaining a limit of this project's own simulator?**
+
+- Tracing real firmware logic (what a function does, what it calls, what
+  format it uses) is in scope even when read entirely through static
+  decode, because it describes the actual firmware and transfers to
+  hardware.
+- Tracing *why the simulator itself* fails to model something (an
+  unimplemented peripheral, an event that never fires under QEMU's generic
+  device model, a card the simulator can't make the firmware accept) is
+  **low priority** unless it is the one thing blocking a specific, named
+  build decision. A simulator-fidelity dead end is worth one fact
+  documenting it, then dropping — not a multi-session trace.
+- When a thread's next step is ambiguous between "keep tracing what the
+  simulator can't do" and "trace what the real firmware would need for the
+  feature," take the second. If genuinely unsure which a next step is,
+  say so in the handoff file rather than picking by default.
+- This applies retroactively: if an open thread in a handoff file doesn't
+  clearly lead to a buildable artifact or an informed patch decision,
+  mark it low priority or drop it there, don't just keep extending it.
+
 ## Scope and collaboration
 
 - Respect explicit exclusive file ownership assigned by the coordinating session. Do not modify another agent's files or revert unrelated changes.

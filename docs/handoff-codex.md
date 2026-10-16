@@ -10,6 +10,14 @@ below F-050, ignore it.
 
 ## Read this first
 
+**Owner direction, 2026-10-16 — read [AGENTS.md](AGENTS.md)'s new "Priority"
+section first.** This project tests modded firmware on the owner's own real
+camera; every thread should lead toward a concrete patch, hook point, or
+build decision for the real firmware, not toward explaining a limit of this
+project's own simulator. A card-detect/SD-command-enumeration thread
+(F-102, F-104) was explored this session and retired for exactly this
+reason — see "Lane 2" below for where it stopped and why.
+
 Main carries facts through **F-104**; check main before allocating F-105.
 Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
@@ -218,15 +226,32 @@ bring-up sequence reaches these four commands at all before giving up
 earlier (e.g. during CMD0/ACMD41/CMD2/CMD3 enumeration, not decoded here),
 and the menu-enable/grey-out link itself. Full detail in facts.md F-104.
 
-**Suggested next angle:** for Lane 1's card-detect thread, decode the
-CMD0/ACMD41/CMD2/CMD3-class enumeration sequence (upstream of F-104's four
-functions) and the `0xc18015ea`/`0x10417890` dispatch inside `0x102aa414` —
-either would close the remaining gap to the menu-enable check. For Lane 2,
-either accept (b) as the working hypothesis and move on, or decode
-`0x1015bd18`'s mode 2/3 branches and `0x101e729e`/`0x101efb9e` to confirm
-it. Forcing a direct call into one of the four F-097 callers with
-synthetic register state (more invasive, less certain)
-remains floated and not attempted.
+**Retired, 2026-10-16 (owner direction):** the card-detect/SD-enumeration
+thread (F-102, F-104) stops here. It traced real firmware addresses (useful
+background: card-detect `0x104157b8`, the block-transfer commands CMD17/18/
+24/25, and most of the CMD0/CMD8/ACMD41/CMD2/CMD3 enumeration sequence —
+see F-102/F-104 for the addresses if ever needed again), but confirmed the
+open question at this point is "why does this project's own QEMU SDHCI
+model fail to complete a command" — a simulator-fidelity limit, not a real
+firmware question, and not something a hardware build needs answered. Do
+not resume it, and do not decode CMD0's enumeration further (F-105 was
+drafted and discarded for the same reason), unless a specific build
+decision later turns out to depend on it.
+
+**The actual next angle (build-relevant):** resolve F-097's capture-descriptor
+vs. shots-remaining-estimator ambiguity by tracing *forward*, not deeper
+into the simulator. F-097's four callers (`0x10155bf4`, `0x101560d0`,
+`0x101564f4`, `0x1015b062`) and F-098/F-103's further-out callers are all
+candidates; the question is whether any call chain starting from them
+eventually reaches F-104's CMD24/25 write-command wrappers (`0x104171ce`,
+`0x10416e6c`) or anything else that looks like a real storage-write
+primitive. A confirmed link would settle hypothesis (a) with hard evidence
+and name the exact real-firmware hook point saved-crop would need on
+hardware; a confirmed non-link (the chain clearly terminates in a UI/text
+call instead) settles (b) and says the save path is elsewhere, still
+unfound. Either answer is build-relevant; "the simulator can't show me SD
+I/O" is not a valid reason to stop short of one of these two answers this
+time, since this question's whole point is what the real firmware does.
 
 ## Rules, unchanged
 
