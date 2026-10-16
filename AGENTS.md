@@ -23,7 +23,7 @@ first. Update it before you stop, even when a session ends early.
 - This is a new scaffold. Milestone 1 originals were recovered and verified locally; see docs/milestone-1-recovery.md. Never describe newly written code as recovered code. Keep the recovered tools and raw reports outside Git because some include firmware excerpts.
 - Parallel work follows [docs/collaboration.md](docs/collaboration.md): file lanes in `.github/lanes.json`, branches named `claude/<topic>` or `codex/<topic>`, and findings appended to [docs/facts.md](docs/facts.md). The owner approves and merges every pull request.
 - Commit to your own lane branch and open a pull request when the owner has asked you to publish work. Never push to `main`, never merge your own pull request, and never open issues or change repository settings without the owner's say-so.
-- A build phase is closed. See [docs/build-phase-gate.md](docs/build-phase-gate.md). Do not create installable output, patched images, or hardware steps unless the owner opens that phase in this file.
+- A build phase is open, for the owner's personal, non-distributed camera only. See [docs/build-phase-gate.md](docs/build-phase-gate.md) for its scope and for what still gates actual hardware access. Never flash or connect a real camera without the owner's separate, explicit go-ahead at that step, even under this authorization.
 
 ## Research and publication
 
