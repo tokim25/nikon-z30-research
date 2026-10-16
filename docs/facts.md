@@ -1359,4 +1359,22 @@ Repros: confirmed WORK, scripts `claude-pickdiff4-private.py` and
 fresh `--output` folder under `private-inputs`; they stay under WORK and are
 not committed. No firmware changed.
 
+F-094. Static search for code that uses the candidate area byte of F-093
+(`0xc1811d90`), from owner-run scans on 2026-10-16. Fifteen words in the image
+hold an address in `0xc1811d40` to `0xc1811de0` (five distinct values:
+`0xc1811d40`, `0xc1811d58`, `0xc1811d60`, `0xc1811d74` and, most often,
+`0xc1811dbc`), loaded by 55 pieces of code, all in one module from `0x10084000`
+to about `0x1008d4ff`. For the four bases below the byte (`0xc1811d40`,
+`0xc1811d58`, `0xc1811d60`, `0xc1811d74`), 22 loaders were checked: none is
+followed within `0x70` bytes by an access at the exact offset that reaches
+`0xc1811d90` (`+0x50`, `+0x38`, `+0x30` and `+0x1c`). Negative result,
+confidence medium (the scan sees only direct accesses within a short window).
+Inferred, low: the byte is reached through an index into an array (the whole
+`0xc1811d40` to `0xc1811dbc` area is a set of small state arrays of one
+subsystem) or through a pointer, not by a fixed offset from one of these bases.
+The code that reads and writes the byte therefore has not been found, and a
+hook does not need it if it can read the byte itself (0 for DX, 1 for 1:1, 2 for
+16:9). Method: owner-run read-only scans; addresses only, no firmware bytes
+recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

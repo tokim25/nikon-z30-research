@@ -91,6 +91,30 @@ work stays in the simulator. Nothing here authorizes touching a real camera.
 
 The paper design for this option is in [xpan-bars-design.md](xpan-bars-design.md).
 
+## Where things stand (2026-10-16, end of this round)
+
+**Proven in the simulator**
+- The crop-window builder gives a 65:24 shape at all three sizes when the 1:1
+  records are replaced (F-080). Saved files are untested.
+- The image-area pick can be driven through the real menu, and the choice
+  persists (F-093). The pick hangs about half the time and is retried.
+- A byte at `0xc1811d90` follows the choice (0 DX, 1 for 1:1, 2 for 16:9)
+  (F-093). Its exact meaning and its readers and writers are not found
+  (F-094).
+
+**Not proven**
+- Anything about live view: no display code reads the choice (F-033, F-081).
+- How the bars would be turned on and off. A small hook is needed (owner's
+  choice 2). Two places to run it from are candidates (F-089, F-090), and a
+  hook could read the byte itself, so the writer is not needed.
+- Whether the image processor accepts the new shape, and what a saved RAW or
+  JPEG looks like.
+- A safe place to put new code, which is build-gate condition 1.
+
+**What changed my mind this round:** the chain built on the bytes of F-081 to
+F-087 was wrong. When something conflicts with what the simulator shows, trust
+the simulator and redo the chain.
+
 ## Order of work
 
 1. Confirm the three data changes in the simulator, with a fresh run.

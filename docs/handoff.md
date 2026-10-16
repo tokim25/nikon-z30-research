@@ -121,8 +121,11 @@ call helper; no process left running, firmware hash confirmed unchanged. "The
 area changes" cannot be tested in the simulator yet. F-093 supersedes that: the pick can be driven (retry on hang, about half
 of 1:1 attempts hang), the choice persists, and a byte at `0xc1811d90` follows it
 (0, 1, 2). The bytes of F-081 to F-087 do NOT hold the area; redo that chain
-from `0xc1811d90`. Next: find the readers and writers of `0xc1811d90` and what
-runs when it changes (a candidate hook moment). Avoid write watchpoints on the
+from `0xc1811d90`. F-094: a static search found no direct access to `0xc1811d90`, so it is
+reached by index or pointer. A hook could read the byte itself, so the writer
+is not needed. Next: owner decides whether to look for a safe place to put new
+code (build-gate condition 1), which is the biggest remaining question; the
+summary is in xpan-replace-1to1-plan.md under "Where things stand". Avoid write watchpoints on the
 simulator link; they left it out of step once. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
