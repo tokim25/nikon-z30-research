@@ -1455,4 +1455,18 @@ call or a shots-remaining/UI display. Method: owner-run read-only decode,
 SHA-256 checked first; addresses and offsets only, no firmware bytes
 recorded.
 
+F-098. One hop further from F-097. Two of the three outer enclosing
+functions (`0x101568ca`, `0x1015be26`) have no direct `bl` callers anywhere
+in the image, so they are reached by pointer/table, not a straight call
+chain; the third (`0x1015a93c`) has two direct callers, `0x1015c208` and
+`0x1015c29c`, close together. Observed static scan on 2026-10-16. Inferred,
+confidence low: pointer dispatch is the pattern this project has
+consistently found for menu/event handler tables (F-072, F-090), which
+leans slightly toward the shots-remaining/UI-display explanation of F-097
+over a straight-line capture pipeline, but this is not conclusive either
+way; capture code could equally be dispatched by table. Not yet done:
+finding the pointer tables that reference `0x101568ca`/`0x1015be26`, and
+reading the two callers of `0x1015a93c`. Method: owner-run read-only scan,
+SHA-256 checked first; addresses only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
