@@ -690,4 +690,18 @@ text lengths are stored somewhere that must also change. Method: read-only
 string search, SHA-256 checked first; only short UI labels recorded, no
 firmware bytes.
 
+F-063. The image-area strings carry no length prefix or terminator: the bytes
+directly before each title copy (`0x10e88c14`, `0x10e890cc`, `0x10e890f0`)
+and the first choice label (`0x10e89112`) are just the last characters of the
+previous string. So each language block must be read through a separate
+index of offsets or lengths, not by scanning for terminators. The language
+blocks are about `0x24ef4` bytes apart in the examples checked (English
+`DX` label at `0x10e89112`, German at `0x10eae006`). Observed static
+inspection on 2026-10-16. Inferred, confidence low: the index sits at the
+start of each block or in a single shared table, and a label change that
+keeps the exact string length (for example "1:1   (16x16)" to
+"65:24 (24x9) ", both 13 characters) would not need the index touched. Not
+yet found: the index itself. Method: read-only inspection, SHA-256 checked
+first; only a few raw bytes were looked at and none are recorded here.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
