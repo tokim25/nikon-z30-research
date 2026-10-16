@@ -153,6 +153,29 @@ handful of runs, medium. The OK hang's cause is unexplained. Repro: private
 `menu_retest_private.py` with `CALLAT`, `NOOP` and `FORCEGATE` switches.
 [guides-ui-states.md](guides-ui-states.md)
 
+F-023. The input map at `0x1073b400` is 179 rows of 8 bytes: input code,
+internal UI-event code, two zero bytes. It matches every known code (input
+0x4, 0x5, 0x3, 0x6, 0x8 and 0x1b give 0x253, 0x254, 0x255, 0x257, 0x258 and
+0x27e). Four guards on UI-event table rows (`0x1045fb20`, `0x1045fb24`,
+`0x1045fb50`, `0x1045fb10`) gate internal codes 0x24f, 0x250, 0x251 and
+0x26d to 0x270 (input codes 0x1a, 0x15, 0x1f and 0x45 to 0x48). Every handler
+examined is a one-shot screen switch through dispatcher `0x10462970`, with no
+press/release split and no lock-style write. Observed, high. That these are
+navigation controls and not AE-L/AF-L is inferred, medium. Helper-agent
+result, not re-verified.
+
+F-024. The firmware holds a named hardware-switch table: 40-byte slots (a
+36-byte name, then a 4-byte bitmask), the first group starting at
+`0x1072e3b0`. It names `ID_SW0_AEAF_LOCK` (slot 10, mask 0x2000) and a twin
+`ID_SW0_AEAF_LOCK_VPOS` (slot 11, mask 0x1000). The same word names the d-pad
+(bits 0 to 8) and top-deck controls, so AE-L/AF-L has its own bit apart from
+every d-pad direction. Strings for the button's custom-function settings
+(`eDSID_Setting_FuncAeAfLockButtonShooting` and `...Movie`) also exist. The
+owner confirmed the button is physically on the body. Observed, high. Not
+closed: the code that reads bit 13 and links it to an input code or an event.
+No reference to the table's base address was found. Press/release handling is
+unknown. Helper-agent result, not re-verified.
+
 F-030. Image-area sizes are stored as data in two places. A run of width and
 height pairs at `0x10750650` lists sizes by aspect ratio and size class; code
 reads it through five literals near `0x10596c9c` to `0x10598640`. A 38-entry
