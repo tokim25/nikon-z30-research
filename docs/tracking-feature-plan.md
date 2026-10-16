@@ -47,7 +47,7 @@ authorized in this session.
 ## Next milestone
 
 Establish the source and destination of the AE-L/AF-L input. The latest
-[bit-13 trace](tracking-mask-namespaces.md) narrows two candidate fields but
+[bit-13 trace](tracking-screen-state.md#2026-10-15-bit-13-does-not-identify-a-physical-button) narrows two candidate fields but
 does not identify either as the physical switch. Resolve that evidence gap
 before choosing a tracking remap.
 
