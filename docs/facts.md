@@ -1521,4 +1521,36 @@ with a `cmd.txt`-polling helper) with a fresh `--output`; the synthetic image
 is `private-inputs/claude-synthetic-sdcard.img`, created locally via
 `newfs_msdos`, never committed. No firmware changed.
 
+F-101. A private QEMU loader overlay proved a native live-view mask hook in
+the assisted simulator on 2026-10-16. Read-only static review found four
+zero-filled candidate instruction spans: `0x1002d78c..0x1002d7bf` (52
+bytes), `0x1002d80c..0x1002d83f` (52 bytes),
+`0x1002d860..0x1002d87f` (32 bytes), and
+`0x1027f468..0x1027f47f` (24 bytes). The surrounding functions return
+before each span, and no aligned literal or table reference into a span was
+found. Correct-mode review rejected apparent mixed ARM/Thumb branch hits as
+decode artifacts. The exact image-area writer is the function at
+`0x1008d38c`; its store at `0x1008d3fc` updates the record containing the
+choice byte at `0xc1811d90` (DX 0, 1:1 1, 16:9 2). Observed, high confidence
+in the simulator: synthetic new code loaded before CPU start, without
+debugger writes to code or mask state, made the mask follow the choice at
+the writer, live-view-start and generic screen-activation paths. A real 1:1
+menu pick kept the mask off over the menu; an audited live-view activation
+enabled full-width black rows 0..106 and 373..479. Ten menu/live-view signal
+cycles alternated correctly. Direct stock callback tests produced 1:1, DX,
+1:1, 16:9 with mask states on, off, on, off; a 16:9 menu control stayed off.
+The firmware hash and QEMU tree remained unchanged. Inferred, confidence
+medium: these spans are viable insertion space beyond the simulator; hidden
+hardware references and execution behavior are not proved. Limits: natural
+menu exit and the natural startup caller were not exercised, the simulator
+has no `i` button, and the immediate-update test used the exact stock row
+callbacks. The later menu-notification trigger hypothesis failed, and QEMU
+write watchpoints failed a known-store self-test. Repro: confirmed WORK,
+private scripts `codex-linker-gaps-private.py`,
+`codex-choice-module-trace-private.py`, `codex-xpan-hook-build-private.py`
+and `codex-xpan-hook-run-private.py`, always with fresh `codex-` output;
+detailed commands and constraints are in
+[native-xpan-liveview-hook.md](native-xpan-liveview-hook.md). No overlay,
+firmware bytes, raw logs or patched image enter Git.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

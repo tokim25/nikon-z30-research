@@ -5,34 +5,28 @@ the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
 
-PRs [#34 through #48](https://github.com/tokim25/nikon-z30-research/pulls)
-are open and had successful checks on their published heads when reviewed.
-They share main base `32a9da5`; preserve every appended fact and report when
-resolving conflicts. This session's final handoff branch is
-`codex/session-handoff-20261016`. The owner approves merges; Codex merges none.
-
-The owner resumed tracking and approved Codex taking over guide/native and
-RAW-crop documents. PR #35 records the ownership metadata change. Simulator
-infrastructure remains in Claude's lane. No Codex agents continue working.
-A new explicit session may resume from the handoff.
-
-F-001 through F-100 are allocated on main. F-101 is next,
-subject to checking new changes before use.
+Main carried F-001 through F-100 when this branch started. F-101 is allocated
+to the live-view hook finding on `codex/xpan-liveview-hook-space`. The owner
+approves merges; Codex merges none. Check main again before allocating F-102.
 
 ## Feature state
 
-Persistent stock native black masks now work after diagnostic simulator
-setup, with independent repeats and two toggle cycles. They remain over
-audited menu entry and can cover menu graphics. Natural startup and a clean
-return from menus remain unverified.
+An assisted simulator prototype now loads a native hook before CPU start and
+makes the stock screen-layer mask follow the stored image-area choice. A real
+1:1 menu pick kept the bars off over the menu, an audited live-view activation
+restored them, DX and 16:9 kept them off, and ten signal cycles passed. The
+instruction-space and native-execution part of build-gate condition 1 is met
+in this assisted simulator setup. Natural startup, natural menu exit and the
+unavailable `i`-menu path remain unverified.
 
 A centered 5200 by 1920 capture-geometry experiment passed, but no saved RAW
 crop or NEF metadata writer is verified. The later structure-pack trace
 does not close that gap. Physical AE-L/AF-L input delivery and a tracking
 entry point remain unverified.
 
-Single next step: audit native clip-state lifecycle and callers of
-`0x104b5fd4` before testing automatic menu cleanup and live-view restoration.
+Single next step: drive a natural return from the real image-area menu under
+the same private loader overlay and confirm that the screen-state wrapper
+restores the mask without an audited activation call.
 
 ## Decisions and limits
 
@@ -43,4 +37,4 @@ processes. Original restricted inputs and the pinned simulator remain
 unchanged. No firmware, raw logs, screenshots or extracted data enter Git.
 The repository stays private; every change goes through owner-reviewed PRs.
 
-Written by Codex in collaboration with Tony Kim; replaces stale session status with the verified publication state.
+Written by Codex in collaboration with Claude and Tony Kim.

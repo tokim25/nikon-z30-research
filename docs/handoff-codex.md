@@ -10,8 +10,9 @@ below F-050, ignore it.
 
 ## Read this first
 
-Main carries facts through **F-100**. Nothing is open on GitHub (no PRs, no
-diverging branches). Hardware access stays **NO-GO**
+Main carried facts through **F-100** when this branch started. F-101 is the
+live-view hook finding on `codex/xpan-liveview-hook-space`; check main before
+allocating F-102. Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,
 non-distributed camera ([build-phase-gate.md](build-phase-gate.md)), but all
@@ -63,6 +64,36 @@ instead. The full design doc is [xpan-bars-design.md](xpan-bars-design.md)
    (F-089, F-090) and to the `0xc1811d90`-style choice byte, and test it in
    the simulator per the "How we will know it works" checklist in the
    design doc.
+
+### F-101 result on `codex/xpan-liveview-hook-space`
+
+- The exact property writer is at `0x1008d38c`, with the choice-record store
+  at `0x1008d3fc`. The final byte at `0xc1811d90` is 0 for DX, 1 for 1:1 and
+  2 for 16:9. The older value-4 statement describes the callback argument,
+  not this stored byte.
+- Four zero-filled candidate instruction spans were found and checked at
+  their real ARM/Thumb boundaries: `0x1002d78c..0x1002d7bf`,
+  `0x1002d80c..0x1002d83f`, `0x1002d860..0x1002d87f`, and
+  `0x1027f468..0x1027f47f`.
+- A private QEMU loader overlay placed synthetic new code in those spans
+  before CPU start. It used wrappers at the exact writer, live-view start
+  and generic screen activation. The debugger did not write code, choice,
+  mask state, bounds or color during the run.
+- A real 1:1 menu pick left the mask off over the menu. An audited live-view
+  activation restored it. DX and 16:9 kept it off. Ten alternating screen
+  signal cycles passed. Direct stock callback tests also changed the mask
+  immediately while live view stayed active.
+- The later menu-notification callback was tested and rejected as a general
+  change trigger. QEMU write watchpoints also failed a known-store self-test.
+- Full evidence, repro commands and limits are in
+  [native-xpan-liveview-hook.md](native-xpan-liveview-hook.md). The natural
+  menu exit, natural startup caller and exact `i`-menu route are still open.
+
+### Single next step for Lane 1
+
+Drive a natural return from the real image-area menu under the same loader
+overlay and confirm that the generic screen-state wrapper restores the mask
+without an audited activation call.
 
 ## Lane 2: saved-crop (does a saved RAW/JPEG actually come out cropped?)
 
@@ -138,4 +169,4 @@ a read-only firmware scan, the owner can run it in their own terminal and
 paste the output back — that unblocked this exact kind of work for Claude
 repeatedly this session.
 
-Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
+Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
