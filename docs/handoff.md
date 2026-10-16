@@ -27,11 +27,13 @@ Date: 2026-10-15. Update this whenever work is in progress.
 Codex's PRs #34 to #49 are on main through #50 (owner-approved lane
 exception). The first part of Codex's single next step is done as F-045: the
 initializer `0x104b5fd4` has two direct callers, `0x10452e56` and
-`0x10452ea8`. Still to do: decode a short window around each to see what
-config pointer they pass, then decide whether either is a clip-only path.
+`0x10452ea8`. F-046 decoded a window around each: both are nine-call nested loops
+(3 by 3) with modes 1 and 2, so the initializer is bulk setup, not a
+clip-only setter. Still to do: read the literal-pool words and the indexed
+tables behind r0 and r2, and find who calls the enclosing function.
 
 The auto-mode classifier denied Claude's own runs of the scan against the
-private firmware, so the owner ran it in a terminal. If a session is blocked
+private firmware, so the owner ran it in a terminal. After the owner changed a permission setting on 2026-10-16, Claude's own run succeeded. If a session is blocked
 the same way, ask the owner to run it. `$WORK/analysis-env` may already hold
 `capstone`; use it instead of a new environment. No firmware bytes are kept
 in the repo.
