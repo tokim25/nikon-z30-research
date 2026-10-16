@@ -1128,4 +1128,22 @@ confidence low to medium. Not yet read: the code around both stores, the true
 start of the routine and its callers. Method: owner-run read-only scan,
 SHA-256 checked first; addresses only, no firmware bytes recorded.
 
+F-085. What the two stores at offset `0x2cc` do, from an owner-run decode on
+2026-10-16. (1) `0x1019a068` is in a routine that fills a small block at
+`+0x2c8` to `+0x2cf` of one object from another record (`ldrb r1, [r0, #0x67]`
+then `strb r1, [r4, #0x2cc]`, with a 32-byte block copy to the same area on
+the other path), so it is an unrelated structure and not the image-area
+setting. (2) `0x10367d26` is in a long routine whose start is probably
+`0x10367260` (the nearest register-saving instruction before both
+`0x10367d26` and `0x10367fd2`). There it runs `ldrb r0, [r8, #0x408]` then
+`strb r0, [r6, #0x2cc]`, between similar copies (`r8 + 0x2f4` to `r6 +
+0x2cb`, `r8 + 0x1b4` to `r6 + 0x278`), and then adds `0xd8` to r6, so the
+destination steps by `0xd8` bytes per item in a loop. Observed (the code).
+Inferred, confidence low to medium: the image-area value starts as a byte at
+`+0x408` of the source structure in r8, is copied into a per-item snapshot at
+`+0x2cc`, and from the snapshot into the mirror byte `+0x15b` (F-083). Not
+yet read: the start of the routine, what r8 is, its callers, and who stores a
+byte at `+0x408`. Method: owner-run read-only decode; instructions only, no
+firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

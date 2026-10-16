@@ -98,7 +98,9 @@ is a mirror reset within a second and live view ignores it. F-082: ten byte stor
 eight loads at offset `0x15b` found. F-083: the mirror byte is
 probably copied from `+0x2cc` of a source structure (r8) by the routine around
 `0x10367fd2`. F-084: only two byte stores with offset `0x2cc` exist (`0x1019a068`, `0x10367d26`).
-Next: owner runs a decode around both and a wider search for the routine start. Avoid write watchpoints on the
+F-085: the useful store copies `r8+0x408` into `+0x2cc`, in a routine starting
+near `0x10367260`. Next: owner runs a decode of its start, its callers, and a
+scan for byte stores with offset `0x408`. Avoid write watchpoints on the
 simulator link; they left it out of step once. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
