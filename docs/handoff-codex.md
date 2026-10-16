@@ -18,7 +18,7 @@ project's own simulator. A card-detect/SD-command-enumeration thread
 (F-102, F-104) was explored this session and retired for exactly this
 reason — see "Lane 2" below for where it stopped and why.
 
-Main carries facts through **F-104**; check main before allocating F-105.
+Main carries facts through **F-105**; check main before allocating F-106.
 Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,
@@ -238,20 +238,30 @@ not resume it, and do not decode CMD0's enumeration further (F-105 was
 drafted and discarded for the same reason), unless a specific build
 decision later turns out to depend on it.
 
-**The actual next angle (build-relevant):** resolve F-097's capture-descriptor
-vs. shots-remaining-estimator ambiguity by tracing *forward*, not deeper
-into the simulator. F-097's four callers (`0x10155bf4`, `0x101560d0`,
-`0x101564f4`, `0x1015b062`) and F-098/F-103's further-out callers are all
-candidates; the question is whether any call chain starting from them
-eventually reaches F-104's CMD24/25 write-command wrappers (`0x104171ce`,
-`0x10416e6c`) or anything else that looks like a real storage-write
-primitive. A confirmed link would settle hypothesis (a) with hard evidence
-and name the exact real-firmware hook point saved-crop would need on
-hardware; a confirmed non-link (the chain clearly terminates in a UI/text
-call instead) settles (b) and says the save path is elsewhere, still
-unfound. Either answer is build-relevant; "the simulator can't show me SD
-I/O" is not a valid reason to stop short of one of these two answers this
-time, since this question's whole point is what the real firmware does.
+**Update (2026-10-16), direct-write path checked and ruled out (F-105):**
+an automated call-graph walk from the F-097 four, following every direct
+`bl`/`blx` transitively (867 distinct functions, exhaustive -- the search
+queue emptied, not a node cap; method validated against F-102's
+hand-decoded card-detect function), never reaches F-104's CMD24/25 write
+wrappers or the shared command-submit primitive. This rules out the
+simplest form of hypothesis (a): none of the four callers, or anything
+they call directly or transitively, synchronously writes the finished
+record to storage right after building it.
+
+**It does not settle the question.** The walk only follows literal
+`bl`/`blx` targets -- it cannot see a hand-off through a function-pointer
+table or a queued/global slot read by a separate worker, which is this
+project's established pattern for handler dispatch elsewhere (F-072,
+F-090, F-098). **The real next angle (still build-relevant):** scan the
+867 reached functions (or the four callers themselves) for a store into a
+global pointer/queue slot that nothing in this same reachable set
+consumes -- that would be the signature of an indirect hand-off to an
+unreached worker, and finding the worker would still name a real hook
+point. If that comes up empty too, decode `0x1015bd18`'s mode 2/3 branches
+and `0x101e729e`/`0x101efb9e` (F-103) to test hypothesis (b) directly
+instead. Either answer is build-relevant; stopping at "the simulator can't
+show me SD I/O" is not, since this question's whole point is what the real
+firmware does.
 
 ## Rules, unchanged
 
