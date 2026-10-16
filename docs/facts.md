@@ -1019,4 +1019,31 @@ confirmed, the other two are not. Repro: confirmed WORK, run
 with a fresh output directory. The script stays under WORK and is not
 committed. No firmware changed.
 
+F-080. Completes the change test of F-079 and explains its failure. An
+owner-approved simulator run on 2026-10-16 called the three lookup helpers of
+the crop-window builder (`0x1020c07c`, `0x1020c128`, `0x1020c17e`) with the
+arguments the builder passes. For area 4 (1:1) they return addresses inside
+the per-area records: the size helper reads record 19 at byte offsets 12 and
+20 (for the medium and small sizes), the margin helpers read records 29 and
+34. The records are longer than first thought: record 19 spans 24 bytes (12
+shorts: three large pairs, then medium pairs), as does the DX record 15. In
+F-079 the scratch record for index 19 was only 12 bytes, so the medium and
+small reads ran past it into stray memory; that explains the nonsense. A
+repeat with a 24-byte record for index 19 and the earlier records for 4, 9
+and 14 gives, for area 4: large window 5208 by 1928 (offsets 8, 8), medium
+3900 by 1440 (a ratio of 2.708, exactly 65:24), small 3906 by 1446 (offsets
+6, 6), with the 'extra' pair following the records at 3900 by 1440 and 2600 by
+960. DX (5584 by 3720) and 16:9 (5584 by 3136) were unchanged, and the
+original table pointers were restored and verified. Observed runtime,
+high within this fixture: replacing the data of the four 1:1 records is enough
+for the crop-window builder to give a 65:24 shape at all three sizes. The
+large window is 2.70 to 1 because the margin offset of 8 is subtracted, so
+the readout record would need to be 5208 by 1936 to land on exactly
+5200 by 1920. Not shown: any effect on live view, capture or saved files.
+Repro: confirmed WORK, run
+`PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/claude-xpan-records2-private.py" --output "$WORK/private-inputs/claude-xpan-records2-NN"`
+with a fresh output directory; the probe is
+`claude-helpers-probe-private.py`. The scripts stay under WORK and are not
+committed. No firmware changed.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
