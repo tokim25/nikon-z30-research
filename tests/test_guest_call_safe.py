@@ -52,9 +52,9 @@ class FakeRemote:
 
 
 class CallTests(unittest.TestCase):
-    def run_call(self, replies, seconds=5):
+    def run_call(self, replies, seconds=5, **kwargs):
         remote = FakeRemote(replies)
-        record, _ = safe.call(remote, "T05thread:01;", 0x10477AF3, [1, 2], seconds)
+        record, _ = safe.call(remote, "T05thread:01;", 0x10477AF3, [1, 2], seconds, **kwargs)
         return remote, record
 
     def test_completes_when_diverted_thread_reaches_sentinel(self):
@@ -88,6 +88,36 @@ class CallTests(unittest.TestCase):
     def test_too_many_arguments_rejected(self):
         with self.assertRaises(ValueError):
             safe.call(FakeRemote([]), "T05thread:01;", 0, [1, 2, 3, 4, 5])
+
+    def test_observe_hit_on_other_thread_is_recorded_not_completion(self):
+        watched = 0xC2B1065C
+        _, record = self.run_call(
+            [("T02thread:02;", watched), ("T05thread:00;", 0),
+             ("T05thread:01;", SENTINEL)],
+            observe=(watched,))
+        self.assertTrue(record["completed"])
+        self.assertEqual(len(record["observations"]), 1)
+        self.assertEqual(record["observations"][0]["thread"], "02")
+        self.assertEqual(record["observations"][0]["pc"], hex(watched))
+        self.assertEqual(record["ignored_stops"], 0)
+
+    def test_capture_receives_remote_and_registers(self):
+        watched, seen = 0xC2B1065C, []
+        self.run_call(
+            [("T02thread:02;", watched), ("T05thread:00;", 0),
+             ("T05thread:01;", SENTINEL)],
+            observe=(watched,),
+            capture=lambda remote, regs: seen.append(regs) or {})
+        self.assertEqual(len(seen), 1)
+        self.assertEqual(seen[0]["r15"], hex(watched))
+
+    def test_unrelated_stop_still_resumed_with_observe_set(self):
+        _, record = self.run_call(
+            [("T02thread:02;", 0x9999), ("T05thread:01;", SENTINEL)],
+            observe=(0xC2B1065C,))
+        self.assertTrue(record["completed"])
+        self.assertEqual(record["ignored_stops"], 1)
+        self.assertEqual(record["observations"], [])
 
 
 if __name__ == "__main__":
