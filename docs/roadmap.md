@@ -36,16 +36,6 @@ with one button press, instead of the usual multi-step menu process.
 - Where, inside saved photos, the camera stores the exact pixel area it
   captured. See [the image-area research](image-area-tables.md).
 
-## What is off-limits
-
-- No real camera is ever touched. All testing happens on a computer, inside
-  the simulator described above.
-- Nikon's own camera software is never published in this project; see the
-  README's [boundaries section](../README.md#boundaries).
-- Turning this research into something a person could install on a camera
-  is a separate, later decision that has not been made. For now, this
-  project only studies and documents how the camera works.
-
 ## Where things stand overall
 
 As of October 2026, the framing guide works in the simulator's live shooting
