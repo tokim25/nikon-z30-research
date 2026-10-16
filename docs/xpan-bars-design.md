@@ -52,12 +52,13 @@ required trigger moment, not an optional one.
   not when the image area changes.
 - The stored image-area value is a mirror that is refreshed about every
   second, and live view ignores it today (F-081).
-- The choice itself already works end to end for sizes: picking 1:1 stores the
-  value 4, and that value reaches the size tables (F-080, F-087).
+- A real 1:1 pick stores final choice byte 1 at `0xc1811d90`; DX stores 0 and
+  16:9 stores 2. The earlier value 4 was a callback argument, not the final
+  stored choice (F-093, F-101).
 
 ## The parts of the change
 
-1. **Know the state.** Read the stored image-area value (4 means XPan) and
+1. **Know the state.** Read the stored image-area value (1 means XPan) and
    whether live view is the active screen.
 2. **Turn the bars on or off.** On: set the flag, shape and color on the
    live-view layer. Off: clear the flag.
@@ -80,17 +81,14 @@ firmware file hash is rechecked.
 
 ## Open questions
 
-1. **Where do the three moments (live view starts, area changes, return from a
-   menu) happen in the camera's code?** Two candidates found (F-089): the
-   point where live view is activated, for "live view starts", and the generic
-   activate step, for "return from a menu". "The area changes" has no
-   candidate yet. F-090 adds that each screen object has a table of handlers
-   chosen by its selector, which is data, so live view starting can be reached
-   by a table entry. If changing the area from the "i" menu leaves live view
-   in place, the bars may need to be updated at that moment too.
-2. **Is there a safe place to add a few instructions?** The camera's software
-   has no obvious spare space, and adding code means changing the image. This
-   is build-gate condition 1.
+1. **Can the simulator drive the real return to live view?** F-101 found the
+   exact area writer, the selector-1 live-view-ready point, and guarded screen
+   close and activation sites. The exposed Back key cannot close the last
+   menu screen. Two internal close events reach a different mode, so the true
+   return path remains unobserved.
+2. **Are the candidate instruction spans safe outside the simulator?** Four
+   zero-filled spans executed in the private loader test (F-101). Hidden
+   hardware references and execution permissions remain unproved.
 3. **Can the focus points be limited to the strip?** Unknown.
 4. **Does the image processor draw its own live-view frame?** If it does, the
    picture may already be cropped or may fight the bars (F-033).
@@ -104,9 +102,9 @@ also hangs (F-092): the simulator could reach the "Choose image area" screen,
 but confirming the 1:1 choice did not complete, even with the thread-aware
 call helper. This moment can be tested by driving the menu, but the pick
 hangs about half the time and must be retried (F-093). When it returns, the
-stored choice changes, and a byte at `0xc1811d90` follows it (0 for DX, 1 for
-1:1, 2 for 16:9). The earlier chain through the mirror bytes was wrong and is
-being redone.
+exact writer at `0x1008d38c` updates the record containing `0xc1811d90` (0
+for DX, 1 for 1:1, 2 for 16:9). The earlier chain through the mirror bytes was
+wrong; F-101 replaces it for the live-view hook.
 
 ## What this does not cover
 
@@ -114,4 +112,4 @@ Flashing, applying the change to a real camera, and the recovery plan. Those
 stay behind the build gate and need the owner's separate go-ahead
 ([build-phase-gate.md](build-phase-gate.md), [recovery-plan.md](recovery-plan.md)).
 
-Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
+Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

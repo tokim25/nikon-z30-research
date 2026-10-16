@@ -16,17 +16,21 @@ makes the stock screen-layer mask follow the stored image-area choice. A real
 1:1 menu pick kept the bars off over the menu, an audited live-view activation
 restored them, DX and 16:9 kept them off, and ten signal cycles passed. The
 instruction-space and native-execution part of build-gate condition 1 is met
-in this assisted simulator setup. Natural startup, natural menu exit and the
-unavailable `i`-menu path remain unverified.
+in this assisted simulator setup. A broad menu-close hook was tested and
+rejected because it enabled the mask on a non-live-view transition screen.
+The replacement requires an empty screen stack and live-view selector 1; it
+passed the same area and cycle controls and stayed off in that transition.
+Natural startup, a true menu return to live view and the unavailable `i`-menu
+path remain unverified.
 
 A centered 5200 by 1920 capture-geometry experiment passed, but no saved RAW
 crop or NEF metadata writer is verified. The later structure-pack trace
 does not close that gap. Physical AE-L/AF-L input delivery and a tracking
 entry point remain unverified.
 
-Single next step: drive a natural return from the real image-area menu under
-the same private loader overlay and confirm that the screen-state wrapper
-restores the mask without an audited activation call.
+Single next step: find a simulator input path that reaches the live-view-ready
+transition at `0x102f57e2` after the menu closes, then confirm that the guarded
+hook restores the mask without an audited activation call.
 
 ## Decisions and limits
 

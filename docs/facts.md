@@ -1553,4 +1553,26 @@ detailed commands and constraints are in
 [native-xpan-liveview-hook.md](native-xpan-liveview-hook.md). No overlay,
 firmware bytes, raw logs or patched image enter Git.
 
+Follow-up on the same F-101 branch tested final-menu closure. The exposed
+Back event stopped at one stack entry. Stock internal events `0x24e` and
+`0x250` removed the last entry, but both requested mode `0x10000`, not the
+live-view target `0x100000`; the physical controls behind those events remain
+unknown. An unguarded close hook turned the mask on in that non-live-view
+state and was rejected. The final private overlay routes its close, writer
+and live-view-ready paths through a guard that requires an empty screen stack
+and live-view selector byte 1 at `0xc1821db8`. It also moves the live-view
+transition hook to the exact selector-1 call at `0x102f5810` inside
+`0x102f57e2`. Observed, high confidence in the
+assisted simulator: the guarded build passed the direct 1:1/DX/1:1/16:9
+sequence and ten menu/live-view signal cycles, and stayed off after the
+non-live-view `0x250` close. Inferred, medium confidence: the guarded close
+and selector-1 sites cover a real return to live view without enabling the
+mask in playback or another base screen. A natural caller of `0x102f57e2`
+was not observed because the assisted fixture's live-view worker is dormant.
+Repro: confirmed WORK, private scripts
+`codex-xpan-guarded-hook-build-private.py`,
+`codex-xpan-hook-run-private.py`,
+`codex-xpan-menu-event-return-private.py`, and
+`codex-menu-exit-observe-private.py`, always with fresh `codex-` output.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

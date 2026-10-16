@@ -76,24 +76,33 @@ instead. The full design doc is [xpan-bars-design.md](xpan-bars-design.md)
   `0x1002d80c..0x1002d83f`, `0x1002d860..0x1002d87f`, and
   `0x1027f468..0x1027f47f`.
 - A private QEMU loader overlay placed synthetic new code in those spans
-  before CPU start. It used wrappers at the exact writer, live-view start
-  and generic screen activation. The debugger did not write code, choice,
-  mask state, bounds or color during the run.
+  before CPU start. It used wrappers at the exact writer, live-view-ready
+  transition, screen close and generic screen activation. The debugger did
+  not write code, choice, mask state, bounds or color during the run.
 - A real 1:1 menu pick left the mask off over the menu. An audited live-view
   activation restored it. DX and 16:9 kept it off. Ten alternating screen
   signal cycles passed. Direct stock callback tests also changed the mask
   immediately while live view stayed active.
 - The later menu-notification callback was tested and rejected as a general
   change trigger. QEMU write watchpoints also failed a known-store self-test.
+- A follow-up rejected an unguarded screen-close trigger. Internal events
+  `0x24e` and `0x250` close the last stack entry but request mode `0x10000`,
+  not live view; the unguarded hook enabled the mask on that transition
+  screen. The final overlay requires an empty stack and live-view selector 1.
+- The live-view trigger now sits at `0x102f5810`, where `0x102f57e2` sets
+  selector 1. The guarded build passed the area controls and ten signal
+  cycles, and stayed off after the non-live-view close control.
 - Full evidence, repro commands and limits are in
-  [native-xpan-liveview-hook.md](native-xpan-liveview-hook.md). The natural
-  menu exit, natural startup caller and exact `i`-menu route are still open.
+  [native-xpan-liveview-hook.md](native-xpan-liveview-hook.md). A true menu
+  return to live view, the natural startup caller and the exact `i`-menu
+  route are still open.
 
 ### Single next step for Lane 1
 
-Drive a natural return from the real image-area menu under the same loader
-overlay and confirm that the generic screen-state wrapper restores the mask
-without an audited activation call.
+Find a simulator input path that reaches `0x102f57e2` after the menu closes,
+then confirm that the guarded hook restores the mask without an audited
+activation call. The exposed Back key cannot close the final menu screen,
+and the tested internal close events do not request live view.
 
 ## Lane 2: saved-crop (does a saved RAW/JPEG actually come out cropped?)
 
