@@ -166,4 +166,13 @@ from the image-area records. Observed static, high. That the path is absent:
 moderate, as 58 callers were not all traced. Helper result.
 [image-area-tables.md](image-area-tables.md)
 
+F-033. No display-side code reads the image area (setting id `0x189e`; value 4
+is 1:1). Live view shows a layer that is almost always full-screen; the area
+reaches only the capture side, where `0x101d5c54` copies it into a request and
+tables give per-area crop windows (live-view readout `0x115a4cc0`, crop sizes
+`0x115729b4`). The only 1:1-specific branch is an interlock bit at `0x1022d5f8`.
+Observed, high for the capture-side facts. That the crop is made upstream by the
+separate image-processor firmware, which is not in this image, is inference at
+about 45 percent. Helper result. [image-area-tables.md](image-area-tables.md)
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

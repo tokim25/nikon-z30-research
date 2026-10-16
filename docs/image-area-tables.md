@@ -53,7 +53,13 @@ chain was found (moderate confidence: 58 callers were not all traced).
 
 ## Open
 
-How live view shows the 1:1 area is still unknown, and so is how capture turns
-these records into saved files.
+A further trace found no display code that reads the image area (fact F-033).
+The area reaches only the capture side, through per-area crop-window tables, and
+the one 1:1-specific branch is a menu interlock. The likeliest reading, at about
+45 percent confidence, is that the separate image-processor firmware, which is
+not in this image, delivers an already-cropped live-view frame. That cannot be
+settled from this image alone. A 65:24 replacement would need new rows in
+several per-area tables, and whether the processor accepts that shape needs a
+test the simulator cannot give.
 
 Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
