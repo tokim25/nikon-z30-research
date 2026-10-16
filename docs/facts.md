@@ -576,4 +576,20 @@ fills the input structure, the helpers at `0x1020c128` and `0x1020c17e`, and
 what `0x101d5ad0` checks. Method: read-only Thumb decode, SHA-256 checked
 first; no bytes recorded here.
 
+F-057. The crop-window builder `0x101d5b36` (F-056) has seven direct
+callers, at `0x1015382a`, `0x10153a18`, `0x1015f978`, `0x1016238e`,
+`0x101936da`, `0x10193a24` and `0x101d5de8`, and no pointer-table
+references. Its validity check `0x101d5ad0` returns true only when a byte at
+input offset `+0x20` is 0 or 1; otherwise the builder writes zeros and
+returns. In the first caller (`0x1015382a`, inside a routine that also calls
+`0x10152fc8` and `0x10153444`) the input structure is not local: it is the
+address `[object + 0x3a4] + 0x208`, a sub-structure of a larger state
+object, so the area byte at input `+0x26` sits at `[object + 0x3a4] + 0x22e`.
+Observed static decode on 2026-10-16. Inferred, confidence low to medium:
+that larger object is the camera's live copy of the current shooting
+settings, and the menu's image-area choice ends up in that byte; this has
+not been shown. Not yet done: the other six callers, and finding the code
+that writes that byte (the link from the menu pick to the crop window).
+Method: read-only Thumb decode, SHA-256 checked first; no bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
