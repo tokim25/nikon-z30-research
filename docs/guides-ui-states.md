@@ -19,10 +19,16 @@ then live view, behaved the same.
   function never fired, so there is no cycle to hook.
 - It fired only during redraws caused by key events, with different source
   layers each time.
-- Calls made then returned as complete after up and down keys, but no bars
-  appeared.
-- With the OK and Back keys, the calls stalled the transition in every run.
-  The cause is unknown.
+- Rerun with the thread-aware helper (fact F-013), used for both the key event
+  and the nested call:
+  - Up, down and Back: the event and the calls complete, but no bars appear.
+    Frames match a no-call control at the bar rows.
+  - OK: the no-call control completes with three compose stops. A nested call
+    at the first stop hangs the event in 3 of 3 runs. A no-op call (surface-size
+    getter) hangs it too, and so does leaving the gate unforced. A call at the
+    last stop lets the event finish, again with no bars.
+- So the hook cannot show guides in menus, and a call at the first stop of an
+  OK redraw breaks it. The cause of the OK hang is unexplained.
 
 ## Not reachable
 

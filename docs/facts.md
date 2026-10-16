@@ -144,6 +144,15 @@ which mask bit are inferred, medium-low. A passive stock-refresh trace saw
 none of these addresses fire, so the live-view input path is dormant absent
 real input. Helper-agent result, not re-verified.
 
+F-022. Menu states cannot show the guides. With the thread-aware helper for
+both the key event and the nested call: up, down and Back complete with no
+bars; OK hangs when any nested call, even a no-op one, is made at the first of
+its three compose stops (3 of 3 runs, no-call control completes), and
+completes with no bars when the call is made at the last stop. Observed in a
+handful of runs, medium. The OK hang's cause is unexplained. Repro: private
+`menu_retest_private.py` with `CALLAT`, `NOOP` and `FORCEGATE` switches.
+[guides-ui-states.md](guides-ui-states.md)
+
 F-023. The input map at `0x1073b400` is 179 rows of 8 bytes: input code,
 internal UI-event code, two zero bytes. It matches every known code (input
 0x4, 0x5, 0x3, 0x6, 0x8 and 0x1b give 0x253, 0x254, 0x255, 0x257, 0x258 and
