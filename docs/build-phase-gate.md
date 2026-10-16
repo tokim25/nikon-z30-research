@@ -1,32 +1,53 @@
 # Gate for a build phase
 
-Status: closed. Nothing here authorizes a build, flashing, or any hardware
-access. Research stays offline and in the simulator.
+Status: open, for personal use on the owner's own camera, not for
+distribution. Research work (studying the firmware, testing ideas in the
+simulator) has never needed this gate; it covers only the step of producing
+something meant to run on real hardware.
 
-A build phase would turn feature specs into something a person could apply to
+A build phase turns feature specs into something a person could apply to
 their own camera. That carries real risk: a failed update can leave a camera
-unusable, and Nikon's firmware is copyrighted. So it needs its own decision
-from the owner, recorded in AGENTS.md.
+unusable, and Nikon's firmware is copyrighted.
 
-## Conditions before the owner is asked
+## The owner's authorization
 
-1. The simulator shows the feature working without a debugger hook, or the
-   hook point and its hang risk are understood and written up.
-2. A recovery plan exists for a failed update, and it does not rely on the
+Recorded 2026-10-15. The owner has said, directly: they want to modify their
+own Z30's firmware, understand the hardware risk, and do not plan to
+distribute the result to anyone. This authorizes starting the work listed
+below. It does not by itself authorize flashing a camera; see "Hardware
+access" below.
+
+## What this opens
+
+- Writing a patcher and the actual feature code meant for the camera, not
+  just the simulator, using the owner's own local firmware copy.
+- Writing the recovery plan and the version and hash checks required before
+  any hardware step. That work was previously out of scope; now it is the
+  priority.
+
+## Hardware access: still gated
+
+Flashing a real camera is not authorized by this file alone. All of the
+following must be true first:
+
+1. The simulator shows the feature working without a debugger hook, or that
+   hook's risk is fully understood.
+2. A written recovery plan exists, and it does not rely on the camera's
    ordinary firmware-update menu.
-3. Version and hash checks refuse anything but the exact verified firmware.
-4. Licensing and publication content have had an independent review.
-5. [hardware-readiness.md](hardware-readiness.md) no longer says NO-GO.
+3. The patcher checks firmware version and hash, and refuses anything but
+   the owner's exact verified original.
+4. [hardware-readiness.md](hardware-readiness.md) no longer says NO-GO; it
+   says NO-GO today and has not been reviewed since this authorization.
 
-## What a build phase may contain
+None of these are true yet. When they are, ask the owner again, explicitly,
+before any hardware step.
 
-- Original code and a patcher that works on the owner's own firmware copy.
-  It stores no Nikon bytes and ships no patched image.
-- Hardware steps are done by the owner alone, after a written plan.
-
-## What stays forbidden
+## What stays forbidden, always
 
 Publishing Nikon firmware, extracted bytes, dumps, or patched images, in any
-repository, issue, or release.
+repository, issue, release, or anywhere else. This project's own patcher
+stores no Nikon bytes and ships no patched image. The owner's modified
+firmware copy stays on their own machine, never in this repository. Hardware
+steps, once authorized, are done by the owner alone.
 
 Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
