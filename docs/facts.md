@@ -139,4 +139,48 @@ handful of runs, medium. The OK hang's cause is unexplained. Repro: private
 `menu_retest_private.py` with `CALLAT`, `NOOP` and `FORCEGATE` switches.
 [guides-ui-states.md](guides-ui-states.md)
 
+F-030. Image-area sizes are stored as data in two places. A run of width and
+height pairs at `0x10750650` lists sizes by aspect ratio and size class; code
+reads it through five literals near `0x10596c9c` to `0x10598640`. A 38-entry
+pointer table at `0x12049a7c` (initialized-data region, reached through its RAM
+copy) points to records near `0x115a4d6c` with, per area (DX, 16:9, 1:1),
+output sizes, padded sensor-readout sizes, large-size copies, and thumbnail
+sizes. Observed static layout, high. Which record drives live view, capture or
+thumbnails is not traced, so a 1:1 replacement may need several records.
+Inferred, low. [image-area-tables.md](image-area-tables.md)
+
+F-031. Corrects F-030's first store. The run of size pairs at `0x10750658` is
+the Retouch Trim editor's table: 110 entries indexed by orientation, source
+group and five aspects, each the largest crop that fits, rounded to multiples
+of 16. A data-only 65:24 swap would fail: `0x10597440` hard-codes the five
+ratios and forces width equal to height for 1:1, labels are 5-byte slots, and
+the counts are compile-time bounds. Observed static, high. Helper result.
+[image-area-tables.md](image-area-tables.md)
+
+F-032. The pointer-table records (RAM copy at `0xc18c7de8`) feed capture and
+readout geometry, output sizes, margins, thumbnails and movie sizes; 1:1 is
+area 4. Live-view render-object offsets `0x320` and `0x324` are the display
+surface size, not image size, which corrects the earlier reading. The live-view
+image size comes from a frame-size table at `0x1073db04`, with no path found
+from the image-area records. Observed static, high. That the path is absent:
+moderate, as 58 callers were not all traced. Helper result.
+[image-area-tables.md](image-area-tables.md)
+
+F-033. No display-side code reads the image area (setting id `0x189e`; value 4
+is 1:1). Live view shows a layer that is almost always full-screen; the area
+reaches only the capture side, where `0x101d5c54` copies it into a request and
+tables give per-area crop windows (live-view readout `0x115a4cc0`, crop sizes
+`0x115729b4`). The only 1:1-specific branch is an interlock bit at `0x1022d5f8`.
+Observed, high for the capture-side facts. That the crop is made upstream by the
+separate image-processor firmware, which is not in this image, is inference at
+about 45 percent. Helper result. [image-area-tables.md](image-area-tables.md)
+
+F-034. The capture-geometry function `0x101d5b36`, called natively in the
+simulator, gives per-area results straight from the records: 1:1 at large size
+is area 3728 by 3728, crop origin (936, 0), image rectangle out to 3720 by 3720;
+16:9 is area 5600 by 3144 with origin (0, 292). Origin equals half the readout
+minus area. Observed, high; hash unchanged. A test with 1:1 changed to a 65:24
+shape was blocked by the permission classifier and has not been run.
+[capture-geometry-baseline.md](capture-geometry-baseline.md)
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
