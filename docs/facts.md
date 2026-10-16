@@ -406,4 +406,17 @@ which event the table slot belongs to, and what `0x104ed666` and `0x104ed67a`
 do are unread. Method: read-only Thumb decode, SHA-256 checked first; no
 bytes recorded here.
 
+F-048. The handler of F-047 reaches its flag through a global RAM structure
+whose pointer literal is `0xc1821c2c` (the handler subtracts `0x1c` to get
+`0xc1821c10`, so the flag it tests is the word at `0xc1821c20`). The same
+literal appears at five places (`0x102ae990`, `0x102aedf0`, `0x102af260`,
+`0x102afb6c`, plus `0xc1821c10` at `0x102afd1c`), and about 80 pc-relative
+loads of it fall between `0x102ae5a8` and `0x102afca0`. Observed static scan
+on 2026-10-16. Inferred, confidence medium: this is one module-wide state
+object shared by that whole code range (the handler table of F-047 lives
+there too), so whatever sets the flag at `0xc1821c20` is most likely a
+function in the same range, found among those loaders. Not yet done: telling
+the writers of that one word apart from the many other users. Method:
+read-only literal-pool scan, SHA-256 checked first; no bytes recorded here.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
