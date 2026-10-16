@@ -1070,4 +1070,23 @@ timing: confirmed WORK, run
 with a fresh output directory. The scripts stay under WORK and are not
 committed. No firmware changed.
 
+F-082. Owner-run scan on 2026-10-16 for who touches the stored area byte of
+F-081. The structure address `0xc2016a68` is loaded by 446 pieces of code
+(literal words at `0x102f3a30`, `0x102f4d38`, `0x1030b46c` and others), so
+it is a large shared state structure, not a private one. Byte stores with
+offset `0x15b` from any base register: ten, at `0x100fc0b8` and
+`0x10367fd2` (main code) and at `0x11dc04fe`, `0x11dc17e6`, `0x11de6eba`,
+`0x11deef16`, `0x11e46296`, `0x11e4757e`, `0x11e6ccee` and `0x11e74d46` (the
+higher settings-store region of F-058 and F-059). Byte loads with that
+offset: eight, at `0x101df8b8`, `0x101e00da`, `0x1030f862` (the choice
+builder), `0x1030f8e8`, `0x1030f928`, `0x1030f92e`, `0x11dc0422` and
+`0x11e461ba`. Observed static scan. Inferred, confidence low to medium: the
+eight high-region stores include the code that refreshes the mirror from the
+stored setting, since that region fills the neighbouring grid bytes at
+`+0x22e` (F-058); which of them writes this byte for the image area is not
+known, and some may be other structures that share the offset. Next: decode a
+short window around each of the ten stores and the two main-code readers.
+Method: owner-run read-only scan, SHA-256 checked first; addresses only, no
+firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
