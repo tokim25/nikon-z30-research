@@ -532,4 +532,26 @@ to height). Not yet done: sorting those callers by which table they read.
 Method: read-only Thumb decode and scan, SHA-256 checked first; sizes are
 Nikon's published numbers and no firmware bytes are recorded.
 
+F-055. The parameter block at `0x115a4c80` (F-054) is a run of short lists of
+packed 16-bit width and height pairs, five entries per list, reached by the
+helpers at `0x1020bfc8` to `0x1020c07c`. The helper offsets map to lists
+starting at `+0x14`, `+0x28`, `+0x34`, `+0x40`, `+0x54`, `+0x68`, `+0x7c`,
+`+0x90`, `+0xa4`, `+0xb8` and `+0xcc`. Where a list holds sizes, entry 4 (the
+1:1 slot) is square: for example 928 by 928 at `+0x78`, 480 by 480 at `+0x8c`,
+1080 by 1080 at `+0xa0`, 120 by 120 at `+0xb4` and 374 by 374 at `+0xc8`. The
+other entries in the same lists are rectangles of 3:2 and 16:9 shape (for
+example 1392 by 928, 1392 by 782 and 1920 by 1080), and the entry order is
+not the same in every list (the list at `+0x90` puts 16:9 at entry 1 and the
+list at `+0x68` puts it at entry 2). The helper at `0x1020bfda` uses a
+different base, RAM `0xc18c7de8`, with two-level indexing. Direct caller
+counts: `0x1020bfda` 38, `0x1020bfc8` 23, `0x1020c05c` 12, `0x1020c02e` 8,
+`0x1020c07c` 6, `0x1020c038` 6, and 17 more spread over the rest. Observed
+static decode on 2026-10-16; what each list is used for (playback, thumbnail,
+live-view output or something else) is NOT established, so the earlier claim
+that the block does not feed live view (F-033) is neither confirmed nor
+refuted here. Inferred, low to medium: replacing the 1:1 slot means giving
+each size list a 65:24 rectangle in its slot 4, and checking each caller for
+a square assumption. Method: read-only decode, SHA-256 checked first; sizes
+only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

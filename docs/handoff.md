@@ -61,8 +61,9 @@ hold square sizes (3712, 2784, 1856 and sensor readout 3728 squared) that
 must become 5200 by 1920 style rectangles; the Retouch Trim code forces
 width equal to height for the 1:1 slot (separate feature, may be left alone);
 one menu interlock is 1:1 specific (F-033). F-054 mapped the table: slot 4 per group of five, records square, 117 direct
-callers of the parameter-block helpers at `0x1020bfc8`. Next: sort those
-callers by which table they read, then check each reader of the 1:1 slot
+callers of the parameter-block helpers at `0x1020bfc8`. F-055 sorted them by helper and decoded the block: size lists with a square
+slot 4, purposes unknown. Next: find what the biggest users (helper
+`0x1020bfda`, 38 callers; `0x1020bfc8`, 23) do with the sizes, then check each reader of the 1:1 slot
 for width-equals-height assumptions, and find the per-area crop-window tables.
 
 ## Where things live
