@@ -387,4 +387,23 @@ clip-state setter, so it should not be called alone as a clip-only step. The
 literal-pool values and what the indexed tables hold are unread. Method:
 read-only Thumb decode, SHA-256 checked first; no bytes recorded here.
 
+F-047. The call chain above the surface initializer `0x104b5fd4` (F-045,
+F-046) is: a handler at `0x102ae5e8`, listed in a table of Thumb function
+pointers at `0x11fa38f8` onward (the entry at `0x11fa38fc`; neighbors point
+to other handlers near `0x102ae5db` and `0x102ae7c3`); that handler checks a
+flag at structure offset `+0x10`, and when it is set calls `0x1045300e`,
+`0x1045348a` and then the wrapper `0x10452f34`, and clears the flag. The
+wrapper's first call is the function at `0x10452d86` (clears a `0x60`-byte
+buffer, runs the 3 by 3 loops that call the initializer, then a third loop of
+calls to `0x10452d26`, then returns); the wrapper then calls `0x104ed666` and
+`0x104ed67a`. The wrapper's only direct caller is the handler (`0x102ae60c`);
+the handler has no direct callers, only the table pointer. Observed static
+decode on 2026-10-16, run by Claude after the owner changed a permission
+setting. Inferred, confidence low to medium: when the flag is set, this
+handler rebuilds a 3 by 3 set of surface objects, so it is a mode or event
+handler and not a menu-exit cleanup by itself. What sets the flag at `+0x10`,
+which event the table slot belongs to, and what `0x104ed666` and `0x104ed67a`
+do are unread. Method: read-only Thumb decode, SHA-256 checked first; no
+bytes recorded here.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
