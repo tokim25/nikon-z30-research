@@ -6,6 +6,7 @@ import json
 
 from .firmware import inspect_firmware, verify_firmware
 from .geometry import centered_crop
+from .verified_firmware import require_verified_eg_module
 from .xpan import write_demo
 
 
@@ -18,6 +19,11 @@ def main(argv: list[str] | None = None) -> int:
     verify.add_argument("path")
     verify.add_argument("--sha256", required=True)
     verify.add_argument("--size", type=int)
+    require = commands.add_parser(
+        "require-verified-eg",
+        help="Hard gate: exit nonzero unless this is the one verified EG module",
+    )
+    require.add_argument("path")
     crop = commands.add_parser("crop", help="Compute largest exact centered 65:24 crop")
     crop.add_argument("width", type=int)
     crop.add_argument("height", type=int)
@@ -39,6 +45,9 @@ def main(argv: list[str] | None = None) -> int:
                       "limitation": "No camera display hook or native capture behavior validated"}
         elif args.command == "crop":
             result = asdict(centered_crop(args.width, args.height))
+        elif args.command == "require-verified-eg":
+            result = asdict(require_verified_eg_module(args.path))
+            result["verified"] = True
         else:
             firmware = inspect_firmware(args.path)
             result = asdict(firmware)
