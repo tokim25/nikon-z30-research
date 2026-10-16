@@ -102,9 +102,11 @@ change: both the mirror and the source are rewritten from something deeper
 within a second (F-081, F-091). Driving the simulated menu to the pick itself
 also hangs (F-092): the simulator could reach the "Choose image area" screen,
 but confirming the 1:1 choice did not complete, even with the thread-aware
-call helper. So this moment currently cannot be tested in the simulator at
-all. It would need either a fix to the simulator's handling of that key, or
-finding and calling the real setter function directly.
+call helper. This moment can be tested by driving the menu, but the pick
+hangs about half the time and must be retried (F-093). When it returns, the
+stored choice changes, and a byte at `0xc1811d90` follows it (0 for DX, 1 for
+1:1, 2 for 16:9). The earlier chain through the mirror bytes was wrong and is
+being redone.
 
 ## What this does not cover
 
