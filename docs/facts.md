@@ -1496,4 +1496,29 @@ accept this ambiguity and move to a different saved-crop angle, or call the
 builder's outer callers directly with synthetic register state (more
 invasive, less certain) to force a hit and inspect the record.
 
+F-100. The simulator cannot be used to directly observe real SD card
+activity for a save. A fresh, blank, FAT32-formatted synthetic disk image
+(created locally, zero real data, attached with `snapshot=on` so writes go
+to QEMU's own temporary overlay and the image itself is never modified) was
+attached as the SD card with SD trace events enabled, on 2026-10-16. The SD
+host controller reports a card insert and reads its capability registers
+once at boot, plus two register writes (a reset sequence) -- and nothing
+else, even after 20 seconds idle or after navigating menus. Setup Menu's
+"Format memory card" item is shown greyed out (unselectable), meaning the
+firmware itself does not consider a usable card present, despite the
+controller-level insert event. No `sdcard_read_block` trace event fired at
+any point. Observed runtime, high confidence for what was tried. This
+closes off the SD-trace angle at this level of effort: the simulator's own
+README already said photo/movie recording is outside its supported scope
+(`xpan-simulator-raw-limits.md`), and this confirms it structurally -- the
+firmware's card-presence check (not modeled here, possibly a detect pin or a
+deeper validation this synthetic image fails) gates it off before any
+command traffic can occur. Not yet tried: finding and tracing that
+card-presence check itself (separate research, not a simulator experiment).
+Repro: confirmed WORK, script `claude-sdcard-format-private.py`
+(single-shot) or `claude-menu-session-sd-private.py` (interactive, paired
+with a `cmd.txt`-polling helper) with a fresh `--output`; the synthetic image
+is `private-inputs/claude-synthetic-sdcard.img`, created locally via
+`newfs_msdos`, never committed. No firmware changed.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
