@@ -139,4 +139,14 @@ handful of runs, medium. The OK hang's cause is unexplained. Repro: private
 `menu_retest_private.py` with `CALLAT`, `NOOP` and `FORCEGATE` switches.
 [guides-ui-states.md](guides-ui-states.md)
 
+F-030. Image-area sizes are stored as data in two places. A run of width and
+height pairs at `0x10750650` lists sizes by aspect ratio and size class; code
+reads it through five literals near `0x10596c9c` to `0x10598640`. A 38-entry
+pointer table at `0x12049a7c` (initialized-data region, reached through its RAM
+copy) points to records near `0x115a4d6c` with, per area (DX, 16:9, 1:1),
+output sizes, padded sensor-readout sizes, large-size copies, and thumbnail
+sizes. Observed static layout, high. Which record drives live view, capture or
+thumbnails is not traced, so a 1:1 replacement may need several records.
+Inferred, low. [image-area-tables.md](image-area-tables.md)
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
