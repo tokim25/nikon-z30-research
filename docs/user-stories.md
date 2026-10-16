@@ -98,14 +98,17 @@ Nikon's is shared.
 4. **Video:** out of scope for the first version. Stills only.
 5. **Full frame:** keep only the XPan crop. The full frame is not kept.
 
-## New questions
+### Further decisions
 
-1. When I switch the camera off and on, should XPan stay selected, like
-   other image areas do?
-2. In XPan, should the camera's own on-screen frame lines, focus points and
-   readouts stay inside the strip, or may they sit over the black bars?
-3. Do you ever want the "i" menu choice and the main menu to show a short
-   label (for example "65:24")?
+1. **Stays selected:** yes. After the camera is switched off and on, XPan
+   stays selected, like other image areas.
+2. **On-screen information:** the camera's frame lines, focus points and
+   readouts stay inside the XPan strip, not over the black bars.
+3. **Label:** yes. The menus show a short label, for example "65:24".
+
+Note: earlier research (image-area-tables.md) says the owner was fine with
+XPan replacing an existing choice such as 1:1. Still to confirm: replace one
+(simpler) or add a new one (harder)?
 
 ## What stays true
 
