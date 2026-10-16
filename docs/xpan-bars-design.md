@@ -99,9 +99,12 @@ firmware file hash is rechecked.
 
 Writing bytes into the camera's settings structures cannot imitate an area
 change: both the mirror and the source are rewritten from something deeper
-within a second (F-081, F-091). The area change has to be tested by driving the
-simulated menu to pick an image area, if the simulator allows it, or by calling
-the real setter once it is found.
+within a second (F-081, F-091). Driving the simulated menu to the pick itself
+also hangs (F-092): the simulator could reach the "Choose image area" screen,
+but confirming the 1:1 choice did not complete, even with the thread-aware
+call helper. So this moment currently cannot be tested in the simulator at
+all. It would need either a fix to the simulator's handling of that key, or
+finding and calling the real setter function directly.
 
 ## What this does not cover
 

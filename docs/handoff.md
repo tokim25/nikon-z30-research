@@ -115,8 +115,13 @@ handler table at `object + 0x78` (data); the call at `0x1030f9ce` is "list
 built", not "choice picked". Owner requirement: the bars must update at once when the area
 is changed from the i menu with live view still on screen. F-091: the pick stubs only post view messages and the source byte
 is also a copy (reset in 0.2 s), so memory writes cannot imitate an area
-change. Next: try driving the simulated menu to pick an image area, and read
-the handler tables of the live-view object. Avoid write watchpoints on the
+change. F-092: driving the menu to pick 1:1
+reached the right screen but hung on the OK press, even with the thread-aware
+call helper; no process left running, firmware hash confirmed unchanged. "The
+area changes" cannot be tested in the simulator yet. Next: owner decides
+whether to try 16:9, debug the simulator's handling of that key, or look for
+the real setter function by other means; read the handler tables of the
+live-view object. Avoid write watchpoints on the
 simulator link; they left it out of step once. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
