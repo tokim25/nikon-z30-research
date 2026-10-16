@@ -44,4 +44,4 @@ Tests use synthetic targets, explicit acknowledgements, and clock ticks. They co
 
 Execution on 2026-10-15: all 10 tracking tests passed locally. The coordinator reported that the final integrated suite passed all 24 tests. `python3 .github/scripts/check_artifacts.py` passed its tracked-artifact checks; this does not certify untracked content or replace manual review.
 
-Unresolved integration: real input routing, display coordinates, target acquisition, autofocus accuracy, camera timing, and hardware compatibility. Simulated success and readable menu strings prove no 3D-tracking implementation. No firmware, extracted bytes, installable patches, device access, or hardware tests are part of this model.
+Unresolved integration: real input routing, display coordinates, target acquisition, autofocus accuracy, camera timing, and hardware compatibility. Simulated success and readable menu strings prove no 3D-tracking implementation. 
