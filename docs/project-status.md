@@ -1,32 +1,46 @@
 # Project status
 
-Updated 2026-10-15. Codex stopped research at the owner's remaining-usage
-cutoff and saved its final handoff for Claude. No agents continue working.
-Start with [handoff-codex.md](handoff-codex.md) on this branch, then review
-the pending PRs. Older paused-lane instructions are superseded by the owner's
-explicit resumption and approved guide/RAW file transfer.
+Updated 2026-10-16 by Codex. Read [handoff-codex.md](handoff-codex.md) for
+the current integration map and next step. Older paused-lane notes are stale.
 
-PRs #34 to #40 are open, covering F-025 to F-029, F-035 and F-036.
-The current `codex/final-claude-handoff` branch adds F-037, the simulator
-RAW-model source audit, and the final cross-track handoff.
+## Open work
 
-All start from main `32a9da5`. Merge #34 through #40, then this branch,
-retaining all facts and using this final handoff when resolving conflicts.
-The owner merges; Codex never merges its own PRs or pushes main.
-PR #35 records the exact ownership transfer and matching test changes.
-Simulator infrastructure retains its previous assignment.
+PRs [#34 through #48](https://github.com/tokim25/nikon-z30-research/pulls)
+are open and had successful checks on their published heads when reviewed.
+They share main base `32a9da5`; preserve every appended fact and report when
+resolving conflicts. This session's final handoff branch is
+`codex/session-handoff-20261016`. The owner approves merges; Codex merges none.
 
-The native geometry A/B/A experiment succeeded twice with centered 5200 by
-1920 geometry. This is not a saved RAW crop. Physical AE-L/AF-L mapping,
-tracking activation, debugger-free guides, failure containment and recovery
-remain unresolved. Personal build work is open; hardware readiness is NO-GO.
+The owner resumed tracking and approved Codex taking over guide/native and
+RAW-crop documents. PR #35 records the ownership metadata change. Simulator
+infrastructure remains in Claude's lane. No Codex agents continue working.
+A new explicit session may resume from the handoff.
 
-Single next step: inspect independent input-cache setter calls at
-`0x103a3e88` and `0x103a400c`. The handoff preserves separate guide and
-RAW leads, reproduction scripts, private run names and failed hypotheses.
+F-001 through F-044 are allocated across main and pending PRs. F-045 is next,
+subject to checking new changes before use.
 
-All publication branches passed 54 local tests and artifact checks. Check
-latest CI heads on GitHub. Original inputs and simulator checkout are clean.
-F-025 to F-037 are allocated; check main/open PRs before using F-038.
+## Feature state
 
-Written by Codex in collaboration with Tony Kim; continues Claude's status notes.
+Persistent stock native black masks now work after diagnostic simulator
+setup, with independent repeats and two toggle cycles. They remain over
+audited menu entry and can cover menu graphics. Natural startup and a clean
+return from menus remain unverified.
+
+A centered 5200 by 1920 capture-geometry experiment passed, but no saved RAW
+crop or NEF metadata writer is verified. The later structure-pack trace
+does not close that gap. Physical AE-L/AF-L input delivery and a tracking
+entry point remain unverified.
+
+Single next step: audit native clip-state lifecycle and callers of
+`0x104b5fd4` before testing automatic menu cleanup and live-view restoration.
+
+## Decisions and limits
+
+Personal, non-distributed build work is open; hardware remains NO-GO.
+No installable firmware or installation workflow was produced. All work
+this session stayed offline in static analysis and disposable simulator
+processes. Original restricted inputs and the pinned simulator remain
+unchanged. No firmware, raw logs, screenshots or extracted data enter Git.
+The repository stays private; every change goes through owner-reviewed PRs.
+
+Written by Codex in collaboration with Tony Kim; replaces stale session status with the verified publication state.
