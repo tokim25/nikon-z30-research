@@ -1,17 +1,17 @@
 # Codex handoff
 
 Rewritten 2026-10-16 by Claude, with the owner's explicit approval to edit
-this Codex-owned file (a lane exception, same as PR #50). The previous
-version of this file was stale, written before this session and still
-pointing at fact numbers below F-050; ignore anything you remember from an
-older copy. Read this file, then [facts.md](facts.md),
-[project-status.md](project-status.md) and [AGENTS.md](AGENTS.md) before
-doing anything.
+this Codex-owned file (a lane exception, same as PR #50). Read this file,
+then [facts.md](facts.md), [project-status.md](project-status.md) and
+[AGENTS.md](AGENTS.md) before doing anything. This version adds a second
+handed-off lane (saved-crop) on top of the first (live-view-bars hook); both
+are below. If you remember an older copy of this file with fact numbers
+below F-050, ignore it.
 
 ## Read this first
 
-Main carries facts through **F-095**. Nothing is open on GitHub (no PRs,
-no diverging branches). Hardware access stays **NO-GO**
+Main carries facts through **F-100**. Nothing is open on GitHub (no PRs, no
+diverging branches). Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,
 non-distributed camera ([build-phase-gate.md](build-phase-gate.md)), but all
@@ -24,15 +24,17 @@ black bars that track that choice, and the saved RAW/JPEG is actually
 cropped. The concrete data-level plan is
 [xpan-replace-1to1-plan.md](xpan-replace-1to1-plan.md).
 
-## Your lane for this handoff: the live-view-bars hook
+Both lanes below were handed to you because Claude hit a genuine wall for
+each — a repeated safety-classifier stop on one, and the simulator's actual
+functional limits on the other — not because either question was shown to
+be unanswerable. Treat both as open research.
 
-This is the one piece Claude is handing to you, because Claude hit the same
-safety-classifier stop twice in a row researching firmware code-insertion
-mechanics and the owner decided Codex should try it instead, not because the
-research itself is unusual for this project (hundreds of similar read-only
-decodes went through fine all session). The full design doc is
-[xpan-bars-design.md](xpan-bars-design.md) — read it in full; this section
-only summarizes.
+## Lane 1: the live-view-bars hook
+
+Claude hit the same safety-classifier stop twice in a row researching
+firmware code-insertion mechanics; the owner decided Codex should try
+instead. The full design doc is [xpan-bars-design.md](xpan-bars-design.md)
+— read it in full; this section only summarizes.
 
 **What's proven:**
 - The camera can draw a persistent black-bar mask on one screen layer with
@@ -57,37 +59,71 @@ only summarizes.
    mask based on the stored image-area choice. This is build-gate condition
    1 ("the simulator shows the feature working without a debugger hook, or
    that hook's risk is fully understood" — `build-phase-gate.md` line 33).
-   Claude did not get far into this before hitting repeated stops; there is
-   essentially no prior art here to build on beyond what F-088 through F-094
-   already establish.
 2. Once a candidate spot exists, tie it to the three trigger moments
    (F-089, F-090) and to the `0xc1811d90`-style choice byte, and test it in
    the simulator per the "How we will know it works" checklist in the
    design doc.
 
-Treat this as genuinely open research, not a known dead end — Claude
-stopped because of its own tooling limits, not because the question was
-shown to be unanswerable.
+## Lane 2: saved-crop (does a saved RAW/JPEG actually come out cropped?)
 
-## Other work in flight (do not duplicate)
+Claude worked this in its own worktree (`nikon-savedcrop`, branch
+`claude/saved-crop-research`, now idle and available to reuse or ignore),
+facts F-095 through F-100. Two different approaches were tried and both
+hit real limits; a third angle is the open suggestion below.
 
-Claude is separately and actively researching the saved-RAW/JPEG crop path
-in its own worktree (`nikon-savedcrop`, branch
-`claude/saved-crop-research`), picking up from the seven callers of the
-crop-window builder `0x101d5b36` (F-056, F-057, F-095). That is unblocked
-and ongoing — don't start on it; check `project-status.md` for the latest
-fact number before choosing your own next fact ID, since both tracks commit
-to the same `facts.md`.
+**Approach A: trace the crop-window builder's callers toward a save path.**
+Of the builder `0x101d5b36`'s seven callers (F-057), six build small
+display/menu info structs (F-095). The seventh, `0x101d5de8` inside a
+function at `0x101d5c54`, is different: it assembles one large record
+(growing past `0x328` bytes) combining the crop geometry, bit-depth/size
+math (`0x101dc204`, dividing 24 bits across 1/2/3/6 components — F-096),
+and copied device-config blocks. It has exactly four direct callers in one
+tight code region (F-097), three sharing a shape: a capability check keyed
+on a per-area id byte, a prepare call, the record build, then a size pair
+copied from `base+0x2b00+0x4c` into the finished record. **This is
+genuinely ambiguous between two explanations and nothing found so far
+picks one**: (a) a capture/save request descriptor, or (b) a
+"shots-remaining-at-this-quality" UI estimator, which needs the same
+ingredients (geometry + bit depth + per-mode math) but never touches
+storage. F-098 found two of the three next-outer callers are reached only
+by pointer/table dispatch (weak lean toward UI, not conclusive).
+
+**Approach B: test it live instead of reasoning about code shape.**
+Three simulator runs with a breakpoint on the record builder and all four
+callers, across menu screens most likely to show a shots-remaining count
+plus a full menu-tab sweep, got zero hits (F-099) — but the simulator's key
+set has no shutter/capture button and no info-overlay button at all, so the
+capture-triggered half of hypothesis (a) can't be tested through normal
+input either way. Separately, attaching a synthetic blank SD card with SD
+trace enabled showed the controller sees a card insert, but the firmware's
+own "Format memory card" menu item stays greyed out and zero SD read/write
+commands ever happen (F-100) — something in the firmware's card-presence
+check rejects the synthetic card before any file I/O could occur, closing
+off the live-observation angle structurally, matching what the simulator's
+own README already said about photo/movie recording being out of its
+supported scope.
+
+**Suggested next angle, not yet tried:** rather than continuing to chase
+Approach A's ambiguity or Approach B's dead end, trace the firmware's
+card-presence check itself (what makes "Format memory card" greyed out) —
+if it's a simple flag the simulator can be made to satisfy, Approach B
+might become viable after all. Separately, forcing a direct call into one
+of the four F-097 callers with synthetic-but-plausible register values
+(more invasive than anything tried, less certain to mean something) was
+floated and not attempted. Either is a reasonable starting point; use your
+own judgment.
 
 ## Rules, unchanged
 
 Offline/simulator only. Never touch a real camera. Never commit firmware
 bytes, dumps, or patched images, anywhere, ever — this applies doubly to
-any work on "a safe place to add instructions," since that research must
-stay entirely descriptive (addresses, offsets, constraints) and never
-include an actual patch or binary diff. Each PR: fresh branch from `main`,
-run the three checks below, one fact per PR where practical, append-only to
-`facts.md`. The owner merges everything; you don't merge your own PRs.
+any work on "a safe place to add instructions" (Lane 1), since that
+research must stay entirely descriptive (addresses, offsets, constraints)
+and never include an actual patch or binary diff. Each PR: fresh branch
+from `main`, run the three checks below, one fact per PR where practical,
+append-only to `facts.md`. The owner merges everything; you don't merge
+your own PRs. Check `project-status.md` for the next free fact number
+before choosing your own, since both lanes share one `facts.md`.
 
 ```sh
 PYTHONPATH=src python3 -m unittest discover -s tests -v
