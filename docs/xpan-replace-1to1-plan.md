@@ -82,6 +82,13 @@ when the choice is offered keep working without code changes.
    the label, and treat the on-screen bars as a later addition. The saved crop
    is the main goal.
 
+## Owner decision on the bars (2026-10-16)
+
+The owner chose option 2: the bars should follow the XPan choice. That needs a
+small code change, so it depends on the open "no debugger hook" condition in
+[build-phase-gate.md](build-phase-gate.md). Until that condition is met, the
+work stays in the simulator. Nothing here authorizes touching a real camera.
+
 ## Order of work
 
 1. Confirm the three data changes in the simulator, with a fresh run.

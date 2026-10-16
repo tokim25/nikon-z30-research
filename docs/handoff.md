@@ -106,8 +106,10 @@ object. The source structure is `0xc2018a2c` (image area at `+0x408`), the
 writer is a generic setter not found by offset. A data-only replacement does
 not need the writer; the live-view bars do need a hook. F-088: the layer clip flag and
 bounds come from a stored template at `0x1073dbe4`, so an always-on mask is a
-data change, and a choice-tied mask needs a small hook. Owner picks between the
-three options in the plan; nothing more to read until then. Avoid write watchpoints on the
+data change, and a choice-tied mask needs a small hook. The owner chose option 2 (bars follow the
+XPan choice, needs a small code change). Simulator only until build-gate
+condition 1 is met. Next step is for the owner and the next session to agree
+how to approach the hook before any more firmware reading. Avoid write watchpoints on the
 simulator link; they left it out of step once. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
