@@ -772,4 +772,22 @@ which name belongs to the area-label list. Method: read-only read of one
 small data block, SHA-256 checked first; numbers and addresses only, no
 firmware bytes.
 
+F-068. Correction to F-067. The two pointer runs before the area-label list
+are not menu-item name tables. An owner-run read of the text they lead to
+(on 2026-10-16) shows the first run, `0x11ff2a4c` to `0x11ff2ab4`, is a list
+of 27 focal-length labels from "50mm" through "4000mm" (in a scrambled
+order), then one label "F--" at `0x11ff2ab8`, and the second run,
+`0x11ff2abc` to `0x11ff2b10`, is 22 f-number labels from "F1.2" through
+"F22". These look like the value lists for manual lens data entry. So the
+block from `0x11ff2a4c` onward is a flat pool of choice and value lists for
+many different settings, one after another, and the area-label list is one
+entry in that pool. Observed (the text) and inferred (the pool, confidence
+medium). Because nothing points at individual lists (F-066), the code most
+likely reaches them by an index into the pool or by a base address plus a
+running offset. Not yet done: finding that base. The next read is to list
+every word in the image whose value falls inside the pool's address range,
+and every code address that loads such a value. Method: read-only read of
+short text labels, SHA-256 checked first; only labels recorded, no firmware
+bytes.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

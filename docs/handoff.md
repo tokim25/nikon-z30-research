@@ -78,9 +78,10 @@ where safe (user-stories.md). F-064: the string index is found (three 36-entry l
 stopped the last step, a read of the table that lists these numbers
 together; the owner approved a narrower read, done as F-065 (the list at `0x11ff2b4c`).
 F-066/F-067: nothing points at that list; it sits after two pointer runs (name
-tables, 26 and 24 entries) and among packed lists of string numbers. Next:
-read the names those pointers lead to (owner runs the read), and match them
-to the lists by position. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
+tables, 26 and 24 entries) and among packed lists of string numbers. F-068 corrects that: the pointers are focal-length and f-number labels (a
+value-list pool), not menu names. Next: list every word and code reference
+whose value falls in the pool range (owner runs the read), to find the pool
+base and the index scheme. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
 AE-L/AF-L button setting `Setting_FuncAeAfLockButtonShooting` (a possible
