@@ -740,4 +740,15 @@ done: what reads this list, what `0x123e` is, and what stores the pick.
 Method: read-only read of one small data list, SHA-256 checked first; only
 numbers recorded, no firmware bytes.
 
+F-066. No word in the image equals the address of the label list of F-065
+(`0x11ff2b4c`) or of the three neighbouring words checked (`0x11ff2b34`,
+`0x11ff2b44`, `0x11ff2b48`), with or without the Thumb bit, and no word
+points anywhere in `0x11ff2b20` to `0x11ff2b80`. Observed static scan on
+2026-10-16, run by the owner in a terminal. Inferred, confidence medium: the
+list is one record inside a larger array that is reached from its base (or by
+an index and a stride), not by pointing at each record. Not yet done:
+finding the base of that array (scan backward from `0x11ff2b34` for the
+repeating record shape) and searching for pointers to the base. Method:
+read-only scan, SHA-256 checked first; addresses only, no firmware bytes.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
