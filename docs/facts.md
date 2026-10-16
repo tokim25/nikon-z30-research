@@ -220,4 +220,13 @@ minus area. Observed, high; hash unchanged. A test with 1:1 changed to a 65:24
 shape was blocked by the permission classifier and has not been run.
 [capture-geometry-baseline.md](capture-geometry-baseline.md)
 
+F-035. Compose job `0x42010019` reaches `0x104787f2` before invoking its
+completion callback `0x10476ea2`. That callback is too late to add guides
+before the current flush. Gate helper `0x103bc388` reads signed 16 bits at
+`0xc1808744`; zero selects direct compose, nonzero queueing. Observed bounded
+static links plus passive runtime support, high confidence; no safe guide
+hook established. Repro: `"$WORK/analysis-env/bin/python" "$WORK/codex-guide-worker-verify-private.py" --output "$WORK/private-inputs/codex-guide-worker-reproduce-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](xpan-compose-completion.md).
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
