@@ -24,11 +24,11 @@ merges its own PRs or pushes main.
 
 ## Current branch and single next step
 
-Branch: `codex/tracking-screen-stack`. F-029 and
-[tracking-screen-stack.md](tracking-screen-stack.md) record the empty-stack
-observation and menu control. Next: establish stock shooting-screen
-initialization before treating dispatcher events as tracking evidence.
-PR #37 holds F-036, the independently repeated geometry result.
+Branch: `codex/tracking-numeric-route`. F-028 and
+[tracking-numeric-input-route.md](tracking-numeric-input-route.md) establish
+a numeric-command route, not a physical input source. Next: inspect independent
+setter calls at `0x103a3e88` and `0x103a400c`. PR #37 holds F-036 geometry;
+PR #38 holds F-029, the assisted live-view screen-stack limitation.
 
 ## New results in progress
 
