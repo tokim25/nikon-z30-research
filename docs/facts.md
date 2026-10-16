@@ -473,4 +473,23 @@ display, because the check was memory-level only. Repro: confirmed WORK, run
 `PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/claude-initializer-copy-check-private.py" --output "$WORK/private-inputs/claude-initializer-copy-check-NN"`
 with a fresh output directory. The script stays under WORK and is not committed.
 
+F-052. Display check of F-050 and F-051 in the simulator, with a negative
+and ambiguous result. With the persistent black mask on (the F-042 setup: 214
+black rows, clip flag 1), the surface initializer `0x104b5fd4` was called for
+object index 1, mode 1 with a config rebuilt from the object's own current
+contents, except that config `+8` (the clip flag) was set to 0, and with
+config words 0 and 4 kept so the registration calls ran. The call returned 1
+and the flag at `0xc1d87838 + 0x2c` read 0 afterwards, but after the normal
+refresh (`0x1032427e` and a 0.6 second run) the screen still showed 214 black
+rows, so the rebuild did not remove the mask. Unexpectedly, object `+0x24`,
+copied from the object's own value 1, read 0 afterwards (object `+0x28` was
+unchanged); what zeroed it is unknown. Observed runtime, one run, assisted
+startup, medium confidence. The whole object was restored byte for byte. Not
+explained: whether an object with `+0x24` equal to 0 is skipped on refresh and
+so leaves old pixels in place, which would make the rebuild a poor cleanup. So
+a rebuild through this initializer is not shown to be a cleanup path; the
+F-047 handler remains unproven as one. Repro: confirmed WORK, run
+`PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/claude-initializer-rebuild-mask-private.py" --output "$WORK/private-inputs/claude-initializer-rebuild-mask-NN"`
+with a fresh output directory. The script stays under WORK and is not committed.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
