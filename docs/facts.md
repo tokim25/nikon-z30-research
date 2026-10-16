@@ -175,4 +175,12 @@ Observed, high for the capture-side facts. That the crop is made upstream by the
 separate image-processor firmware, which is not in this image, is inference at
 about 45 percent. Helper result. [image-area-tables.md](image-area-tables.md)
 
+F-034. The capture-geometry function `0x101d5b36`, called natively in the
+simulator, gives per-area results straight from the records: 1:1 at large size
+is area 3728 by 3728, crop origin (936, 0), image rectangle out to 3720 by 3720;
+16:9 is area 5600 by 3144 with origin (0, 292). Origin equals half the readout
+minus area. Observed, high; hash unchanged. A test with 1:1 changed to a 65:24
+shape was blocked by the permission classifier and has not been run.
+[capture-geometry-baseline.md](capture-geometry-baseline.md)
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
