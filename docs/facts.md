@@ -1227,4 +1227,29 @@ themselves, the callers of this routine, and the live-view entry sequence.
 Method: owner-run read-only decode; instructions and numbers only, no
 firmware bytes recorded.
 
+F-089. Candidate trigger points for the bars, from an owner-run decode on
+2026-10-16 of the first `0x90` bytes of the live-view mode-enter routine
+`0x102f2990` and of `0x102355ee`. (1) `0x102f2990` takes one argument (a mode
+number, compared with 1 and `0xc`), stores a byte 9 on its stack, reads a
+global flag, calls `0x10484e20` with 0, reads the property `0x1a0e` through
+`0x10465984` (and calls `0x1044f238` when it is 6, `0xe` or `0xf`), makes two
+calls to `0x10465b0e` and `0x104555f2`, and then loads the live-view mode
+object at `0xc1821d44` and calls `0x104b9116` with it and 0, followed by
+`0x1046283c`, `0x10462894` with `0x10000`, `0x10453cc6` and `0x103685dc`. It
+has no direct callers, so it is reached through a pointer table. (2)
+`0x102355ee` stores its second argument at `[object + 0x30]`, then calls the
+shared routine `0x10199e04` with `object + 0x20` and 1 as a tail call; the code
+after it is a run of small virtual-call thunks (they load a function pointer
+from offsets `0x44` to `0x70` of the object and jump to it), so the object is
+an interface with methods, and `0x102355ee` is a generic "set state and
+signal" step. It has no direct callers either, and earlier simulator tests
+called it with both the menu object (`0xc182e688`) and the live-view object
+(`0xc1821d44`). Observed. Inferred, confidence low to medium: the place just
+after the activation of the live-view object in `0x102f2990` is a natural spot
+to apply or clear the mask for "live view starts", and `0x102355ee` (when its
+object is the live-view object) is a candidate for "return from a menu";
+"the area changes" has no candidate yet. Not read: the rest of `0x102f2990`
+and what `0x104b9116` does. Method: owner-run read-only decode; instructions
+and numbers only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

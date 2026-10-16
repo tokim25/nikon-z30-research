@@ -73,8 +73,10 @@ firmware file hash is rechecked.
 ## Open questions
 
 1. **Where do the three moments (live view starts, area changes, return from a
-   menu) happen in the camera's code?** Not yet found. This is the main
-   unknown.
+   menu) happen in the camera's code?** Two candidates found (F-089): the
+   point where live view is activated, for "live view starts", and the generic
+   activate step, for "return from a menu". "The area changes" has no
+   candidate yet.
 2. **Is there a safe place to add a few instructions?** The camera's software
    has no obvious spare space, and adding code means changing the image. This
    is build-gate condition 1.

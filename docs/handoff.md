@@ -108,9 +108,10 @@ not need the writer; the live-view bars do need a hook. F-088: the layer clip fl
 bounds come from a stored template at `0x1073dbe4`, so an always-on mask is a
 data change, and a choice-tied mask needs a small hook. The owner chose option 2 (bars follow the
 XPan choice, needs a small code change). Simulator only until build-gate
-condition 1 is met. The paper design is written (xpan-bars-design.md). Next: the owner
-reviews it; its main open question is where the three trigger moments happen
-in the code. Avoid write watchpoints on the
+condition 1 is met. The paper design is written (xpan-bars-design.md). F-089 found two candidate trigger points (live-view
+activation in `0x102f2990`, generic activate `0x102355ee`); "area changes" has
+none. Next: owner reviews the design; then look for what runs when the area
+is picked (read the rest of `0x102f2990` and `0x104b9116` if needed). Avoid write watchpoints on the
 simulator link; they left it out of step once. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
