@@ -91,7 +91,9 @@ structure). F-073: literals resolved; item ids `0x123c` (1:1) and `0x123e` (16:9
 F-075/F-076: the chain is two veneers to a wrapper stub at `0x104270a4` that
 passes the code, a pointer and a line number to the shared routine
 `0x101993de`, which is the real availability test; `0x1052d7c6` is an event
-dispatcher, unrelated. Next: owner decodes `0x101993de`. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
+dispatcher, unrelated. F-077: the chain ends in a generic settings lookup, parked. The concrete plan is
+`xpan-replace-1to1-plan.md`; next is its step 1, confirming the data changes in
+the simulator. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
 AE-L/AF-L button setting `Setting_FuncAeAfLockButtonShooting` (a possible

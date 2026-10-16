@@ -965,4 +965,21 @@ confidence low to medium (the wrapper reading). Not yet read: `0x101993de`.
 Method: owner-run read-only decode; instructions and numbers only, no
 firmware bytes recorded.
 
+F-077. End of the check chain, from an owner-run decode on 2026-10-16. The
+shared routine `0x101993de` is a five-instruction wrapper: it overwrites its
+second argument with a stack address, calls `0x10199ab4` with the code and
+that address, and returns the result. So the text pointer and line number
+that the stub at `0x104270a4` passes (F-076) are ignored here; they look like
+debug arguments. Nearby are batch versions that loop over arrays of codes
+and values (`0x101993e8`, `0x1019941e`, `0x10199438`) and call
+`0x100f303c`, `0x100f308a` and `0x100f3114`, which read like get and
+compare calls on a settings store keyed by 16-bit codes. Observed. Inferred,
+confidence medium: whether 1:1 is offered is a lookup of the property code
+`0x1003` (16:9 is `0x1004`) in that store, not logic in the menu routine. So
+an XPan choice that keeps value 4, item id `0x123c`, string 1454 and code
+`0x1003` inherits whatever rule already decides when 1:1 is offered. Not read:
+`0x10199ab4` and the code that sets `0x1003`; neither is needed for a first
+version, so they are parked. Method: owner-run read-only decode; instructions
+and numbers only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

@@ -26,6 +26,8 @@ the camera builds that list, and how the "i" menu opens it, comes first,
 because the on-screen bars and the saved crop should both follow from that
 one choice. Decisions are in [user-stories.md](user-stories.md).
 
+The concrete change list is in [xpan-replace-1to1-plan.md](xpan-replace-1to1-plan.md).
+
 ## 1. XPan in live view (what you see)
 
 **Works in the simulator.** The camera's own drawing code puts black bars on
