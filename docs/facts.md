@@ -1855,4 +1855,57 @@ Method: read-only static decode (capstone, Thumb) and literal-pool word
 scans, SHA-256 checked first; addresses, offsets and ids only, no firmware
 bytes recorded.
 
+F-107. Resolves the Lane 1 close-handler mode-state sub-question that
+stopped a prior session three times (handoff-codex.md's "owner note on
+the pattern"), one level past where that session left off. Confirms the
+exact close handler: the table slot `0x113033a8` named in the prior
+hand-off holds `0x10460c3d` (Thumb-tagged), i.e. the real close handler is
+`0x10460c3c`.
+
+Full chain, decoded in order:
+- **`0x10460c3c`** (the close handler): calls `0x1045b27e`; if that
+  returns 0, selects mode `0x100000` (the live-view target); any nonzero
+  return selects `0x10000`.
+- **`0x1045b27e`** (the "small helper" the prior hand-off described):
+  calls `0x10457db2` and returns 0 if that result is 0, 3, or 4, else 1 --
+  exactly matching the prior hand-off's abstract description, now with the
+  concrete function identified.
+- **`0x10457db2`**: this is where the prior session stopped. It is a
+  trivial 3-instruction getter -- `ldr r0, [pc, #0x13c]; ldrb r0, [r0]; bx
+  lr` -- that reads one byte from a fixed global address and returns it
+  directly; it is not itself the `cmp r0,#1/2/3`-style dispatcher an
+  earlier reading assumed (that shape belongs to the next function over,
+  `0x10457dbe`, which calls a different function, `0x1045a7f2`, and is
+  unrelated to this chain). Resolving its literal pool entry
+  (`0x10457ef0`) gives the byte's address: **`0xc181f6fc`**.
+
+A literal-pool word scan for `0xc181f6fc` across the full image found
+three references: the getter above (`0x10457ef0`), and two more at
+`0x10458310` and `0x104593b0`. Both of the other two are **read**
+accessors into small lookup tables anchored near this address, not
+writers: the first (`0x104582fa`) indexes a stride-8 table at
+`0xc181f6fc + 0x50` with a bounds check at 10 entries and reads a byte at
+`+4` of the selected entry; the second (`0x10459366`) indexes a different
+stride-8 table (resolved via a second literal, not yet read) with a bounds
+check at `0xb3` (179) entries and reads a full word. Neither writes
+`0xc181f6fc` itself.
+
+Observed static decode on 2026-10-16, no classifier stop encountered at
+any point in this chain (contrast with the prior session's three stops on
+this exact sub-question -- the earlier stops were apparently specific to
+decoding past `0x10457db2`, which this pass did without incident).
+Confidence high for the chain itself (direct instruction-level reads, no
+inference). Not yet done: finding what actually **writes**
+`0xc181f6fc` -- none of the three literal-pool references found is a
+write, so the writer either loads a different literal that resolves to
+the same address via arithmetic (the same pattern F-106 ran into with its
+unresolved slot producer), or writes it through one of the two
+stride-8 tables' sibling entries rather than the plain byte directly. This
+is the natural next step for whoever picks this up: a register-arithmetic
+scan (not a literal match) for writes landing on `0xc181f6fc`, or fully
+mapping the two stride-8 tables to see if a write-side sibling function
+exists for either. Method: read-only static decode (capstone, Thumb) and
+literal-pool word scans, SHA-256 checked first; addresses and offsets
+only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

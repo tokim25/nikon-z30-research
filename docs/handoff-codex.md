@@ -18,7 +18,7 @@ project's own simulator. A card-detect/SD-command-enumeration thread
 (F-102, F-104) was explored this session and retired for exactly this
 reason — see "Lane 2" below for where it stopped and why.
 
-Main carries facts through **F-106**; check main before allocating F-107.
+Main carries facts through **F-107**; check main before allocating F-108.
 Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,
@@ -138,10 +138,30 @@ exactly the open thread PR #119 names as its "single next step"; pick it up
 from there rather than re-deriving it.
 
 **Owner note on the pattern:** this one specific sub-question (what
-naturally drives the menu-close-to-live-view transition) has now stopped
+naturally drives the menu-close-to-live-view transition) had stopped
 Claude three times in a row via the safety classifier, more than any other
-single topic this session. If it also proves difficult for you, that is
-useful signal on its own, not just a retry target.
+single topic in that session.
+
+**Update (2026-10-16), resolved one level further, no classifier stop this
+time (F-107):** the close handler is confirmed as `0x10460c3c`. Its chain
+is now: `0x10460c3c` -> calls `0x1045b27e` ("the small helper") -> calls
+`0x10457db2` (this is exactly where the prior session stopped) -> which
+turns out to be a trivial 3-instruction getter reading one byte at
+`0xc181f6fc` and returning it directly (not the `cmp`-dispatcher an
+earlier reading assumed -- that's a different, unrelated function one
+step over). Two more literal-pool references to `0xc181f6fc` were found
+and both are **reads** into small lookup tables anchored near it, not
+writes. Full detail in facts.md F-107.
+
+**Current single next step for Lane 1:** find what actually writes
+`0xc181f6fc`. None of the three literal-pool hits is a write, so the
+writer likely computes the address via register arithmetic on a nearby
+base (the same pattern F-106 hit with its Lane 2 slot), or writes through
+a sibling of one of the two stride-8 lookup tables rather than the plain
+byte. This is a concrete, bounded next step, not open-ended -- once the
+writer is found, it directly answers "what naturally sets the
+menu-close-to-live-view state," closing out build-gate condition 1's
+remaining open thread for Lane 1.
 
 ## Lane 2: saved-crop (does a saved RAW/JPEG actually come out cropped?)
 
