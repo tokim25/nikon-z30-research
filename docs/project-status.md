@@ -5,11 +5,11 @@ the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
 
-Main carried F-001 through F-100 when this branch started. F-101 is allocated
-to the live-view hook finding on `codex/xpan-liveview-hook-space`. The owner
-approves merges; Codex merges none. Check main again before allocating F-102.
-The documentation-only branch `codex/hardware-risk-criteria` starts from the
-F-101 branch and allocates no fact number.
+Main carries facts through **F-103**. F-101 (live-view hook) merged via PR
+#119. F-102 (SD card-detect trace) and F-103 (saved-crop continuation,
+corrects F-098) are both on `claude/f102-sd-carddetect`. The owner approves
+merges; nobody merges their own PRs. Check main again before allocating
+F-104.
 
 ## Feature state
 

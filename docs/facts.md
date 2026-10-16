@@ -1579,4 +1579,127 @@ Repro: confirmed WORK, private scripts
 `codex-xpan-menu-event-return-private.py`, and
 `codex-xpan-live-ready-probe-private.py`, always with fresh `codex-` output.
 
+F-102. Follows up F-100's open question (what gates "Format memory card")
+with a static trace of the card-detect function itself. The function at
+`0x104157b8` (the comment-cited address `0x104157dc` is a test inside it,
+not its entry) reads the SDHCI Present State register (offset `0x24`) of
+controller 0 only (MMIO base `0x2a100000`) and tests bit 16 ("Card
+Inserted") via `lsls r0,r0,#0xf; bmi` -- a plain bit test against nothing
+else. On a miss it ORs failure bits into a global status struct at
+`0xc18015e8` and returns; on a hit it probes four more helpers, re-checks
+Present State bit 12, and writes pass bits into the same struct before
+returning a boolean. Three direct callers exist: a self-retry inside the
+function's own trailer (`0x104159a4`), a periodic re-poll branch inside a
+generic notification dispatcher (`0x102c3a1c`, reached only for a specific
+event code), and a controller-0 bring-up routine at `0x102aa414` that
+retries up to twice on failure and, on success, dispatches on a separate
+global byte at `0xc18015ea` (values 2 vs 3) into a call to `0x10417890`.
+Observed static decode on 2026-10-16. The exact link from that dispatch (or
+from the `0xc18015e8` struct) to the Setup-menu enable/grey-out check was
+not found -- this is the open gap.
+
+Separately, the function at `0x104164ba` is a generic
+"issue command, wait for completion" primitive (not detect-specific): it
+branches on capability bit 25 of the same `0xc18015e8` struct (offset
+`+0x44`) and, on the non-fast path, calls two OS primitives
+(`0x10199e0a`, `0x10199e4e`) against a fixed event object at
+`0xc1d2da74`. That exact object is the one registered together with
+controller 0's IRQ (`0x1019dfd6(0xe6, ...)` at `0x102aa2d4`) -- confirming
+the nikon-z30-display.c comment's IRQ claim (0xe6 for controller 0, 0xe9 for
+controller 1, the latter against a different event object `0xc1d2df30` with
+no card-detect caller found into controller 1). `0x104164ba` has 8 call
+sites clustered at `0x1041678e`, `0x10416818`, `0x104169e0`, `0x10416a02`,
+`0x10417040`, `0x104170c4`, `0x104172ee` and `0x10417310` (likely individual
+SD command handlers), none individually decoded yet. Observed static
+decode. Inferred, medium confidence: because `0x104164ba` always waits on
+controller 0's specific hardware event rather than a generic/parameterized
+one, and the project's QEMU model comment already states "polling commands
+can work there but DMA completion never reaches the event object awaited by
+0x104164ba", a stall here during SD bring-up (CMD0/ACMD41/CMD2/CMD3-class
+initialization, not bulk-data DMA specifically) is a stronger candidate for
+blocking "Format memory card" than card-detect itself, which is a simple,
+satisfiable bit test. Not proven end-to-end: no single call site among the 8
+was confirmed to sit inside the same bring-up sequence that `0x102aa414`
+drives.
+
+Also checked and ruled unlikely as the cause: the ADMA2/vendor-revision
+check at `0x10415e12`..`0x10415e26` (inside a mode-select function at
+`0x10415d80` that tries transfer modes 1/2/3 in turn). Mode 3 requires a
+capability-register byte at `[r4+0xfc]` bits 24-31 to equal 1; QEMU's
+generic SDHCI model exposes a different vendor byte there. On mismatch the
+function returns 0 ("mode unavailable") via a plain `pop {pc}` at
+`0x10415dae` -- no abort, trap, or storage-disabling side effect -- leaving
+mode 1 (not gated by this byte at all) still selectable. This matches the
+QEMU source comment's own framing ("a driver-compatible revision, not a
+silicon ID"). Observed static decode, high confidence this path does not
+block the card entirely.
+
+Not yet done: tracing `0x10417890` and the `0xc18015ea` dispatch forward
+into the menu/UI layer (the direct lead to the enable/grey-out check), and
+decoding the 8 `0x104164ba` callers individually to identify which SD
+commands they correspond to and whether one sits in the same bring-up path
+as `0x102aa414`. Method: read-only static decode (capstone, Thumb),
+SHA-256 checked first; addresses, offsets and register/field names only, no
+firmware bytes recorded.
+
+F-103. Continues F-097/F-098's ambiguity between a capture/save descriptor
+and a shots-remaining/UI estimator, and corrects F-098's premise. The two
+addresses F-098 called "reached only by pointer/table" -- `0x101568ca` and
+`0x1015be26` -- are internal basic-block labels, not function entries; their
+real enclosing functions (found by walking back to the nearest `push`
+prologue) are `0x10156714` and `0x1015bc3e`. Checked against the real
+entries: `0x1015bc3e` has 3 direct `bl` callers (`0x1015bd2c`, `0x1015c162`,
+`0x1015da18`) and one tail `b.w` caller (`0x1015d7a6`), scattered across
+roughly `0x10153000`-`0x1015da00` -- ordinary direct calls, not table
+dispatch, weakening F-098's lean. Only `0x10156714` still has zero `bl`,
+tail-`b.w`, or raw-pointer-word references anywhere in a full 33.9MB image
+scan (both plain and Thumb-bit-set variants checked); no dispatch table was
+found referencing it either, so this one remains genuinely unresolved
+(unreached by any literal mechanism a flat scan can see, or dead code in
+this build -- not determined). Observed static decode on 2026-10-16.
+
+`0x1015a93c` (F-098's third function) decodes as a large multi-way
+dispatcher: it compares an incoming id against a long run of literal-pool
+constants shaped like category-plus-subid pairs (`0x0419xxxx`, `0x0418xxxx`,
+`0x0417xxxx`), then falls into Thumb jump tables (`tbb [pc,r0]`) for finer
+dispatch -- the same property/event-ID dispatch shape this project has
+already tied to menu/property tables (F-072, F-090), not a save/capture
+consumer. It is referenced with the Thumb bit set (`0x1015a93d`) from 17
+separate literal-pool sites spread across roughly `0x10153158`-`0x10162ff4`
+(~65KB of code, no regular stride -- each its own small literal near its own
+use site), i.e. handed around as a callback/handler argument from many call
+sites, not read out of one fixed table. Its two F-098 callers, `0x1015c208`
+and `0x1015c29c`, sit as ordinary straight-line code inside one enclosing
+function `0x1015beb0` (found via `push.w` prologue): each builds a small
+stack struct, calls `0x1015a93c` (fires the dispatch), then calls
+`0x1015bd18` with a mode argument (0 or 1). `0x1015bd18` is a small
+mode-dispatch wrapper (modes 0/1/2/3): it sets a flag bit at `[base+0x68]`,
+runs a check through `0x101883b2`, and in modes 2/3 only, loads the
+`0x1015a93d` callback and feeds it into `0x101e729e` then `0x101efb9e`; for
+other modes it is also what calls `0x1015bc3e` (at `0x1015bd2c`). One hop
+further out, `0x1015beb0` has exactly one direct `bl` caller,
+`0x1015c13e`, but the function boundary there is ambiguous (looks like
+shared/merged tail code) and was not fully resolved. Observed static decode.
+
+Net picture: F-096/097's crop/record-builder chain, F-098's two targets, and
+`0x1015a93c`'s property dispatch all sit inside one tight function cluster
+(`0x1015beb0`-`0x1015c450`), reading as one "apply an image-area/quality/size
+setting" handler -- build the descriptor, fire a property/event notification,
+then apply/persist flags. Inferred, confidence low to medium: this leans
+toward hypothesis (b) from F-097 (a settings/property-change handler feeding
+UI and internal state) over (a) (a capture/save request descriptor),
+because `0x1015a93c`'s dispatcher shape and its reuse as a shared callback
+match this project's established property/menu-table pattern rather than a
+single fixed capture-pipeline call site. Not conclusive: no unambiguous
+storage/SD-write primitive or UI-text/counter-formatting call was identified
+among the functions touched here (`0x10163e5c`, `0x1006e4b4`/`0x1006e494`/
+`0x1006e48c`, `0x101883b2`, `0x10199c40`, `0x101e729e`, `0x101efb9e`,
+`0x10156b62`, `0x1007631e`, `0x100763c2` -- all still undecoded). Not yet
+done: decoding `0x1015bd18`'s mode 2/3 branches and `0x101e729e`/
+`0x101efb9e` to confirm the callback theory, sampling more of the 17
+`0x1015a93d` literal sites, and resolving `0x1015c13e`'s real function
+boundary. Method: read-only static decode (capstone, Thumb), full-image
+literal/branch scans, SHA-256 checked first; addresses, offsets and
+constants only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

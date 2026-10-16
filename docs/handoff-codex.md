@@ -10,9 +10,8 @@ below F-050, ignore it.
 
 ## Read this first
 
-Main carried facts through **F-100** when this branch started. F-101 is the
-live-view hook finding on `codex/xpan-liveview-hook-space`; check main before
-allocating F-102. Hardware access stays **NO-GO**
+Main carries facts through **F-102**; check main before allocating F-103.
+Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,
 non-distributed camera ([build-phase-gate.md](build-phase-gate.md)), but all
@@ -175,15 +174,41 @@ off the live-observation angle structurally, matching what the simulator's
 own README already said about photo/movie recording being out of its
 supported scope.
 
-**Suggested next angle, not yet tried:** rather than continuing to chase
-Approach A's ambiguity or Approach B's dead end, trace the firmware's
-card-presence check itself (what makes "Format memory card" greyed out) —
-if it's a simple flag the simulator can be made to satisfy, Approach B
-might become viable after all. Separately, forcing a direct call into one
-of the four F-097 callers with synthetic-but-plausible register values
-(more invasive than anything tried, less certain to mean something) was
-floated and not attempted. Either is a reasonable starting point; use your
-own judgment.
+**Update (2026-10-16), card-presence check traced (F-102):** the detect
+function itself (`0x104157b8`) is a plain, satisfiable bit test (SDHCI
+Present State bit 16 on controller 0) — not the blocker. The stronger
+candidate is a downstream stall: `0x104164ba`, a generic "issue
+command, wait for completion" primitive used ~8 times during SD bring-up,
+always waits on controller 0's specific hardware event object, matching the
+QEMU model's own comment that "polling commands can work there but DMA
+completion never reaches the event object awaited by 0x104164ba." Not
+proven end-to-end. The direct link from card-detect's result (or the global
+status struct at `0xc18015e8`) forward into the Setup-menu enable/grey-out
+check was not found — that's the open gap, along with decoding the 8
+`0x104164ba` call sites individually. Full detail in facts.md F-102.
+
+**Update (2026-10-16), Approach A continued, F-098 partly corrected
+(F-103):** `0x101568ca` and `0x1015be26` are internal basic-block labels,
+not function entries — their real enclosing functions are `0x10156714` and
+`0x1015bc3e`. Re-checked against the real entries, `0x1015bc3e` turns out to
+have ordinary direct callers (not table-dispatched as F-098 implied); only
+`0x10156714` still has zero references found by any literal mechanism.
+`0x1015a93c` itself decodes as a property/event-ID dispatcher (compare
+against ID constants, then jump table) shared as a callback pointer from 17
+separate literal-pool sites across ~65KB of code — the textbook shape this
+project has already tied to menu/property tables (F-072/F-090), not a
+capture/save pipeline. Leans toward hypothesis (b) (settings/property
+handler, not a capture descriptor) at low-to-medium confidence; no
+unambiguous storage-write or UI-counter call was found either way. Full
+detail in facts.md F-103.
+
+**Suggested next angle:** for Lane 1's card-detect thread, decode the 8
+`0x104164ba` callers and the `0xc18015ea`/`0x10417890` dispatch inside
+`0x102aa414`. For Lane 2, either accept (b) as the working hypothesis and
+move on, or decode `0x1015bd18`'s mode 2/3 branches and `0x101e729e`/
+`0x101efb9e` to confirm it. Forcing a direct call into one of the four
+F-097 callers with synthetic register state (more invasive, less certain)
+remains floated and not attempted.
 
 ## Rules, unchanged
 
