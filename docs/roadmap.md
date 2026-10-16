@@ -1,62 +1,60 @@
 # Research roadmap
 
-Updated 2026-10-16. The goal is XPan framing in live view and saved RAW
-files, plus the camera's own subject tracking from one AE-L/AF-L press.
-All results so far come from offline analysis and a simulator. No actual
-camera was connected or changed.
+Updated 2026-10-16. All results so far come from offline analysis and a
+simulator. No real camera was connected or changed.
 
-## Live-view framing
+## The goal, in plain words
 
-The earlier guide-line experiment works through native drawing calls.
-The new result in PR #43 uses stock border drawing after one diagnostic
-clip flag and native geometry/color setup. It keeps black masks on screen
-as the preview refreshes without repeated debugger drawing calls.
+Two things, both from the owner:
 
-The calibrated result leaves a 720 by 266 visible strip, rounded to 65:24.
-Two independent runs pass. Two later on/off cycles also restore the
-baseline when disabled. However, PR #48 shows that the mask remains when
-the menu opens and can cover menu graphics. The following live-view entry
-call did not prove a natural menu exit.
+1. **XPan framing you can see and keep.** The wide 65:24 look shows in live
+   view, and the camera also records every photo in that same crop. A guide
+   on screen alone is not the goal.
+2. **One-press subject tracking.** Pressing the AE-L/AF-L button starts the
+   camera's own subject tracking.
 
-Next: trace the native clip-state lifecycle, then test menu cleanup and a
-verified return to live view. Natural startup, focus graphics and reboot
-remain open. This is not yet an automatic camera feature.
+## 1. XPan in live view (what you see)
 
-## Saved RAW crop
+**Works in the simulator.** The camera's own drawing code puts black bars on
+the top and bottom, leaving a 65:24 strip. Two independent runs passed, and
+turning the bars off restores the normal picture.
 
-PR #37 proves that temporary guest data can produce centered 5200 by 1920
-capture geometry, an exact 65:24 rectangle. It does not prove that the
-camera captures or saves that rectangle.
+**Not finished.** The bars stay stuck when a menu opens and can cover menu
+graphics. We traced which part of the camera sets up the screen layers (PR
+#51 to #60 notes, facts F-045 to F-052). One idea, rebuilding the layer to
+clear the bars, was tested and did not work: the switch turned off but the
+bars stayed. Next is finding another way to clear them when a menu opens.
 
-PR #47 traces selected geometry-like fields into a packed structure and
-processing submission. The source object's identity and a NEF writer remain
-unverified. Reviewed TIFF-like constants were unrelated error/UI values.
+## 2. XPan in the saved photo (what gets recorded)
 
-Next in this trail: establish the source object and the actual save boundary,
-then obtain simulator evidence of saved-image behavior. Do not infer a RAW
-crop from a masked preview or a geometry return value.
+**Not shown yet.** This is the less proven half of the goal.
+- A simulator test showed the camera's capture settings can be set to the
+  XPan size, 5200 by 1920 pixels, an exact 65:24 shape.
+- That does not show a saved photo with that crop. We do not yet know
+  whether the saved file, RAW or JPEG, would come out cropped, or whether the
+  file's own size notes would be right.
+- The simulator's image-processing part is only partly modeled, so it may not
+  be able to prove this at all.
 
-## One-button tracking
+**Next:** find where the camera decides the size of the saved file, and see
+whether the simulator can show a cropped save. Do not treat a masked preview
+or a size number as proof of a cropped photo.
 
-The named hardware switch and several input paths are known. New queued
-input work traces a selected bank containing logical ID 41 and mask 0x2000.
-Matching that mask to the named AE-L/AF-L switch does not prove they refer
-to the same physical event.
+## 3. One-press tracking (the AE-L/AF-L button)
 
-Next in this trail: trace the queued-event producer to its source and
-press/release handling. A tracking entry point, visible reticle transition,
-cancellation and rejection in unsupported modes are still unverified.
+**Allowed, but nobody is working on it right now.** The owner un-paused it.
+The button exists on the body and has its own signal inside the camera, and
+several paths for button signals are mapped. Nobody has yet shown that
+signal reaching the tracking feature. A visible tracking box, canceling it,
+and refusing it in modes that cannot track are all still unproven.
 
-## Integration and readiness
+## Where things stand overall
 
-The single next session task is the native clip-state lifecycle above.
-The other trails can resume in separate agreed lanes. No combined feature
-test or installable firmware is available. Hardware remains NO-GO.
+- All of Codex's pending work is merged. Nothing is waiting.
+- No combined feature test exists, and no installable firmware exists.
+- Hardware remains NO-GO. A recovery plan is drafted but not credible yet
+  ([recovery-plan.md](recovery-plan.md)).
+- See [the Codex handoff](handoff-codex.md), [the Claude handoff](handoff.md)
+  and [the readiness checkpoint](hardware-readiness.md) for details.
 
-The owner resumed tracking and approved Codex taking over guide/native and
-RAW-crop documents; older pause notes are stale. PRs #34 through #48 hold
-the pending findings. Use [the current handoff](handoff-codex.md) for their
-integration order, private repros and exact limits, and
-[the readiness checkpoint](hardware-readiness.md) for remaining gates.
-
-Written by Codex in collaboration with Tony Kim; updates Claude's roadmap with verified simulator progress and unfinished work.
+Written by Claude (Opus 5.5) and Codex in collaboration with Tony Kim.
