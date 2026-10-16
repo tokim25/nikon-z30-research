@@ -130,4 +130,13 @@ Observed dispatch mechanics, high. Why OK does nothing in live view is not
 settled: the live-view screen's group, id and key table were not found.
 Inferred, low. Helper-agent result, not re-verified.
 
+F-022. Menu states cannot show the guides. With the thread-aware helper for
+both the key event and the nested call: up, down and Back complete with no
+bars; OK hangs when any nested call, even a no-op one, is made at the first of
+its three compose stops (3 of 3 runs, no-call control completes), and
+completes with no bars when the call is made at the last stop. Observed in a
+handful of runs, medium. The OK hang's cause is unexplained. Repro: private
+`menu_retest_private.py` with `CALLAT`, `NOOP` and `FORCEGATE` switches.
+[guides-ui-states.md](guides-ui-states.md)
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
