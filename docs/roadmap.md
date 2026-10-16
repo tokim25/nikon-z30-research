@@ -1,50 +1,62 @@
 # Research roadmap
 
-This page tracks progress on two camera features we are studying, step by
-step, inside a simulator. A simulator is a program that acts like the
-camera's hardware, so we can test ideas without a real camera. Nothing here
-has been installed on, or connected to, an actual Nikon camera.
+Updated 2026-10-16. The goal is XPan framing in live view and saved RAW
+files, plus the camera's own subject tracking from one AE-L/AF-L press.
+All results so far come from offline analysis and a simulator. No actual
+camera was connected or changed.
 
-## The two features
+## Live-view framing
 
-**A framing guide.** Lines on the screen that show a wide, panoramic crop (a
-65:24 shape) while shooting, so a photographer can compose for that crop
-before taking the picture.
+The earlier guide-line experiment works through native drawing calls.
+The new result in PR #43 uses stock border drawing after one diagnostic
+clip flag and native geometry/color setup. It keeps black masks on screen
+as the preview refreshes without repeated debugger drawing calls.
 
-**Subject tracking.** A way to turn on the camera's own subject-tracking
-with one button press, instead of the usual multi-step menu process.
+The calibrated result leaves a 720 by 266 visible strip, rounded to 65:24.
+Two independent runs pass. Two later on/off cycles also restore the
+baseline when disabled. However, PR #48 shows that the mask remains when
+the menu opens and can cover menu graphics. The following live-view entry
+call did not prove a natural menu exit.
 
-## What we have proven
+Next: trace the native clip-state lifecycle, then test menu cleanup and a
+verified return to live view. Natural startup, focus graphics and reboot
+remain open. This is not yet an automatic camera feature.
 
-- The framing guide now works. The camera's own built-in drawing code draws
-  the guide lines on screen, in the live shooting view, inside the
-  simulator. We did not paste the lines on top from outside; the camera's
-  own software drew them. See [the simulator results](native-guides-simulator.md).
-- An early bug that made this unreliable, where a background process could
-  randomly stall a command, is now fixed and tested.
-- The guide does not yet work inside the camera's menu screens, only in the
-  live shooting view. We checked this carefully and stopped trying, rather
-  than force it.
+## Saved RAW crop
 
-## What we are still researching
+PR #37 proves that temporary guest data can produce centered 5200 by 1920
+capture geometry, an exact 65:24 rectangle. It does not prove that the
+camera captures or saves that rectangle.
 
-- Which button could turn on subject tracking with one press. We have found
-  that the camera recognizes a physical switch for this, but we have not yet
-  traced the full path from a button press to the tracking feature turning
-  on. See [the shared findings log](facts.md): every finding there is marked
-  as confirmed or as a reasoned guess.
-- Where, inside saved photos, the camera stores the exact pixel area it
-  captured. See [the image-area research](image-area-tables.md).
+PR #47 traces selected geometry-like fields into a packed structure and
+processing submission. The source object's identity and a NEF writer remain
+unverified. Reviewed TIFF-like constants were unrelated error/UI values.
 
-## Where things stand overall
+Next in this trail: establish the source object and the actual save boundary,
+then obtain simulator evidence of saved-image behavior. Do not infer a RAW
+crop from a masked preview or a geometry return value.
 
-As of October 2026, the framing guide works in the simulator's live shooting
-view, with known limits around menu screens. Subject tracking is still at
-the research stage: we know a lot about how the camera handles buttons and
-events, but the full path from a button press to the tracking feature has
-not been confirmed.
+## One-button tracking
 
-For day-to-day status and the next task, see [the simulator-work
-handoff](handoff.md) and [the tracking-research handoff](handoff-codex.md).
+The named hardware switch and several input paths are known. New queued
+input work traces a selected bank containing logical ID 41 and mask 0x2000.
+Matching that mask to the named AE-L/AF-L switch does not prove they refer
+to the same physical event.
 
-Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
+Next in this trail: trace the queued-event producer to its source and
+press/release handling. A tracking entry point, visible reticle transition,
+cancellation and rejection in unsupported modes are still unverified.
+
+## Integration and readiness
+
+The single next session task is the native clip-state lifecycle above.
+The other trails can resume in separate agreed lanes. No combined feature
+test or installable firmware is available. Hardware remains NO-GO.
+
+The owner resumed tracking and approved Codex taking over guide/native and
+RAW-crop documents; older pause notes are stale. PRs #34 through #48 hold
+the pending findings. Use [the current handoff](handoff-codex.md) for their
+integration order, private repros and exact limits, and
+[the readiness checkpoint](hardware-readiness.md) for remaining gates.
+
+Written by Codex in collaboration with Tony Kim; updates Claude's roadmap with verified simulator progress and unfinished work.

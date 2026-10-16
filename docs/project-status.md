@@ -1,45 +1,46 @@
 # Project status
 
-Last updated 2026-10-15 by Claude. Update this file whenever a pull request
-merges, a session starts or stops, or a decision changes.
+Updated 2026-10-16 by Codex. Read [handoff-codex.md](handoff-codex.md) for
+the current integration map and next step. Older paused-lane notes are stale.
 
-## Where to start
+## Open work
 
-Codex: [handoff-codex.md](handoff-codex.md). Claude: [handoff.md](handoff.md).
+PRs [#34 through #48](https://github.com/tokim25/nikon-z30-research/pulls)
+are open and had successful checks on their published heads when reviewed.
+They share main base `32a9da5`; preserve every appended fact and report when
+resolving conflicts. This session's final handoff branch is
+`codex/session-handoff-20261016`. The owner approves merges; Codex merges none.
 
-## Open pull requests
+The owner resumed tracking and approved Codex taking over guide/native and
+RAW-crop documents. PR #35 records the ownership metadata change. Simulator
+infrastructure remains in Claude's lane. No Codex agents continue working.
+A new explicit session may resume from the handoff.
 
-None, as of the last update to this file.
+F-001 through F-044 are allocated across main and pending PRs. F-045 is next,
+subject to checking new changes before use.
 
-Merged: #5, #6, #13 to #26 (#13 to #16 superseded by #18, the rest landed),
-and #29 to #32. Local, simulator-only firmware experimentation is allowed
-in AGENTS.md. Personal, non-distributed build-phase work is open
-(build-phase-gate.md); hardware access is not. A version-and-hash gate is
-merged (`verified_firmware.py`).
+## Feature state
 
-## Sessions in flight
+Persistent stock native black masks now work after diagnostic simulator
+setup, with independent repeats and two toggle cycles. They remain over
+audited menu entry and can cover menu graphics. Natural startup and a clean
+return from menus remain unverified.
 
-- Claude, simulator: issue #8 (guides in menu states) and the guide docs,
-  owned by one session. Branches `claude/*`.
-- Claude, tracking and button mapping: paused by the owner. The research so
-  far is merged (#20, #24); do not resume it without the owner's say-so.
-- Codex: stalled on token limits. Resumes from its handoff file.
+A centered 5200 by 1920 capture-geometry experiment passed, but no saved RAW
+crop or NEF metadata writer is verified. The later structure-pack trace
+does not close that gap. Physical AE-L/AF-L input delivery and a tracking
+entry point remain unverified.
 
-## Fact numbers
+Single next step: audit native clip-state lifecycle and callers of
+`0x104b5fd4` before testing automatic menu cleanup and live-view restoration.
 
-F-001 to F-024 and F-030 to F-034 are used. F-025 to F-029 are reserved for
-the tracking lane, which the owner has paused; do not use them without the
-owner's say-so. The next free number for other work is F-035. Before adding
-a fact, check main and open pull requests for the next free number.
+## Decisions and limits
 
-## Owner decisions
+Personal, non-distributed build work is open; hardware remains NO-GO.
+No installable firmware or installation workflow was produced. All work
+this session stayed offline in static analysis and disposable simulator
+processes. Original restricted inputs and the pinned simulator remain
+unchanged. No firmware, raw logs, screenshots or extracted data enter Git.
+The repository stays private; every change goes through owner-reviewed PRs.
 
-- Every change goes through a pull request, and the owner merges. The repo
-  stays private. Branch protection is unavailable on this plan.
-- Build-phase work is open for the owner's own, non-distributed camera
-  (build-phase-gate.md). Hardware access stays closed until the gate's
-  remaining conditions are met and the owner separately approves it.
-- Each session works in its own git worktree. The primary checkout stays on
-  `main`.
-
-Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
+Written by Codex in collaboration with Tony Kim; replaces stale session status with the verified publication state.

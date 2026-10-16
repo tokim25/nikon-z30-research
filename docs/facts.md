@@ -220,4 +220,145 @@ minus area. Observed, high; hash unchanged. A test with 1:1 changed to a 65:24
 shape was blocked by the permission classifier and has not been run.
 [capture-geometry-baseline.md](capture-geometry-baseline.md)
 
+F-025. Corrects F-021's exclusive-writer and universal 60-byte ring-record
+claims. Both `0x102f0a36` and `0x102f1844` write into the ring at
+`0xc2008ea0`, using index state `0xc182004c` and 400-byte slots. The former
+copies 60 bytes and forces kind 1; the latter copies 396 bytes and can advance
+the index modulo 16. Observed static code/data links, high confidence,
+independently checked. Physical source, runtime delivery and tracking meaning
+remain unverified. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex_input_record_verify_private.py" --output "$WORK/private-inputs/codex-input-record-review-02"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-input-records.md).
+F-026. Two record-field bit-13 paths have different normalized outputs:
+`0x102f0488` maps `+0x164` bit 13 to `+0x18` mask 2, while `0x102f056e`
+maps `+0x150` bit 13 to `+0x18` mask 4, clearing the corresponding source
+bit. Their candidate/menu-map links are respectively `0x1a` / `0x24f` and
+`0x19` / `0x280`. Observed bounded static links, high confidence,
+independently checked. Neither source field is proven to be SW0 or physical
+AE-L/AF-L; execution and final event delivery remain unverified. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex-sw0-normalization-verify-private.py" --output "$WORK/private-inputs/codex-sw0-normalization-review-03"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-mask-namespaces.md).
+F-027. In the bounded structured-record path at `0x1008ad26`, selector 5
+chooses mask `0x2000`. State at record `+0x08` equal to 1 sets the mask in
+staging word `0xc1811e74`; zero clears it. Other states skip that update but
+still reach setter `0x101e383a`, which copies the word to cache
+`0xc181182c + 0x30`. Observed static code/data links, high confidence,
+independently checked. Sender, physical SW0/button identity, runtime delivery
+and tracking meaning are unverified. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex-input-field-source-verify-private.py" --output "$WORK/private-inputs/codex-input-field-source-review-04"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-input-source.md).
+F-036. Supersedes F-034's unrun-test status: two simulator A/B/A runs of
+geometry routine `0x101d5b36` with temporary data-only changes returned a
+centered area 5216 by 1936 at origin (192, 896), with rectangle 5200 by 1920
+(65:24). DX and 16:9 controls were unchanged; restoration exactly recovered
+baseline outputs. Observed runtime results, high confidence. Original file
+and instructions were unchanged; capture, saved RAW crop and hardware
+support remain unverified. Repro:
+`PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex_agent_geometry_data_probe_private.py" --output "$WORK/private-inputs/codex-geometry-reproduce-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](xpan-capture-geometry-probe.md).
+F-029. Two unchanged-firmware simulator runs found count zero in screen stack
+`0xc181e4f0` before startup, after assisted live-view startup and after stock
+refresh. An audited menu-entry control populated two entries (IDs 1 and
+`0x351`). Observed runtime counts, high confidence; bounded fixture
+interpretation, moderate. Getter `0x1046109a` / `0x10365ff0` confirms count
+at container `+8`. Ordinary camera state and tracking input are unverified.
+Repro: `PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex_screen_stack_private.py" --output "$WORK/private-inputs/codex-screen-stack-review-04" --menu-control`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-screen-stack.md).
+F-028. Mode-3 path in initializer `0x1008ad72` supplies callback
+`0x1008ac2e` through registrar `0x101e1c04`, word limit 4, flags 0.
+Consumer `0x101e1c22` calls numeric-text parser `0x101e230e` before the
+registered callback. This establishes one registered numeric-command route
+into the handler containing `0x1008ad26`. Observed bounded static links,
+high confidence, independently reviewed. Diagnostic purpose is inference;
+registration success, transport and physical-button identity are unverified.
+Repro: `"$WORK/analysis-env/bin/python" "$WORK/codex-registered-input-verify-private.py" --output "$WORK/private-inputs/codex-registered-input-review-03"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-numeric-input-route.md).
+F-035. Compose job `0x42010019` reaches `0x104787f2` before invoking its
+completion callback `0x10476ea2`. That callback is too late to add guides
+before the current flush. Gate helper `0x103bc388` reads signed 16 bits at
+`0xc1808744`; zero selects direct compose, nonzero queueing. Observed bounded
+static links plus passive runtime support, high confidence; no safe guide
+hook established. Repro: `"$WORK/analysis-env/bin/python" "$WORK/codex-guide-worker-verify-private.py" --output "$WORK/private-inputs/codex-guide-worker-reproduce-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](xpan-compose-completion.md).
+F-037. The pinned simulator contains an opt-in functional ISP model with
+explicit pixel-layout hypotheses, fixed RAW-transaction checks and bounded
+processed output. This corrects categorical claims that it has no image
+processor. SD transport exists, but neither source presence nor geometry
+tests establish native NEF serialization or saved RAW cropping. Observed
+source, high confidence; runtime/hardware fidelity unverified. Repro:
+`python3 "$WORK/codex_agent_raw_model_source_audit_private.py" --output "$WORK/private-inputs/codex-raw-model-reproduce-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](xpan-simulator-raw-limits.md).
+F-040. Setter `0x104540ee` controls retained border color at `0xc1820138`
+and retention at `0xc1820134`. Nonzero color reaches refresh request
+`+0x168`, render-context `+0x44` and producer `0x103c1b54`. Retention 1
+preserved synthetic white across two refreshes in two runs; retention 0
+cleared stored color after one use in a control run. Observed bounded static
+and runtime behavior, high confidence. No visible guides or new geometry
+established. Repro: `PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex-guide-border-color-observe-private.py" --retention 1 --output "$WORK/private-inputs/codex-border-color-reproduce-02"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](xpan-border-color-state.md).
+F-042. Two calibrated simulator A/B/A runs produced persistent stock black
+crop masks: 107 rows top/bottom, centered 266-row visible strip at width 720
+(rounded 65:24). After one diagnostic clip-flag write and native geometry /
+color setup, the mask appeared autonomously and survived three refreshes
+without per-cycle rectangle injection. Restoration recovered baseline outside
+the animated band. Observed runtime behavior, high confidence; natural
+startup, overlays, saved RAW and hardware unverified. Repro:
+`PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex-guide-clip-mask-private.py" --bounds -1 106 721 374 --output "$WORK/private-inputs/codex-native-mask-reproduce-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](xpan-persistent-native-mask.md).
+F-038. Queued consumer `0x103a3f9e` maps record ID `+0x11` through 16-row
+banks at `0xc18c9a7c + 128 * BYTE(0xc18c9a64)`, stride 8. Operations
+0–2 set mapped bits, 3–4 clear; changed staging at `0xc18c9a68` reaches
+setter `0x101e383a` at `0x103a400c`. Handler `0x103a3d14` builds this
+route for code `0x2083`. Observed static links, high confidence; transport,
+physical identity, press/release and tracking unverified. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex-agent-queued-input-verify-private.py" --output "$WORK/private-inputs/codex-queued-route-reproduce-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-queued-bank-route.md).
+F-043. Query `0x103a3cb0` selects input bank 1 via byte store
+`0x103a3cdc`. Initialized bank `0xc18c9afc`, row 11, associates logical
+ID 41 with mask `0x2000`; the query sends tag/ID pairs as code `0x2082`.
+Observed static links, high confidence. Execution, physical SW0/button
+identity, transport and tracking remain unverified. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex-agent-input-bank-verify-private.py" --output "$WORK/private-inputs/codex-input-bank-reproduce-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-input-bank-selection.md).
+F-041. Assisted startup changed live-view object `0xc1821d44` selector
+`+0x74` from 4 to 1 while the menu/screen stack stayed empty. The separate
+registry `0xc2006594` had groups 2/3 before startup and gained group 5.
+Getter `0x104571fe` uses descriptor stride 44 without reviewed ID/null-base
+guards. Observed static/runtime state, high confidence; fixture
+generalization moderate. No input/AF readiness inferred. Repro:
+`PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex_mode_object_20261016_private.py" --output "$WORK/private-inputs/codex-mode-state-reproduce-01" --menu-control`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-registry-mode-state.md).
+F-039. Builder `0x101e779c` repacks selected source halfwords `+0x208`
+through `+0x218`; caller `0x101ea022` supplies source argument plus
+`0x1c` and destination `0xc233addc`. A later reviewed path copies
+2024 bytes through `0x100aa43a` and submits via `0x100c9f24`. Observed
+static links, high confidence; original capture-request identity, NEF
+semantics, runtime delivery and saved crop unverified. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex_agent_geometry_pack_verify_private.py" --output "$WORK/private-inputs/codex-geometry-pack-reproduce-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](xpan-packed-config-boundary.md).
+F-044. Under assisted simulator startup, two diagnostic clip-flag on/off
+cycles at property `0xc1d87838 + 0x2c` produced the calibrated 214 black
+border rows on and restored baseline pixels outside the animated band off.
+Audited menu entry `0x102355ee` grew the screen stack from zero to two;
+the mask, bank, property and retained color remained unchanged. A subsequent
+live-view entry did not remove those stack entries, so natural menu exit is
+unverified. Observed runtime, high within this fixture; independently repeated.
+Original owned fields were restored. Repro: confirmed WORK, run
+`PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex-guide-mask-reliability-private.py" --output "$WORK/private-inputs/codex-mask-lifetime-fact-reproduce-01"`
+with a fresh output directory. [Report](xpan-mask-menu-lifetime.md).
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
