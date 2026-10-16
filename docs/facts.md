@@ -373,4 +373,18 @@ arguments are not yet read. Next: decode a short window around each caller
 to see what config pointer they pass. Method: read-only Thumb branch scan,
 SHA-256 checked first; no bytes recorded here.
 
+F-046. Both callers of the surface initializer `0x104b5fd4` (F-045) sit
+inside nested loops that count to 3 (compare-with-3 at `0x10452e5c`,
+`0x10452e62`, `0x10452eae`, `0x10452eb4`), so each runs up to nine times per
+pass over a 3 by 3 set. The first passes mode value 1 in r1, the second mode
+value 2. Each sets up r0 from an indexed table, r2 from a literal-pool word
+and several stack arguments; the second first clears a `0x198`-byte local
+buffer and passes its address. Observed static decode of a short window
+before each call, produced by the owner in a terminal (and repeated by
+Claude) on 2026-10-16. Inferred, confidence low to medium: the initializer is
+bulk per-item surface setup for a 3 by 3 set in two modes, not a one-off
+clip-state setter, so it should not be called alone as a clip-only step. The
+literal-pool values and what the indexed tables hold are unread. Method:
+read-only Thumb decode, SHA-256 checked first; no bytes recorded here.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
