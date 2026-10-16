@@ -943,4 +943,26 @@ confirm the targets, and reading the literals and the switch in the routine
 from `0x1052d7c6`. Method: owner-run read-only decode; instructions only, no
 firmware bytes recorded.
 
+F-076. Corrects F-075. An owner-run read on 2026-10-16 printed the raw bytes
+of the two jump instructions and the routine after them. Working the
+encodings by hand confirms both jumps: `0x10484d90` branches to `0x1052d7c2`
+(`a8 f0 17 bd`), and `0x1052d7c2` branches on to `0x104270a4`
+(`f9 f6 6f bc`). So the chain from the image-area builder's check call is
+real: two one-line long-jump veneers ending at the stub at `0x104270a4`. That
+stub keeps the caller's first argument (the availability code `0x1003` or
+`0x1004`), adds a text pointer and the number `0x20c`, and branches to the
+shared routine at `0x101993de`. Its siblings do the same with other numbers
+(`0x21e`, `0x22d`, `0x243`, `0x25a`) and other shared routines. This pattern
+fits a wrapper that records the caller's source file and line next to the
+query (the same macro style used for logging), so it is probably not error
+reporting, and the real availability test is the shared routine at
+`0x101993de`. The routine at `0x1052d7c6` is unrelated: it compares a message
+value against event numbers such as `0x4100040`, `0x4100024` and `0x410001c`
+and works on RAM structures at `0xc18c568c`, `0xc2588e6c`, `0xc2589338` and
+`0xc2588c38`, so it is an event dispatcher. The earlier guess that it is the
+check is withdrawn. Observed (the bytes, the literals), inferred,
+confidence low to medium (the wrapper reading). Not yet read: `0x101993de`.
+Method: owner-run read-only decode; instructions and numbers only, no
+firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
