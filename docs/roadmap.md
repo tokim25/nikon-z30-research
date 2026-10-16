@@ -11,7 +11,18 @@ Two things, both from the owner:
    view, and the camera also records every photo in that same crop. A guide
    on screen alone is not the goal.
 2. **One-press subject tracking.** Pressing the AE-L/AF-L button starts the
-   camera's own subject tracking.
+   camera's own subject tracking. Losing the button's lock job is fine.
+
+First version: stills only, RAW and JPEG, only the XPan crop kept.
+
+## 0. XPan as a menu choice (how you turn it on)
+
+You want XPan to be a choice in the camera's "Choose image area" menu,
+reached from the "i" quick menu, for stills only, applied to RAW and JPEG.
+Nothing has been researched yet on adding a choice to that menu. Finding how
+the camera builds that list, and how the "i" menu opens it, comes first,
+because the on-screen bars and the saved crop should both follow from that
+one choice. Decisions are in [user-stories.md](user-stories.md).
 
 ## 1. XPan in live view (what you see)
 

@@ -7,13 +7,18 @@ camera.
 
 ## Shooting with XPan
 
-**Story 1: turn XPan on and off.**
-As a photographer, I switch XPan on and off quickly so I can use it only when
-I want it.
-- Done when: one action I choose turns it on, the same action turns it off,
-  and turning it off returns everything to normal.
-- Status: works only in the simulator, switched by a test tool. Which action
-  (a button, a menu item) is **not decided**; see Questions.
+**Story 1: choose XPan like any other image area.**
+As a photographer, I pick XPan in the camera's own "Choose image area"
+menu, the same place I change the image ratio today. I put that menu on the
+"i" quick menu, so one press of "i" and a pick turns XPan on, and picking
+the normal area turns it off.
+- Done when: XPan appears as a choice in "Choose image area" next to the
+  existing ones; picking it turns XPan on; picking another turns it off and
+  everything returns to normal; and the "i" menu can open that same list.
+- Status: works only in the simulator, switched by a test tool. **Not yet
+  researched:** whether a new choice can be added to that menu, how the menu
+  list is built, and how the "i" menu points to it. This is now the first
+  thing to find out.
 
 **Story 2: frame the shot in XPan.**
 As a photographer, I see solid black bars at the top and bottom of live
@@ -37,15 +42,16 @@ saw, so I do not have to crop it later.
   right size in the simulator, but no cropped saved photo has been seen.
 
 **Story 5: both kinds of file.**
-As a photographer, this works for the file types I shoot.
-- Done when: it works for the file types listed in Questions.
+As a photographer, the XPan crop is applied to both RAW and JPEG stills.
+- Done when: a RAW and a JPEG taken in XPan both open as 65:24 images.
 - Status: not started.
 
 ## Subject tracking
 
 **Story 6: start tracking with one press.**
 As a photographer, I press AE-L/AF-L once and the camera starts following my
-subject, the same as its own tracking does.
+subject, the same as its own tracking does. I accept losing the button's
+usual lock-exposure-and-focus job.
 - Done when: one press shows the tracking box and the camera follows.
 - Status: **not shown.** The button's signal is mapped inside the camera,
   but no one has shown it reaching tracking.
@@ -83,17 +89,23 @@ Nikon's is shared.
 - Done when: the result lives only on my computer and camera.
 - Status: rule already in place; nothing built to apply yet.
 
-## Questions for you
+## Decisions (answered 2026-10-16)
 
-1. **Turning XPan on and off (Story 1):** which action do you want? For
-   example a button, a menu item, or a custom control.
-2. **File types (Stories 4 and 5):** RAW only, JPEG only, or both?
-3. **Tracking with AE-L/AF-L (Story 6):** this button normally locks exposure
-   and focus. Are you fine losing that, or should it need a long press or a
-   mode?
-4. **Video (not covered):** should XPan apply to video, or stills only?
-5. **Still the plan:** photos keep the XPan crop only, with no way to get the
-   full frame back from the same file? Say if you want the full frame kept.
+1. **Turning XPan on and off:** through the existing "Choose image area"
+   menu, reached from the "i" quick menu. XPan is a new choice there.
+2. **File types:** RAW and JPEG both.
+3. **AE-L/AF-L:** fine to lose its normal lock job for tracking.
+4. **Video:** out of scope for the first version. Stills only.
+5. **Full frame:** keep only the XPan crop. The full frame is not kept.
+
+## New questions
+
+1. When I switch the camera off and on, should XPan stay selected, like
+   other image areas do?
+2. In XPan, should the camera's own on-screen frame lines, focus points and
+   readouts stay inside the strip, or may they sit over the black bars?
+3. Do you ever want the "i" menu choice and the main menu to show a short
+   label (for example "65:24")?
 
 ## What stays true
 
