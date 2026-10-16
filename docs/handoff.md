@@ -76,7 +76,8 @@ where safe (user-stories.md). F-064: the string index is found (three 36-entry l
 `0x112f41e0`, `0x112f4270`, `0x112f4300`; English region index at
 `0x10e79dac`); labels are DX 737, 1:1 1454, 16:9 1455. A safety classifier
 stopped the last step, a read of the table that lists these numbers
-together; the owner decides whether to retry. Next: the menu item table that defines "Choose image area" (start from the text at
+together; the owner approved a narrower read, done as F-065 (the list at `0x11ff2b4c`).
+Next: find what reads that list and what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
 AE-L/AF-L button setting `Setting_FuncAeAfLockButtonShooting` (a possible
