@@ -32,7 +32,7 @@ following must be true first:
 
 1. The simulator shows the feature working without a debugger hook, or that
    hook's risk is fully understood.
-2. A written recovery plan exists, and it does not rely on the camera's
+2. A written recovery plan exists ([draft](recovery-plan.md), not yet credible), and it does not rely on the camera's
    ordinary firmware-update menu.
 3. The patcher checks firmware version and hash, and refuses anything but
    the owner's exact verified original.
