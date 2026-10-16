@@ -1,24 +1,29 @@
 # Hardware-readiness checkpoint
 
-Date: 2026-10-15. Decision: **NO-GO for hardware testing or installation.**
+Date: 2026-10-15, reviewed the same day after a round of simulator and
+tracking work. Decision: **NO-GO for hardware testing or installation.**
 
 This is an interim assessment, not completion of the five-milestone program.
-The user authorized continued offline research through a readiness decision;
-that does not authorize hardware access or production of installable firmware.
+The owner has separately authorized build-phase work for personal,
+non-distributed use ([docs/build-phase-gate.md](build-phase-gate.md)); that
+is authorization to start the work below, not a hardware go-ahead. Flashing
+or connecting a real camera still needs the owner's separate, explicit
+approval at that point, after the conditions below are met.
 
 ## Milestone status
 
 | Milestone | Current evidence | Remaining acceptance gate |
 | --- | --- | --- |
-| Prerequisite: native XPan guides | Native stock display baseline runs; host geometry works. | Actual guides rendered by native code and removed cleanly. |
-| 1. Framing reliability | Synthetic geometry and overlay tests pass. | Native guide placement across layouts, menus and focus graphics, repeated toggle and cleanup checks. |
-| 2. Tracking entry point | Documented behavior and a host interaction model; no verified callable entry point. | Trace the original reticle activation path and establish its state requirements. |
+| Prerequisite: native XPan guides | Met in live view. Native code draws the guides, toggles cleanly, and survives repeated on/off and color/alpha checks ([native-guides-simulator.md](native-guides-simulator.md)). | None remaining for live view; see milestone 1 for other layouts. |
+| 1. Framing reliability | Live view is reliable. Menu screens are confirmed, not just unverified, to not support the same mechanism ([guides-ui-states.md](guides-ui-states.md)); that is an accepted limit. | A guide path that also works in menus and focus-graphic overlays, or an explicit decision that live view is sufficient. |
+| 2. Tracking entry point | A named hardware switch for a candidate button exists with its own bit ([facts.md](facts.md), fact F-024). The path from that bit to a callable tracking entry point is not established. This research is paused by the owner. | Trace the original reticle activation path and establish its state requirements. |
 | 3. One-step native activation | Host model only. | One verified native input, visible reticle transition, cancellation and rejection in unsupported modes. |
-| 4. Combined native checks | Neither native feature is established. | Run both together and verify display/input isolation, cleanup and recovery in simulation. |
-| 5. Final readiness decision | Interim no-go is justified by missing evidence. | Review completed preceding evidence and unresolved emulator-to-camera differences. A no-go remains a valid eventual decision. |
+| 4. Combined native checks | Guides are established in live view; tracking is not, so the two cannot yet be run together. | Run both together and verify display/input isolation, cleanup and recovery in simulation. |
+| 5. Final readiness decision | Reviewed 2026-10-15; still no-go. One native feature (guides) works in live view; the other (tracking) has no verified entry point and its research is paused. | Unchanged: complete milestones 2 to 4, then decide again. |
 
-Passing host tests cannot advance native milestones. A successful simulated
-reticle transition would still not prove actual autofocus performance.
+One milestone being met does not advance the others. Guides working does not
+establish anything about tracking, and a successful simulated reticle
+transition would still not prove actual autofocus performance.
 
 ## Known limitations
 
@@ -38,14 +43,24 @@ Local execution evidence is summarized in [the baseline report](simulator-baseli
 
 ## Conditions before proposing a separate hardware phase
 
-1. Complete native simulator acceptance evidence with repeatable procedures.
+1. Complete native simulator acceptance evidence with repeatable procedures,
+   for guides and for tracking. Guides are done for live view; tracking has
+   no verified entry point yet.
 2. Keep measured behavior separate from startup fixtures and emulator assumptions.
-3. Establish version checks, failure containment and a credible recovery plan;
-   do not assume an ordinary firmware-update menu can recover a failed device.
+3. Version checks are done: `require_verified_eg_module` refuses anything
+   but the owner's exact verified original. Failure containment and a
+   credible recovery plan are not done; do not assume an ordinary
+   firmware-update menu can recover a failed device.
 4. Review publication content and third-party licensing independently of tests.
-5. Ask the user for separate, informed approval of a clearly bounded hardware
-   plan. This document grants no permission to connect, flash or install.
+5. Ask the owner for separate, informed approval of a clearly bounded
+   hardware plan, distinct from the personal-use build-phase authorization
+   already given. This document grants no permission to connect, flash or
+   install.
 
-Next: establish the native drawing interface and tracking input route. Until
-those are verified, guide reliability and combined native testing remain blocked
-by research dependencies, not by a need for more user approval.
+Next: the native drawing interface is established for live view. The
+tracking input route is not, and that research is paused pending the
+owner. A written recovery plan and failure containment are the other
+remaining blockers, and neither needs the owner's resumption of tracking
+research to start.
+
+Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
