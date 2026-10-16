@@ -1432,4 +1432,27 @@ the immediate next step). Method: owner-run read-only decode, SHA-256
 checked first; addresses, offsets and constants only, no firmware bytes
 recorded.
 
+F-097. The record-assembly function `0x101d5c54` (F-096) has exactly four
+direct callers, all in one tight code region (`0x10155bf4`, `0x101560d0`,
+`0x101564f4`, `0x1015b062`, spanning roughly `0x10155b00` to `0x1015b100`),
+from an owner-run decode on 2026-10-16. Three of the four (`0x101564f4`,
+`0x1015b062`, and `0x10155bf4` loosely) share a shape: a capability-style
+check through `0x10163546`, keyed on a per-area id byte at source `+0x4ea`
+(the same source block F-096 copies id bytes `+0x4e8` to `+0x4eb` from into
+the built record); a prepare call `0x1015350e`; the record-builder call;
+then, after it returns, a doubleword is read from
+`[some_pointer + 0x2b00 + 0x4c]` and copied into the finished record at
+offsets `+0x124`/`+0x128`. Observed. Inferred, confidence low, stated as two
+competing explanations rather than one, because both fit equally well so
+far: (a) this assembles and submits a capture/save request, where the
+finished record eventually reaches a storage write; or (b) this is a
+"remaining shots at this quality" style estimator, which also needs crop
+geometry, bit-depth math (F-096) and a per-mode call shape, but only feeds a
+UI counter and never touches storage. Nothing read so far distinguishes
+these. Not yet done: finding what calls each of these four outer sites (one
+level further out), to see whether that context is nearer a storage/write
+call or a shots-remaining/UI display. Method: owner-run read-only decode,
+SHA-256 checked first; addresses and offsets only, no firmware bytes
+recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
