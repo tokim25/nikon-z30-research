@@ -751,4 +751,25 @@ finding the base of that array (scan backward from `0x11ff2b34` for the
 repeating record shape) and searching for pointers to the base. Method:
 read-only scan, SHA-256 checked first; addresses only, no firmware bytes.
 
+F-067. Layout around the label list of F-065, from an owner-run read of 512
+bytes (`0x11ff2a4c` to `0x11ff2c4c`) on 2026-10-16. (1) From `0x11ff2a4c`
+there are two runs of 32-bit pointers into low image data: 26 pointers into
+`0x11c912b4` to `0x11c913e0` (to `0x11ff2ab4`), then one into `0x11c9832c`,
+then 24 pointers into `0x11c926bc` to `0x11c9277c` (to `0x11ff2b10`). They
+look like pointers to name strings, in two groups, but the names were not
+read. (2) From `0x11ff2b14` on there are no more pointers: small numbers and
+16-bit pairs, with the lists of string numbers packed back to back. Examples:
+the list `0x2a9, 0x2aa, 0x2ab, 0x3f6` at `0x11ff2b34`; the area-label list
+`0x2e1, 0x5ae, 0x5af` at `0x11ff2b4c`; a descending run `0x14e` to `0x149`
+at `0x11ff2b78`; and repeated groups such as `0x2e7, 0x4c1, 0x2ee, 0x2f0,
+0x2f1, 0x2e9, 0x2ea, 0x2ef, 0x2f2, 0x314` twice at `0x11ff2bb4` and
+`0x11ff2bdc`. (3) No word in the image points to any aligned address in the
+512 bytes. Observed. Inferred, confidence low to medium: the two pointer runs
+are name tables for menu items, and the lists after them are the items'
+choice lists, tied together by position or by a stored count rather than by
+pointers. Not yet done: reading the names the pointers lead to, to learn
+which name belongs to the area-label list. Method: read-only read of one
+small data block, SHA-256 checked first; numbers and addresses only, no
+firmware bytes.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

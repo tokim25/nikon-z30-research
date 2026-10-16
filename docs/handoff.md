@@ -77,8 +77,10 @@ where safe (user-stories.md). F-064: the string index is found (three 36-entry l
 `0x10e79dac`); labels are DX 737, 1:1 1454, 16:9 1455. A safety classifier
 stopped the last step, a read of the table that lists these numbers
 together; the owner approved a narrower read, done as F-065 (the list at `0x11ff2b4c`).
-F-066: nothing points at that list, so it is a record inside a bigger array;
-find the array's base and who points to it. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
+F-066/F-067: nothing points at that list; it sits after two pointer runs (name
+tables, 26 and 24 entries) and among packed lists of string numbers. Next:
+read the names those pointers lead to (owner runs the read), and match them
+to the lists by position. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
 AE-L/AF-L button setting `Setting_FuncAeAfLockButtonShooting` (a possible
