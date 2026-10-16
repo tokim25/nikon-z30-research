@@ -220,4 +220,15 @@ minus area. Observed, high; hash unchanged. A test with 1:1 changed to a 65:24
 shape was blocked by the permission classifier and has not been run.
 [capture-geometry-baseline.md](capture-geometry-baseline.md)
 
+F-028. Mode-3 path in initializer `0x1008ad72` supplies callback
+`0x1008ac2e` through registrar `0x101e1c04`, word limit 4, flags 0.
+Consumer `0x101e1c22` calls numeric-text parser `0x101e230e` before the
+registered callback. This establishes one registered numeric-command route
+into the handler containing `0x1008ad26`. Observed bounded static links,
+high confidence, independently reviewed. Diagnostic purpose is inference;
+registration success, transport and physical-button identity are unverified.
+Repro: `"$WORK/analysis-env/bin/python" "$WORK/codex-registered-input-verify-private.py" --output "$WORK/private-inputs/codex-registered-input-review-03"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-numeric-input-route.md).
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

@@ -1,81 +1,77 @@
 # Codex handoff
 
-Codex owns this file. Update it whenever work is in progress, so a fresh
-session can resume. Rules are in [collaboration.md](collaboration.md).
+Updated 2026-10-15. The owner resumed research and approved Codex taking over
+guide and RAW-crop files. Continue offline work toward 65:24 live-view framing,
+a matching saved RAW crop, and AE-L/AF-L tracking. Personal build work is open;
+camera access is not. The owner asked this session to stop when remaining
+account usage reaches 8% and publish a handoff for Claude.
 
-## Read this first: the lane is paused
+## Published work and integration
 
-The owner has paused tracking entry-point and button-mapping research. Do
-not resume tracing which button reaches the tracking feature, including any
-item in "Where the trail was left" below, without the owner's explicit
-say-so in this conversation first. This is not a lane-ownership question;
-it is a standing instruction from the owner.
+Main baseline: `32a9da5`. Dedicated worktree: `work/codex-tracking-resume`;
+the primary checkout stays on main. PRs #34, #35 and #36 are open and have
+passed CI. Merge in order, retaining every appended fact and the latest handoff:
 
-## Lane
+- #34: F-025 corrects the input ring's single-writer claim.
+- #35: F-026 distinguishes bit-13 fields, records the user-approved guide/RAW
+  file transfer, and sets separate feature acceptance requirements.
+- #36: F-027 traces a structured-control path into an input cache; its physical
+  meaning remains unverified.
 
-Tracking entry-point research: where the original firmware starts and ends
-the subject-tracking reticle, and what state it needs. Static analysis,
-simulator observation, tests and tooling.
+Each new finding also starts from main. Ledger and handoff edits can conflict;
+retain all facts and use the latest handoff when integrating. Codex never
+merges its own PRs or pushes main.
 
-## State
+## Current branch and single next step
 
-No tracking entry point is verified, and no input call has been attempted.
-Findings merged so far, each marked observed or inferred in
-[facts.md](facts.md):
+Branch: `codex/tracking-numeric-route`. F-028 and
+[tracking-numeric-input-route.md](tracking-numeric-input-route.md) establish
+a numeric-command route, not a physical input source. Next: inspect independent
+setter calls at `0x103a3e88` and `0x103a400c`. PR #37 holds F-036 geometry;
+PR #38 holds F-029, the assisted live-view screen-stack limitation.
 
-- F-009 to F-012: an MMIO input sampler, its consumers, the shared
-  menu/live-view event router, and the live-view event builder.
-- F-014 to F-021: where the live-view flag that starts tracking is set, what
-  state 1 requires, and (F-021) a working traced example of a physical
-  button bit reaching an internal event.
-- F-023, F-024: the input map is fully decoded; the four candidate guard
-  functions turned out to be ordinary navigation buttons, not AE-L/AF-L. A
-  named switch, `ID_SW0_AEAF_LOCK`, has its own dedicated bit (mask 0x2000),
-  separate from the d-pad. The owner confirmed the button exists on the
-  camera body.
+## New results in progress
 
-## Wider project context, outside this lane
+A native geometry A/B/A test ran twice: temporary data changes in a disposable
+guest produced a centered 5200 by 1920 rectangle, exactly 65:24. DX and 16:9
+controls stayed unchanged; restoring the data restored all baseline outputs.
+No original firmware file or instruction was changed. This is geometry
+evidence, not proof of saved RAW output.
 
-- The owner opened a build phase for their own, non-distributed camera
-  ([build-phase-gate.md](build-phase-gate.md)). This authorizes writing a
-  real patcher and a recovery plan; it does not authorize flashing
-  anything, and does not change the pause on this lane's research.
-- A firmware version-and-hash gate is merged
-  (`src/nikon_z30_research/verified_firmware.py`).
-- [hardware-readiness.md](hardware-readiness.md) was reviewed and still
-  says NO-GO. It names the unverified tracking entry point as one of two
-  remaining blockers, alongside a missing recovery plan.
-- Another session owns F-022 and the guide/menu-state work
-  (`docs/guides-ui-states.md`, `docs/native-*`, `docs/guide*`); do not edit
-  those files.
+Other bounded results are being documented separately: compose completion
+callback timing, empty screen stack in the assisted live-view fixture, and
+the simulator's optional functional ISP limits. Do not assume a physical
+button mapping from a matching bit number.
 
-## Where the trail was left (paused, not a to-do list)
+## Private inputs and reproducibility
 
-If and when the owner resumes this lane, this is where research stopped:
+Confirmed WORK:
+`/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.
+Keep existing inputs and helpers unchanged. New private helpers and run
+folders use `codex_` or `codex-` prefixes outside Git. No firmware content,
+raw logs, screenshots or extracted listings may enter any repository surface.
+Do not search the disk for more firmware.
 
-1. Find the routine that scans the SW0 switch word, reads bit 13 (mask
-   0x2000), and follows it to an input code or event. Then find press and
-   release handling, and whether it meets `0x102f2990`.
-2. Resolve the live-view screen's key table from group array `0xc2006594`,
-   and read its entries for 0x27E, 0x2a3, 0x2a8 and the default 0x31e.
-3. Trace task loop `0x10235576` and the code tables for 0x24e to 0x252.
-4. Trace upward from `0x1030705a` to the message framework and packet
-   sender, for issue #11.
+Use the report's private helper with a fresh output folder under
+`$WORK/private-inputs/`. Runtime imports disable bytecode writes. Simulator
+sessions use separate local debugger ports and absolute private output paths.
+The original module hash and pinned simulator revision are checked; the
+simulator checkout must stay clean. No patch builder or hardware is used.
 
-None of this is authorized to start without the owner asking for it again.
+## Ownership and readiness
 
-## To resume
+The owner transferred guide/native documents and image-area/capture-geometry
+reports to Codex; PR #35 records the exact file patterns and matching tests.
+Simulator infrastructure retains its previous assignment. Claude should
+agree ownership before concurrent edits, then read the latest report and
+handoff rather than resuming older paused-lane instructions.
 
-1. Read this whole file first, then AGENTS.md, collaboration.md,
-   project-status.md and facts.md. Confirm with the owner whether this lane
-   stays paused before doing anything else.
-2. Run the tests and both checks with `python3`.
-3. Private WORK is
-   `/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.
-   Re-run a `codex_*_verify_private.py` script into a fresh output folder.
-4. F-025 to F-029 are reserved for this lane; check project-status.md for
-   the actual next free number, since other lanes have used numbers past
-   F-029 while this one was paused.
-5. Branch `codex/<topic>` from main; one finding per PR.
+Guides still require a debugger hook. The physical input-to-tracking path,
+saved RAW behavior and recovery evidence remain unresolved. The simulator
+has an optional functional ISP with unverified layout assumptions; there is
+no validated saved-RAW pipeline. Hardware readiness stays NO-GO.
 
-Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
+Baseline tests: 54 passing. Restricted outputs remain private; reproduction
+commands and semantic results are the published evidence.
+
+Written by Codex in collaboration with Tony Kim; continues Claude's research and includes independent Codex subagent checks.
