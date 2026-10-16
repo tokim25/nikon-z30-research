@@ -22,11 +22,15 @@ def _thread_of(reply):
 
 
 def call(remote, packet, function, arguments, seconds=30, *,
-         stack_pointer=None, sentinel=DEFAULT_SENTINEL):
+         observe=(), capture=None, stack_pointer=None, sentinel=DEFAULT_SENTINEL):
     """Run `function` on the thread that produced `packet`, then restore it.
 
-    Returns (record, last_reply). record["completed"] is true only when that
-    same thread reached the sentinel; only then is its context restored.
+    `observe`/`capture` match the simulator tools' own helper: a stop at one
+    of these addresses, on either thread, is recorded and stepped over
+    rather than treated as completion. Unlike that helper, a stop elsewhere
+    on the OTHER thread is resumed, not misread as completion. Returns
+    (record, last_reply); record["completed"] is true only when the
+    diverted thread itself reached the sentinel.
     """
     if len(arguments) > 4:
         raise ValueError("only register arguments are supported")
@@ -45,10 +49,13 @@ def call(remote, packet, function, arguments, seconds=30, *,
     status = struct.unpack_from("<I", registers, 64)[0]
     struct.pack_into("<I", registers, 64, status | THUMB_BIT)
     assert remote.command(f"Z1,{sentinel:x},4") == "OK"
+    for address in observe:
+        assert remote.command(f"Z1,{address:x},2") == "OK"
     assert remote.command("G" + registers.hex()) == "OK"
 
     deadline = time.monotonic() + seconds
     ignored, completed, timed_out = 0, False, False
+    observations = []
     last_reply, last_stop, after = packet, None, {}
     remote.send("c")
     while True:
@@ -68,7 +75,26 @@ def call(remote, packet, function, arguments, seconds=30, *,
         if stopped == thread and pc == sentinel:
             completed = True
             break
-        ignored += 1
+
+        if pc in observe and len(observations) < 256:
+            item = {"pc": hex(pc), "thread": stopped, "registers": after}
+            if capture:
+                item.update(capture(remote, after))
+            observations.append(item)
+            assert remote.command(f"z1,{pc:x},2") == "OK"
+            assert remote.command("Hc" + stopped) == "OK"
+            remote.send("s")
+            remote.sock.settimeout(5)
+            remote.receive()
+            assert remote.command(f"Z1,{pc:x},2") == "OK"
+            assert remote.command("Hc-1") == "OK"
+            remote.send("c")
+            continue
+
+        if stopped == thread:
+            break   # diverted thread stopped somewhere unexpected; report it
+
+        ignored += 1   # an unrelated stop on the other thread; just resume
         if time.monotonic() >= deadline:
             timed_out = True
             break
@@ -79,6 +105,8 @@ def call(remote, packet, function, arguments, seconds=30, *,
             remote.sock.sendall(b"\x03")
         except OSError:
             pass
+    for address in observe:
+        remote.command(f"z1,{address:x},2")
     remote.command(f"z1,{sentinel:x},4")
     if completed:
         assert remote.command("Hg" + thread) == "OK"
@@ -91,4 +119,6 @@ def call(remote, packet, function, arguments, seconds=30, *,
         "last_stop": last_stop,
         "registers": after,
     }
+    if observe:
+        record["observations"] = observations
     return record, last_reply
