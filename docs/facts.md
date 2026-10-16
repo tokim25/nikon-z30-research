@@ -220,4 +220,15 @@ minus area. Observed, high; hash unchanged. A test with 1:1 changed to a 65:24
 shape was blocked by the permission classifier and has not been run.
 [capture-geometry-baseline.md](capture-geometry-baseline.md)
 
+F-044. Under assisted simulator startup, two diagnostic clip-flag on/off
+cycles at property `0xc1d87838 + 0x2c` produced the calibrated 214 black
+border rows on and restored baseline pixels outside the animated band off.
+Audited menu entry `0x102355ee` grew the screen stack from zero to two;
+the mask, bank, property and retained color remained unchanged. A subsequent
+live-view entry did not remove those stack entries, so natural menu exit is
+unverified. Observed runtime, high within this fixture; independently repeated.
+Original owned fields were restored. Repro: confirmed WORK, run
+`PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex-guide-mask-reliability-private.py" --output "$WORK/private-inputs/codex-mask-lifetime-fact-reproduce-01"`
+with a fresh output directory. [Report](xpan-mask-menu-lifetime.md).
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
