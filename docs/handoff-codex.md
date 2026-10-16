@@ -24,10 +24,11 @@ merges its own PRs or pushes main.
 
 ## Current branch and single next step
 
-Branch: `codex/xpan-geometry-data-probe`, from main. F-036 and
-[xpan-capture-geometry-probe.md](xpan-capture-geometry-probe.md) record the
-completed geometry comparison. Next: follow the native descriptor consumers
-into NEF metadata and storage writes; do not infer saved RAW success.
+Branch: `codex/tracking-screen-stack`. F-029 and
+[tracking-screen-stack.md](tracking-screen-stack.md) record the empty-stack
+observation and menu control. Next: establish stock shooting-screen
+initialization before treating dispatcher events as tracking evidence.
+PR #37 holds F-036, the independently repeated geometry result.
 
 ## New results in progress
 
