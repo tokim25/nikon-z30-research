@@ -458,4 +458,19 @@ nonzero would be a candidate for setting it. This must be checked in the
 simulator with a fresh run before anyone relies on it. Method: read-only
 Thumb decode, SHA-256 checked first; no bytes recorded here.
 
+F-051. Runtime check of F-050 in the simulator: calling the surface
+initializer `0x104b5fd4` with object index 1, mode 1 (the pair for which
+`0x104b5e30` returns `0xc1d87838`), and a 0x1a0-byte config block copied the
+config words into the object. With the clip flag at `0xc1d87838 + 0x2c` set to
+1 beforehand, a call with config `+8` equal to 0 left the flag at 0, and a
+second call with config `+8` equal to 1 left it at 1. Object `+0x24` and
+`+0x28` took the config values at `+0` and `+4` (both 0, so they went from
+`1` and `0xd0959600` to 0), which is why config word 0 was kept at zero: it
+skips the registration calls. Both calls returned 1. The whole `0x1c0`-byte
+object was restored byte for byte afterward. Observed runtime, high within
+this fixture (assisted startup, one run). Not shown: any effect on the
+display, because the check was memory-level only. Repro: confirmed WORK, run
+`PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/claude-initializer-copy-check-private.py" --output "$WORK/private-inputs/claude-initializer-copy-check-NN"`
+with a fresh output directory. The script stays under WORK and is not committed.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
