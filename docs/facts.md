@@ -1702,4 +1702,58 @@ boundary. Method: read-only static decode (capstone, Thumb), full-image
 literal/branch scans, SHA-256 checked first; addresses, offsets and
 constants only, no firmware bytes recorded.
 
+F-104. Decodes the 8 call sites into `0x104164ba` left open by F-102. They
+collapse to exactly 4 enclosing functions, each containing 2 of the 8 (the
+backward function-entry scan had too short a window for 4 of the 8; the
+true entries are far above them in the same function). Each enclosing
+function loads a 16-bit "command word" into a register early on:
+`0x104168aa` loads `0x113a`, `0x104165b8` loads `0x123a`, `0x104171ce` loads
+`0x183a`, `0x10416e6c` loads `0x193a`. Read as `(CMD_INDEX << 8) | flags`,
+the high bytes `0x11/0x12/0x18/0x19` are exactly SD command indices 17, 18,
+24, 25 -- CMD17 READ_SINGLE_BLOCK, CMD18 READ_MULTIPLE_BLOCK, CMD24
+WRITE_BLOCK, CMD25 WRITE_MULTIPLE_BLOCK -- and the shared low byte `0x3a`
+decodes against the standard SDHCI Command-register bit layout (offset
+0x0E, upper half of the 32-bit Argument2/Transfer-Mode-and-Command word) as
+bit5 Data Present Select=1, bit4 Command Index Check Enable=1, bit3 Command
+CRC Check Enable=1, bits1-0 Response Type Select=2 (48-bit/R1-class
+response) -- a completely standard data-transfer command encoding, not an
+arbitrary constant. Observed static decode on 2026-10-16, high confidence:
+these four functions are the firmware's real SD single/multi block
+read/write command-issue routines.
+
+Each function's command word is stored into fields of the per-controller
+state struct (byte at `+7`, word at `+0x40`, a stack slot) before being
+passed to `0x1041372c` (apparent "submit command" call, tested for
+success/failure immediately after); on success the function proceeds
+through a pair of `0x104164ba` waits, each preceded by a short, near-
+identical preamble (`bl 0x104131b2` and either `0x102c2eee`/`0x102c2cc8` or
+`0x1041612a`/`0x104161dc`, varying slightly per function) before loading the
+controller struct pointer into r0/r1/r2 and calling `0x104164ba`. This
+shape -- two sequential completion waits per command, the first gated by a
+`cbz` that branches to an error/retry path on failure, the second feeding
+a final success/failure decision -- reads as the standard SDHCI two-stage
+wait (a per-transfer "buffer ready" signal, then "transfer complete"), not
+two unrelated waits. Neither `0x1041372c`, `0x104131b2`,
+`0x102c2eee`/`0x102c2cc8`, nor `0x1041612a`/`0x104161dc` were decoded in
+this pass. Observed static decode, medium confidence for the two-stage-wait
+reading (consistent with the shape, not confirmed by decoding the waited-on
+interrupt bits themselves).
+
+This strengthens F-102's inference: if F-102's "DMA completion never
+reaches the event object awaited by 0x104164ba" holds for controller 0 under
+QEMU's generic SDHCI model, then every one of CMD17/18/24/25 issued against
+controller 0 would stall at the first of these two waits, well past
+card-detect, which would independently explain both F-100's zero
+`sdcard_read_block` events and the "Format memory card" grey-out -- the
+firmware's SD stack would never progress far enough to consider the card
+usable, regardless of what synthetic image is attached. Still not proven
+end-to-end: whether the firmware's actual bring-up sequence reaches
+CMD17/18/24/25 at all before giving up (it may fail earlier, e.g. during
+CMD0/ACMD41/CMD2/CMD3-class enumeration, which are not among these 4
+functions) was not checked, and the menu-enable/grey-out check itself
+(F-102's still-missing link) was not pursued further here. Method:
+read-only static decode (capstone, Thumb), SHA-256 checked first; addresses,
+offsets, register fields and standard SDHCI register semantics only, no
+firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

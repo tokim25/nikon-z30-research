@@ -10,7 +10,7 @@ below F-050, ignore it.
 
 ## Read this first
 
-Main carries facts through **F-102**; check main before allocating F-103.
+Main carries facts through **F-104**; check main before allocating F-105.
 Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,
@@ -202,12 +202,30 @@ handler, not a capture descriptor) at low-to-medium confidence; no
 unambiguous storage-write or UI-counter call was found either way. Full
 detail in facts.md F-103.
 
-**Suggested next angle:** for Lane 1's card-detect thread, decode the 8
-`0x104164ba` callers and the `0xc18015ea`/`0x10417890` dispatch inside
-`0x102aa414`. For Lane 2, either accept (b) as the working hypothesis and
-move on, or decode `0x1015bd18`'s mode 2/3 branches and `0x101e729e`/
-`0x101efb9e` to confirm it. Forcing a direct call into one of the four
-F-097 callers with synthetic register state (more invasive, less certain)
+**Update (2026-10-16), the 8 `0x104164ba` callers decoded (F-104):** they
+collapse to exactly 4 enclosing functions, each loading a command word that
+decodes as a standard SDHCI command register value for CMD17
+READ_SINGLE_BLOCK, CMD18 READ_MULTIPLE_BLOCK, CMD24 WRITE_BLOCK and CMD25
+WRITE_MULTIPLE_BLOCK (high byte = SD command index, shared low byte `0x3a`
+= data-present + index/CRC-check + R1-response flags). Each calls
+`0x104164ba` twice in what reads as the standard two-stage "buffer
+ready, then transfer complete" wait. This strengthens the F-102 stall
+theory: if any of these four ever fire against controller 0, they'd stall
+at the first wait under the QEMU model's own documented limitation —
+independently explaining both F-100's zero `sdcard_read_block` events and
+the "Format memory card" grey-out. Still open: whether the firmware's
+bring-up sequence reaches these four commands at all before giving up
+earlier (e.g. during CMD0/ACMD41/CMD2/CMD3 enumeration, not decoded here),
+and the menu-enable/grey-out link itself. Full detail in facts.md F-104.
+
+**Suggested next angle:** for Lane 1's card-detect thread, decode the
+CMD0/ACMD41/CMD2/CMD3-class enumeration sequence (upstream of F-104's four
+functions) and the `0xc18015ea`/`0x10417890` dispatch inside `0x102aa414` —
+either would close the remaining gap to the menu-enable check. For Lane 2,
+either accept (b) as the working hypothesis and move on, or decode
+`0x1015bd18`'s mode 2/3 branches and `0x101e729e`/`0x101efb9e` to confirm
+it. Forcing a direct call into one of the four F-097 callers with
+synthetic register state (more invasive, less certain)
 remains floated and not attempted.
 
 ## Rules, unchanged
