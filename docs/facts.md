@@ -220,4 +220,14 @@ minus area. Observed, high; hash unchanged. A test with 1:1 changed to a 65:24
 shape was blocked by the permission classifier and has not been run.
 [capture-geometry-baseline.md](capture-geometry-baseline.md)
 
+F-041. Assisted startup changed live-view object `0xc1821d44` selector
+`+0x74` from 4 to 1 while the menu/screen stack stayed empty. The separate
+registry `0xc2006594` had groups 2/3 before startup and gained group 5.
+Getter `0x104571fe` uses descriptor stride 44 without reviewed ID/null-base
+guards. Observed static/runtime state, high confidence; fixture
+generalization moderate. No input/AF readiness inferred. Repro:
+`PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex_mode_object_20261016_private.py" --output "$WORK/private-inputs/codex-mode-state-reproduce-01" --menu-control`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-registry-mode-state.md).
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
