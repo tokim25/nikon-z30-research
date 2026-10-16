@@ -10,6 +10,38 @@ before the first camera test. It tracks progress toward three states defined in
 FOR AN EXPERIMENTAL HARDWARE TEST**, or **HARDWARE VALIDATED**. The current
 state is below the first of those for the complete feature set.
 
+## Owner call on build-gate condition 1, Lane 1 (live-view-bars hook) --
+## pending a dissenting review, 2026-10-16
+
+The owner has called `build-phase-gate.md`'s condition 1 ("the simulator
+must show the feature working without a debugger memory write, and the
+relevant state transitions must pass") **satisfied for Lane 1 specifically**,
+on this evidence: the native in-ROM hook (a pre-boot loader overlay, not a
+live debugger write) passed its direct area-change and ten-cycle controls
+and, via a diagnostic dispatch call, the full live-view-ready transition
+(F-101); the natural trigger for that same transition is now understood
+end to end down to the exact event code (F-107, F-108).
+
+**This call is provisional, not final, and does not by itself authorize any
+build-phase work on this feature.** The gate's current wording ("the
+relevant state transitions must pass") does not explicitly distinguish a
+diagnostic-call transition from a naturally-triggered one, and the hook was
+only observed passing via the former -- F-108 explains the natural trigger's
+mechanism but does not demonstrate it firing in the simulator. Whether that
+distinction matters is exactly what requires scrutiny.
+
+**Before any build-phase work begins on this feature, a dissenting review
+from Codex, run as its own independent session (not by the session that
+reached this call), is required.** The review should take the skeptical
+side on purpose: does the diagnostic-call evidence actually satisfy "the
+relevant state transitions must pass," or does the gate require observing
+a natural trigger specifically; is F-108's mechanism-level understanding of
+the trigger event sufficient given the natural trigger itself still was not
+found; and is there anything else this call missed. Record the review's
+conclusion here, in this section, when it happens -- agreeing, disagreeing,
+or asking the owner to decide. Until that review is recorded, treat this
+call as not yet in effect for any build step.
+
 | Requirement | Evidence | Remaining gap |
 | --- | --- | --- |
 | Live-view framing | Prior native guide lines; PR #43 adds persistent native black masks after diagnostic setup. | Natural startup and supported state lifecycle. |

@@ -14,9 +14,17 @@ question is accepted as settled toward the settings/property-dispatch
 reading (F-106). Lane 1's mode-state chain is resolved through F-108;
 F-109 closes the one remaining thread (who posts the live-view trigger
 event) as a deliberately-dropped simulator-reachability question, not a
-real-firmware gap -- see handoff-codex.md for the owner judgment call
-this leaves open (whether build-gate condition 1 is already satisfied).
-F-109 is on `claude/f109-event-origin-deadend`. The owner approves
+real-firmware gap.
+
+**Owner call, pending review:** the owner has called build-gate condition
+1 satisfied for Lane 1 (see hardware-readiness.md's new section for the
+exact evidence and the one ambiguity it rests on). **This does not
+authorize any build-phase work yet** -- a dissenting review from Codex,
+run as its own independent session, is required first and must be
+recorded in hardware-readiness.md before proceeding. F-109 is on
+`claude/f109-event-origin-deadend`; the condition-1 call and dissenting-
+review requirement are on `claude/condition1-owner-call`. The owner
+approves
 merges; nobody merges their own PRs. Check main again before allocating
 F-110.
 

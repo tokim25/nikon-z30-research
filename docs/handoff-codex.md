@@ -177,18 +177,25 @@ obviously already delivers this event through ordinary use (F-090), and
 F-108's hook sites sit downstream of it, not upstream. A real build does
 not need this answered.
 
-**Where Lane 1 actually stands for the real build:** the instruction
-space and native-execution mechanism are proven (F-101,
-native-xpan-liveview-hook.md), and the natural trigger's mechanism is now
-fully understood end to end (F-107, F-108) even though the simulator
-can't be made to exercise it directly. Whether that combination already
-satisfies build-gate condition 1's second branch ("that hook's risk is
-fully understood") rather than its first ("the simulator shows the
-feature working") is an owner judgment call, not something to resolve by
-further tracing -- flagging it here rather than deciding it. If the
-owner agrees it's satisfied, the real next step is updating
-[hardware-readiness.md](hardware-readiness.md)'s Lane 1 row rather than
-more simulator work.
+**Update (2026-10-16), owner call made, pending a dissenting review:** the
+owner has called build-gate condition 1 satisfied for Lane 1 on this
+evidence (instruction space and native-execution proven, F-101; the
+natural trigger's mechanism fully understood end to end, F-107/F-108,
+though not demonstrated firing naturally in the simulator). **Correction**
+to the "second branch" framing used earlier in this file and in F-109: the
+current gate text (post the PR #119 hardware-safety rewrite) has no
+explicit "or that hook's risk is fully understood" alternative any more --
+condition 1 now reads only "the simulator must show the feature working
+without a debugger memory write, and the relevant state transitions must
+pass." Whether the diagnostic-call evidence already available satisfies
+that, given the natural trigger itself was never observed firing, is
+exactly the ambiguity the owner's call rests on.
+
+**This call does not authorize any build-phase work yet.** A dissenting
+review from Codex, run as its own independent session, is required first
+-- see [hardware-readiness.md](hardware-readiness.md)'s new section for
+the review's exact scope. Record the review's conclusion there when it
+happens.
 
 ## Lane 2: saved-crop (does a saved RAW/JPEG actually come out cropped?)
 
