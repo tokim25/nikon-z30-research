@@ -35,6 +35,20 @@ firmware that would be broken, so it cannot be counted on as the way back.
    modified camera may be refused or charged. The owner should expect to
    carry this cost, and should decide in advance whether they accept it.
 
+## Public sources checked (2026-10-16)
+
+- Nikon's published update guide for a different camera, the COOLPIX P500
+  ([PDF](https://nikonimglib.com/europe/Firmware/P500/v1.1/Sc/Updating_Camera_Firmware(Windows).pdf)),
+  says power loss during an update can damage the camera, and that an
+  inoperable camera should go to a Nikon-authorized service representative.
+  That is a different model, so for the Z30 it is **unverified**, though
+  Nikon guides for other models read the same way. It points to service as
+  the official way back, not a home procedure. This bears on unknowns 1, 2
+  and 5 but answers none of them.
+- A search for an official Nikon Z-series recovery page found none. Forum
+  reports describe only retrying an update or resetting the camera, which
+  applies to a camera that still starts.
+
 ## What a credible plan must contain before the gate counts it as met
 
 - A written, step-by-step way back to the verified original that does not
