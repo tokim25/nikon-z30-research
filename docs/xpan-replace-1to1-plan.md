@@ -40,6 +40,15 @@ when the choice is offered keep working without code changes.
 - **Frame lines and focus points** must stay inside the strip (owner decision).
 - **Applying it.** The recovery plan is still a draft ([recovery-plan.md](recovery-plan.md)).
 
+## Progress in the simulator (2026-10-16)
+
+- The area slot is the first byte of the crop builder's input, and 1:1 gives a
+  square window from square records (F-078).
+- Repointing the 1:1 records at XPan-shaped ones made the large-size window
+  5208 by 1928, close to 65:24, with DX and 16:9 unchanged (F-079).
+- The medium and small sizes gave nonsense with my guessed records, so their
+  layout must be read before step 1 is done.
+
 ## Order of work
 
 1. Confirm the three data changes in the simulator, with a fresh run.

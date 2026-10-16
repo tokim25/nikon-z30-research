@@ -982,4 +982,41 @@ an XPan choice that keeps value 4, item id `0x123c`, string 1454 and code
 version, so they are parked. Method: owner-run read-only decode; instructions
 and numbers only, no firmware bytes recorded.
 
+F-078. Corrects the area byte of F-057 and records a read-only baseline. In
+the simulator (assisted startup, one fresh run, guest scratch memory only,
+nothing modified), calling the crop-window builder `0x101d5b36` with an
+input structure of zeros except for chosen bytes shows that the area slot is
+the first byte of the structure, not the byte at offset `+0x26`. With the
+first byte 0, 2 and 4 the builder returns, for the large size, a readout of
+5600 by 3728 and a window of 5584 by 3720 (DX, offsets 16 and 8), 5584 by
+3136 (16:9, offsets 16 and 8) and 3720 by 3720 (1:1, offsets 8 and 8); the
+medium and small sizes (third structure byte `+0x22` set to 1 and 2) give
+4176 by 2784 and 2784 by 1856 for DX, and 2784 by 2784 and 2790 by 2790 for
+1:1. Slots 1 and 3 return all zeros. A nonzero byte at `+0x26` returns one
+fixed result (readout 5656 by 3918) whatever the area, so that byte is a mode
+flag, not the area. Observed runtime, high within this fixture. This confirms
+F-054 to F-056 on a running simulator: the 1:1 slot yields a square window
+because its records are square. Repro: confirmed WORK, run
+`PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/claude-cropbuilder-byte0-private.py" --output "$WORK/private-inputs/claude-cropbuilder-byte0-NN"`
+with a fresh output directory. The script stays under WORK and is not
+committed.
+
+F-079. First change test for the plan in `xpan-replace-1to1-plan.md`, in the
+simulator only (one run, guest memory only). The RAM copy of the per-area
+pointer table (`0xc18c7de8`, F-032) was temporarily repointed, for the four
+1:1 entries (indices 4, 9, 14 and 19), at scratch records with XPan-shaped
+sizes (5216 by 1936 readout, 5200 by 1920 output sizes), then the builder was
+called for area 4. Result, large size: the window became 5208 by 1928 with
+offsets 8 and 8, a ratio of 2.70 to 1 (65:24 is 2.71 to 1), so the output
+follows the 1:1 records and a 65:24 shape comes out when the records are
+changed; the DX and 16:9 results did not change. Result, medium and small
+sizes: nonsense values (negative and huge windows), so the records I wrote for
+indices 9 and 19 do not match the layout those paths expect; the layout of
+those two groups is still unread. The original pointers were restored and
+verified. Observed runtime, medium confidence: the large-size path is
+confirmed, the other two are not. Repro: confirmed WORK, run
+`PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/claude-xpan-records-private.py" --output "$WORK/private-inputs/claude-xpan-records-NN"`
+with a fresh output directory. The script stays under WORK and is not
+committed. No firmware changed.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
