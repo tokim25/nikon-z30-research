@@ -847,4 +847,32 @@ decode `0x1030f780` to `0x1030f920`. Method: owner-run read-only scan and
 decode, SHA-256 checked first; addresses and instructions only, no firmware
 bytes recorded.
 
+F-072. The routine that builds the image-area menu choices, read from an
+owner-run decode of `0x1030f780` to `0x1030f920` on 2026-10-16. The routine
+at `0x1030f844` (entry pushes 14 registers) copies four words from a source
+table onto its stack, then loops with counter r4 from 0 to 1 (compare with 2
+at `0x1030f8dc`). Each pass tests one of the stack words with the function
+`0x10484d90`; if that returns nonzero, or if the word equals the current
+value, it appends an entry to an output list. The current value is the byte
+at offset `+0x15b` of a settings structure whose address is a literal near
+`0x1030f84c`; the neighbouring byte at `+0x15a` is used by two similar
+routines at `0x1030f7a0` and `0x1030f7be`, so the structure holds several
+adjacent selection bytes. An appended entry gets a 16-bit string number from
+the list at RAM `0xc1870eb8` (the area-label list, F-065), indexed by r4, at
+offset `+4` (the first word of the list, 737 for the DX label, goes into a
+separate header slot at `0x1030f88e`), so pass 0 contributes string 1454 (the
+1:1 label) and pass 1 string 1455 (the 16:9 label). The routine also stores
+the entry's numeric value into a table with an 8-byte stride and a count at
+`[r8 + 0xc]`. A sibling routine at `0x1030f8e4` calls it, then calls
+`0x1051a17c` with the current value to look up the matching entry. Observed
+(the code), inferred, confidence medium (the reading of the loop as the
+image-area choice builder rests on the string numbers 1454 and 1455 and the
+two-pass shape). Consequences if right: DX is always shown, 1:1 and 16:9 are
+shown only when `0x10484d90` allows them or they are current, and the 1:1
+slot's numeric value and label come from one source table and the
+area-label list. Not yet read: the literals this routine uses, the source
+table of numeric values, and what `0x10484d90` checks. Method: owner-run
+read-only decode, SHA-256 checked first; addresses and instruction reading
+only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
