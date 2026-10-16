@@ -220,4 +220,15 @@ minus area. Observed, high; hash unchanged. A test with 1:1 changed to a 65:24
 shape was blocked by the permission classifier and has not been run.
 [capture-geometry-baseline.md](capture-geometry-baseline.md)
 
+F-025. Corrects F-021's exclusive-writer and universal 60-byte ring-record
+claims. Both `0x102f0a36` and `0x102f1844` write into the ring at
+`0xc2008ea0`, using index state `0xc182004c` and 400-byte slots. The former
+copies 60 bytes and forces kind 1; the latter copies 396 bytes and can advance
+the index modulo 16. Observed static code/data links, high confidence,
+independently checked. Physical source, runtime delivery and tracking meaning
+remain unverified. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex_input_record_verify_private.py" --output "$WORK/private-inputs/codex-input-record-review-02"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-input-records.md).
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
