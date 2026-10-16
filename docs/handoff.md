@@ -1,58 +1,39 @@
-# Session handoff: native XPan guides
+# Claude lane handoff
 
-Date: 2026-10-15. Update this file whenever a workflow is in progress.
+Date: 2026-10-15. Update this whenever work is in progress.
 
 ## State
 
-Offline simulator work only. Uncommitted: nothing is staged, and the user has
-not declared integration ready. The checkout started at 014ab00 on `main`.
+- Native guides work in the simulator in live view
+  ([native-guides-simulator.md](native-guides-simulator.md)). The call hangs
+  are fixed (F-013). Menus are an accepted limit (F-022, issue #8 closed).
+- The image-area research is in
+  [image-area-tables.md](image-area-tables.md) (F-030 to F-033) and
+  [capture-geometry-baseline.md](capture-geometry-baseline.md). Live view shows
+  the area only through the capture side, so the crop is probably made by the
+  image processor, which is not in this image.
+- Blocked: a throwaway-firmware test of a 65:24 replacement for 1:1. The
+  permission classifier denied creating the copy; it needs the owner's approval.
 
-Findings so far:
+## Next
 
-- [Dispatch chain](native-dispatch-chain.md): refresh request to render setup.
-- [Border gate](native-border-gate.md): why stock draws no border rectangles.
-- [Rectangle call](native-rectangle-call.md): one native call reaches 0x105124de, but no pixels appear in the frame dump.
-
-First acceptance item (native guides) is not verified.
-
-## Looser stage approved by the user
-
-The user approved a looser simulator stage: host-written pixels in a third
-layer, composited by native code ([guide-layer-compose.md](guide-layer-compose.md)).
-Toggle on, off and on again worked. It is not native drawing, and the
-original acceptance wording still stands for the final milestone. Remaining
-reliability work: menu and focus-graphic states, more toggle cycles, and
-calibrating the one-to-two-row vertical offset. Private script:
-`guides_loop_private.py`.
+1. Owner decides: approve that test, or skip it. Also saved files versus
+   live-view framing only, and whether to open a build phase.
+2. Issue #9: a call site for the guides that needs no debugger. Research and
+   spec only.
 
 ## Where things live
 
-Restricted inputs stay outside this checkout, under the chat workspace's
-`work/` directory: the verified EG module, the pinned simulator checkout, and
-run folders such as `private-inputs/call-c`. Private scripts there:
-`rect_trace_wide.py`, `rect_call_private.py` (arguments: run name, y, height,
-colour), `frame_compare_private.py`, `disasm_private.py`. They print raw
-observations, so keep their output private.
-
-## Next step
-
-Native guides now work in the simulator: see
-[native-guides-simulator.md](native-guides-simulator.md). The earlier blocker
-was a queue-and-wait gate (global 0xc1808744) that deadlocked a call made from
-the display worker's own breakpoint. Private script that produced the result:
-`native_fill_loop8_private.py` (arguments: run name, 0, 0, color, cycles).
-The call hangs are fixed: the debugger call helper now checks which thread
-stopped (`src/nikon_z30_research/guest_call_safe.py`, fact F-013). The private
-loop using it is `native_fill_loop9_private.py` with `robust_call_private.py`.
-Repeats, colors, alpha and thickness are checked. Still open: menu states
-(issue #8) and a call site that needs no debugger (issue #9). The loop is a
-debugger hook, not a deployable mechanism.
+Restricted inputs sit under the workspace `work/` folder: the EG module, the
+pinned simulator and run folders in `private-inputs/`. Private scripts there:
+`native_fill_loop9_private.py` with `robust_call_private.py`,
+`menu_retest_private.py`, `geom_probe_private.py` (run name, firmware path),
+`dimtable_scan_private.py`. Keep their output private.
 
 ## Constraints
 
-Never touch the owner's real camera, and no installable output. Local,
-simulator-only experiments are allowed (see AGENTS.md); anything derived
-from a modified firmware copy stays outside the repo. Publish through pull
-requests the owner merges.
+Local simulator-only experiments on a throwaway copy are allowed (AGENTS.md).
+Never touch the real camera. Nothing from a modified copy goes in the repo.
+The build phase stays closed. Publish through pull requests the owner merges.
 
 Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
