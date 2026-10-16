@@ -89,6 +89,8 @@ small code change, so it depends on the open "no debugger hook" condition in
 [build-phase-gate.md](build-phase-gate.md). Until that condition is met, the
 work stays in the simulator. Nothing here authorizes touching a real camera.
 
+The paper design for this option is in [xpan-bars-design.md](xpan-bars-design.md).
+
 ## Order of work
 
 1. Confirm the three data changes in the simulator, with a fresh run.
