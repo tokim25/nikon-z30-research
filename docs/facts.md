@@ -220,4 +220,14 @@ minus area. Observed, high; hash unchanged. A test with 1:1 changed to a 65:24
 shape was blocked by the permission classifier and has not been run.
 [capture-geometry-baseline.md](capture-geometry-baseline.md)
 
+F-029. Two unchanged-firmware simulator runs found count zero in screen stack
+`0xc181e4f0` before startup, after assisted live-view startup and after stock
+refresh. An audited menu-entry control populated two entries (IDs 1 and
+`0x351`). Observed runtime counts, high confidence; bounded fixture
+interpretation, moderate. Getter `0x1046109a` / `0x10365ff0` confirms count
+at container `+8`. Ordinary camera state and tracking input are unverified.
+Repro: `PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex_screen_stack_private.py" --output "$WORK/private-inputs/codex-screen-stack-review-04" --menu-control`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-screen-stack.md).
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
