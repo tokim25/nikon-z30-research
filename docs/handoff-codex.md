@@ -18,7 +18,7 @@ project's own simulator. A card-detect/SD-command-enumeration thread
 (F-102, F-104) was explored this session and retired for exactly this
 reason — see "Lane 2" below for where it stopped and why.
 
-Main carries facts through **F-105**; check main before allocating F-106.
+Main carries facts through **F-106**; check main before allocating F-107.
 Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,
@@ -252,14 +252,32 @@ record to storage right after building it.
 `bl`/`blx` targets -- it cannot see a hand-off through a function-pointer
 table or a queued/global slot read by a separate worker, which is this
 project's established pattern for handler dispatch elsewhere (F-072,
-F-090, F-098). **The real next angle (still build-relevant):** scan the
-867 reached functions (or the four callers themselves) for a store into a
-global pointer/queue slot that nothing in this same reachable set
-consumes -- that would be the signature of an indirect hand-off to an
-unreached worker, and finding the worker would still name a real hook
-point. If that comes up empty too, decode `0x1015bd18`'s mode 2/3 branches
-and `0x101e729e`/`0x101efb9e` (F-103) to test hypothesis (b) directly
-instead. Either answer is build-relevant; stopping at "the simulator can't
+F-090, F-098).
+
+**Update (2026-10-16), both follow-ups run, leans toward (b) at medium
+confidence (F-106):** the global-write scan over F-105's 867 functions
+found two real leads, both ambiguous on their own; `0x1015bd18`'s four
+modes were fully decoded (correcting F-103's mode assignment) alongside
+`0x101e729e`/`0x101efb9e`. The strongest finding: `0x101efb9e` leads to a
+function that **synchronously calls** the `0x1015a93c` property dispatcher
+directly with an id and output pointer -- a property get/notify call, not
+a job registration -- and the one event queue found (`0x101e729e`'s path)
+is generic and posts to a queue architecturally distant from the SD code
+block. Both lean toward (b). The one open thread: mode 2 of `0x1015bd18`
+dereferences a global slot (`0xc18a6890`) and, when non-null, copies data
+from it using the exact same offset/size as F-096's record-builder's first
+block copy -- real but unconfirmed evidence the slot holds that record's
+output. The slot's actual producer was not found by a literal-word scan
+(6 hits, none resembling a write) and likely computes the address via
+register arithmetic on the module's wider base (`0xc18a6810`, used 52
+times across `0x10152000`-`0x1015c600`) rather than its own literal. Full
+detail in facts.md F-106.
+
+**Next step:** either find `0xc18a6890`'s producer via a register-
+arithmetic scan (not a literal match) over those 52 functions -- the last
+piece that could still flip this to (a) -- or accept (b) as the working
+answer at this point and move on; either is a defensible, build-relevant
+stopping point. Stopping at "the simulator can't
 show me SD I/O" is not, since this question's whole point is what the real
 firmware does.
 
