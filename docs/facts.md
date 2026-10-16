@@ -436,4 +436,26 @@ callers of the other module functions pass, or look for stores through the
 table-registered handlers' neighbors. Method: read-only Thumb scan,
 SHA-256 checked first; no bytes recorded here.
 
+F-050. The surface initializer `0x104b5fd4` (F-045 to F-049) takes a config
+block as its fifth argument (the first stack argument, read as `[sp + 0x20]`
+after its own push). It validates two config words (`+0x14` and `+0x18`, each
+must be below 7), fetches a surface object through `0x104b5e30` using the
+first two arguments, and then copies config fields into the object: config
+`+0`, `+4`, `+8` into object `+0x24`, `+0x28`, `+0x2c`; config `+0xc` and
+`+0x10` into object `+0x30` and `+0x34`; config `+0x14` through `+0x28` into
+object `+0x38` through `+0x4c`; a `0x168`-byte block from config `+0x2c` into
+object `+0x50`; and two bytes from config `+0x194`, `+0x195` into object
+`+0x1b8`, `+0x1b9`. If object `+0x24` and `+0x28` are both nonzero it then
+calls registration-style functions (`0x103bcb64`, `0x1039c17e`, `0x103bd144`,
+`0x103bd25c`, `0x103bcb6a`). Observed static decode on 2026-10-16. Object
+`+0x2c` is the same offset as the diagnostic clip flag in F-042
+(`0xc1d87838 + 0x2c`). Inferred, confidence low to medium, and not yet
+shown: `0xc1d87838` is such a surface object, so rebuilding it through this
+path overwrites the clip flag from config `+8`. If so, the F-047 handler is a
+candidate for clearing the black mask on its own whenever its config clip
+word is zero, and a call to the initializer with a config whose `+8` is
+nonzero would be a candidate for setting it. This must be checked in the
+simulator with a fresh run before anyone relies on it. Method: read-only
+Thumb decode, SHA-256 checked first; no bytes recorded here.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
