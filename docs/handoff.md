@@ -29,8 +29,11 @@ exception). The first part of Codex's single next step is done as F-045: the
 initializer `0x104b5fd4` has two direct callers, `0x10452e56` and
 `0x10452ea8`. F-046 decoded a window around each: both are nine-call nested loops
 (3 by 3) with modes 1 and 2, so the initializer is bulk setup, not a
-clip-only setter. Still to do: read the literal-pool words and the indexed
-tables behind r0 and r2, and find who calls the enclosing function.
+clip-only setter. F-047 traced the chain upward: table slot `0x11fa38fc` -> handler
+`0x102ae5e8` (flag at +0x10) -> wrapper `0x10452f34` -> `0x10452d86` ->
+initializer. Still to do: find what sets the +0x10 flag, which event owns the
+table slot, and what `0x104ed666`/`0x104ed67a` do; then decide whether any
+step is a clip-only path.
 
 The auto-mode classifier denied Claude's own runs of the scan against the
 private firmware, so the owner ran it in a terminal. After the owner changed a permission setting on 2026-10-16, Claude's own run succeeded. If a session is blocked

@@ -16,7 +16,7 @@ RAW-crop documents. PR #35 records the ownership metadata change. Simulator
 infrastructure remains in Claude's lane. No Codex agents continue working.
 A new explicit session may resume from the handoff.
 
-F-001 through F-046 are allocated on main. F-047 is next,
+F-001 through F-047 are allocated on main. F-048 is next,
 subject to checking new changes before use.
 
 ## Feature state
