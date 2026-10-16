@@ -315,5 +315,14 @@ startup, overlays, saved RAW and hardware unverified. Repro:
 `PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex-guide-clip-mask-private.py" --bounds -1 106 721 374 --output "$WORK/private-inputs/codex-native-mask-reproduce-01"`,
 using confirmed WORK and a fresh output directory.
 [Evidence and limits](xpan-persistent-native-mask.md).
+F-038. Queued consumer `0x103a3f9e` maps record ID `+0x11` through 16-row
+banks at `0xc18c9a7c + 128 * BYTE(0xc18c9a64)`, stride 8. Operations
+0–2 set mapped bits, 3–4 clear; changed staging at `0xc18c9a68` reaches
+setter `0x101e383a` at `0x103a400c`. Handler `0x103a3d14` builds this
+route for code `0x2083`. Observed static links, high confidence; transport,
+physical identity, press/release and tracking unverified. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex-agent-queued-input-verify-private.py" --output "$WORK/private-inputs/codex-queued-route-reproduce-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-queued-bank-route.md).
 
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
