@@ -296,5 +296,14 @@ source, high confidence; runtime/hardware fidelity unverified. Repro:
 `python3 "$WORK/codex_agent_raw_model_source_audit_private.py" --output "$WORK/private-inputs/codex-raw-model-reproduce-01"`,
 using confirmed WORK and a fresh output directory.
 [Evidence and limits](xpan-simulator-raw-limits.md).
+F-040. Setter `0x104540ee` controls retained border color at `0xc1820138`
+and retention at `0xc1820134`. Nonzero color reaches refresh request
+`+0x168`, render-context `+0x44` and producer `0x103c1b54`. Retention 1
+preserved synthetic white across two refreshes in two runs; retention 0
+cleared stored color after one use in a control run. Observed bounded static
+and runtime behavior, high confidence. No visible guides or new geometry
+established. Repro: `PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex-guide-border-color-observe-private.py" --retention 1 --output "$WORK/private-inputs/codex-border-color-reproduce-02"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](xpan-border-color-state.md).
 
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
