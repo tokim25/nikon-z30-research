@@ -648,4 +648,24 @@ reading what `Setting_ImageSize` holds, and finding where the list's names
 map to numeric setting ids. Method: read-only string search, SHA-256 checked
 first; only short setting names are recorded, no firmware bytes.
 
+F-061. The `eDSID_` names of F-060 are referenced from one pointer table.
+The entry for `Setting_ImageSize` sits at `0x1204ea68`; its neighbours in the
+same table are `Setting_JpegEncodeQuality` (`0x1204ea5c`),
+`Setting_ImageCombination`, `Setting_JpegPolicy` (before it) and
+`Setting_RawRecord`, `Setting_IsoSense`, `Setting_IsoSenseType` (after it),
+so the table runs in a fixed order with the image-quality settings grouped
+together. A run of small numbers ends right before the table
+(`0xc31` to `0xc34`, `0x204`, `0x20b`, `0x1d05`, `0x106`, then
+`0xffffffff`), which may be a list of ids for an earlier group, but it is
+not paired entry for entry with these names. No entry between the quality
+settings and the ISO settings names an image area, crop or aspect, which
+fits F-060. Observed static decode on 2026-10-16. Inferred, confidence low:
+the image-area choice is not one of the named data-store settings, so it
+probably lives in the shooting-parameter structures of F-056 and F-057 and is
+reached through a separate menu item table. Not yet done: the table that
+defines the "Choose image area" menu item itself, found from the menu text
+(F-053), and the numeric id that goes with the `Setting_ImageSize` name.
+Method: read-only decode, SHA-256 checked first; only short setting names are
+recorded, no firmware bytes.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
