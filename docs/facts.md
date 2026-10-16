@@ -220,4 +220,15 @@ minus area. Observed, high; hash unchanged. A test with 1:1 changed to a 65:24
 shape was blocked by the permission classifier and has not been run.
 [capture-geometry-baseline.md](capture-geometry-baseline.md)
 
+F-027. In the bounded structured-record path at `0x1008ad26`, selector 5
+chooses mask `0x2000`. State at record `+0x08` equal to 1 sets the mask in
+staging word `0xc1811e74`; zero clears it. Other states skip that update but
+still reach setter `0x101e383a`, which copies the word to cache
+`0xc181182c + 0x30`. Observed static code/data links, high confidence,
+independently checked. Sender, physical SW0/button identity, runtime delivery
+and tracking meaning are unverified. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex-input-field-source-verify-private.py" --output "$WORK/private-inputs/codex-input-field-source-review-04"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-input-source.md).
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
