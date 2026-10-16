@@ -24,13 +24,6 @@ something a person could install on their own camera.
 
 An offline Python research scaffold for documenting reproducible methods and testing them with synthetic data. This is newly created code. The earlier research archive has now been recovered and checked locally; see the [Milestone 1 recovery report](docs/milestone-1-recovery.md). Its original tools and raw reports remain outside Git.
 
-## Boundaries
-
-- Keep the repository private by default.
-- Never publish Nikon firmware, extracted firmware bytes, memory dumps, installable patches, credentials, or proprietary artifacts, including through issues, logs, releases, or attachments.
-- Never flash hardware. Analysis runs offline; GitHub is used only for approved project administration and publishing the research scaffold.
-- Use synthetic fixtures and publish methods, independently written code, and reviewed findings only.
-
 ## Development
 
 Use Python 3.11 or newer; CI tests Python 3.11, 3.12, and 3.13. Package metadata permits Python 3.10, but it is outside the current CI baseline. Python modules live under `src/`; tests live under `tests/` and use the standard library `unittest` framework.
