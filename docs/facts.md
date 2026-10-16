@@ -1331,4 +1331,32 @@ with a fresh output directory and drive it with a second small script that
 appends to its `cmd.txt`; scripts stay under WORK and are not committed. No
 firmware changed.
 
+F-093. The picked image area can be driven in the simulator, and it is stored
+somewhere other than the bytes of F-081 to F-087. Simulator runs on
+2026-10-16 (assisted startup, guest input only; route: back, up five times, OK
+to enter the list, down three times to "Choose image area", OK, down, OK;
+screens checked by eye against the real menu). (1) The OK on the 1:1 row
+returned in 6 of 13 attempts and hung in the other 7 (it also hung in F-092);
+the same OK on the 16:9 row returned in its one attempt. The hang is timing
+dependent (an added 5-second pause did not remove it); it needs more work, so
+the pick should be retried until it returns. (2) When the pick returns, the
+menu shows the 1:1 icon next to "Choose image area", and re-opening the
+screen shows 1:1 as the current choice, so the choice is really stored. (3) The
+three bytes of F-081 to F-087 (`0xc2016bc3`, `0xc2018a2c + 0x408`,
+`0xc2016a68 + 0x2cc`) stayed 0 for 6 seconds after a returned 1:1 pick, so they
+do not hold the image area; the chain built on them (F-083, F-085, F-086,
+F-087) is not supported and must be redone. (4) A comparison of 16 MB of guest
+memory (`0xc1800000` to `0xc2800000`) before and after a returned pick, with an idle control, found about 3,200 changed bytes, mostly screen
+drawing. Among them one byte, `0xc1811d90`, went from 0 to 1 for the 1:1 pick
+and from 0 to 2 for the 16:9 pick (two runs), stayed at 1 after leaving the
+screen, going back and re-opening it, and read 0 before the pick. It matches the
+picker's row order (DX 0, 1:1 1, 16:9 2). Observed runtime, medium confidence;
+the setting could also live outside the range read. Inferred, low to medium: `0xc1811d90` is the stored
+image-area index or a close copy of it. Not yet done: finding which code reads
+and writes that byte, and what the values 4 and 2 of F-074 really are.
+Repros: confirmed WORK, scripts `claude-pickdiff4-private.py` and
+`claude-pickkeep-private.py` with `--downs 1` (1:1) or `--downs 2` (16:9) and a
+fresh `--output` folder under `private-inputs`; they stay under WORK and are
+not committed. No firmware changed.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

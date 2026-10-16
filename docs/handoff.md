@@ -118,10 +118,11 @@ is also a copy (reset in 0.2 s), so memory writes cannot imitate an area
 change. F-092: driving the menu to pick 1:1
 reached the right screen but hung on the OK press, even with the thread-aware
 call helper; no process left running, firmware hash confirmed unchanged. "The
-area changes" cannot be tested in the simulator yet. Next: owner decides
-whether to try 16:9, debug the simulator's handling of that key, or look for
-the real setter function by other means; read the handler tables of the
-live-view object. Avoid write watchpoints on the
+area changes" cannot be tested in the simulator yet. F-093 supersedes that: the pick can be driven (retry on hang, about half
+of 1:1 attempts hang), the choice persists, and a byte at `0xc1811d90` follows it
+(0, 1, 2). The bytes of F-081 to F-087 do NOT hold the area; redo that chain
+from `0xc1811d90`. Next: find the readers and writers of `0xc1811d90` and what
+runs when it changes (a candidate hook moment). Avoid write watchpoints on the
 simulator link; they left it out of step once. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
