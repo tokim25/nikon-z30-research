@@ -1,84 +1,76 @@
 # Codex handoff
 
-Updated 2026-10-15. The owner asked Codex to continue both features and
-approved taking over the guide and RAW-crop files. Tracking research is
-resumed. Personal build work is open; camera access still needs separate
-approval. No installable build has been produced.
+Updated 2026-10-15. The owner resumed research and approved Codex taking over
+guide and RAW-crop files. Continue offline work toward 65:24 live-view framing,
+a matching saved RAW crop, and AE-L/AF-L tracking. Personal build work is open;
+camera access is not. The owner asked this session to stop when remaining
+account usage reaches 8% and publish a handoff for Claude.
 
-## Current work and integration
+## Published work and integration
 
-Dedicated worktree: `work/codex-tracking-resume`. Active branch:
-`codex/tracking-input-source`, from main `32a9da5`.
-The primary checkout is left on main.
+Main baseline: `32a9da5`. Dedicated worktree: `work/codex-tracking-resume`;
+the primary checkout stays on main. PRs #34, #35 and #36 are open and have
+passed CI. Merge in order, retaining every appended fact and the latest handoff:
 
-1. [PR #34](https://github.com/tokim25/nikon-z30-research/pull/34): F-025
-   corrects F-021's single-writer claim; two writers use the ring.
-2. [PR #35](https://github.com/tokim25/nikon-z30-research/pull/35): F-026
-   distinguishes two bit-13 record fields. It also records the approved
-   file transfer, feature requirements, status and ownership tests.
-3. This branch: F-027 identifies a structured-control path that can set or
-   clear bit 13 in a staging word and copy it to an input cache.
-   [Evidence and repro](tracking-input-source.md).
+- #34: F-025 corrects the input ring's single-writer claim.
+- #35: F-026 distinguishes bit-13 fields, records the user-approved guide/RAW
+  file transfer, and sets separate feature acceptance requirements.
+- #36: F-027 traces a structured-control path into an input cache; its physical
+  meaning remains unverified.
 
-All start from main. Merge in that order, retaining every append-only fact
-and this latest handoff when resolving conflicts. Codex never merges its
-own PRs. PRs #34 and #35 have passed CI on Python 3.11, 3.12 and 3.13;
-they are unmerged as of this update.
+Each new finding also starts from main. Ledger and handoff edits can conflict;
+retain all facts and use the latest handoff when integrating. Codex never
+merges its own PRs or pushes main.
 
-No physical AE-L/AF-L path, tracking entry point or saved RAW crop is
-verified. No firmware change, guest input call or hardware action occurred
-in this session. Baseline: 54 tests and both artifact checks pass.
+## Current branch and single next step
 
-## Single next step
+Branch: `codex/xpan-geometry-data-probe`, from main. F-036 and
+[xpan-capture-geometry-probe.md](xpan-capture-geometry-probe.md) record the
+completed geometry comparison. Next: follow the native descriptor consumers
+into NEF metadata and storage writes; do not infer saved RAW success.
 
-Identify the sender and meaning of the structured records consumed near
-`0x1008ad26`. Selector 5 and state 1/0 control bit 13, but neither that
-selector nor the resulting cache word is proven to represent SW0 or the
-physical AE-L/AF-L switch. Do not turn this candidate into a button remap
-without the missing source link.
+## New results in progress
 
-An optional upstream lead from the helper's producer analysis remains
-unreviewed: cache pairs based at `0xc181182c` may feed snapshot fields
-`+0x150` and `+0x164`. Private script
-`codex-snapshot-field-producers-private.py` uses a limited linear symbolic
-pass, not full control flow. Verify before relying on it. F-027 deliberately
-does not claim that complete link.
+A native geometry A/B/A test ran twice: temporary data changes in a disposable
+guest produced a centered 5200 by 1920 rectangle, exactly 65:24. DX and 16:9
+controls stayed unchanged; restoring the data restored all baseline outputs.
+No original firmware file or instruction was changed. This is geometry
+evidence, not proof of saved RAW output.
 
-## Private inputs and reproduction
+Other bounded results are being documented separately: compose completion
+callback timing, empty screen stack in the assisted live-view fixture, and
+the simulator's optional functional ISP limits. Do not assume a physical
+button mapping from a matching bit number.
 
-Owner-confirmed WORK:
+## Private inputs and reproducibility
+
+Confirmed WORK:
 `/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.
-Keep original inputs, existing helpers and the simulator unchanged. Use new
-`codex_` or `codex-` private scripts and output folders outside Git; never
-search the disk for firmware.
+Keep existing inputs and helpers unchanged. New private helpers and run
+folders use `codex_` or `codex-` prefixes outside Git. No firmware content,
+raw logs, screenshots or extracted listings may enter any repository surface.
+Do not search the disk for more firmware.
 
-Helpers for the three findings:
-`codex_input_record_verify_private.py`,
-`codex-sw0-normalization-verify-private.py` and
-`codex-input-field-source-verify-private.py`. Use a fresh output directory
-under `$WORK/private-inputs/`. Report pages give reproduction commands.
-Private raw output never enters Git. The simulator checkout remains clean.
+Use the report's private helper with a fresh output folder under
+`$WORK/private-inputs/`. Runtime imports disable bytecode writes. Simulator
+sessions use separate local debugger ports and absolute private output paths.
+The original module hash and pinned simulator revision are checked; the
+simulator checkout must stay clean. No patch builder or hardware is used.
 
-Independent review caught an address-arithmetic error in the last helper:
-the staging base is `0xc1811e70`, but the accessed word is base plus 4,
-`0xc1811e74`. It also corrected the claim about other state values: they
-skip the staging update but still call the cache setter. The report records
-the corrected bounded behavior.
+## Ownership and readiness
 
-## Feature ownership and limits
+The owner transferred guide/native documents and image-area/capture-geometry
+reports to Codex; PR #35 records the exact file patterns and matching tests.
+Simulator infrastructure retains its previous assignment. Claude should
+agree ownership before concurrent edits, then read the latest report and
+handoff rather than resuming older paused-lane instructions.
 
-The owner approved Codex taking over `docs/native-*`, `docs/guide*`,
-`docs/image-area-tables.md` and `docs/capture-geometry-baseline.md`.
-PR #35 records the transfer in lane configuration and collaboration notes;
-simulator infrastructure retains its previous assignment. Claude should read
-this handoff and agree file ownership before concurrent edits.
+Guides still require a debugger hook. The physical input-to-tracking path,
+saved RAW behavior and recovery evidence remain unresolved. The simulator
+has an optional functional ISP with unverified layout assumptions; there is
+no validated saved-RAW pipeline. Hardware readiness stays NO-GO.
 
-Guides still depend on a debugger hook. The RAW goal needs saved-file and
-image-processor evidence beyond geometry calculations; this simulator has no
-image processor. Tracking needs a proven input-to-reticle path. Recovery and
-failure containment remain unresolved. Hardware readiness stays NO-GO.
+Baseline tests: 54 passing. Restricted outputs remain private; reproduction
+commands and semantic results are the published evidence.
 
-F-025, F-026 and F-027 are allocated in these three PRs. F-028 and F-029
-remain reserved for tracking. Check main and open PRs before adding facts.
-
-Written by Codex in collaboration with Tony Kim; continues Claude's work and includes independent Codex subagent reviews.
+Written by Codex in collaboration with Tony Kim; continues Claude's research and includes independent Codex subagent checks.

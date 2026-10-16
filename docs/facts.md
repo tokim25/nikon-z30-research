@@ -250,5 +250,15 @@ and tracking meaning are unverified. Repro:
 `"$WORK/analysis-env/bin/python" "$WORK/codex-input-field-source-verify-private.py" --output "$WORK/private-inputs/codex-input-field-source-review-04"`,
 using confirmed WORK and a fresh output directory.
 [Evidence and limits](tracking-input-source.md).
+F-036. Supersedes F-034's unrun-test status: two simulator A/B/A runs of
+geometry routine `0x101d5b36` with temporary data-only changes returned a
+centered area 5216 by 1936 at origin (192, 896), with rectangle 5200 by 1920
+(65:24). DX and 16:9 controls were unchanged; restoration exactly recovered
+baseline outputs. Observed runtime results, high confidence. Original file
+and instructions were unchanged; capture, saved RAW crop and hardware
+support remain unverified. Repro:
+`PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex_agent_geometry_data_probe_private.py" --output "$WORK/private-inputs/codex-geometry-reproduce-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](xpan-capture-geometry-probe.md).
 
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
