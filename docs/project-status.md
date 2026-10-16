@@ -5,14 +5,16 @@ the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
 
-Main carries facts through **F-105**. F-101 merged via PR #119; F-102/F-103
-via PR #123; F-104 via PR #124. The SD-card-detect/enumeration thread
-(F-102, F-104) is retired per owner direction (see AGENTS.md's "Priority"
-section and handoff-codex.md) -- it explained a simulator limit, not
-something a real build needs. F-105 (record-builder reachability check
-against F-104's write commands) is on
-`claude/f105-record-builder-reachability`. The owner approves merges;
-nobody merges their own PRs. Check main again before allocating F-106.
+Main carries facts through **F-106**. F-101 merged via PR #119; F-102/F-103
+via PR #123; F-104 via PR #124; F-105 via PR #126. The SD-card-detect/
+enumeration thread (F-102, F-104) is retired per owner direction (see
+AGENTS.md's "Priority" section and handoff-codex.md). F-106 (direct test
+of the capture-descriptor vs. shots-remaining-estimator hypothesis --
+leans toward the estimator/property-dispatch reading at medium confidence,
+with one open thread: who writes the global slot F-106 found at
+`0xc18a6890`) is on `claude/f106-hypothesis-b-evidence`. The owner
+approves merges; nobody merges their own PRs. Check main again before
+allocating F-107.
 
 ## Feature state
 

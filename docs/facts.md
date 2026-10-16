@@ -1794,4 +1794,65 @@ unreached worker. Method: read-only static decode (capstone, Thumb) and an
 automated call-graph BFS, SHA-256 checked first; addresses only, no
 firmware bytes recorded.
 
+F-106. Tests F-097's capture-descriptor vs. shots-remaining-estimator
+ambiguity directly, on two fronts, continuing from F-105's negative
+result. Corrects and extends F-103 along the way.
+
+**Front 1: full decode of `0x1015bd18`'s four modes (corrects F-103).**
+F-103 said modes 2/3 feed the `0x1015a93c` callback into `0x101e729e`
+then `0x101efb9e`. The actual assignment is the opposite: **modes 0 and 1**
+are the ones that build a small stack struct and call `0x101efb9e` with the
+`0x1015a93d` callback pointer; mode 2 and mode 3 call `0x101e729e` only
+(with a fixed object, never the callback). All four modes converge on a
+shared tail that, **only in mode 2**, dereferences a global pointer at a
+computed slot address `0xc18a6810 + 0x80 + 0x80 = 0xc18a6890` and, if
+non-null, copies 96 bytes from `+0x4f0` and 752 bytes from `+0x2a50` of the
+pointed-to object into a fixed destination object at `0xc239d91c`. The
+96-byte-from-`+0x4f0` copy is the **same source offset and size** as the
+first block copy F-096 found inside the record builder `0x101d5c54`
+itself -- real evidence, not proof, that the slot's pointer is or matches
+`0x101d5c54`'s output.
+
+**Front 2: decode of `0x101e729e` and `0x101efb9e`.** `0x101e729e` is an
+argument-setting stub (not a full function entry) for a shared "post an
+event" primitive at `0x101e725a`: allocate a 12-byte `{code, id, ptr}`
+record, lock a global struct at `0xc21c0eec`, append to a linked list at
+`[0xc21c0eec+0xa4]`, signal, unlock. `0x1015bd18`'s call posts
+`{code=6, id=0x04180041, ptr=<fixed object>}` -- a generic notification,
+architecturally distant from the SD/storage code block
+(`0x10413000`-`0x10418000`, F-102/F-104) and tagged with an id numerically
+adjacent to `0x04180042`, one of `0x1015a93c`'s own dispatch-ID constants
+(F-103) -- the same `0x0417`-`0x0419` property/event-ID family, not
+anything capture-specific. `0x101efb9e` is a thin wrapper
+(always returns 1) around `0x1007c094`, which **synchronously calls the
+`0x1015a93c` dispatcher directly** -- `callback(id=0x042d0027,
+&output_slot)` -- rather than registering it anywhere for later/async use.
+That is the shape of a property get/notify call, not a capture-job
+submission.
+
+Observed static decode on 2026-10-16 (subagent-assisted). Inferred,
+confidence medium, leaning toward hypothesis (b): both mechanisms found in
+modes 0/1 and mode 3 are notification/property-dispatch shaped, and the
+one queue found (`0xc21c0eec`) is generic and storage-distant. What keeps
+this from higher confidence: mode 2's slot-dereference-and-copy (front 1)
+is a genuinely new, unexplained data movement whose size/offset match to
+F-096's record builder is suggestive but not confirmed, since the slot's
+actual producer was not found. A literal-pool word scan for the slot
+address `0xc18a6890` (6 hits total) found no site resembling a producer --
+the two resolved so far (`0x1016145c`, `0x1015dfb8`) load it only to
+immediately subtract `0x80` back to the module's wider base
+(`0xc18a6810`, used 52 times across `0x10152000`-`0x1015c600`, an
+unrelated-looking convenience pointer) for other fields, not to write a
+record pointer there. The true producer may compute the slot via register
+arithmetic on the base literal rather than ever loading `0xc18a6890` as its
+own literal, which this word-scan cannot find. Several called functions
+remain undecoded (`0x1014cc88`, `0x1018916e`, `0x101635b8`, `0x1015bbb0`,
+`0x1015ba4c`, `0x10220e14`, `0x10220d8e`, `0x1007631e`, `0x100763c2`,
+`0x10156b62`), any of which could still hide a storage hand-off. Not yet
+done: finding `0xc18a6890`'s real producer via a register-arithmetic scan
+(not a literal match) over the 52 functions that use the wider base.
+Method: read-only static decode (capstone, Thumb) and literal-pool word
+scans, SHA-256 checked first; addresses, offsets and ids only, no firmware
+bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
