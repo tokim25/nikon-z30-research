@@ -36,14 +36,17 @@ Key routing in live view is in F-020. F-021 shows that neither store
 reaching an internal event.
 
 The owner added a goal: map AE-L/AF-L to the tracking entry point (flag bit
-16 -> state 1, F-014/F-015), research and spec only. A study on that is
-running; its result starts at F-022. Check facts.md first.
+16 -> state 1, F-014/F-015), research and spec only. The owner confirmed the
+button exists on the body. F-023 rules out the guarded navigation rows. F-024
+finds the lead: a named switch `ID_SW0_AEAF_LOCK` with its own bit (mask
+0x2000). Another session owns F-022 and the menu-state work.
 
 ## Next step
 
-1. AE-L/AF-L: find its input code and press/release handling (likely through
-   decoder `0x102f0e38` from F-021), and whether its handler shares a
-   dispatch point with `0x102f2990`. Priority; the rest wait on it.
+1. Find the routine that scans the SW0 switch word and reads bit 13 (mask
+   0x2000), for example a test against immediate 0x2000 or a bit-13 case in a
+   jump table, and follow it to an input code or event. Then find press and
+   release handling, and whether it meets `0x102f2990`. Priority.
 2. Resolve the live-view screen's key table from group array `0xc2006594`,
    and read its entries for 0x27E, 0x2a3, 0x2a8 and the default 0x31e.
 3. Trace task loop `0x10235576` and the code tables for 0x24e to 0x252.
