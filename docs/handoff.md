@@ -84,7 +84,11 @@ address + `0xaf87e36c`); the pool is probably at RAM `0xc187036c` to
 `0xc187136c`. F-070: done; 416 pool words and 406 loaders found in a code module from
 `0x1030bf08`; `0xc1870e80` (just before the area-label list) is loaded at
 `0x1030c880`. F-071: done; the area-label list is loaded only at `0x1030f87a` and
-`0x1030f8a8`. Next: owner runs a decode of `0x1030f780` to `0x1030f920`. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
+`0x1030f8a8`. F-072: decoded; `0x1030f844` builds the DX/1:1/16:9 choice list (two-pass loop,
+filtered by `0x10484d90`, current value is a byte at `+0x15b` of a settings
+structure). Next: owner runs a read that resolves the literals used by
+`0x1030f844`, shows the source table of numeric values, and decodes
+`0x10484d90`. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
 AE-L/AF-L button setting `Setting_FuncAeAfLockButtonShooting` (a possible
