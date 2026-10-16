@@ -1400,4 +1400,36 @@ the assembled record afterward (a save call, a queue post, or another display
 use). Method: owner-run read-only decode, SHA-256 checked first; addresses
 and offsets only, no firmware bytes recorded.
 
+F-096. Corrects and extends F-095. The crop-builder caller `0x101d5de8`
+sits inside a function whose real entry is `0x101d5c54` (push of 9
+registers, `sub sp, #0x1c`), not the `0x101d5a14` landmark F-095 guessed,
+which was an unrelated record-matching loop. An owner-run decode on
+2026-10-16 of `0x101d5c54` through past the crop call confirms and extends
+F-095's reading. (1) Before the crop call, the function calls
+`0x101dc204` twice (passing a mode value 2 or 3 and a pointer to two loaded
+words, derived from a settings byte at `source+0x2000+0xa52`). That
+function is not a geometry lookup: for a first argument of 1, 2, 3 or 6 it
+divides the constant 24 by that argument (`sdiv`, with rounding), scaled by
+a second value, which reads as bits-per-component or similar size math
+dividing a 24-bit depth across 1 to 6 components, not another crop-window
+call. (2) After the crop call and the two previously found block copies
+(96 bytes from `source+0x4f0`, 80 bytes from `source+0x550`), individual
+field copies continue well past the `+0x310` offset already found: more
+bytes from `source+0x5a0` through `+0x5a8`, a doubleword from
+`source+0x1400+0x1c`, and a conditional word at destination `+0x320`, ending
+with destination `+= 0x328` and a further block load (`ldm` of four words
+from `source+0x5d0`) before three mode branches
+(`0x101d601c`/`0x101d5ffe`/`0x101d602e`) selected by settings bytes from
+the same `source+0x2000` block (`+0xaa5`, `+0xa71`, `+0xa8e`, `+0xa90`).
+Observed. Inferred, confidence medium: the destination record (well over
+0x328 bytes, combining geometry, bit-depth/size math and copied device
+config) is a stronger candidate for a capture or save-side descriptor than
+any of the other six crop-builder callers (F-095), none of which build
+anything this large or include size-in-bytes arithmetic. Not yet found: who
+calls `0x101d5c54`, what identifies its destination record, and what reads
+the finished record afterward (continuing into the three mode branches is
+the immediate next step). Method: owner-run read-only decode, SHA-256
+checked first; addresses, offsets and constants only, no firmware bytes
+recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
