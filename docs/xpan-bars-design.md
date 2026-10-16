@@ -95,6 +95,14 @@ firmware file hash is rechecked.
 4. **Does the image processor draw its own live-view frame?** If it does, the
    picture may already be cropped or may fight the bars (F-033).
 
+## How the area change can be tested
+
+Writing bytes into the camera's settings structures cannot imitate an area
+change: both the mirror and the source are rewritten from something deeper
+within a second (F-081, F-091). The area change has to be tested by driving the
+simulated menu to pick an image area, if the simulator allows it, or by calling
+the real setter once it is found.
+
 ## What this does not cover
 
 Flashing, applying the change to a real camera, and the recovery plan. Those

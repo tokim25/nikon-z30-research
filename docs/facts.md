@@ -1280,4 +1280,32 @@ table at `object + 0x78` of the live-view object, and the table is data; (b)
 tables, `0x102f8340` and `0x10356fb0`. Method: owner-run read-only decode;
 instructions and numbers only, no firmware bytes recorded.
 
+F-091. The source byte is also a copy, and the pick stubs only post messages.
+(1) Simulator check on 2026-10-16 (assisted startup, one run, guest memory
+only, restored): the source byte at `0xc2018a2c + 0x408` (F-087) was set to
+4. Within 0.2 simulated seconds it read 0 again, and the mirror
+(`0xc2016a68 + 0x15b`) and the snapshot byte (`0xc2016a68 + 0x2cc`) stayed 0
+at 0.2, 0.5, 1.0 and 2.0 seconds. So the source is rewritten from something
+deeper, and the refresh that fills the mirror did not pick up a changed
+source. Writing bytes into these structures therefore cannot imitate "the
+area changed"; the real value lives behind the settings store and must be
+changed through its own path. Observed runtime, medium confidence (one run).
+(2) Owner-run decode on 2026-10-16: the shared routine `0x1030cc68` takes an
+item id, allocates a message of size `0x100` (through `0x10454210`, with a
+context from `0x10324244`), fills fields (including the value `0x2ed`), posts
+it with `0x104546c6` and tail-calls `0x1030bc9c`. Three stubs near the
+area-choice builder (`0x1030f78c`, `0x1030f82e`, `0x1030f9dc`) look an item
+id up in a list by index, call it, and set the byte at `0xc1828be4` to 1; a
+fourth stub at `0x1030ccce` sets it to 2. The routine has 24 direct callers
+(`0x1030ccaa`, `0x1030ccd8`, `0x1030ce88`, `0x1030dc76` and others). These
+stubs refresh the on-screen list, not the stored setting. Observed (the code);
+inferred, confidence low to medium (the reading as a view update). Result for
+the design: the "area changes" moment is still not located, and it cannot be
+tested by writing memory; it can be tested by driving the simulated menu.
+Not yet tried: whether the simulator's menu branch can be driven to pick an
+image area. Repro of (1): confirmed WORK, run
+`PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/claude-sourcefollow-private.py" --output "$WORK/private-inputs/claude-sourcefollow-NN"`
+with a fresh output directory; the script stays under WORK and is not
+committed. No firmware changed.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
