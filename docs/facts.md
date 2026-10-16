@@ -1377,4 +1377,27 @@ hook does not need it if it can read the byte itself (0 for DX, 1 for 1:1, 2 for
 16:9). Method: owner-run read-only scans; addresses only, no firmware bytes
 recorded.
 
+F-095. Of the seven callers of the crop-window builder `0x101d5b36` (F-057),
+the other six (besides `0x1015382a`, already read) were decoded on
+2026-10-16. Five build small on-stack or per-item context structs from an
+object at `+0x3a4` and immediately feed a property query or UI item builder
+(`0x10194cca` with id `0x2cf`, `0x1015336c`/`0x10364232`/`0x10364250`
+clusters, or loop bodies that copy fields into per-item records at growing
+offsets) -- the same shape as display/menu info builders, not save paths.
+The sixth, at `0x101d5de8` (enclosing function entry near `0x101d5a14`), is
+different: right after the crop call it does two large block copies through
+`0x10199bdc` (96 bytes from `source+0x4f0` to `dest+0x260`, then 80 bytes
+from `source+0x550` to `dest+0x2c0`), then a run of individual byte/word
+copies from the source at `+0x553`, `+0x554`, `+0x5a7`, `+0x5a8` and more
+(cut off) into the destination at `+0x2ec`, `+0x2ed`, `+0x310` and beyond,
+with a further pointer at `source + 0x1400` referenced soon after. Observed
+static decode on 2026-10-16. Inferred, confidence low to medium: this is
+assembling one composite record (destination, growing past `0x310` bytes)
+out of several source sub-blocks, which is a more promising shape for a
+capture/save descriptor than the other five callers. Not yet read: the rest
+of this copy sequence, the destination object's identity, and what consumes
+the assembled record afterward (a save call, a queue post, or another display
+use). Method: owner-run read-only decode, SHA-256 checked first; addresses
+and offsets only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
