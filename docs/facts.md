@@ -1965,4 +1965,32 @@ static decode (capstone, Thumb) and a register-arithmetic write scan
 (not a literal-word match), SHA-256 checked first; addresses, offsets and
 event/mode codes only, no firmware bytes recorded.
 
+F-109. Closes the "what posts event `0x4100012`" thread as a deprioritized
+dead end, not a finding to build on. Four independent methods, each
+checked across the **full** 33.9MB image (not a bounded window): direct
+`bl` calls, tail `b.w` branches, raw pointer-table words (plain and
+Thumb-tagged), and Thumb table-branch (`tbb`/`tbh`) jump tables with their
+computed targets resolved. All four found zero references to
+`0x10459d80`, the dispatcher that receives this event code as its own
+parameter (F-108). This mirrors F-103's identical dead end for
+`0x10156714` -- consistent with this being either dead code in this
+build, or reached through a mechanism these methods cannot see (e.g. an
+ARM-mode call, a double-indirection table, or a `tbb`/`tbh` whose own
+reachability wasn't itself checked).
+
+This was not pursued further on purpose, matching AGENTS.md's priority
+rule, not because of a classifier stop (none occurred) or exhausted
+technique space (ARM-mode scanning and a manual search of the UI/input
+event-pump module remain untried). The reasoning: this question is about
+*simulator reachability* (can the simulator's limited key set be made to
+post this event), not about the real firmware, which obviously already
+delivers it through ordinary use -- F-090 already shows live view working.
+F-108's hook sites (`0x102f5810`, `0x102355c0`, the guard in
+native-xpan-liveview-hook.md) sit downstream of this event, not upstream
+of it, so a real hardware build does not need this answered. Recorded so
+a future session does not redo this exact search, not as an invitation to
+continue it. Method: read-only static scans (capstone, direct branch-
+immediate decoding, literal-pool word search, table-branch resolution),
+SHA-256 checked first; addresses only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
