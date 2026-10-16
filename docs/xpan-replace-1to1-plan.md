@@ -69,6 +69,19 @@ when the choice is offered keep working without code changes.
 - **Saved files:** the image processor may or may not accept the shape; the
   simulator cannot settle it.
 
+## Options for the live-view bars (F-088)
+
+1. **Data only, always on.** Edit the stored layer template so the clip flag
+   and bounds make the 65:24 strip permanent. No code changes, but the bars
+   are not tied to the XPan choice, and they would clip the menus too.
+2. **A small hook (new code).** A few instructions that run when live view is
+   entered and turn the mask on only when the stored area value is 4. Ties the
+   bars to the choice; needs a code patch, which is the open "no debugger
+   hook" condition in [build-phase-gate.md](build-phase-gate.md).
+3. **Skip the bars in version 1.** Ship the XPan choice, the size tables and
+   the label, and treat the on-screen bars as a later addition. The saved crop
+   is the main goal.
+
 ## Order of work
 
 1. Confirm the three data changes in the simulator, with a fresh run.

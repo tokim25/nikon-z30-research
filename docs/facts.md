@@ -1199,4 +1199,32 @@ live-view bars are different: nothing in the display path reads the value
 the open question of build-gate condition 1. Method: owner-run read-only
 decode; instructions and addresses only, no firmware bytes recorded.
 
+F-088. Where the screen layers get their clip flag and bounds, from an
+owner-run decode of `0x10452d86` to `0x10452f34` on 2026-10-16. The routine
+builds the layer objects at startup in four passes. Pass 1 copies a `0x60`-byte
+block from `0x1073db78`, then calls `0x104b5f2a` for each of three layer ids
+listed at `0x1073d888`. Pass 2 copies a `0x198`-byte template from
+`0x1073dbe4` (the table at `0x1073db78` plus `0x6c`) into a local buffer and
+calls the initializer `0x104b5fd4` (F-050) for each of 3 by 3 combinations
+with mode 1. Between calls it changes only three fields of the local buffer:
+a word at config `+0x20` from a three-word table at `0x1073dbd8`, a flag at
+config `+0x24`, and a byte at config `+0x194`; the rest is the template.
+Passes 3 and 4 do the same with a second template at `0x1073dd88` (mode 2),
+and a third pass (mode 3, `0x104b699e`) and a fourth (mode 4, `0x104b6a30`,
+template `0x1073df20`) follow. The clip flag and the bounds that the
+initializer copies into each layer object (config `+8` and `+0xc`, F-050) are
+therefore fields of the stored template, which sits in the main image
+(address below `0x11f81c94`), not in the copied-to-RAM data. Observed (the
+code and the literals). Inferred, confidence medium: (a) changing the clip
+flag and bounds in the template would make every layer built this way carry
+the same mask, always on and for all three layer ids, which would include the
+menu layers (so menus would be clipped, as in F-044), and nothing in this
+routine reads the image-area value; (b) tying the mask to the XPan choice
+needs new code, for example a few instructions that run when live view is
+entered and set the flag from the stored area byte. The routine runs at
+startup, not when the area changes. Not read: the template contents
+themselves, the callers of this routine, and the live-view entry sequence.
+Method: owner-run read-only decode; instructions and numbers only, no
+firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
