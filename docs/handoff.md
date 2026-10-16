@@ -88,7 +88,9 @@ address + `0xaf87e36c`); the pool is probably at RAM `0xc187036c` to
 filtered by `0x10484d90`, current value is a byte at `+0x15b` of a settings
 structure). F-073: literals resolved; item ids `0x123c` (1:1) and `0x123e` (16:9), header
 `0x15aa`; the check is a thunk to `0x1052d7c2`. F-074: done; stored values 4 (1:1, code 0x1003) and 2 (16:9, code 0x1004); the
-real check is at `0x104270a4`. Next: owner runs a decode of `0x104270a4`. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
+`0x104270a4` turned out to be error-report stubs (F-075), so the real check is
+probably the routine at `0x1052d7c6`. Next: owner prints the raw encodings at
+`0x10484d90` and `0x1052d7c2` and the literals and switch of `0x1052d7c6`. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
 AE-L/AF-L button setting `Setting_FuncAeAfLockButtonShooting` (a possible
