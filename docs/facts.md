@@ -592,4 +592,22 @@ not been shown. Not yet done: the other six callers, and finding the code
 that writes that byte (the link from the menu pick to the crop window).
 Method: read-only Thumb decode, SHA-256 checked first; no bytes recorded.
 
+F-058. A scan of the whole image for byte stores at offset `0x22e` (the
+location of the area byte from F-057, `[object + 0x3a4] + 0x22e`) found five
+stores. (1) In the main code area, `0x101ae68e` writes the fixed value 1 (and
+3 at `+0x22f`) while setting up a settings-like object, inside a routine whose
+entry is probably `0x101ae57a`; it stores a constant, so it is a fixed setup
+and not the menu pick. (2) Two stores each at `0x11defa8e`/`0x11defada` and
+`0x11e758be`/`0x11e7590a`, in a higher code region, fill the byte at `+0x22e`
+as part of a grid: bytes at `+0x22e`, `+0x232`, `+0x236`, `+0x23a` and so on
+at steps of 4 within a row and `0xc` between rows, twelve in all, set to
+either zero or a value returned by `0x11dc4530`. Six loads of the byte exist,
+at `0x1034101a`, `0x10d32d32`, `0x11dbf980`, `0x11dc27fc`, `0x11e45718` and
+`0x11e48594`. Observed static scan on 2026-10-16. Inferred, confidence low:
+the byte is one cell of a small grid, not a single global setting, and the
+code that fills the grid from the real menu choice is in the higher region
+(`0x11dc....` to `0x11e7....`), not yet read. Also unread: what
+`0x11dc4530` returns and the six loaders. Method: read-only scan and decode,
+SHA-256 checked first; no bytes recorded here.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

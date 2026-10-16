@@ -65,8 +65,10 @@ callers of the parameter-block helpers at `0x1020bfc8`. F-055 sorted them by hel
 slot 4, purposes unknown. F-056: the main consumer `0x101d5b36` is a centered crop-window builder keyed
 by a byte at input +0x26 (no square test inside it). F-057: seven callers; in the first one the input structure lives at
 `[object+0x3a4]+0x208`, so the area byte is at `[object+0x3a4]+0x22e`.
-Next: find who writes that byte (menu pick to crop window), read the other
-six callers, read helpers `0x1020c128`
+F-058: five stores of that byte; one is a fixed 1, the rest fill a 12-cell grid
+in the higher code region (`0x11dc....` to `0x11e7....`). Next: read
+`0x11dc4530` and the grid fillers there (menu pick to crop window), read the
+other six callers, read helpers `0x1020c128`
 and `0x1020c17e` and check `0x101d5ad0`, then the other big users (helper
 `0x1020bfda`, 38 callers; `0x1020bfc8`, 23) then check each reader of the 1:1 slot
 for width-equals-height assumptions, and find the per-area crop-window tables.
