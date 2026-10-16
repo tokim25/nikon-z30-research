@@ -790,4 +790,21 @@ and every code address that loads such a value. Method: read-only read of
 short text labels, SHA-256 checked first; only labels recorded, no firmware
 bytes.
 
+F-069. Why nothing in the code points at the label pool (F-066, F-068). An
+owner-run scan on 2026-10-16 found no code that builds a `0x11ff....` address
+in two halves, and only two data words in `0x11ff2000` to `0x11ff3000`
+(`0x11ff2da4` at `0x1063cd48` and `0x11ff2200` at `0x109b3378`); the one
+instruction-looking "loader" at `0x1063cb64` sits in data and decodes to
+nonsense, so it is a false match. This region is initialized data, copied to
+RAM at startup, so code uses the RAM copy. Two known pairs give the same
+fixed offset between stored address and RAM address: `0x12049a7c` to
+`0xc18c7de8` (F-032) and `0x1204b7e8` to `0xc18c9b54`
+(`tracking-input-bank-selection.md`), both `+0xaf87e36c`. If that offset holds
+across the region, the pool `0x11ff2000` to `0x11ff3000` lives at RAM
+`0xc187036c` to `0xc187136c`, and the area-label list `0x11ff2b4c` at RAM
+`0xc1870eb8`. Observed (the scan results and the two pairs), inferred,
+confidence medium (the offset is assumed to hold for the pool). Next: search
+for code that loads values in `0xc187036c` to `0xc187136c`. Method: arithmetic
+on recorded addresses plus the owner-run scan; no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
