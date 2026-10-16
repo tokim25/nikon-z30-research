@@ -81,8 +81,10 @@ F-066/F-067: nothing points at that list; it sits after two pointer runs (name
 tables, 26 and 24 entries) and among packed lists of string numbers. F-068 corrects that: the pointers are focal-length and f-number labels (a
 value-list pool), not menu names. F-069: the pool is initialized data, so code uses its RAM copy (stored
 address + `0xaf87e36c`); the pool is probably at RAM `0xc187036c` to
-`0xc187136c`. Next: owner runs a scan for code and data words in that RAM
-range to find the pool base and the index scheme. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
+`0xc187136c`. F-070: done; 416 pool words and 406 loaders found in a code module from
+`0x1030bf08`; `0xc1870e80` (just before the area-label list) is loaded at
+`0x1030c880`. Next: owner runs a read that decodes the code around
+`0x1030c880` and lists loaders of `0xc1870e00` to `0xc1870f40`. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
 AE-L/AF-L button setting `Setting_FuncAeAfLockButtonShooting` (a possible
