@@ -1252,4 +1252,32 @@ object is the live-view object) is a candidate for "return from a menu";
 and what `0x104b9116` does. Method: owner-run read-only decode; instructions
 and numbers only, no firmware bytes recorded.
 
+F-090. What the live-view start routine does at its end, and what
+`0x104b9116` is, from an owner-run decode on 2026-10-16. (1) `0x104b9116` is
+not an activation call. It is a short setter: it stores its second argument
+at `[object + 0x74]` (the selector byte seen in earlier simulator tests for
+the live-view object `0xc1821d44` and the menu object `0xc182e688`), and when
+that argument is 0 it first clears two words at `+0x94` and `+0x98`. The live
+view start routine `0x102f2990` calls it with the live-view object and 0. (2)
+The next routine, `0x104b912c`, is a dispatcher: it reads the selector, loads
+a function pointer from `[object + 0x78 + 4 * selector]` and, if it is not
+zero, jumps to it with the event arguments. So each screen object has a
+table of handlers indexed by its selector. (3) After setting the selector,
+the start routine calls `0x1046283c` and `0x10462894`, then (after a mode
+check on the values 7, 8 and `0xc`) calls `0x102f8340` with the address of its
+mode byte, `0x1035871e`, `0x10356fb0` with 4 or 3, `0x1044e49c` and
+`0x1035764e` with 3, and returns. (4) The call to the snapshot routine at
+`0x1030f9ce` is in the same module as the area-choice builder (F-072). The
+code just before it copies a byte from `[0xc1828be4 + 0xc]` (the count of the
+choice list the builder produced) into `[r4 + 0x20]`, checks two conditions,
+then calls `0x10366bd0` with 0, `0x103683be`, the snapshot routine
+`0x10367260` and `0x1036994a`. This reads as "after the choice list is built,
+refresh the snapshot", which is the menu being shown, not necessarily the
+choice being picked. Observed. Inferred, confidence low to medium: (a) a
+clean way to run new code when live view starts is an entry in the handler
+table at `object + 0x78` of the live-view object, and the table is data; (b)
+"the area changes" is still not located. Not read: the contents of the handler
+tables, `0x102f8340` and `0x10356fb0`. Method: owner-run read-only decode;
+instructions and numbers only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

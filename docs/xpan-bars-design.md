@@ -76,7 +76,10 @@ firmware file hash is rechecked.
    menu) happen in the camera's code?** Two candidates found (F-089): the
    point where live view is activated, for "live view starts", and the generic
    activate step, for "return from a menu". "The area changes" has no
-   candidate yet.
+   candidate yet. F-090 adds that each screen object has a table of handlers
+   chosen by its selector, which is data, so live view starting can be reached
+   by a table entry. If changing the area from the "i" menu leaves live view
+   in place, the bars may need to be updated at that moment too.
 2. **Is there a safe place to add a few instructions?** The camera's software
    has no obvious spare space, and adding code means changing the image. This
    is build-gate condition 1.
