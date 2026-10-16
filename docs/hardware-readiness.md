@@ -4,6 +4,12 @@ Reviewed 2026-10-16. **NO-GO for hardware testing or installation.**
 Personal build-phase authorization does not grant permission to connect,
 flash or install on the owner's camera. No installable firmware was produced.
 
+This checkpoint does not certify hardware safety. Safety cannot be proved
+before the first camera test. It tracks progress toward three states defined in
+[build-phase-gate.md](build-phase-gate.md): **SIMULATOR ACCEPTED**, **READY
+FOR AN EXPERIMENTAL HARDWARE TEST**, or **HARDWARE VALIDATED**. The current
+state is below the first of those for the complete feature set.
+
 | Requirement | Evidence | Remaining gap |
 | --- | --- | --- |
 | Live-view framing | Prior native guide lines; PR #43 adds persistent native black masks after diagnostic setup. | Natural startup and supported state lifecycle. |
@@ -12,7 +18,7 @@ flash or install on the owner's camera. No installable firmware was produced.
 | RAW output path | PR #47 verifies a selected structure pack and processing submission. | Source-object identity and native serialization/storage boundary. |
 | AE-L/AF-L tracking | PRs #44/#45 trace a queued bank mapping; physical identity remains unresolved. | Verified button press/release, tracking entry point, reticle and cancellation. |
 | Combined features | Neither complete feature is available. | Concurrent display/input behavior, rejection in unsupported states and recovery. |
-| Failure containment | Exact original identity gate exists. | Timing, power behavior, compatibility and a credible recovery plan. |
+| Failure containment | Exact original identity gate exists. | Timing, power behavior, compatibility, and either a verified recovery path or explicit acceptance that recovery may require service or may fail. |
 
 The masked preview leaves 720 by 266 visible pixels, rounded to 65:24.
 It hides UI outside that strip as well. The test uses one diagnostic guest
@@ -38,5 +44,9 @@ each disposable process was discarded. No hardware was used.
 Next: establish native clip-state lifecycle across menu entry and a verified
 return to live view. Complete the remaining simulator evidence and containment
 work before proposing a separate, concrete hardware plan for owner approval.
+
+Changing this file to **READY FOR AN EXPERIMENTAL HARDWARE TEST** would mean
+that the measurable preflight checks passed and the owner accepted the written
+residual risk. It would not mean that the modified firmware was proved safe.
 
 Written by Codex in collaboration with Tony Kim; updates Claude's earlier checkpoint with the new simulator findings and their limits.

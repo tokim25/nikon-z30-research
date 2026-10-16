@@ -18,6 +18,13 @@ touching a real camera. Build-phase work is open for the owner's own,
 non-distributed camera ([build-phase-gate.md](build-phase-gate.md)), but all
 work stays in the offline simulator.
 
+Owner decision recorded 2026-10-16: absolute hardware safety is no longer an
+acceptance criterion because it cannot be proved before a first hardware
+test. The gate now distinguishes **SIMULATOR ACCEPTED**, **READY FOR AN
+EXPERIMENTAL HARDWARE TEST**, and **HARDWARE VALIDATED**. A missing recovery
+path must be stated as an accepted service-or-total-loss risk; it may not be
+described as safe. The current state remains NO-GO.
+
 The owner's goal, restated plainly, is in
 [user-stories.md](user-stories.md) and [roadmap.md](roadmap.md): an XPan
 (65:24) choice that replaces "1:1" in "Choose image area", live view shows
