@@ -52,6 +52,10 @@ when the choice is offered keep working without code changes.
   crop-window builder. It shows nothing yet about live view, capture or saved
   files.
 
+- Setting the stored area byte alone changes nothing on screen and is reset
+  within a second, so live view does not follow it and the byte is a mirror of
+  a stored setting (F-081). The bars need their own link to the choice.
+
 ## Order of work
 
 1. Confirm the three data changes in the simulator, with a fresh run.
