@@ -18,7 +18,7 @@ project's own simulator. A card-detect/SD-command-enumeration thread
 (F-102, F-104) was explored this session and retired for exactly this
 reason — see "Lane 2" below for where it stopped and why.
 
-Main carries facts through **F-107**; check main before allocating F-108.
+Main carries facts through **F-108**; check main before allocating F-109.
 Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,
@@ -153,15 +153,29 @@ step over). Two more literal-pool references to `0xc181f6fc` were found
 and both are **reads** into small lookup tables anchored near it, not
 writes. Full detail in facts.md F-107.
 
-**Current single next step for Lane 1:** find what actually writes
-`0xc181f6fc`. None of the three literal-pool hits is a write, so the
-writer likely computes the address via register arithmetic on a nearby
-base (the same pattern F-106 hit with its Lane 2 slot), or writes through
-a sibling of one of the two stride-8 lookup tables rather than the plain
-byte. This is a concrete, bounded next step, not open-ended -- once the
-writer is found, it directly answers "what naturally sets the
-menu-close-to-live-view state," closing out build-gate condition 1's
-remaining open thread for Lane 1.
+**Update (2026-10-16), the natural trigger found, three-stop question
+resolved (F-108):** a register-arithmetic scan (not a literal match)
+found the setter, `0x10457dac`, the plain sibling of F-107's getter. It
+has exactly one direct caller anywhere in the image, inside a dispatcher
+at `0x10459d80`: when the incoming event code equals **`0x4100012`**, it
+calls the setter with `r0 = 4` -- one of F-107's three live-view-selecting
+values -- then calls `0x1046283c` and `0x10462894` with no further gating.
+**Those are the same two calls F-090 already found inside the live-view-
+start routine `0x102f2990` itself.** That match is independent
+corroboration this is the real trigger, not a coincidental write. No
+classifier stop encountered anywhere in this chain. Full detail in
+facts.md F-108.
+
+**Current single next step for Lane 1:** find what *posts* internal event
+`0x4100012` -- a physical control, an internal state transition, or
+something else -- to confirm it is reachable through the camera's normal
+live-view-entry path (not just this one dispatcher branch), and to see
+whether the simulator can be made to post it directly (neither of its two
+testable close events, `0x24e`/`0x250`, is this one). If it can be posted
+in the simulator, the existing guarded hook in
+[native-xpan-liveview-hook.md](native-xpan-liveview-hook.md) can finally be
+tested against a true natural trigger instead of a diagnostic call --
+closing out build-gate condition 1 for Lane 1 for real.
 
 ## Lane 2: saved-crop (does a saved RAW/JPEG actually come out cropped?)
 
