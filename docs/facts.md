@@ -220,4 +220,14 @@ minus area. Observed, high; hash unchanged. A test with 1:1 changed to a 65:24
 shape was blocked by the permission classifier and has not been run.
 [capture-geometry-baseline.md](capture-geometry-baseline.md)
 
+F-038. Queued consumer `0x103a3f9e` maps record ID `+0x11` through 16-row
+banks at `0xc18c9a7c + 128 * BYTE(0xc18c9a64)`, stride 8. Operations
+0–2 set mapped bits, 3–4 clear; changed staging at `0xc18c9a68` reaches
+setter `0x101e383a` at `0x103a400c`. Handler `0x103a3d14` builds this
+route for code `0x2083`. Observed static links, high confidence; transport,
+physical identity, press/release and tracking unverified. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex-agent-queued-input-verify-private.py" --output "$WORK/private-inputs/codex-queued-route-reproduce-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-queued-bank-route.md).
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
