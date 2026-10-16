@@ -922,4 +922,25 @@ Not yet read: `0x104270a4`, what decides whether a code is available, and the
 setter that writes the stored byte. Method: owner-run read-only read and
 decode, SHA-256 checked first; numbers only, no firmware bytes recorded.
 
+F-075. Correction to the end of F-074's check chain. An owner-run decode of
+`0x104270a4` to `0x10427170` on 2026-10-16 shows that code is not an
+availability test. The first stub loads a pointer and the number `0x20c`
+(524) and branches to a shared routine at `0x101993de`; the following stubs
+load other pointers and numbers (`0x21e`, `0x22d`, `0x243`, `0x25a`) and
+call shared routines at `0x10199436`, `0x101995c8`, `0x101995da` and
+`0x10199674`. That shape (a text pointer and a source line number passed to
+a shared routine) is typical of error or assertion reporting. After the
+stubs comes a table of about 30 branches to routines at `0x102364..`,
+`0x105060..` and `0x104762..`. So the route `0x10484d90` to `0x1052d7c2` to
+`0x104270a4` does not reach a predicate for 1:1. More likely the first jump at
+`0x1052d7c2` is a linker or patch veneer that was misread, and the routine
+that actually takes the code (`0x1003` or `0x1004`) is the one starting at
+`0x1052d7c6`, which saves registers, switches on its first argument by
+comparing it with literals, and uses constants such as `0x3ef` and `0x118`.
+Observed (the stubs), inferred, confidence low (the veneer reading). Not
+yet done: printing the raw encodings at `0x10484d90` and `0x1052d7c2` to
+confirm the targets, and reading the literals and the switch in the routine
+from `0x1052d7c6`. Method: owner-run read-only decode; instructions only, no
+firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
