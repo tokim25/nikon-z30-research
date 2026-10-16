@@ -50,14 +50,19 @@ class LaneTests(unittest.TestCase):
         self.assertIsNone(self.module.branch_lane("shared/x", self.lanes))
 
     def test_own_and_shared_files_are_allowed(self):
-        changed = ["docs/native-new.md", "docs/facts.md", "AGENTS.md"]
+        changed = ["docs/simulator-new.md", "docs/facts.md", "AGENTS.md"]
         self.assertEqual(self.module.violations("claude", changed, self.lanes), [])
+        transferred = ["docs/native-new.md", "docs/guide-new.md",
+                       "docs/image-area-tables.md", "docs/capture-geometry-baseline.md"]
+        self.assertEqual(self.module.violations("codex", transferred, self.lanes), [])
 
     def test_other_lane_files_are_rejected(self):
         found = self.module.violations("claude", ["docs/tracking-new.md"], self.lanes)
         self.assertEqual(found, [("docs/tracking-new.md", "codex")])
-        found = self.module.violations("codex", ["docs/guide-new.md"], self.lanes)
-        self.assertEqual(found, [("docs/guide-new.md", "claude")])
+        found = self.module.violations("codex", ["docs/simulator-new.md"], self.lanes)
+        self.assertEqual(found, [("docs/simulator-new.md", "claude")])
+        found = self.module.violations("claude", ["docs/guide-new.md"], self.lanes)
+        self.assertEqual(found, [("docs/guide-new.md", "codex")])
 
     def test_every_pattern_set_is_a_list_of_strings(self):
         for patterns in self.lanes.values():
