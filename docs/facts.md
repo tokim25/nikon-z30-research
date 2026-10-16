@@ -824,4 +824,27 @@ shows only 60). Next: decode the code around `0x1030c880` and list the words
 and loaders in `0xc1870e00` to `0xc1870f40`. Method: owner-run read-only scan,
 SHA-256 checked first; addresses only, no firmware bytes recorded.
 
+F-071. Who uses the area-label list. An owner-run read on 2026-10-16 of every
+word and load in the RAM range `0xc1870e00` to `0xc1870f40` (50 words, 54
+loads) shows that the area-label list, at RAM `0xc1870eb8`, is loaded in
+exactly two places, both in one routine in the `0x1030f...` block: `0x1030f87a`
+and `0x1030f8a8`. The two lists next to it are loaded there too: `0xc1870eb0`
+at `0x1030f856`, and `0xc1870e98` and `0xc1870ea0` at `0x1030f7b6` and
+`0x1030f78c`, with `0xc1870ed8`, `0xc1870ee4`, `0xc1870efc` and `0xc1870f08`
+at `0x1030fa18`, `0x1030f9dc`, `0x1030faae` and `0x1030fa6e`. In contrast,
+the pool entries at `0xc1870e98`, `0xc1870ea0`, `0xc1870ec4`, `0xc1870ecc`,
+`0xc1870ed8`, `0xc1870ee4`, `0xc1870efc`, `0xc1870f08` and `0xc1870f20` are
+each loaded again in at least four other code blocks (around `0x10315a..`,
+`0x103767..`, `0x103e04..` and `0x10430f..`), but `0xc1870eb0` and
+`0xc1870eb8` are not. Separately, the routine at `0x1030c874` loads
+`0xc1870e80` as a base and loops over elements, calling `0x1030bc58`,
+`0x10454210` and `0x1030bc00` for each, which is consistent with a menu or
+list builder that creates one object per element of a table; its use of the
+table at `0xc1870e80` is not fully read. Observed (the loads) and inferred,
+confidence low to medium (the builder reading). So the "Choose image area"
+choices appear to be used only by the routine around `0x1030f87a`. Next:
+decode `0x1030f780` to `0x1030f920`. Method: owner-run read-only scan and
+decode, SHA-256 checked first; addresses and instructions only, no firmware
+bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
