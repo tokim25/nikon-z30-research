@@ -34,8 +34,9 @@ clip-only setter. F-047 traced the chain upward: table slot `0x11fa38fc` -> hand
 initializer. F-048: the flag is the word at `0xc1821c20`, part of a module-wide state
 object (about 80 loaders in `0x102ae5a8`..`0x102afca0`). F-049: two static patterns found no writer of that word (negative
 result, medium confidence). F-050 decoded the initializer: it copies config +8 into object +0x2c, the
-same offset as the F-042 clip flag, so rebuilds may reset the mask (inferred,
-unverified; needs a simulator test). Still to do: find the flag writer another way, which event owns the
+same offset as the F-042 clip flag, so rebuilds may reset the mask (inferred; F-051
+confirmed the copy at memory level in the simulator; display effect still
+untested). Still to do: find the flag writer another way, which event owns the
 table slot, and what `0x104ed666`/`0x104ed67a` do; then decide whether any
 step is a clip-only path.
 
