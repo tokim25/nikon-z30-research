@@ -1,77 +1,35 @@
 # Codex handoff
 
-Updated 2026-10-15. The owner resumed research and approved Codex taking over
-guide and RAW-crop files. Continue offline work toward 65:24 live-view framing,
-a matching saved RAW crop, and AE-L/AF-L tracking. Personal build work is open;
-camera access is not. The owner asked this session to stop when remaining
-account usage reaches 8% and publish a handoff for Claude.
+Updated 2026-10-15. Research stopped near the owner's 8% usage threshold.
+The owner resumed both feature tracks and approved the guide/RAW file transfer
+recorded in PR #35. Personal build work is open; hardware access is not.
 
-## Published work and integration
+PRs #34 to #39 are open: input-ring correction, ownership/bit-field mapping,
+structured input cache, successful 65:24 geometry, screen-stack limitation,
+and numeric-command attribution. Preserve every fact when integrating.
+All branches start from main `32a9da5`; ledger/handoff conflicts need the
+owner's resolution. Never merge our own PRs or push main.
 
-Main baseline: `32a9da5`. Dedicated worktree: `work/codex-tracking-resume`;
-the primary checkout stays on main. PRs #34, #35 and #36 are open and have
-passed CI. Merge in order, retaining every appended fact and the latest handoff:
+Current branch: `codex/xpan-compose-completion`. F-035 and
+[xpan-compose-completion.md](xpan-compose-completion.md) reject the selected
+completion callback as a pre-flush hook. The single next guide step is to
+trace draw submissions before composition and establish callback ownership.
 
-- #34: F-025 corrects the input ring's single-writer claim.
-- #35: F-026 distinguishes bit-13 fields, records the user-approved guide/RAW
-  file transfer, and sets separate feature acceptance requirements.
-- #36: F-027 traces a structured-control path into an input cache; its physical
-  meaning remains unverified.
-
-Each new finding also starts from main. Ledger and handoff edits can conflict;
-retain all facts and use the latest handoff when integrating. Codex never
-merges its own PRs or pushes main.
-
-## Current branch and single next step
-
-Branch: `codex/tracking-numeric-route`. F-028 and
-[tracking-numeric-input-route.md](tracking-numeric-input-route.md) establish
-a numeric-command route, not a physical input source. Next: inspect independent
-setter calls at `0x103a3e88` and `0x103a400c`. PR #37 holds F-036 geometry;
-PR #38 holds F-029, the assisted live-view screen-stack limitation.
-
-## New results in progress
-
-A native geometry A/B/A test ran twice: temporary data changes in a disposable
-guest produced a centered 5200 by 1920 rectangle, exactly 65:24. DX and 16:9
-controls stayed unchanged; restoring the data restored all baseline outputs.
-No original firmware file or instruction was changed. This is geometry
-evidence, not proof of saved RAW output.
-
-Other bounded results are being documented separately: compose completion
-callback timing, empty screen stack in the assisted live-view fixture, and
-the simulator's optional functional ISP limits. Do not assume a physical
-button mapping from a matching bit number.
-
-## Private inputs and reproducibility
-
-Confirmed WORK:
+Confirmed private WORK:
 `/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.
-Keep existing inputs and helpers unchanged. New private helpers and run
-folders use `codex_` or `codex-` prefixes outside Git. No firmware content,
-raw logs, screenshots or extracted listings may enter any repository surface.
-Do not search the disk for more firmware.
+Existing inputs stay unchanged. New private helpers/output use codex prefixes.
+Report pages give fresh-directory repro commands. Original hash and pinned,
+clean simulator are checked. No raw output enters Git.
 
-Use the report's private helper with a fresh output folder under
-`$WORK/private-inputs/`. Runtime imports disable bytecode writes. Simulator
-sessions use separate local debugger ports and absolute private output paths.
-The original module hash and pinned simulator revision are checked; the
-simulator checkout must stay clean. No patch builder or hardware is used.
+Other verified results: temporary guest data produced centered 5200 by 1920
+geometry in two A/B/A runs, controls unchanged and restored. This is not saved
+RAW evidence. Assisted live-view startup/refresh had empty screen stack; menu
+entry control populated it. The candidate structured-input handler has a
+numeric-command route; physical AE-L/AF-L input is still unknown.
 
-## Ownership and readiness
+Remaining unpublished source audit and final cross-track handoff are being
+saved next. No agent is doing further research. Hardware readiness stays
+NO-GO: debugger-free guides, saved RAW behavior, tracking and recovery remain
+unverified. Baseline 54 tests and publication checks pass.
 
-The owner transferred guide/native documents and image-area/capture-geometry
-reports to Codex; PR #35 records the exact file patterns and matching tests.
-Simulator infrastructure retains its previous assignment. Claude should
-agree ownership before concurrent edits, then read the latest report and
-handoff rather than resuming older paused-lane instructions.
-
-Guides still require a debugger hook. The physical input-to-tracking path,
-saved RAW behavior and recovery evidence remain unresolved. The simulator
-has an optional functional ISP with unverified layout assumptions; there is
-no validated saved-RAW pipeline. Hardware readiness stays NO-GO.
-
-Baseline tests: 54 passing. Restricted outputs remain private; reproduction
-commands and semantic results are the published evidence.
-
-Written by Codex in collaboration with Tony Kim; continues Claude's research and includes independent Codex subagent checks.
+Written by Codex in collaboration with Tony Kim; continues Claude's work and includes independent Codex agent checks.
