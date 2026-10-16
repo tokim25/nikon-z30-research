@@ -68,7 +68,9 @@ by a byte at input +0x26 (no square test inside it). F-057: seven callers; in th
 F-058: five stores of that byte; one is a fixed 1, the rest fill a 12-cell grid
 in the higher code region (`0x11dc....` to `0x11e7....`). F-059: the grid values come from a text-keyed settings store (`0x11df06b8`).
 F-060: 354 `eDSID_` setting names; none mention image area. F-061: the names sit in one pointer table at `0x1204ea5c` onward (ImageSize
-at `0x1204ea68`), and the image area is not among them. Next: find the menu
+at `0x1204ea68`), and the image area is not among them. F-062: the area text is stored per language (about 30 blocks) with no plain
+pointers; labels can stay "1:1", an in-place "65:24 (24x9)" would fit.
+Next: find the menu
 item table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the

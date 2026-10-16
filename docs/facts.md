@@ -668,4 +668,26 @@ defines the "Choose image area" menu item itself, found from the menu text
 Method: read-only decode, SHA-256 checked first; only short setting names are
 recorded, no firmware bytes.
 
+F-062. The menu text for image areas is stored once per language, about 30
+blocks, with no string terminators and no plain pointers to the strings
+(a search for pointer words to the four copies of the title, at `0x10e88c14`,
+`0x10e890cc`, `0x10e890f0` and `0x10e8ed48`, found none), so the menu most
+likely refers to each string by number and offset. In the English block the
+area labels read "DX   (24x16)" at `0x10e89112`, then "1:1   (16x16)" and
+"16:9  (24x14)", with the label text of each area followed by size lines such
+as "3712x3712; 13.8 M" and "2784x2784" (which echo the 1:1 sizes of F-054).
+Ten language blocks hold the 1:1 label, for example at `0x10e75bbe`,
+`0x10e9423a`, `0x110cf248` and `0x1125fc1e`, and about thirty hold the "DX"
+label (for instance `0x10eae006` German, `0x10ed7e70` French,
+`0x10f8e532` Chinese). Observed static string search on 2026-10-16. Inferred,
+confidence medium: because the owner accepts keeping the "1:1" label, no text
+needs to change for a first version. A shorter in-place label such as
+"65:24 (24x9)" (the 24 mm DX width gives about 8.9 mm of height) would fit the
+13 characters of the 1:1 label, but the size lines next to it ("3712x3712;
+13.8 M" and similar) are also wrong for XPan and would need the same care.
+Not yet done: the table that maps menu items to string numbers, and whether
+text lengths are stored somewhere that must also change. Method: read-only
+string search, SHA-256 checked first; only short UI labels recorded, no
+firmware bytes.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
