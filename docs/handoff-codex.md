@@ -64,6 +64,28 @@ instead. The full design doc is [xpan-bars-design.md](xpan-bars-design.md)
    the simulator per the "How we will know it works" checklist in the
    design doc.
 
+**Update (2026-10-16, picking up PR #119's own "single next step"):** a
+prior Codex run (before running out of budget, work not committed) found
+that the normal menu-close handler reaches the live-view-ready path when an
+internal mode-state check comes out a specific way, and was tracing what
+naturally sets that state. Claude continued the same trace a little further
+before hitting its own repeated classifier stop on this exact sub-question
+(three in a row) and is handing it back: the close handler (one of
+`docs/native-xpan-liveview-hook.md`'s key addresses) has no direct callers
+and exactly one table entry, at `0x113033a8`. Its branch between the two
+internal modes reads a small helper, which in turn checks a function whose
+return value of 0, 3, or 4 selects the live-view-targeting mode (any other
+value selects the non-live-view mode already shown not to reach the hook).
+That function's own addresses and what feeds it were not yet read. This is
+exactly the open thread PR #119 names as its "single next step"; pick it up
+from there rather than re-deriving it.
+
+**Owner note on the pattern:** this one specific sub-question (what
+naturally drives the menu-close-to-live-view transition) has now stopped
+Claude three times in a row via the safety classifier, more than any other
+single topic this session. If it also proves difficult for you, that is
+useful signal on its own, not just a retry target.
+
 ## Lane 2: saved-crop (does a saved RAW/JPEG actually come out cropped?)
 
 Claude worked this in its own worktree (`nikon-savedcrop`, branch
