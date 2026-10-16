@@ -72,8 +72,11 @@ at `0x1204ea68`), and the image area is not among them. F-062: the area text is 
 pointers; labels can stay "1:1", an in-place "65:24 (24x9)" would fit.
 F-063: strings have no length marker, so an offset or length index exists
 elsewhere; same-length label swaps avoid it. Owner wants the "65:24" label
-where safe (user-stories.md). Next: find the string index, then the menu
-item table that defines "Choose image area" (start from the text at
+where safe (user-stories.md). F-064: the string index is found (three 36-entry language tables at
+`0x112f41e0`, `0x112f4270`, `0x112f4300`; English region index at
+`0x10e79dac`); labels are DX 737, 1:1 1454, 16:9 1455. A safety classifier
+stopped the last step, a read of the table that lists these numbers
+together; the owner decides whether to retry. Next: the menu item table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
 AE-L/AF-L button setting `Setting_FuncAeAfLockButtonShooting` (a possible
