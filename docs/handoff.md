@@ -94,9 +94,10 @@ passes the code, a pointer and a line number to the shared routine
 dispatcher, unrelated. F-077: the chain ends in a generic settings lookup, parked. The concrete plan is
 `xpan-replace-1to1-plan.md`; step 1 is done for the crop-window builder: F-078,
 F-079, F-080 (full-length XPan records give 65:24 at all three sizes). F-081: the stored area byte
-is a mirror reset within a second and live view ignores it. Next: static scan
-for stores to offset `0x15b` of the structure at `0xc2016a68` (owner runs it),
-then decide how the bars follow the choice. Avoid write watchpoints on the
+is a mirror reset within a second and live view ignores it. F-082: ten byte stores and
+eight loads at offset `0x15b` found. Next: owner runs a short decode around
+each of the ten stores and the two main-code readers (`0x101df8b8`,
+`0x101e00da`), then decide how the bars follow the choice. Avoid write watchpoints on the
 simulator link; they left it out of step once. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
