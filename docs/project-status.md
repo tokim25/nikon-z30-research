@@ -11,10 +11,11 @@ Codex: [handoff-codex.md](handoff-codex.md). Claude: [handoff.md](handoff.md).
 
 1. #20 (F-021 and the AE-L/AF-L goal) then #24 (F-023, F-024), stacked on it.
    Both are tracking research, waiting for the owner's review.
-2. #21 (rule allowing local simulator-only firmware experimentation) and #22
-   (call helper with observe/capture) are independent of the others.
+2. #25 (image-area research, F-030 to F-033) is independent.
+3. #26 is this status hub.
 
-Merged: #17, #18, #19 and #23. #13 to #16 are superseded by #18.
+Merged: #17, #18, #19, #21, #22 and #23. #13 to #16 are superseded by #18.
+Local, simulator-only firmware experimentation is now allowed in AGENTS.md.
 
 ## Sessions in flight
 
@@ -26,8 +27,10 @@ Merged: #17, #18, #19 and #23. #13 to #16 are superseded by #18.
 
 ## Fact numbers
 
-F-001 to F-024 are used. The next free number is F-025. Before adding a
-fact, check main and open pull requests for the next free number.
+F-001 to F-024 are used, and F-030 to F-033 belong to the image-area
+research (#25). F-025 to F-029 are reserved for the tracking lane. The next
+free number after that is F-034. Before adding a fact, check main and open
+pull requests for the next free number.
 
 ## Owner decisions
 

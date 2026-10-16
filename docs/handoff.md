@@ -50,7 +50,9 @@ debugger hook, not a deployable mechanism.
 
 ## Constraints
 
-No hardware, no firmware edits, no installable output. Do not commit or
-publish until told.
+Never touch the owner's real camera, and no installable output. Local,
+simulator-only experiments are allowed (see AGENTS.md); anything derived
+from a modified firmware copy stays outside the repo. Publish through pull
+requests the owner merges.
 
 Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
