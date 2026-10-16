@@ -107,6 +107,14 @@ Nikon's is shared.
    readouts stay inside the XPan strip, not over the black bars.
 3. **Label:** yes. The menus show a short label, for example "65:24".
 
+### Label (answered 2026-10-16)
+
+Use the better label, "65:24" with the size in the same style as the others
+(for example "65:24 (24x9)"), wherever it can be done safely. If a language
+or place makes that hard, keep the "1:1" label there. English is the first
+target; the other roughly thirty languages can follow. A same-length swap
+(13 characters, as F-063 notes) is the safest form.
+
 ### Replace, not add (answered 2026-10-16)
 
 XPan **replaces the 1:1 choice** in "Choose image area". It may keep the
