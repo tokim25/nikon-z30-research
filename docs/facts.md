@@ -1756,4 +1756,42 @@ read-only static decode (capstone, Thumb), SHA-256 checked first; addresses,
 offsets, register fields and standard SDHCI register semantics only, no
 firmware bytes recorded.
 
+F-105. Directly attacks F-097's capture-descriptor vs. shots-remaining-
+estimator ambiguity by checking reachability from the record builder's
+four direct callers (`0x10155bf4`, `0x101560d0`, `0x101564f4`,
+`0x1015b062`) to F-104's real SD write commands (CMD24/CMD25 at
+`0x104171ce`/`0x10416e6c`) or the shared command-submit primitive
+(`0x1041372c`). Method: an automated breadth-first walk of the direct
+`bl`/`blx` call graph starting at these four, decoding each reached
+function from its entry to the next function's prologue (a `push`/`push.w`
+with `lr`, used as the end-of-function boundary -- validated against
+F-102's manually-decoded card-detect function, which the naive
+"stop at the first return" version of this method had under-counted by
+missing a later exit path; the corrected version recovers all of
+card-detect's known calls). Starting from the four callers, the walk
+reaches exactly 867 distinct functions and terminates (the work queue
+empties, not a node cap) -- none of them is in the SD command block
+(`0x10413000`-`0x10418000`) or the submit primitive. Observed static
+BFS on 2026-10-16, SHA-256 checked first.
+
+This is a real but limited negative result, not a resolution. It rules out
+the simplest form of hypothesis (a) -- the four callers, or anything they
+call directly or transitively, synchronously writing the finished record to
+storage right after building it. It does not rule out a version of (a)
+where the record is instead handed off indirectly: written to a queue or
+global slot that a separate worker function reads and acts on later,
+reached only through a function-pointer table rather than a direct call.
+This project has repeatedly found pointer/table dispatch to be the normal
+pattern for handler code here (F-072, F-090, F-098's `0x101568ca`/
+`0x1015be26`), so this is a real possibility, not a stretch -- it was simply
+not checked by this BFS, which only follows literal `bl`/`blx` targets.
+Confidence: medium-high against the direct-write form of (a); the
+indirect-handoff form of (a), and (b), remain open. Not yet done: scanning
+the 867 reached functions (or the four callers themselves) for a store into
+a global pointer/queue slot that isn't consumed by anything in this same
+reachable set, which would be the signature of a hand-off to an
+unreached worker. Method: read-only static decode (capstone, Thumb) and an
+automated call-graph BFS, SHA-256 checked first; addresses only, no
+firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

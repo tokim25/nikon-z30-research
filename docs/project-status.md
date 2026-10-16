@@ -5,11 +5,14 @@ the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
 
-Main carries facts through **F-104**. F-101 (live-view hook) merged via PR
-#119; F-102/F-103 merged via PR #123. F-104 (decodes the 8 `0x104164ba`
-callers as the firmware's CMD17/18/24/25 block-transfer routines) is on
-`claude/f104-sd-command-callers`. The owner approves merges; nobody merges
-their own PRs. Check main again before allocating F-105.
+Main carries facts through **F-105**. F-101 merged via PR #119; F-102/F-103
+via PR #123; F-104 via PR #124. The SD-card-detect/enumeration thread
+(F-102, F-104) is retired per owner direction (see AGENTS.md's "Priority"
+section and handoff-codex.md) -- it explained a simulator limit, not
+something a real build needs. F-105 (record-builder reachability check
+against F-104's write commands) is on
+`claude/f105-record-builder-reachability`. The owner approves merges;
+nobody merges their own PRs. Check main again before allocating F-106.
 
 ## Feature state
 
