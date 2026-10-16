@@ -1,35 +1,86 @@
-# Codex handoff
+# Final Codex handoff for Claude
 
-Updated 2026-10-15. Research stopped near the owner's 8% usage threshold.
-The owner resumed both feature tracks and approved the guide/RAW file transfer
-recorded in PR #35. Personal build work is open; hardware access is not.
+Updated 2026-10-15. Research stopped to honor the owner's 8% remaining-usage
+cutoff. No agents continue working. Personal build work is open; hardware
+access remains closed. No installable firmware was produced.
 
-PRs #34 to #39 are open: input-ring correction, ownership/bit-field mapping,
-structured input cache, successful 65:24 geometry, screen-stack limitation,
-and numeric-command attribution. Preserve every fact when integrating.
-All branches start from main `32a9da5`; ledger/handoff conflicts need the
-owner's resolution. Never merge our own PRs or push main.
+The owner resumed tracking and approved Codex taking over guide/native and
+RAW-crop documents. PR #35 records the exact ownership/test changes.
+Read this handoff before older paused-lane notes. Agree ownership before
+concurrent edits; simulator infrastructure retains its previous assignment.
 
-Current branch: `codex/xpan-compose-completion`. F-035 and
-[xpan-compose-completion.md](xpan-compose-completion.md) reject the selected
-completion callback as a pre-flush hook. The single next guide step is to
-trace draw submissions before composition and establish callback ownership.
+## GitHub integration
 
-Confirmed private WORK:
+All work starts from main `32a9da5`. Nothing was merged by Codex.
+The owner merges. Preserve all append-only facts and use this final handoff
+when resolving ledger/handoff conflicts:
+
+| PR | Fact | Result |
+| --- | --- | --- |
+| #34 | F-025 | Two input-ring writers, correcting F-021. |
+| #35 | F-026 | Distinct bit-13 fields; file transfer and feature plan. |
+| #36 | F-027 | Structured control into input cache, physical source unknown. |
+| #37 | F-036 | Two successful centered 65:24 geometry A/B/A runs. |
+| #38 | F-029 | Assisted live-view screen stack empty; menu control populated it. |
+| #39 | F-028 | One candidate input route parses numeric commands. |
+| #40 | F-035 | Selected completion callback runs after compose; too late for current guide flush. |
+| Current branch | F-037 | Functional ISP exists; saved-RAW pipeline remains unverified. |
+
+Current branch: `codex/final-claude-handoff`, in dedicated worktree
+`work/codex-tracking-resume`. The primary checkout remains on main.
+Merge in the listed order and retain every report; these branches share a
+base, not an integration history. Do not replace the ledger with one branch's
+copy. F-025 to F-037 are now allocated; next free fact is F-038, subject to
+checking main/open PRs.
+
+## Single next step
+
+Inspect independent cache-setter calls at `0x103a3e88` and `0x103a400c`
+for a physical input source. The numeric-command route is not evidence of an
+AE-L/AF-L press. No tracking entry point or normal input delivery is verified.
+
+Other resumable leads, not established interfaces:
+
+- RAW: geometry descriptors reach request field `+0x20a` at candidate
+  callers `0x1015382a`, `0x1015f978`, `0x1016238e`; the latter continues
+  through `0x1015336c`. Trace toward NEF metadata/storage. No writer contract
+  was verified. Filename anchors are not writer evidence.
+- Guides: trace draw submissions before `0x103c2232` queues composition.
+  Object callback `0x103c3500` had zero hits in one stock refresh; its
+  lifetime interpretation remains unverified. No debugger-free hook exists
+  in the evidence so far.
+- Input fixture: establish stock shooting-screen initialization. A synthetic
+  preview can render with an empty menu/screen stack; avoid guessed key calls.
+- Snapshot/cache-pair link from the earlier linear symbolic script remains
+  unreviewed; do not rely on it without checking branches and register flow.
+
+## Private reproduction and checks
+
+Confirmed WORK:
 `/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.
-Existing inputs stay unchanged. New private helpers/output use codex prefixes.
-Report pages give fresh-directory repro commands. Original hash and pinned,
-clean simulator are checked. No raw output enters Git.
+Keep existing inputs unchanged. New helpers and outputs are codex-prefixed
+outside Git. Every report supplies private repro commands with fresh output
+directories. Runtime imports disable bytecode writes; each simulator uses
+its own local debugger port and absolute private output path.
 
-Other verified results: temporary guest data produced centered 5200 by 1920
-geometry in two A/B/A runs, controls unchanged and restored. This is not saved
-RAW evidence. Assisted live-view startup/refresh had empty screen stack; menu
-entry control populated it. The candidate structured-input handler has a
-numeric-command route; physical AE-L/AF-L input is still unknown.
+Successful geometry runs: `codex-agent-raw-geometry-probe-02` and
+`codex-root-geometry-probe-01`. Temporary guest data produced centered
+5200 by 1920 geometry; DX/16:9 controls were unchanged and restoration exactly
+recovered baseline. Original firmware files and instructions were untouched.
+This did not capture or save a RAW image.
 
-Remaining unpublished source audit and final cross-track handoff are being
-saved next. No agent is doing further research. Hardware readiness stays
-NO-GO: debugger-free guides, saved RAW behavior, tracking and recovery remain
-unverified. Baseline 54 tests and publication checks pass.
+Unreviewed NEF leads remain in private `codex-agent-raw-geometry-context-01`
+and `codex-agent-raw-format-anchor-xrefs-01`. Guide producer observations
+are in `codex-guide-producer-observation-01`. Do not import raw memory,
+firmware, screenshots, logs or extracted listings into Git.
 
-Written by Codex in collaboration with Tony Kim; continues Claude's work and includes independent Codex agent checks.
+All publication branches passed 54 local unit tests and artifact/encoded-data
+checks. CI results must be checked on GitHub for the latest heads. The
+original module hash and pinned clean simulator were checked. No patch
+builder, hardware access, original firmware edit or installation workflow
+was used. The only firmware-data experiment was inside a disposable guest.
+
+Hardware readiness stays NO-GO: debugger-free guides, saved RAW behavior,
+physical-button tracking, failure containment and recovery remain unresolved.
+
+Written by Codex in collaboration with Tony Kim; continues Claude's research and includes independent Codex agent reviews.

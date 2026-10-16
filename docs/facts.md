@@ -287,5 +287,14 @@ static links plus passive runtime support, high confidence; no safe guide
 hook established. Repro: `"$WORK/analysis-env/bin/python" "$WORK/codex-guide-worker-verify-private.py" --output "$WORK/private-inputs/codex-guide-worker-reproduce-01"`,
 using confirmed WORK and a fresh output directory.
 [Evidence and limits](xpan-compose-completion.md).
+F-037. The pinned simulator contains an opt-in functional ISP model with
+explicit pixel-layout hypotheses, fixed RAW-transaction checks and bounded
+processed output. This corrects categorical claims that it has no image
+processor. SD transport exists, but neither source presence nor geometry
+tests establish native NEF serialization or saved RAW cropping. Observed
+source, high confidence; runtime/hardware fidelity unverified. Repro:
+`python3 "$WORK/codex_agent_raw_model_source_audit_private.py" --output "$WORK/private-inputs/codex-raw-model-reproduce-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](xpan-simulator-raw-limits.md).
 
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
