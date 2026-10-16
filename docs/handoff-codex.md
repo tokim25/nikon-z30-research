@@ -1,55 +1,38 @@
-# Codex handoff
+# Codex continuation handoff
 
-Resumed 2026-10-16 at the owner's request. Continue until either account
-window reaches 8% remaining, then publish the final handoff. Initial remaining
-usage: 100% five-hour, 54% weekly. All 54 baseline tests and both artifact
-checks pass. No new hardware authorization was given.
+Updated 2026-10-16. The owner resumed work until 8% remaining account usage.
+No hardware approval was given. Personal build work is open; hardware stays
+NO-GO. All 54 baseline tests and artifact checks pass.
 
-## Current work
+Current branch: `codex/xpan-persistent-native-mask`, from main `32a9da5`,
+in `work/codex-tracking-resume`. The primary checkout remains on main.
+PRs #34 through #42 remain open. Preserve every fact/report and use the latest
+handoff when resolving integration conflicts; the owner merges, never Codex.
+PR #35 records the user-approved guide/RAW document takeover.
 
-Dedicated worktree: `work/codex-tracking-resume`. Branch:
-`codex/xpan-border-color-state`, from main `32a9da5`.
-The primary checkout remains on main. PRs #34 through #41 are still open;
-there is no newer merged research. The previous final handoff is in
-[PR #41](https://github.com/tokim25/nikon-z30-research/pull/41).
-Retain all pending facts and reports when integrating, and never merge our
-own PRs or push main.
+F-042 and [the mask report](xpan-persistent-native-mask.md) establish persistent
+native black crop masks after one diagnostic clip-flag write and native
+geometry/color setup. Two calibrated runs leave rows 107–372 visible, survive
+three refreshes and restore cleanly. No per-cycle rectangle injector or queue
+gate override is used. This is not natural startup or an installable feature.
 
-Three private research tasks are active: physical input sources outside the
-numeric-command handler; geometry request consumers toward NEF output; and
-persistent guide drawing before composition. Root is checking stock shooting
-screen initialization because the assisted live-view fixture's screen stack
-was empty. These are research tasks, not verified interfaces.
+Single next guide step: establish the current mode's native clip-enable and
+startup ownership before using the surface initializer `0x104b5fd4`.
+It is an unverified lead, not a clip-only setter. Menus, focus overlays,
+repeated toggles, reboot persistence and saved RAW remain untested.
 
-Reserved new facts: F-038 input, F-039 RAW, F-040 guides, F-041 root screen
-research. Check main and open PRs before publication or assigning more.
-
-## Single next step
-
-F-040 records a persistent native border-color setting, independently repeated;
-see [the evidence](xpan-border-color-state.md). Next: establish matching clip
-geometry and whether stock border commands survive composition. A data-only
-guest experiment is in progress; no visible guides are claimed yet.
-
-## Limits and private inputs
-
-The owner approved the guide/native and RAW-crop document takeover; PR #35
-records file patterns and tests. Simulator infrastructure retains its previous
-assignment. Personal build work is open, but physical camera access is closed.
-Hardware readiness remains NO-GO. Original firmware instructions and files
-stay unchanged; no patch builder or installation workflow is used.
+Other work awaiting publication: a bank-mapped queued input route (F-038),
+separate bank selection/ID mapping (F-043), and registry/mode-object state
+(F-041). No physical AE-L/AF-L input or tracking entry is verified. RAW
+structure packing has not been identified as NEF metadata; preserve its
+private leads without promoting field-offset matches to file evidence.
 
 Confirmed WORK:
 `/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.
-Existing inputs/helpers are immutable. New private scripts and outputs use
-codex prefixes outside Git. Disable bytecode writes for simulator imports,
-use separate debugger ports and absolute private output paths, and check the
-original hash and clean pinned simulator. No bytes, logs, dumps, screenshots
-or extracted listings enter Git.
+Existing inputs are immutable. New codex-prefixed helpers/output stay outside
+Git; detailed logs, pixels, memory and extracted listings never enter Git.
+Each report gives a fresh-directory repro. Disable bytecode writes and use
+isolated debugger ports. Original hash and pinned clean simulator are checked.
+No original firmware file/instruction or hardware was changed.
 
-Prior strongest result: native geometry A/B/A produced centered 5200 by 1920
-geometry twice, with unchanged controls and exact restoration. Saved RAW
-cropping, physical AE-L/AF-L tracking, debugger-free guide drawing and recovery
-remain unresolved. The optional functional ISP is not a validated NEF pipeline.
-
-Written by Codex in collaboration with Tony Kim; continues Claude's research and the previous Codex handoff.
+Written by Codex in collaboration with Tony Kim; continues Claude's work with independent Codex agent checks.

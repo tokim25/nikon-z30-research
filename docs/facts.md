@@ -305,5 +305,15 @@ and runtime behavior, high confidence. No visible guides or new geometry
 established. Repro: `PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex-guide-border-color-observe-private.py" --retention 1 --output "$WORK/private-inputs/codex-border-color-reproduce-02"`,
 using confirmed WORK and a fresh output directory.
 [Evidence and limits](xpan-border-color-state.md).
+F-042. Two calibrated simulator A/B/A runs produced persistent stock black
+crop masks: 107 rows top/bottom, centered 266-row visible strip at width 720
+(rounded 65:24). After one diagnostic clip-flag write and native geometry /
+color setup, the mask appeared autonomously and survived three refreshes
+without per-cycle rectangle injection. Restoration recovered baseline outside
+the animated band. Observed runtime behavior, high confidence; natural
+startup, overlays, saved RAW and hardware unverified. Repro:
+`PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex-guide-clip-mask-private.py" --bounds -1 106 721 374 --output "$WORK/private-inputs/codex-native-mask-reproduce-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](xpan-persistent-native-mask.md).
 
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
