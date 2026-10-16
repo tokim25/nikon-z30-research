@@ -1,45 +1,32 @@
 # Project status
 
-Last updated 2026-10-15 by Claude. Update this file whenever a pull request
-merges, a session starts or stops, or a decision changes.
+Updated 2026-10-15. Codex stopped research at the owner's remaining-usage
+cutoff and saved its final handoff for Claude. No agents continue working.
+Start with [handoff-codex.md](handoff-codex.md) on this branch, then review
+the pending PRs. Older paused-lane instructions are superseded by the owner's
+explicit resumption and approved guide/RAW file transfer.
 
-## Where to start
+PRs #34 to #40 are open, covering F-025 to F-029, F-035 and F-036.
+The current `codex/final-claude-handoff` branch adds F-037, the simulator
+RAW-model source audit, and the final cross-track handoff.
 
-Codex: [handoff-codex.md](handoff-codex.md). Claude: [handoff.md](handoff.md).
+All start from main `32a9da5`. Merge #34 through #40, then this branch,
+retaining all facts and using this final handoff when resolving conflicts.
+The owner merges; Codex never merges its own PRs or pushes main.
+PR #35 records the exact ownership transfer and matching test changes.
+Simulator infrastructure retains its previous assignment.
 
-## Open pull requests
+The native geometry A/B/A experiment succeeded twice with centered 5200 by
+1920 geometry. This is not a saved RAW crop. Physical AE-L/AF-L mapping,
+tracking activation, debugger-free guides, failure containment and recovery
+remain unresolved. Personal build work is open; hardware readiness is NO-GO.
 
-None, as of the last update to this file.
+Single next step: inspect independent input-cache setter calls at
+`0x103a3e88` and `0x103a400c`. The handoff preserves separate guide and
+RAW leads, reproduction scripts, private run names and failed hypotheses.
 
-Merged: #5, #6, #13 to #26 (#13 to #16 superseded by #18, the rest landed),
-and #29 to #32. Local, simulator-only firmware experimentation is allowed
-in AGENTS.md. Personal, non-distributed build-phase work is open
-(build-phase-gate.md); hardware access is not. A version-and-hash gate is
-merged (`verified_firmware.py`).
+All publication branches passed 54 local tests and artifact checks. Check
+latest CI heads on GitHub. Original inputs and simulator checkout are clean.
+F-025 to F-037 are allocated; check main/open PRs before using F-038.
 
-## Sessions in flight
-
-- Claude, simulator: issue #8 (guides in menu states) and the guide docs,
-  owned by one session. Branches `claude/*`.
-- Claude, tracking and button mapping: paused by the owner. The research so
-  far is merged (#20, #24); do not resume it without the owner's say-so.
-- Codex: stalled on token limits. Resumes from its handoff file.
-
-## Fact numbers
-
-F-001 to F-024 and F-030 to F-034 are used. F-025 to F-029 are reserved for
-the tracking lane, which the owner has paused; do not use them without the
-owner's say-so. The next free number for other work is F-035. Before adding
-a fact, check main and open pull requests for the next free number.
-
-## Owner decisions
-
-- Every change goes through a pull request, and the owner merges. The repo
-  stays private. Branch protection is unavailable on this plan.
-- Build-phase work is open for the owner's own, non-distributed camera
-  (build-phase-gate.md). Hardware access stays closed until the gate's
-  remaining conditions are met and the owner separately approves it.
-- Each session works in its own git worktree. The primary checkout stays on
-  `main`.
-
-Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
+Written by Codex in collaboration with Tony Kim; continues Claude's status notes.
