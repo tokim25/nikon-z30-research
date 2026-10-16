@@ -19,7 +19,9 @@ First version: stills only, RAW and JPEG, only the XPan crop kept.
 
 You want XPan to be a choice in the camera's "Choose image area" menu,
 reached from the "i" quick menu, for stills only, applied to RAW and JPEG.
-Nothing has been researched yet on adding a choice to that menu. Finding how
+The owner chose to replace the 1:1 choice with XPan (it may keep the 1:1
+label), which is simpler than adding a new one. The menu text has been
+located (F-053); the code that builds the list is not found yet. Finding how
 the camera builds that list, and how the "i" menu opens it, comes first,
 because the on-screen bars and the saved crop should both follow from that
 one choice. Decisions are in [user-stories.md](user-stories.md).
