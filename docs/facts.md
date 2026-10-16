@@ -704,4 +704,23 @@ keeps the exact string length (for example "1:1   (16x16)" to
 yet found: the index itself. Method: read-only inspection, SHA-256 checked
 first; only a few raw bytes were looked at and none are recorded here.
 
+F-064. The menu strings of F-053, F-062 and F-063 are indexed. Three
+36-entry pointer tables at `0x112f41e0`, `0x112f4270` and `0x112f4300` give,
+for each of 36 languages, the start of three regions. For the second language
+(English) they are `0x10e79dac`, `0x10e7bc4c` and `0x10e9a9c2`. The first
+region (`0x1ea0` bytes) is a list of 1960 32-bit byte offsets; the second is
+the packed UTF-16 text, and string number n runs from offset n to offset n+1
+(checked: the offsets of the three "Choose image area" copies, the "DX"
+label and its neighbours all match). String numbers found: size lines 733
+and 734, title 735, a title variant 736, the DX label 737, "12-bit" 738,
+"14-bit" 739, the 1:1 label 1454 and the 16:9 label 1455. So the area
+labels have numbers, and the 1:1 label is string 1454. Observed static
+decode on 2026-10-16; confidence high for the index, since every checked
+string matched. Because strings are packed back to back, a label of a
+different length means changing the offsets after it, so a same-length label
+(F-063) remains the safe form. Not yet done: the table or code that uses
+these string numbers to define the menu items. Method: read-only decode,
+SHA-256 checked first; only short UI labels and numbers recorded, no
+firmware bytes.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
