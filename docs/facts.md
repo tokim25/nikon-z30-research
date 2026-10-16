@@ -361,4 +361,16 @@ Original owned fields were restored. Repro: confirmed WORK, run
 `PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex-guide-mask-reliability-private.py" --output "$WORK/private-inputs/codex-mask-lifetime-fact-reproduce-01"`
 with a fresh output directory. [Report](xpan-mask-menu-lifetime.md).
 
+F-045. The surface initializer `0x104b5fd4` has exactly two direct Thumb
+`bl` callers, at `0x10452e56` and `0x10452ea8`, both in the same function
+region. A scan for its address (with and without the Thumb bit) as a 32-bit
+word found no pointer-table references. Observed static scan of the verified
+original over the code range `0x10020000` to `0x11f81c94`; the first-pass
+result was run by the owner in a terminal on 2026-10-16. Confidence medium:
+the scan sees direct branches only, so indirect calls through registers are
+not ruled out, and mixed code/data decoding is heuristic. The callers'
+arguments are not yet read. Next: decode a short window around each caller
+to see what config pointer they pass. Method: read-only Thumb branch scan,
+SHA-256 checked first; no bytes recorded here.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
