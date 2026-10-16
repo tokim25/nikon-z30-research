@@ -898,4 +898,28 @@ read: the four words at `0x10740eb0`, the code at `0x1052d7c2`, and what
 uses the item ids. Method: owner-run read-only scan and decode, SHA-256
 checked first; addresses and numbers only, no firmware bytes recorded.
 
+F-074. Numeric values behind the image-area choices, from an owner-run read
+on 2026-10-16. The four words at `0x10740eb0` are `0x1003`, `0x1004`, `4`
+and `2`. In the choice builder of F-072 and F-073 the first two are passed
+one at a time to the check `0x10484d90`, and the last two are compared with
+the current-value byte at `0xc2016bc3`. So the choice with the 1:1 label
+(string 1454, id `0x123c`) uses availability code `0x1003` and stored value
+4, and the choice with the 16:9 label (string 1455, id `0x123e`) uses code
+`0x1004` and stored value 2; DX is the default and, by elimination and by the
+slot layout of F-054 (slots 0, 2 and 4 carry data), value 0. A neighbouring
+routine at `0x1030f7e4` maps a stored value to the same codes (value 4 to
+`0x1003`, value 2 to `0x1004`). This agrees with the capture tables, where the
+1:1 area is slot 4 and 16:9 is slot 2. The check chain is longer than first
+read: `0x10484d90` jumps to `0x1052d7c2`, which is itself one instruction, a
+branch to `0x104270a4`, so the real availability test is at `0x104270a4`. The
+code that follows `0x1052d7c6` is a different routine (it switches on a
+passed value). Observed (the words), inferred, confidence medium (the reading
+of the four words as codes and values rests on the loop shape and the
+neighbouring routine). Consequence for XPan: replacing 1:1 can keep the same
+stored value 4, the same item id `0x123c` and the same string number 1454,
+and change only what slot 4 means in the size tables and the label text.
+Not yet read: `0x104270a4`, what decides whether a code is available, and the
+setter that writes the stored byte. Method: owner-run read-only read and
+decode, SHA-256 checked first; numbers only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
