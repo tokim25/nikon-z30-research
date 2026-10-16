@@ -723,4 +723,21 @@ these string numbers to define the menu items. Method: read-only decode,
 SHA-256 checked first; only short UI labels and numbers recorded, no
 firmware bytes.
 
+F-065. The three area-label string numbers of F-064 sit together in a small
+list at `0x11ff2b4c`: 32-bit values 737 (DX), 1454 (1:1) and 1455 (16:9),
+followed by the value `0x15aa` and a zero, and preceded by the value
+`0x123e`. A similar list sits just before it at `0x11ff2b34`: 681, 682, 683
+and 1014, preceded by a word that holds `0x15aa` and `0x123c` as two 16-bit
+halves. Another record at `0x11ff2b60` starts with 737 again. Observed
+static read of about twenty words on 2026-10-16, run after the owner approved
+the narrower read. Inferred, confidence low: each list is one menu item's
+choices, the values `0x123c` and `0x123e` (two apart) are menu item or
+setting ids, and `0x15aa` is a type or end marker shared by the lists. None
+of this is shown. What matters for the plan is that the 1:1 choice is
+reached by a plain list of string numbers, so keeping the "1:1" string
+number and swapping the text in place would leave the list alone. Not yet
+done: what reads this list, what `0x123e` is, and what stores the pick.
+Method: read-only read of one small data list, SHA-256 checked first; only
+numbers recorded, no firmware bytes.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
