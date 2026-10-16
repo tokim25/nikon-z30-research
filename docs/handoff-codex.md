@@ -1,5 +1,7 @@
 # Codex handoff
 
+Known corrections: see [corrections.md](corrections.md).
+
 Rewritten 2026-10-16 by Claude, with the owner's explicit approval to edit
 this Codex-owned file (a lane exception, same as PR #50). Read this file,
 then [facts.md](facts.md), [project-status.md](project-status.md) and

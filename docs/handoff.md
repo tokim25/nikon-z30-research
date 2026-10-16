@@ -1,5 +1,10 @@
 # Claude lane handoff
 
+**Retired 2026-10-16.** Superseded by
+[handoff-codex.md](handoff-codex.md), which covers both lanes (Lane 1:
+live-view-bars hook, Lane 2: saved-crop) with a unified, current structure.
+Kept for history; do not use for current status.
+
 Date: 2026-10-15. Update this whenever work is in progress.
 
 ## State

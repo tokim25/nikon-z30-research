@@ -1,5 +1,7 @@
 # Facts ledger
 
+Known corrections: see [corrections.md](corrections.md).
+
 Both lanes append here. Never edit an old entry: add a new one that
 supersedes it. Format: ID, statement, observed or inferred, confidence, source.
 Addresses are landmarks, not approved entry points.
