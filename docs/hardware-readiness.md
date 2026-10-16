@@ -48,7 +48,7 @@ call as not yet in effect for any build step.
 | Display reliability | PR #48 repeats two clean on/off cycles. Mask remains over audited menu entry. | Menu cleanup, verified return to live view, focus graphics and reboot. |
 | RAW crop | PR #37 changes capture geometry to centered 5200 by 1920 in a disposable guest. | Actual capture, saved NEF dimensions/metadata and compatibility. |
 | RAW output path | PR #47 verifies a selected structure pack and processing submission. | Source-object identity and native serialization/storage boundary. |
-| AE-L/AF-L tracking | PRs #44/#45 trace a queued bank mapping; tracking-dispatch-registration.md traces the route one level further, up through its event-code dispatcher to a type-keyed handler registration. Physical identity remains unresolved. | Verified button press/release, tracking entry point, reticle and cancellation. |
+| AE-L/AF-L tracking | PRs #44/#45 trace a queued bank mapping; tracking-input-chain.md (consolidated from tracking-dispatch-registration.md and others) traces the route one level further, up through its event-code dispatcher to the owning state-machine step function -- whose own registration mechanism turned out to be unresolved, not the type-keyed table once claimed (see corrections.md). Physical identity remains unresolved. | Verified button press/release, tracking entry point, reticle and cancellation. |
 | Combined features | Neither complete feature is available. | Concurrent display/input behavior, rejection in unsupported states and recovery. |
 | Failure containment | Exact original identity gate exists. | Timing, power behavior, compatibility, and either a verified recovery path or explicit acceptance that recovery may require service or may fail. |
 

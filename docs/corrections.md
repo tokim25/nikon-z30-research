@@ -40,6 +40,9 @@ it, date.
 
 ## 2. `tracking-dispatch-registration.md`'s `{handler, type-id}` table claim
 
+(That file is now consolidated into [tracking-input-chain.md](tracking-input-chain.md)'s
+"2026-10-16: Tracing the queued-bank route upward" section; see entry 3 below.)
+
 - **Original claim:** the "The enclosing state-machine step and its
   registration" section claimed a raw pointer-word scan found handler
   `0x10379d5a` registered in a clean `{handler, type-id}` table at
@@ -63,8 +66,38 @@ it, date.
   `0x10379d5a` has zero direct `bl`/tail-`b.w`/raw-pointer-word callers
   anywhere in the image (that negative finding still stands — it is just
   no longer explained by the withdrawn table claim).
-- **Corrected in:** this same file, `docs/tracking-dispatch-registration.md`
-  (PR on `claude/tracking-table-correction`), which replaces the table claim
-  with an honest statement that the registration/reachability mechanism for
-  `0x10379d5a` remains unresolved.
+- **Corrected in:** PR merging `claude/tracking-table-correction`, in the
+  then-standalone `docs/tracking-dispatch-registration.md`, which replaced
+  the table claim with an honest statement that the registration/
+  reachability mechanism for `0x10379d5a` remains unresolved. That file was
+  later folded into [tracking-input-chain.md](tracking-input-chain.md) by
+  the docs-consolidation PR (entry 3 below); the corrected text moved with
+  it unchanged.
+- **Date:** 2026-10-16.
+
+## 3. tracking-*.md sprawl consolidated into topic files
+
+- **What changed (not a factual correction, a reorganization):** 13
+  single-finding `docs/tracking-*.md` stub files from 2026-10-15/16 were
+  consolidated into three topic files with zero content loss (every
+  address, finding, confidence level, "Observed"/"Inferred" distinction,
+  repro command and "Written by" line carried forward as dated sections):
+  - `docs/tracking-input-chain.md` <- tracking-input-source.md,
+    tracking-input-sampler.md, tracking-input-records.md,
+    tracking-numeric-input-route.md, tracking-queued-bank-route.md,
+    tracking-input-bank-selection.md, tracking-dispatch-registration.md
+    (including its entry-2 correction above, carried forward as-is).
+  - `docs/tracking-screen-state.md` <- tracking-screen-stack.md,
+    tracking-registry-mode-state.md, tracking-mask-namespaces.md,
+    tracking-ui-event-router.md
+  - `docs/tracking-sampler-payload.md` <- tracking-sampler-consumers.md,
+    tracking-liveview-payload.md
+
+  `tracking-entry-research.md` and `tracking-feature-plan.md` were left as
+  separate files (decision/plan documents, referenced by name elsewhere).
+  Old filenames were deleted (`git rm`); links elsewhere in the repo were
+  updated to the new filenames, except inside `docs/facts.md`'s numbered
+  `F-###` entries, which that file's append-only rule forbids editing in
+  place -- those links now point at deleted filenames. See the
+  docs-consolidation PR body for the specific `F-###` entries affected.
 - **Date:** 2026-10-16.
