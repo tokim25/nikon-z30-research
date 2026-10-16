@@ -9,8 +9,12 @@ Each lane owns a set of files, listed in `.github/lanes.json`. CI fails a
 pull request from a `claude/*` or `codex/*` branch that edits the other lane's
 files. Shared files are open to both.
 
-- Claude: simulator drawing and display work, `docs/native-*`, `docs/guide*`.
-- Codex: tracking entry-point research, static analysis tooling, tests.
+- Claude: simulator infrastructure and display-path research; see the exact
+  patterns in `.github/lanes.json`.
+- Codex: tracking research and, under the owner's 2026-10-15 transfer,
+  `docs/native-*`, `docs/guide*`, image-area and capture-geometry reports.
+  This lets Codex continue both requested features. Simulator infrastructure
+  retains its previous assignment.
 - Shared: `docs/facts.md`, `docs/roadmap.md`, `AGENTS.md`, `.github/`.
 
 ## Rules
@@ -35,4 +39,4 @@ simulator test that proves it. Turning specs into a build is a separate
 phase, described in [build-phase-gate.md](build-phase-gate.md), and it needs
 the owner's explicit approval.
 
-Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
+Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

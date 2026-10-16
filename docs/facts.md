@@ -220,4 +220,15 @@ minus area. Observed, high; hash unchanged. A test with 1:1 changed to a 65:24
 shape was blocked by the permission classifier and has not been run.
 [capture-geometry-baseline.md](capture-geometry-baseline.md)
 
+F-026. Two record-field bit-13 paths have different normalized outputs:
+`0x102f0488` maps `+0x164` bit 13 to `+0x18` mask 2, while `0x102f056e`
+maps `+0x150` bit 13 to `+0x18` mask 4, clearing the corresponding source
+bit. Their candidate/menu-map links are respectively `0x1a` / `0x24f` and
+`0x19` / `0x280`. Observed bounded static links, high confidence,
+independently checked. Neither source field is proven to be SW0 or physical
+AE-L/AF-L; execution and final event delivery remain unverified. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex-sw0-normalization-verify-private.py" --output "$WORK/private-inputs/codex-sw0-normalization-review-03"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](tracking-mask-namespaces.md).
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
