@@ -492,4 +492,21 @@ F-047 handler remains unproven as one. Repro: confirmed WORK, run
 `PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/claude-initializer-rebuild-mask-private.py" --output "$WORK/private-inputs/claude-initializer-rebuild-mask-NN"`
 with a fresh output directory. The script stays under WORK and is not committed.
 
+F-053. The "Choose image area" menu text lives in the firmware as UTF-16
+strings inside one packed text blob, not as separate files. The title appears
+at `0x10e88c22` and `0x10e890da`/`0x10e890fe`, the last two sitting next to
+the choice label "DX (24x16)" and neighbouring menu titles (white balance,
+12-bit/14-bit). Help text for the image-area control appears at `0x10e8ed56`
+and `0x10e8ede8` ("hold the button and rotate a command dial"), and a
+confirmation message "DX image area selected" at `0x10e8a200`. A search for
+ASCII names (`ImageArea`, `IMAGE_AREA`) found nothing; the only `ID_IMAGE`
+hit is an unrelated save-media name at `0x11c991ab`. Observed static string
+search on 2026-10-16. Inferred, confidence low to medium: the menu builds its
+list from numeric string IDs that index this blob, so adding an "XPan" choice
+means more than adding a string; it needs a new list entry, a new area value
+that the capture side accepts (see F-033, `image-area-tables.md`), and
+saved-file size rows. Not yet found: the code that builds the list, or how
+the "i" menu points at it. Method: read-only string search, SHA-256 checked
+first; only short UI labels are recorded, no firmware bytes.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
