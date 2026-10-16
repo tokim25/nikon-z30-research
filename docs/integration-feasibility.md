@@ -14,7 +14,7 @@ over the live picture or start subject tracking from a new button action.
 The add-on interface supports short actions selected from a menu. Keeping an
 add-on in memory does not make it run in the background.
 
-**Decision:** continue read-only display research; do not implement camera
+**Decision:**  do not implement camera
 integration yet. Tracking needs a verified entry point before implementation.
 This does not establish that either feature is impossible.
 
