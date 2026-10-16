@@ -610,4 +610,22 @@ code that fills the grid from the real menu choice is in the higher region
 `0x11dc4530` returns and the six loaders. Method: read-only scan and decode,
 SHA-256 checked first; no bytes recorded here.
 
+F-059. The grid values of F-058 come from a settings store, not from fixed
+code. The supplier `0x11dc4530` is a two-instruction thunk (it sets r3 to 0
+and jumps to `0x11dc4508`). That routine calls a gate `0x11dc44d0` (which
+reads a global flag byte; when the flag is 1 it returns a not-ready result)
+and, when allowed, tail-calls `0x11df06b8`. That routine reads a record count
+at object offset `+0x3ce`, builds a text key from two strings with a
+printf-style formatter (`0x11bf18c4`), looks the key up in a table object at
+offset `+0xf0` (`0x11bf26ec` and `0x11bf26d4`), and falls back to a default
+passed in r3 (here 0) when the key is missing or out of range. Observed
+static decode on 2026-10-16. Inferred, confidence medium: the higher code
+region (`0x11dc....` to `0x11e7....`) holds a text-keyed settings database,
+and the area byte is read from it by key. If so, the menu's saved image-area
+choice has a text name that can be found as a string. Not yet done: finding
+which key names the image area (an earlier search for `ImageArea` and
+`IMAGE_AREA` found nothing, so the key may be spelled differently or built
+from pieces), and who writes it when the menu is used. Method: read-only
+decode, SHA-256 checked first; no bytes recorded here.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
