@@ -62,8 +62,11 @@ must become 5200 by 1920 style rectangles; the Retouch Trim code forces
 width equal to height for the 1:1 slot (separate feature, may be left alone);
 one menu interlock is 1:1 specific (F-033). F-054 mapped the table: slot 4 per group of five, records square, 117 direct
 callers of the parameter-block helpers at `0x1020bfc8`. F-055 sorted them by helper and decoded the block: size lists with a square
-slot 4, purposes unknown. Next: find what the biggest users (helper
-`0x1020bfda`, 38 callers; `0x1020bfc8`, 23) do with the sizes, then check each reader of the 1:1 slot
+slot 4, purposes unknown. F-056: the main consumer `0x101d5b36` is a centered crop-window builder keyed
+by a byte at input +0x26 (no square test inside it). Next: find who fills
+that input structure and what sets the +0x26 byte, read helpers `0x1020c128`
+and `0x1020c17e` and check `0x101d5ad0`, then the other big users (helper
+`0x1020bfda`, 38 callers; `0x1020bfc8`, 23) then check each reader of the 1:1 slot
 for width-equals-height assumptions, and find the per-area crop-window tables.
 
 ## Where things live

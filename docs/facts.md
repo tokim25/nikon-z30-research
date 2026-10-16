@@ -554,4 +554,26 @@ each size list a 65:24 rectangle in its slot 4, and checking each caller for
 a square assumption. Method: read-only decode, SHA-256 checked first; sizes
 only, no firmware bytes recorded.
 
+F-056. The function at `0x101d5b36` (the main consumer named in
+`image-area-tables.md`) is a crop-window builder. It takes a pointer to an
+input structure and a pointer to an output structure. It reads the area slot
+as a byte at input offset `+0x26` (0 to 4, with 4 the 1:1 slot) and a second
+byte at input offset `+0`, and calls the block helpers of F-054 and F-055: the
+list at `+0x14` (helper `0x1020bfc8`), the list at `+0x28` (`0x1020c05c`), the
+list at `+0xcc` (`0x1020c072`), the list at `+0xc` (`0x1020c07c`), and two
+more helpers at `0x1020c128` and `0x1020c17e`, plus `0x1020bfda` for a third
+size. It copies width and height pairs into output offsets `+0` to `+0xb`,
+then, when the input is valid (checked by `0x101d5ad0`), works out a centered
+rectangle: an x and y offset (output `+0xc`, `+0xe`) from half the difference
+between a full size and a window size, a rectangle at output `+0x10` to
+`+0x16` (left, top, right, bottom), and a further width and height at output
+`+0x18`, `+0x1a` that depends on a third byte (`+0x22`, values 0 to 2). When
+the input is invalid it writes zeros. Observed static decode on 2026-10-16.
+Inferred, confidence medium: the 1:1 slot is selected purely by the data
+index in the byte at `+0x26`, with no square test in this function, and the
+crop is centered, which matches a centered 65:24 strip. Not yet read: who
+fills the input structure, the helpers at `0x1020c128` and `0x1020c17e`, and
+what `0x101d5ad0` checks. Method: read-only Thumb decode, SHA-256 checked
+first; no bytes recorded here.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
