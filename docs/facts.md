@@ -1908,4 +1908,61 @@ exists for either. Method: read-only static decode (capstone, Thumb) and
 literal-pool word scans, SHA-256 checked first; addresses and offsets
 only, no firmware bytes recorded.
 
+F-108. Closes F-107's open thread: finds the writer of `0xc181f6fc` and
+with it the natural trigger for the menu-close-to-live-view transition
+that stopped a prior session three times and that F-107 only got one
+step closer to.
+
+A register-arithmetic scan (resolving `ldr`-literal + `add`/`sub`
+sequences, not a literal-word match, over the `0x10440000`-`0x10470000`
+module) found two writers:
+
+- `0x10459140`, inside a larger module-init routine (`0x104590e4`) that
+  sets up a 10-entry array and several other fixed objects at startup --
+  it unconditionally zeroes the byte as part of general initialization,
+  not a per-event trigger.
+- **`0x10457dac`**: a plain setter, `ldr r1, [pc, #imm]; strb r0, [r1]; bx
+  lr` -- the natural sibling to F-107's getter at `0x10457db2`, sitting
+  immediately before it in the same instruction stream. Takes whatever
+  value is passed in `r0`.
+
+The setter has **exactly one direct caller** in the whole image:
+`0x10459db2`, inside a dispatcher function (`0x10459d80`) that branches on
+an incoming event code. The specific branch is taken when the event code
+equals **`0x4100012`**: it stores a caller-supplied value (or zero) into a
+secondary field, then calls the setter with **`r0 = 4`** -- one of the
+three values (0, 3, 4) F-107 already showed route the close handler
+(`0x10460c3c`) to the live-view target instead of the generic
+menu-close target. Immediately after, the same branch calls `0x1046283c`
+and `0x10462894` with no further gating. **These are the same two calls
+F-090 already found inside the live-view-start routine `0x102f2990`
+itself**, right after it sets the live-view object's selector --
+independent corroboration, not just circumstantial, that event
+`0x4100012` is the real live-view-entry trigger, not an unrelated code
+path that happens to write the same byte.
+
+Observed static decode on 2026-10-16 (register-arithmetic scan plus
+direct disassembly), no classifier stop encountered. Confidence high for
+the mechanical chain (setter identity, sole caller, the value written,
+the two post-call matches to F-090); confidence medium for "this is *the*
+natural trigger the menu-close path needs" specifically, since what
+*posts* internal event `0x4100012` (a physical button, an internal state
+machine, or something else) was not traced -- the simulator's exposed key
+set has already been shown (native-xpan-liveview-hook.md's "Limits"
+section) not to reach the two internal close events it could drive
+(`0x24e`, `0x250`), and `0x4100012` was not among those tested either.
+
+This resolves the mechanism build-gate condition 1 was waiting on for
+Lane 1: a safe-to-add hook no longer needs to guess at what sets the
+live-view mode-state, since `0x10457dac` is a conventional setter
+reachable the same way any other code would call it. Not yet done: find
+what posts event `0x4100012` (to confirm it is reachable through the
+camera's normal `i`-menu or live-view-entry controls, not only through
+this one dispatcher's internal branch), and test the existing guarded
+hook (`native-xpan-liveview-hook.md`) against a simulator run that drives
+this event directly, if a way to post it is found. Method: read-only
+static decode (capstone, Thumb) and a register-arithmetic write scan
+(not a literal-word match), SHA-256 checked first; addresses, offsets and
+event/mode codes only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
