@@ -97,9 +97,8 @@ F-079, F-080 (full-length XPan records give 65:24 at all three sizes). F-081: th
 is a mirror reset within a second and live view ignores it. F-082: ten byte stores and
 eight loads at offset `0x15b` found. F-083: the mirror byte is
 probably copied from `+0x2cc` of a source structure (r8) by the routine around
-`0x10367fd2`. Next: owner runs a decode of that routine's start and a scan for
-byte stores with offset `0x2cc`, to find what r8 is and who writes the real
-setting. Avoid write watchpoints on the
+`0x10367fd2`. F-084: only two byte stores with offset `0x2cc` exist (`0x1019a068`, `0x10367d26`).
+Next: owner runs a decode around both and a wider search for the routine start. Avoid write watchpoints on the
 simulator link; they left it out of step once. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the

@@ -1115,4 +1115,17 @@ that routine, which structure r8 is, who calls it, and who writes `+0x2cc`.
 Method: owner-run read-only decode; instructions only, no firmware bytes
 recorded.
 
+F-084. Owner-run scan on 2026-10-16 for byte stores with offset `0x2cc`, the
+source offset of the image-area setting in F-083. The whole image has exactly
+two: `0x1019a068` and `0x10367d26`. The second lies `0x2ac` bytes before the
+mirror store at `0x10367fd2`, so it is probably in the same long routine,
+which would then copy settings in both directions (one half into the
+structure at `+0x2cc`, another half out of it). The search for the start of
+that routine found no instruction that saves the return register within
+`0x600` bytes before `0x10367fd2`, so the routine is longer than that. Byte
+loads at offset `0x2cc` were not counted. Observed static scan. Inferred,
+confidence low to medium. Not yet read: the code around both stores, the true
+start of the routine and its callers. Method: owner-run read-only scan,
+SHA-256 checked first; addresses only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
