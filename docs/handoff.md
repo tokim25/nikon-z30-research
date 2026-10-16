@@ -99,8 +99,11 @@ eight loads at offset `0x15b` found. F-083: the mirror byte is
 probably copied from `+0x2cc` of a source structure (r8) by the routine around
 `0x10367fd2`. F-084: only two byte stores with offset `0x2cc` exist (`0x1019a068`, `0x10367d26`).
 F-085: the useful store copies `r8+0x408` into `+0x2cc`, in a routine starting
-near `0x10367260`. Next: owner runs a decode of its start, its callers, and a
-scan for byte stores with offset `0x408`. Avoid write watchpoints on the
+near `0x10367260`. F-086: the routine has 20 callers and the source byte is stored only by the
+settings-store module (`0x11dcd08e`, `0x11dcd14c`, `0x11dcd198`, `0x11dcd674`,
+plus a duplicate copy at `0x11e52...`). Next: owner runs a decode around those
+stores and the loads `0x11dcd662`, `0x11dcdbfa`, `0x1037416c`, and resolves the
+routine's two literal addresses. Avoid write watchpoints on the
 simulator link; they left it out of step once. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the

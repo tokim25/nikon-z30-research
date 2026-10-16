@@ -1146,4 +1146,31 @@ yet read: the start of the routine, what r8 is, its callers, and who stores a
 byte at `+0x408`. Method: owner-run read-only decode; instructions only, no
 firmware bytes recorded.
 
+F-086. The snapshot routine and the writers of its source byte, from an
+owner-run read on 2026-10-16. (1) The routine at `0x10367260` is confirmed as a
+function start (it saves eight registers and reserves `0x638` bytes of
+stack). It first calls `0x10367196`, loads two structure addresses from its
+literal pool (r8, the source, and r6, the destination), and copies a series of
+fields from the source into the destination, including `r8 + 0x44`, `+0x48`
+and `+0x4c` and single bytes at `+0`, `+4`, `+8`, `+0xc`, `+0x34` and
+`+0x1e0`. (2) It has 20 direct callers: `0x10301e46`, `0x103039e6`,
+`0x10304552`, `0x1030b40c`, `0x1030b6b4`, `0x1030b7a4`, `0x1030ca70`,
+`0x1030f9ce`, `0x1030fc80`, `0x103117ba`, `0x10311b9a`, `0x10368250`,
+`0x10368360`, `0x10369994`, `0x103cbf68`, `0x103dddf6`, `0x103df306`,
+`0x10450112`, `0x104c2cac` and `0x104c2cd0`; one of them, `0x1030f9ce`, sits
+right beside the image-area choice builder (F-072) in the same module, which
+fits the quick rewriting of the mirror seen in F-081. (3) Byte stores with
+offset `0x408`: eight, at `0x11dcd08e`, `0x11dcd14c`, `0x11dcd198`,
+`0x11dcd674` and, in a second copy of the same code, `0x11e52e12`,
+`0x11e52ed0`, `0x11e52f1c` and `0x11e533f8`. Byte loads with that offset:
+six, at `0x10367d22` (the snapshot routine), `0x1037416c`, `0x11dcd662`,
+`0x11dcdbfa`, `0x11e533e6` and `0x11e5397e`. Observed (the scan and the
+routine start). Inferred, confidence low to medium: the real image-area
+setting is written by code in the higher settings-store region (the four
+stores in `0x11dcd...`, with a duplicate copy in `0x11e52...`), and the
+snapshot routine copies it forward on demand. Not yet read: the code around
+those stores and the loads, and which structure the two literal addresses are.
+Method: owner-run read-only decode and scan; instructions and addresses only,
+no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
