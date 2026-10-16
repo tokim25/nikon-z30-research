@@ -1469,4 +1469,31 @@ finding the pointer tables that reference `0x101568ca`/`0x1015be26`, and
 reading the two callers of `0x1015a93c`. Method: owner-run read-only scan,
 SHA-256 checked first; addresses only, no firmware bytes recorded.
 
+F-099. Three live simulator checks on 2026-10-16 (assisted startup, breakpoint
+observation via the thread-aware helper's `observe` support, nothing
+modified, firmware hash and simulator tree confirmed unchanged after each)
+found zero hits on the record builder `0x101d5c54` or its four known callers
+(F-096, F-097) while navigating: "Choose image area", "Image quality",
+"Image size", and a broad sweep across all top-level menu tabs (Photo, Video,
+Retouch, Setup) several items deep each. The simulator's key set has no
+shutter/capture button and no "i" quick-menu or info-display button (only
+up/down/left/right/ok/back), so a true capture trigger cannot be attempted
+through this interface at all, and neither can some on-camera info overlays.
+Observed runtime (negative result), medium confidence: ordinary menu
+browsing does not reach this code, which is modest evidence against the
+simplest form of the "shots remaining" hypothesis from F-097 (a counter
+shown directly on these menu screens), but it does not rule in the
+capture-path hypothesis either, since the one trigger that would prove it
+(an actual capture or info-overlay keypress) is not reachable here. The two
+hypotheses in F-097 remain open. Repro: confirmed WORK, scripts
+`claude-recordbuilder-observe2-private.py` and
+`claude-recordbuilder-sweep-private.py` with a fresh `--output`; they stay
+under WORK and are not committed. Separately, an owner-run string search
+found "shots"/"remaining" UI text in the known menu-text blob (around
+`0x10e8....`, F-053's region) and one `.NEF` ASCII literal at `0x11c9a614`,
+neither tied to these specific functions by address proximity. Next: either
+accept this ambiguity and move to a different saved-crop angle, or call the
+builder's outer callers directly with synthetic register state (more
+invasive, less certain) to force a hit and inspect the record.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
