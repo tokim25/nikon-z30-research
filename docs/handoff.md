@@ -104,8 +104,10 @@ settings-store module (`0x11dcd08e`, `0x11dcd14c`, `0x11dcd198`, `0x11dcd674`,
 plus a duplicate copy at `0x11e52...`). F-087 corrects this: those stores are a buffer-ready flag in an unrelated
 object. The source structure is `0xc2018a2c` (image area at `+0x408`), the
 writer is a generic setter not found by offset. A data-only replacement does
-not need the writer; the live-view bars do need a hook. Next: decide whether
-to look for a hook point in the live-view path (build-gate condition 1). Avoid write watchpoints on the
+not need the writer; the live-view bars do need a hook. F-088: the layer clip flag and
+bounds come from a stored template at `0x1073dbe4`, so an always-on mask is a
+data change, and a choice-tied mask needs a small hook. Owner picks between the
+three options in the plan; nothing more to read until then. Avoid write watchpoints on the
 simulator link; they left it out of step once. Then what `0x123e` is, then the table that defines "Choose image area" (start from the text at
 `0x10e890da`, look for the code or table that references those string ids),
 and who writes the area on a menu pick; also note the i-menu slots and the
