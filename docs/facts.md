@@ -1046,4 +1046,28 @@ with a fresh output directory; the probe is
 `claude-helpers-probe-private.py`. The scripts stay under WORK and are not
 committed. No firmware changed.
 
+F-081. The stored image-area byte is a mirror that the camera refreshes.
+In the simulator (assisted startup, guest memory only, one run for the
+timing and one earlier run for the live-view check), the byte at
+`0xc2016a68 + 0x15b` (`0xc2016bc3`, the current-value byte of F-072 and
+F-073) reads 0 at start. A write of 4 held when read back immediately and
+after 0.05 simulated seconds, and was back at 0 after 0.65 seconds, so
+something rewrites it from another source within that time. With the byte
+set to 4 or 2 and the live view refreshed, the picture showed no black rows
+and no change beyond the animated band already present in the baseline
+(159 changed rows both times), so the live view does not react to this
+byte. Observed runtime, medium confidence (one run each). This agrees with
+F-033 (no display code reads the image area). Consequence for the plan: to
+make the camera adopt the XPan choice, the source behind the mirror (the
+settings store of F-059 and F-077) has to change, or the code that writes the
+mirror has to be found; writing the mirror alone does nothing. A write
+watchpoint to find that code left the debugger link out of step and a
+simulator process behind, which I stopped; the firmware file hash and the
+simulator tree were checked unchanged afterwards. Next: a static scan for
+stores to offset `0x15b` from the structure at `0xc2016a68`. Repro of the
+timing: confirmed WORK, run
+`PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/claude-areabyte-probe-private.py" --output "$WORK/private-inputs/claude-areabyte-probe-NN"`
+with a fresh output directory. The scripts stay under WORK and are not
+committed. No firmware changed.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
