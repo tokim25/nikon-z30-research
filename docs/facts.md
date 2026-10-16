@@ -341,5 +341,14 @@ generalization moderate. No input/AF readiness inferred. Repro:
 `PYTHONDONTWRITEBYTECODE=1 "$WORK/analysis-env/bin/python" "$WORK/codex_mode_object_20261016_private.py" --output "$WORK/private-inputs/codex-mode-state-reproduce-01" --menu-control`,
 using confirmed WORK and a fresh output directory.
 [Evidence and limits](tracking-registry-mode-state.md).
+F-039. Builder `0x101e779c` repacks selected source halfwords `+0x208`
+through `+0x218`; caller `0x101ea022` supplies source argument plus
+`0x1c` and destination `0xc233addc`. A later reviewed path copies
+2024 bytes through `0x100aa43a` and submits via `0x100c9f24`. Observed
+static links, high confidence; original capture-request identity, NEF
+semantics, runtime delivery and saved crop unverified. Repro:
+`"$WORK/analysis-env/bin/python" "$WORK/codex_agent_geometry_pack_verify_private.py" --output "$WORK/private-inputs/codex-geometry-pack-reproduce-01"`,
+using confirmed WORK and a fresh output directory.
+[Evidence and limits](xpan-packed-config-boundary.md).
 
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

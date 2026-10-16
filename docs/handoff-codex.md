@@ -16,11 +16,11 @@ repeated and restored. It is not natural startup, saved RAW cropping or an
 installable firmware feature. Physical AE-L/AF-L input and tracking remain
 unverified. The previous full trail is in PR #41.
 
-Current branch: `codex/tracking-registry-mode-state`. F-041 records
-[registry/selector observations](tracking-registry-mode-state.md). The empty
-menu stack did not prevent live-view selector 1. Next: trace the type-3 input
-contract without substituting menu key injection. PR #44 holds F-038 and
-PR #45 holds F-043, whose physical input meaning is still unverified.
+Current branch: `codex/xpan-packed-config-boundary`. F-039 records
+[a structure-pack boundary](xpan-packed-config-boundary.md), not NEF metadata.
+Single next RAW step: establish source identity and save boundary. PRs #44,
+#45 and #46 hold queued input, bank selection and distinct registry/mode state.
+A final bounded mask/menu reliability test is finishing; no new research expands.
 
 Confirmed WORK:
 `/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.
