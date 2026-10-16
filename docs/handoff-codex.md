@@ -10,12 +10,20 @@ below F-050, ignore it.
 
 ## Read this first
 
-Main carries facts through **F-100**. Nothing is open on GitHub (no PRs, no
-diverging branches). Hardware access stays **NO-GO**
+Main carried facts through **F-100** when this branch started. F-101 is the
+live-view hook finding on `codex/xpan-liveview-hook-space`; check main before
+allocating F-102. Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,
 non-distributed camera ([build-phase-gate.md](build-phase-gate.md)), but all
 work stays in the offline simulator.
+
+Owner decision recorded 2026-10-16: absolute hardware safety is no longer an
+acceptance criterion because it cannot be proved before a first hardware
+test. The gate now distinguishes **SIMULATOR ACCEPTED**, **READY FOR AN
+EXPERIMENTAL HARDWARE TEST**, and **HARDWARE VALIDATED**. A missing recovery
+path must be stated as an accepted service-or-total-loss risk; it may not be
+described as safe. The current state remains NO-GO.
 
 The owner's goal, restated plainly, is in
 [user-stories.md](user-stories.md) and [roadmap.md](roadmap.md): an XPan
@@ -63,6 +71,48 @@ instead. The full design doc is [xpan-bars-design.md](xpan-bars-design.md)
    (F-089, F-090) and to the `0xc1811d90`-style choice byte, and test it in
    the simulator per the "How we will know it works" checklist in the
    design doc.
+
+### F-101 result on `codex/xpan-liveview-hook-space`
+
+- The exact property writer is at `0x1008d38c`, with the choice-record store
+  at `0x1008d3fc`. The final byte at `0xc1811d90` is 0 for DX, 1 for 1:1 and
+  2 for 16:9. The older value-4 statement describes the callback argument,
+  not this stored byte.
+- Four zero-filled candidate instruction spans were found and checked at
+  their real ARM/Thumb boundaries: `0x1002d78c..0x1002d7bf`,
+  `0x1002d80c..0x1002d83f`, `0x1002d860..0x1002d87f`, and
+  `0x1027f468..0x1027f47f`.
+- A private QEMU loader overlay placed synthetic new code in those spans
+  before CPU start. It used wrappers at the exact writer, live-view-ready
+  transition, screen close and generic screen activation. The debugger did
+  not write code, choice, mask state, bounds or color during the run.
+- A real 1:1 menu pick left the mask off over the menu. An audited live-view
+  activation restored it. DX and 16:9 kept it off. Ten alternating screen
+  signal cycles passed. Direct stock callback tests also changed the mask
+  immediately while live view stayed active.
+- The later menu-notification callback was tested and rejected as a general
+  change trigger. QEMU write watchpoints also failed a known-store self-test.
+- A follow-up rejected an unguarded screen-close trigger. Internal events
+  `0x24e` and `0x250` close the last stack entry but request mode `0x10000`,
+  not live view; the unguarded hook enabled the mask on that transition
+  screen. The final overlay requires an empty stack and live-view selector 1.
+- The live-view trigger now sits at `0x102f5810`, where `0x102f57e2` sets
+  selector 1. The guarded build passed the area controls and ten signal
+  cycles, and stayed off after the non-live-view close control.
+- A diagnostic call through the stock type-2 dispatcher reached that full
+  live-view-ready path and returned with selector 1, stack count zero and the
+  1:1 mask on. The natural worker trigger remains dormant in the fixture.
+- Full evidence, repro commands and limits are in
+  [native-xpan-liveview-hook.md](native-xpan-liveview-hook.md). A true menu
+  return to live view, the natural startup caller and the exact `i`-menu
+  route are still open.
+
+### Single next step for Lane 1 (superseded below)
+
+Find a stock menu-close event sequence that reaches `0x102f57e2` without a
+direct diagnostic call, then confirm that the guarded hook restores the mask.
+The exposed Back key cannot close the final menu screen, and the tested
+internal close events do not request live view.
 
 **Update (2026-10-16, picking up PR #119's own "single next step"):** a
 prior Codex run (before running out of budget, work not committed) found
@@ -160,4 +210,4 @@ a read-only firmware scan, the owner can run it in their own terminal and
 paste the output back — that unblocked this exact kind of work for Claude
 repeatedly this session.
 
-Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
+Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

@@ -37,22 +37,43 @@ or waive any recovery, version, hash, or readiness requirement.
   any hardware step. That work was previously out of scope; now it is the
   priority.
 
-## Hardware access: still gated
+## Hardware testing: evidence and accepted risk
 
-Flashing a real camera is not authorized by this file alone. All of the
-following must be true first:
+Absolute hardware safety is not an acceptance criterion. It cannot be proved
+before the first camera test because the simulator does not model the Z30's
+boot loader, update process, power-loss behavior or every hardware timing
+condition.
 
-1. The simulator shows the feature working without a debugger hook, or that
-   hook's risk is fully understood.
-2. A written recovery plan exists ([draft](recovery-plan.md), not yet credible), and it does not rely on the camera's
-   ordinary firmware-update menu.
-3. The patcher checks firmware version and hash, and refuses anything but
-   the owner's exact verified original.
-4. [hardware-readiness.md](hardware-readiness.md) no longer says NO-GO; it
-   says NO-GO today and has not been reviewed since this authorization.
+The project uses three states instead:
 
-None of these are true yet. When they are, ask the owner again, explicitly,
-before any hardware step.
+1. **Simulator accepted.** The feature passes its natural-startup, state,
+   control and stress checks in the pinned simulator.
+2. **Ready for an experimental hardware test.** The measurable checks below
+   pass, the remaining risks are written down, and the owner gives a separate
+   final approval.
+3. **Hardware validated.** This state can be earned only after a successful,
+   bounded test on real hardware. It is never inferred from the simulator.
+
+Uploading to a real camera is not authorized by this file alone. Before the
+second state can apply:
+
+1. The simulator must show the feature working without a debugger memory
+   write, and the relevant state transitions must pass.
+2. The patcher must accept only the owner's exact verified original and must
+   produce only the planned changes.
+3. The code layout, instruction mode, branches, register handling, stack use
+   and return paths must be reviewed.
+4. The original firmware must be backed up offline. A verified recovery path
+   is preferred. If none can be verified, the record must say so plainly and
+   the owner must explicitly accept that recovery may require Nikon service
+   or may be impossible.
+5. [hardware-readiness.md](hardware-readiness.md) must say **READY FOR AN
+   EXPERIMENTAL HARDWARE TEST**, with the exact build and test scope named.
+6. The owner must approve that concrete test immediately before any hardware
+   step.
+
+The current state remains NO-GO. Meeting these checks would permit a bounded
+experiment; it would not certify the firmware as safe.
 
 ## What stays forbidden, always
 
