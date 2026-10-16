@@ -1,32 +1,26 @@
 # Codex continuation handoff
 
 Updated 2026-10-16. The owner resumed offline work until 8% remaining usage.
-Research is now wrapping up for publication. No hardware approval was given.
-Personal build work is open; hardware readiness remains NO-GO.
+Research has stopped for publication and handoff. No hardware approval was
+given. Original firmware and simulator checkout remain unchanged.
 
-All branches start from main `32a9da5`, in dedicated worktree
-`work/codex-tracking-resume`; the primary checkout stays on main. PRs #34
-through #43 are open. Preserve all appended facts and use the final handoff
-when resolving conflicts. The owner merges, never Codex. PR #35 records the
-approved guide/RAW document transfer.
+PRs #34 through #47 contain the prior milestones. Current branch
+`codex/xpan-mask-menu-lifetime` adds F-044: two diagnostic mask toggle cycles
+pass, independently repeated, but the mask persists over audited menu entry.
+The subsequent live-view entry left the stack at two entries, so it did not
+establish natural menu exit. See [the report](xpan-mask-menu-lifetime.md).
 
-PR #43 is the strongest new result: persistent stock black crop masking
-after one diagnostic clip flag and native geometry/color setup, independently
-repeated and restored. It is not natural startup, saved RAW cropping or an
-installable firmware feature. Physical AE-L/AF-L input and tracking remain
-unverified. The previous full trail is in PR #41.
+PR #43 is the strongest display result: persistent stock black crop masking
+after diagnostic clip-state setup. It does not crop a saved RAW. PR #47
+traces a structure pack but does not establish source identity or NEF
+serialization. Physical AE-L/AF-L routing and a tracking entry point remain
+unverified. Next: establish native clip-state cleanup across menu entry and
+a verified return to live view.
 
-Current branch: `codex/xpan-packed-config-boundary`. F-039 records
-[a structure-pack boundary](xpan-packed-config-boundary.md), not NEF metadata.
-Single next RAW step: establish source identity and save boundary. PRs #44,
-#45 and #46 hold queued input, bank selection and distinct registry/mode state.
-A final bounded mask/menu reliability test is finishing; no new research expands.
-
-Confirmed WORK:
-`/Users/tonykim/Documents/Codex/2026-10-15/referenced-chatgpt-conversation-this-is-an/work`.
-Existing inputs are immutable; new codex-prefixed scripts/output stay outside
-Git. Reports give private repro commands using fresh directories. No logs,
-pixels, memory or extracted listings enter Git. Original files/instructions
-and pinned simulator checkout remain unchanged. Local baseline: 54 tests pass.
+Branches start from main `32a9da5`. Preserve every appended fact while
+resolving conflicts and prefer the final session handoff over this interim
+copy. Owner merges; Codex never merges. Private helpers/output stay under
+the user-confirmed WORK outside Git; reports give fresh-directory repros.
+Original inputs are immutable. Local baseline: 54 synthetic tests pass.
 
 Written by Codex in collaboration with Tony Kim; continues Claude's work and the prior Codex handoff.
