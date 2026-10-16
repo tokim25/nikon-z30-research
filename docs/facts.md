@@ -1173,4 +1173,30 @@ those stores and the loads, and which structure the two literal addresses are.
 Method: owner-run read-only decode and scan; instructions and addresses only,
 no firmware bytes recorded.
 
+F-087. Corrects F-086. An owner-run decode on 2026-10-16 shows the eight
+byte stores at offset `0x408` in the higher settings-store region
+(`0x11dcd08e`, `0x11dcd14c`, `0x11dcd198`, `0x11dcd674` and the duplicate
+copy) do not write the image-area setting. In that code the object at r4 has
+a buffer pointer at `+0x3fc`, a byte at `+0x400`, a handle at `+0x404` and a
+byte at `+0x408` that is set to 1 after a buffer is allocated and filled, and
+to 0 when the buffer is freed (`0x11dcd060` frees `[+0x3fc]` and clears
+`+0x3fc` and `+0x400`). So `+0x408` there is a "buffer ready" flag in an
+unrelated object, a coincidence of offset. What stands: the snapshot routine
+at `0x10367260` loads two structure addresses, `0xc2018a2c` (the source, r8,
+also passed to `0x10484d8c`) and `0xc2016a68` (the destination, r6), and
+copies the image-area byte from source `+0x408` to the snapshot `+0x2cc`
+(F-085). A serializer at about `0x10374128` to `0x1037416c` copies a run of
+source bytes `+0x3e0` to `+0x408` (one byte per 4-byte slot, plus a word at
+`+0x3fc`) into a record, so the source structure holds the settings as bytes
+in four-byte slots, and the image area is the slot at `+0x408`. Who writes
+that slot is not found: no byte store with offset `0x408` writes it, so it is
+set through an indexed or generic setter that does not use a fixed offset.
+Observed (the code), inferred, confidence medium. Consequences: a data-only
+replacement of 1:1 needs no change to the writer, because the menu already
+stores the value 4 for 1:1 and the snapshot carries it to the tables. The
+live-view bars are different: nothing in the display path reads the value
+(F-033, F-081), so showing them for value 4 needs new code (a hook), which is
+the open question of build-gate condition 1. Method: owner-run read-only
+decode; instructions and addresses only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

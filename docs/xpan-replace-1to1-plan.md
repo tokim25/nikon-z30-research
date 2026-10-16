@@ -56,6 +56,19 @@ when the choice is offered keep working without code changes.
   within a second, so live view does not follow it and the byte is a mirror of
   a stored setting (F-081). The bars need their own link to the choice.
 
+## Where this leaves the plan (2026-10-16)
+
+- **Saved data and size tables:** a data-only replacement of the 1:1 records is
+  enough for the crop-window builder (F-080). The menu already stores the
+  value 4 for 1:1, and the snapshot routine carries it to the tables (F-085,
+  F-087), so no change to the code that writes the setting is needed.
+- **Live-view bars:** nothing in the display path reads the stored value
+  (F-033, F-081). Showing the bars for value 4 needs new code, a small hook in
+  the live-view path. That is the open "no debugger hook" condition in
+  [build-phase-gate.md](build-phase-gate.md) and the main remaining risk.
+- **Saved files:** the image processor may or may not accept the shape; the
+  simulator cannot settle it.
+
 ## Order of work
 
 1. Confirm the three data changes in the simulator, with a fresh run.
