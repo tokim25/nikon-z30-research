@@ -95,3 +95,18 @@ exact manifest for the checker. Neither has been done.
 - Not buildable yet: the digest input at `0x10000088` is open, and the change
   must be expressed as an exact manifest over the ROM-mapped records, which has
   not been written or checked.
+
+## Manifest status for readout records 4 and 14 (2026-10-17)
+
+- Stock values (EG file, u16 x 12) at the readout record for index 4
+  (`0x115a4d9c`) and index 14 (`0x115a4e14`) are read; index 14 differs from
+  index 4 only in its later pairs.
+- The repoint probe wrote only a 6-short scratch record (5216 x 1936, 0, 0,
+  3912, 1452), not a full in-place record. The in-place 12-short record's
+  remaining fields for 5216 x 1936 are not determined by the probe, so an exact
+  manifest cannot be written from the evidence.
+- No scratch build was produced. The checker was not run on a modified image.
+  The copy is therefore not built, and the window target (5200 x 1920 vs the
+  probe's 5208 x 1928) remains unresolved.
+- Still open: the digest input at `0x10000088`, camera acceptance, and the
+  output-record question.
