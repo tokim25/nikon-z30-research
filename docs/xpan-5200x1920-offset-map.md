@@ -140,3 +140,13 @@ exact manifest for the checker. Neither has been done.
   pairs of indices 4 and 14, which this run did not do.
 - Build: not attempted; the repo's `StockImage` gate refuses any modified EG by
   design, so the checker result would be a refusal.
+
+## Joint single-pair probe, index 4 and index 14 (2026-10-17, scratch)
+
+- All 36 combinations (one pair of index 4 x one pair of index 14, each set to
+  5216 x 1936, rest stock): every large window stayed 3720 x 3720, offsets (8, 8).
+- No combination reproduces 5208 x 1928. The earlier result needed several
+  pairs changed together with non-stock values, so the field mapping is not
+  settled by single-pair edits.
+- Build: not attempted. The repo's `StockImage` gate refuses any modified EG by
+  design; the checker result would be a refusal.
