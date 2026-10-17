@@ -337,6 +337,59 @@ stopping point. Stopping at "the simulator can't
 show me SD I/O" is not, since this question's whole point is what the real
 firmware does.
 
+## Lane 3: AE-L/AF-L subject tracking (new section, 2026-10-16)
+
+This lane didn't have its own section here before -- it was tracked only
+through `docs/hardware-readiness.md`'s table row and the `docs/tracking-*.md`
+files directly. Adding this section now because the owner asked for a
+clean handoff point.
+
+**Where this stands relative to the other two lanes:** far behind. Lane 1
+has its mechanism fully traced (F-107/F-108) down to one owner judgment
+call. Lane 2's capture-vs-estimator ambiguity is resolved (F-106). Lane 3
+has **no verified native entry point at all** -- this is still the actual
+blocker, not a refinement.
+
+**What's established**, all in `docs/tracking-input-chain.md` (read it in
+full; this is only a summary):
+- The prior candidate activation lead (`0x11cf4e90`/`0x11cf4ea0`) was
+  falsified: it resolves to Bluetooth/HCI packet processing, not AF
+  (`docs/tracking-entry-research.md`).
+- A queued input-bank route exists for property codes `0x2082`/`0x2083`
+  (logical ID 41, mask `0x2000`), traced up through two layers of generic
+  event dispatchers (`0x10379a68`, and the `tbb`-dispatched state-machine
+  step `0x10379d5a`) to a registration mechanism that remains unresolved
+  -- `0x10379d5a` has zero direct callers anywhere in the image by any
+  method tried (direct calls, tail branches, raw pointer words, `tbb`/
+  `tbh` tables), the same dead-end shape Lane 1 hit and dropped for
+  `0x4100012`'s poster.
+- **The actually promising lead**: a sibling event-code dispatcher
+  (`0x1037aae2`) with codes `0x2006` (touch), `0x2020`, `0x2021`, and
+  **`0x2087`** -- four codes from tracking's own `0x2083`. Most of
+  `0x2087`'s sub-codes post a simple few-state payload to property
+  `0x2021`: a toggle/lock shape, materially more promising than the
+  falsified Bluetooth lead, though **not confirmed as AE-L/AF-L**.
+- An exhaustive search (module-level, then full-image) for anything that
+  *reads* property `0x2021` by direct comparison found **nothing** -- the
+  consumer is reached some other way (likely registration-based, matching
+  F-106's finding on a different property family), not a literal-value
+  dispatch a static text search can find.
+
+**Exact handoff point, two concrete options, neither tried yet:**
+1. **Live simulator verification**: breakpoint `0x10475ecc` (the shared
+   property-post primitive) for id `0x2021` during ordinary simulated
+   navigation, and separately check whether `0x2087` is reachable from
+   the simulator's key set at all.
+2. **A masked/family-level static search**: check whether any dispatcher
+   compares the *high byte* (`0x20`) of incoming ids rather than the
+   exact value `0x2021`, the same encoding shape F-104 found for SD
+   commands. Requires finding candidate generic property dispatchers
+   first -- not attempted this session.
+
+Do not restart from the Bluetooth lead or from `0x10379d5a`'s
+registration search -- both are exhausted by direct static method in
+`tracking-input-chain.md`. Start from option 1 or 2 above.
+
 ## Rules, unchanged
 
 Offline/simulator only. Never touch a real camera. Never commit firmware

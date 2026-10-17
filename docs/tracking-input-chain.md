@@ -588,3 +588,66 @@ only, no firmware bytes recorded.
 
 Written by Claude (Sonnet 5.5) in collaboration with Tony Kim, continuing
 the section above.
+
+## 2026-10-16: no consumer found by direct comparison -- handoff point
+
+Searched for property `0x2021`'s consumer (the section above's named next
+step), exhaustively, two ways:
+
+1. A scan of the module around the known post sites (`0x10370000`-
+   `0x103b0000`) for any `cmp`/`sub`/`movw` referencing `0x2021` found
+   only the 6 already-known post sites (`movw r0/r3, #0x2021` immediately
+   before a call to `0x10475ecc`). No compare/dispatch site in that
+   range.
+2. A full 33.9MB image scan for any `cmp`/`cmp.w`/`subs`/`sub.w`
+   instruction referencing the immediate `0x2021`, anywhere, found
+   **zero** hits.
+
+Nothing in this firmware image explicitly compares against the literal
+`0x2021` to decide what to do about it. Combined with F-106's finding on
+a different property family (`0x0418xxxx`, Lane 2) that posted events
+there reach their consumer through a generic queue-and-registration
+primitive rather than a hardcoded comparison, the likely explanation is
+architectural: this firmware's property-notification system dispatches
+by registration (a consumer subscribes once, generically, and reads the
+posted id as data at runtime) rather than by compile-time literal
+comparison, so a literal-value search cannot find the consumer no matter
+how exhaustive.
+
+**This is a deliberate handoff point, not a dead end treated as closed.**
+Two concrete ways forward exist, both requiring techniques beyond what
+this session used:
+
+1. **Live simulator verification.** Set a breakpoint on the shared post
+   primitive `0x10475ecc` (the same technique this project has used
+   throughout for event/property tracing) and observe calls with
+   id `0x2021` during ordinary simulated menu/button navigation, to see
+   what state changes afterward. This would also help determine whether
+   `0x2087` is reachable from the simulator's limited key set at all --
+   unknown and not yet checked.
+2. **A masked/family-level static search**, not a literal-value search:
+   check whether any dispatcher compares a *masked or shifted* form of
+   incoming property ids (e.g. testing only the high byte, `0x20`, the
+   way F-104's SD command words encoded a category in one byte and a
+   sub-id as plain data) rather than the exact value `0x2021`. This
+   session did not attempt this -- it requires finding candidate generic
+   property-dispatch functions first (a different search than anything
+   tried in this file so far) and checking their comparison shape, not
+   just literal matches.
+
+**State to hand off:** the touch-input event family (`0x2006`/`0x2020`/
+`0x2021`/`0x2087`, all reached through the dispatcher at `0x1037aae2`)
+remains the strongest lead this project has found for AE-L/AF-L or any
+related physical-button identity -- materially stronger than the
+falsified Bluetooth/HCI lead in tracking-entry-research.md, because it is
+a real, locally-coherent control cluster with a toggle/lock-shaped
+payload, not packet-protocol bookkeeping. It is not confirmed. Whoever
+picks this up next should not restart from the Bluetooth lead or from
+`0x10379d5a`'s unresolved registration (both already exhausted by direct
+static search in this file); start from option 1 or 2 above.
+
+Method: read-only static decode (capstone, Thumb) and full-image
+instruction scans, SHA-256 checked first; addresses and event/property
+codes only, no firmware bytes recorded.
+
+Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
