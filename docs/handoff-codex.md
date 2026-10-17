@@ -20,7 +20,7 @@ project's own simulator. A card-detect/SD-command-enumeration thread
 (F-102, F-104) was explored this session and retired for exactly this
 reason — see "Lane 2" below for where it stopped and why.
 
-Main carries facts through **F-111**; check main before allocating F-112.
+Main carries facts through **F-112**; check main before allocating F-113.
 Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,
@@ -361,13 +361,38 @@ still could not find the literal instruction dereferencing either table
 address directly -- that specific question is now lower priority than
 following the property-id family itself. Full detail in facts.md F-111.
 
-**Next step:** decode `0x1034e674`'s full branch structure (modes 1/2/3,
-each computing its own sequential property-id block) and the second
-module cluster at `0x104ddxxx`-`0x104e1xxx` (not yet touched), looking
-specifically for anything that reads or writes crop/image-area state in
-either. This is a fresh thread, not a continuation of the record-builder
-chain; do not revisit that chain (F-095 through F-106) without new
-evidence pointing back to it.
+**Update (2026-10-16), the real geometry table found (F-112):** checked
+`0x1034e674` directly for image-area property `0x501` -- zero
+references anywhere in either of its two address clusters, so that
+module is very unlikely to be crop-aware; dropped rather than decoded
+further. Instead found every direct reader of `0x501` itself (8 sites,
+full-image scan). One, `0x105a7946`, is a real width/height-by-area
+lookup: calls `0x1020bfda(quality, area)` twice, reading a `{width,
+height}` struct. `0x1020bfda` is a confirmed 2D indexer (quality -> row
+pointer -> area-indexed `{i16,i16}` entries), with at least nine
+sibling tables of the identical shape immediately following it in ROM
+-- almost certainly one per save/display format class.
+
+**The strongest lead this research has found, with one hard limit:**
+the table itself is RAM-resident (`0xc18c7de8`), not present in the ROM
+image, so its actual width/height numbers cannot be read statically --
+live simulator inspection is required to see real values. Separately,
+whether the one traced call chain (`0x105a7946` -> `0x10237934`, which
+adjusts the value and calls two unidentified helpers shaped like
+string/count formatters) is a save-time computation or only a menu
+display-label formatter was **not determined** -- say this plainly, do
+not assume either answer. Full detail in facts.md F-112.
+
+**Next step:** trace `0x105a7946`'s own caller(s) to establish whether
+it's reached from a menu-display context or an actual capture/save
+context -- that single fact would resolve the open question above. In
+parallel or instead: use the simulator to read the actual RAM table
+contents at `0xc18c7de8` for the known DX/1:1/16:9 area values, which
+would independently confirm this is the real per-area dimension table
+regardless of which context calls it. This is a fresh thread, not a
+continuation of the record-builder chain; do not revisit that chain
+(F-095 through F-106), and do not return to F-111's `0x1034exxx` module
+without new evidence pointing back to it.
 
 ## Lane 3: AE-L/AF-L subject tracking (new section, 2026-10-16)
 
