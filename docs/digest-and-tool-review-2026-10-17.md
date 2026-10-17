@@ -70,3 +70,18 @@ directory outside the repo. Hardware remains **NO-GO**.
   reproduced here, so the digest is not resolved.
 - Conclusion: the digest input at `0x10000088` remains unresolved. No local
   copy is built on this basis.
+
+## 5. Digest source trace (2026-10-17, static, scratch copy)
+
+- Caller found: at `0x101ce590` the literal `0x10000088` is loaded into r0 and
+  passed to the setup helper `0x101d7026`, which copies 8 bytes from that
+  argument into the checker object (memcpy via `0x10199cf0`, length 8).
+- The address is outside the EG payload. The EX component (524,290 bytes) does
+  not show an ARM vector-table pattern at its start, so it cannot be assumed to
+  be the boot region mapped at flash base `0x10000000`. TPJ shows no such
+  pattern either.
+- Result: the source is a fixed boot-region address that the decoded package
+  does not supply at that offset, which points to device or boot state rather
+  than package content. This is a reading, not proof.
+- Digest input: **still open**. Build: not started; the readout-record manifest
+  depends on this gate.
