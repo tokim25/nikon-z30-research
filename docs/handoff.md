@@ -7,6 +7,20 @@ Kept for history; do not use for current status.
 
 Date: 2026-10-15. Update this whenever work is in progress.
 
+
+## Current checkpoint, 2026-10-17 (read-only build decision)
+
+Status: standalone-EG route verified only to the digest boundary; not a
+build-ready route. The eight-byte digest input at `0x10000088` is unresolved
+(F-140, F-141). Full decision and minimum XPan edit set:
+[xpan-build-decision.md](xpan-build-decision.md). Hardware remains NO-GO.
+WonderLantern's install claim conflicts with the traced digest branch and is
+unverified here. `native-claude-build-research-handoff.md` is absent on main.
+
+Single next step (Codex): decide whether the eight digest bytes at
+`0x10000088` come from package content or device state, by tracing the
+metadata transform `0x101d3f14` and its callback chain.
+
 ## State
 
 - Native guides work in the simulator in live view
