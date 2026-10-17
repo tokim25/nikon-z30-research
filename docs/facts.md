@@ -2621,4 +2621,67 @@ memory read after ordinary simulated startup, no diagnostic call, no
 firmware modification; SHA-256 and QEMU checkout verified before and
 after. No firmware bytes recorded.
 
+F-120. Closes one specific item F-109 flagged as untried ("ARM-mode
+scanning") -- not by answering F-109's actual question, but by
+confirming, for the first time in this project, that this firmware
+genuinely contains ARM-mode code at all. Every static decode this
+project has ever done (including F-109's four exhaustive methods) was
+Thumb-only; this checks whether that was ever actually wrong to assume.
+
+**Real ARM-mode code confirmed, not hypothetical.** A full-image Thumb
+scan for `blx` with an immediate operand (the only Thumb instruction that
+unconditionally switches the core to ARM state) found 16,066 raw hits
+across 7,693 distinct targets -- almost all of that volume is the same
+scan-artifact noise this project has hit repeatedly this session (data
+decoded as if it were code). But the small number of high-frequency
+targets are real: spot-checked four of them by decoding as ARM32 from
+their own address, and all four are clean, idiomatic ARM code, not
+garbage:
+
+- `0x10199bdc`/`0x10199cf0` (2,144 + 2,763 call sites): a textbook ARM
+  `memcpy`-style routine -- 32-byte block transfer with `ldm`/`stm`, a
+  byte-aligned tail-handling continuation. One of the two sites
+  (`0x10199bdc`) is called directly from the InitTask entry function
+  (`0x10053070`), the single most central checkpoint this entire
+  project's tooling waits on -- genuinely live, heavily-used code, not an
+  obscure corner.
+- `0x11d6cc24` (23 call sites): byte-for-byte the same `memcpy` logic as
+  `0x10199cf0`, at a completely different address -- a second, separate
+  linked copy, consistent with a large multi-module firmware statically
+  linking its own C runtime per module rather than sharing one copy.
+- `0x1027f154` (156 call sites) and `0x1027ed08` (219 call sites): shaped
+  like ordinary ARM EABI compiler-runtime helpers (sign/magnitude
+  handling consistent with a software divide/modulo routine; a `clz`-
+  based normalization step), not application logic.
+
+**What this does and does not mean.** It means this project's blanket
+assumption of Thumb-only code was wrong, and that any future "zero
+callers found by every static method" dead end (F-103's `0x10156714`,
+F-109's `0x10459d80`, this session's F-116/F-117 for Lane 3) *could* in
+principle be explained by a caller living inside one of these ARM
+islands, invisible to a Thumb decoder the same way data regions produce
+garbage Thumb. **It does not show that any specific one of them is** --
+every confirmed-real example found this pass is a mundane compiler
+runtime helper (memcpy, a divide-shaped routine), not application-level
+event dispatch, and it would be architecturally unusual for a firmware's
+own UI/property-notification logic to be hand-written in ARM mode while
+everything else is Thumb. Mapping the full extent of every ARM island
+and checking whether any of them references `0x10459d80`, `0x4100012`,
+or a property-`0x2021`-shaped dispatcher was not attempted -- that is
+real, separately-scoped work (find each ARM region's boundaries, decode
+it as ARM, search it the same way F-109 searched Thumb code), not a
+quick addition to this scan, and is exactly the kind of open-ended
+simulator/methodology trace AGENTS.md's priority rule cautions against
+starting speculatively. Flagged for whoever (likely Codex, alongside
+Lane 0) has reason to revisit one of those specific dead ends next, not
+pursued further here.
+
+Confidence high for the four spot-checked sites being genuine ARM code
+(clean decode, one directly confirmed live via a well-known caller);
+low/unknown for the remaining 7,689 distinct targets, most of which are
+presumed noise but were not individually checked. Method: full-image
+Thumb decode scanning for `blx`-immediate (capstone), then ARM32 decode
+of a handful of the highest-frequency targets for verification; SHA-256
+checked first. No firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

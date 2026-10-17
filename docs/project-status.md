@@ -16,6 +16,14 @@ does not by itself authorize or reach hardware install; that still needs
 the owner's separate written risk acceptance (hardware-readiness.md) and
 conditions 2 through 4.
 
+**F-120 found this firmware genuinely contains ARM-mode code** (a real
+`memcpy` routine at two separate linked addresses, plus compiler-runtime-
+shaped helpers), confirmed via live code decode -- something every prior
+static scan in this project assumed away. Does not show any of the
+project's specific "zero callers" dead ends (`0x10459d80`, Lane 3's
+property dispatch) live there; flagged as a cheaper thing to check before
+touching QEMU's C source if Lane 0's steps 1-2 come back empty.
+
 Main carries facts through **F-114**. F-101 merged via PR #119; F-102/F-103
 via PR #123; F-104 via PR #124; F-105 via PR #126; F-106 via PR #127;
 F-107 via PR #128; F-108 via PR #129; F-110 via PR #138; F-111 via PR
