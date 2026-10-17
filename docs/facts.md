@@ -2876,6 +2876,24 @@ capture, cropped file or camera access. Actual filename-field consumption
 remains unresolved and is reserved for the owner-approved on-camera test; no
 static route remains open. [Evidence and limits](native-save-table-ram-mapping.md).
 
+F-150. Still-versus-movie predicate at the live-view hook `0x102f5810`:
+unresolved. Inside the live-view type-2 handler `0x102f57e2`, the only branch
+before the selector write is a bit test on a byte at `0xc181b4b4`. It skips
+one call to `0x104bd3c0`, and both paths rejoin at `0x102f580c`. The write at
+`0x102f5810` stores selector 1 into `0xc1821d44 + 0x74` through setter
+`0x104b9116`, with no still, movie, playback, warning or unavailable test.
+The guard (empty stack plus selector 1) therefore cannot separate still
+capture from movie recording, and it cannot exclude those states. Movie live
+view is admitted if it reaches this worker (inferred, medium). The byte at
+`0xc181b4b4` is not identified, and the bit-6 gate's meaning is unknown. This
+conflicts with the design rule that movie mode stays off
+([xpan-bars-design.md](xpan-bars-design.md)). Observed static decode, high
+confidence; the natural caller and worker trigger remain unobserved (F-019).
+Needed: a state value that marks still capture, traced to a load before
+`0x102f57e2`. Hook stays out of build decisions until then.
+[Evidence and limits](native-xpan-liveview-hook.md).
+
+
 
 F-154. Caller search for the filename-table getter `0x10354350`: no static
 route reaches it. Route classes checked over the whole image: direct and
