@@ -101,3 +101,51 @@ it, date.
   place -- those links now point at deleted filenames. See the
   docs-consolidation PR body for the specific `F-###` entries affected.
 - **Date:** 2026-10-16.
+
+## 4. Tracking property 0x2021 payload and consumer-search limits
+
+- **Original claims:** tracking-input-chain.md described the post payload
+  as 1 to 4 bytes and inferred a simple toggle/lock shape; its later
+  literal-immediate search was summarized as no explicit test of `0x2021`
+  anywhere. The upward trace also summarized the state-machine index as
+  subtracting `0x20000`.
+- **Correction:** the property uses a structured record with length
+  4..512, subtype/status-like fields and an optional tail, stored in a
+  516-byte buffer. A generic object lookup compares register-loaded ids;
+  a separate query wrapper explicitly excludes `0x2021` using two
+  subtractions. The state-machine table index is `event - 0x20001`.
+  Neither the old small values nor the new notification route identifies
+  AE-L/AF-L. Details and private verification are in
+  [the table-dispatched consumer section](tracking-input-chain.md#2026-10-16-table-dispatched-consumer-and-structured-payload-for-0x2021).
+- **Date:** 2026-10-16.
+
+## 5. Tracking cluster dispatcher edges were assigned to the wrong ids
+
+- **Original claim:** the control-cluster section assigned `0x2020` to
+  `0x103a2a9c`, `0x2021` to `0x103a31a6`, and `0x2087` to
+  `0x103a341a`; Codex's first continuation carried the wrong `0x2021`
+  assignment forward. It also attributed the global `+0x48` callback
+  branch to `0x2006`.
+- **Correction:** checked branch destinations give `0x2020` ->
+  `0x103a31a6`, `0x2021` -> `0x103a341a`, and `0x2087` ->
+  `0x103a2a9c` -> `0x103a29ca`. The `+0x48` callback is for `0x2002`;
+  `0x2006` is ignored by this dispatcher. The subtype handler gates on
+  an operation flag preserved from property notifications. The
+  command/reply interpretation replaces the earlier small-lock-state
+  lead; AE-L/AF-L and tracking identity remain unverified. See
+  [the corrected map and simulator evidence](tracking-input-chain.md#2026-10-16-bounded-menu-probe-and-corrected-commandreply-map).
+- **Date:** 2026-10-16.
+
+## 6. The tracking control cluster is a BLE controller path
+
+- **Original claim:** the `0x2020`/`0x2021`/`0x2087` cluster was called
+  a real, non-Bluetooth lead for physical AE-L/AF-L delivery.
+- **Correction:** diagnostic references in the actual handlers identify
+  a BLE camera-controller module and its authentication sibling. This
+  was found by following the new property path, independently of the
+  already-retired HCI lead. It is not evidence of physical-button
+  provenance. The corrected build decision retires it as a physical
+  AE-L/AF-L lead without claiming remote control code cannot share
+  downstream camera operations. See
+  [diagnostic provenance and the build decision](tracking-input-chain.md#2026-10-16-diagnostic-provenance-identifies-a-ble-controller-cluster).
+- **Date:** 2026-10-16.

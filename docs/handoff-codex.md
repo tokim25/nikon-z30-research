@@ -337,58 +337,150 @@ stopping point. Stopping at "the simulator can't
 show me SD I/O" is not, since this question's whole point is what the real
 firmware does.
 
-## Lane 3: AE-L/AF-L subject tracking (new section, 2026-10-16)
+## Lane 3: AE-L/AF-L subject tracking (updated by Codex, 2026-10-16)
 
-This lane didn't have its own section here before -- it was tracked only
-through `docs/hardware-readiness.md`'s table row and the `docs/tracking-*.md`
-files directly. Adding this section now because the owner asked for a
-clean handoff point.
+Native tracking request candidates are now statically linked to the labelled
+assignment; runtime tracking activation and physical AE-L/AF-L delivery
+remain unverified. See tracking-protect-button.md's dated continuation.
+The latest evidence is in tracking-input-chain.md's final three dated sections.
+The original control-cluster interpretation is substantially corrected:
 
-**Where this stands relative to the other two lanes:** far behind. Lane 1
-has its mechanism fully traced (F-107/F-108) down to one owner judgment
-call. Lane 2's capture-vs-estimator ambiguity is resolved (F-106). Lane 3
-has **no verified native entry point at all** -- this is still the actual
-blocker, not a refinement.
+- The generic post path uses a real 21-object lookup table. Property
+  `0x2021` is entry 14, object `0xc18a3cb8`, getter `0x10599318`.
+  Its structured payload has length 4..512, subtype/status-like fields,
+  an optional tail, and 516-byte storage. It is not just a small lock value.
+- **Correct dispatcher map:** `0x2020` -> `0x103a31a6`; `0x2021` ->
+  `0x103a341a`; `0x2087` -> `0x103a2a9c` -> `0x103a29ca`.
+  The original Claude section and Codex's first continuation assigned
+  these branches incorrectly. Do not build on that old map. `0x2006`
+  is ignored in this dispatcher; `0x2002` uses its callback at global
+  `+0x48`. The separate mode-1 dispatcher still has its own touch-shaped
+  `0x2006` path.
+- Initialization `0x1037a468` registers subscriber `0x1037a3b0` for a
+  five-id list including `0x2021` and `0x2087`. It queues `0x2000d`
+  through `0x1037ac4c`; the known state-machine case reaches
+  `0x1037aae2`. This is an actual registration chain, not the withdrawn
+  neighboring-pointer table claim. Its live slot was observed installed.
+- The `0x2021` consumer `0x103a341a` gates on a source/operation flag:
+  local posts supply 0 and are ignored; the decoded-input path supplies 1.
+  Replies use the same property id. This is a command/reply-shaped
+  mechanism, and diagnostic provenance now identifies its BLE controller
+  and sibling authentication modules. The original non-Bluetooth claim
+  is withdrawn; physical-button identity remains unproved.
+- The bounded simulator probe is done: two disposable runs, each with
+  23 stock menu-key calls covering all six exposed keys. Navigation
+  breakpoint and screen-stack/frame changes passed as positive controls.
+  Both saw five startup property posts, zero `0x2021` posts, zero
+  subscriber/dispatcher calls, and zero `0x2087` dispatches. Run 2 also
+  watched the corrected consumer and got zero hits. This is a bounded
+  menu-fixture result, not proof that the real camera never uses it.
 
-**What's established**, all in `docs/tracking-input-chain.md` (read it in
-full; this is only a summary):
-- The prior candidate activation lead (`0x11cf4e90`/`0x11cf4ea0`) was
-  falsified: it resolves to Bluetooth/HCI packet processing, not AF
-  (`docs/tracking-entry-research.md`).
-- A queued input-bank route exists for property codes `0x2082`/`0x2083`
-  (logical ID 41, mask `0x2000`), traced up through two layers of generic
-  event dispatchers (`0x10379a68`, and the `tbb`-dispatched state-machine
-  step `0x10379d5a`) to a registration mechanism that remains unresolved
-  -- `0x10379d5a` has zero direct callers anywhere in the image by any
-  method tried (direct calls, tail branches, raw pointer words, `tbb`/
-  `tbh` tables), the same dead-end shape Lane 1 hit and dropped for
-  `0x4100012`'s poster.
-- **The actually promising lead**: a sibling event-code dispatcher
-  (`0x1037aae2`) with codes `0x2006` (touch), `0x2020`, `0x2021`, and
-  **`0x2087`** -- four codes from tracking's own `0x2083`. Most of
-  `0x2087`'s sub-codes post a simple few-state payload to property
-  `0x2021`: a toggle/lock shape, materially more promising than the
-  falsified Bluetooth lead, though **not confirmed as AE-L/AF-L**.
-- An exhaustive search (module-level, then full-image) for anything that
-  *reads* property `0x2021` by direct comparison found **nothing** -- the
-  consumer is reached some other way (likely registration-based, matching
-  F-106's finding on a different property family), not a literal-value
-  dispatch a static text search can find.
+**Retired as a physical-button lead:** following subtype `0x11` found
+diagnostic references at `0x103a3390` and `0x103a30ac` to the BLE
+camera-controller source identifier at `0x103a3228`; the `0x2087` path
+references a BLE authentication identifier at `0x103a2df4`. This is
+independent of the old HCI lead, which was not reopened. The cluster may
+contain remote control operations, but is not evidence for physical
+AE-L/AF-L delivery. Do not use its generic reply handler as that hook.
 
-**Exact handoff point, two concrete options, neither tried yet:**
-1. **Live simulator verification**: breakpoint `0x10475ecc` (the shared
-   property-post primitive) for id `0x2021` during ordinary simulated
-   navigation, and separately check whether `0x2087` is reachable from
-   the simulator's key set at all.
-2. **A masked/family-level static search**: check whether any dispatcher
-   compares the *high byte* (`0x20`) of incoming ids rather than the
-   exact value `0x2021`, the same encoding shape F-104 found for SD
-   commands. Requires finding candidate generic property dispatchers
-   first -- not attempted this session.
+**Protect follow-up completed, 2026-10-16:** see
+[tracking-protect-button.md](tracking-protect-button.md). The named Protect
+mask maps to logical input `0x16` / UI event `0x282`; the AE-L/AF-L
+mask maps to `0x0d` / `0x28b`. Do not interchange them. Indexed labels
+and actual table consumers link the named AE-L/AF-L playback descriptor
+to setting `0x1186`, function value 24 (Protect), and handler
+`0x10523c46` -> `0x105224bc`. File protection was not exercised.
 
-Do not restart from the Bluetooth lead or from `0x10379d5a`'s
-registration search -- both are exhausted by direct static method in
-`tracking-input-chain.md`. Start from option 1 or 2 above.
+The separate shooting descriptor uses `0x1184`. Live-view mode object
+`0xc1821d44 + 0x4c` holds callback `0x102f2eae`. Its branch at
+`0x102f2f96` tests snapshot `+4` bit 13 and assignment `0x1184 == 9`
+(independently labelled AF-ON), then sets selector `0x14` through
+`0x1044e68c`. Type-3 handler `0x102f7448` reads and clears that selector.
+These are verified static links, not physical delivery or tracking proof.
+
+**Continuation completed:** snapshot `+4` is current, `+8` previous,
+`+0x0c` changed, `+0x10` press edges and `+0x14` release edges.
+The AF-ON branch tests a level, checks both `0x1184` and `0x1187`,
+and sets pending word `0xc20168c4`. Other input changes while held can
+re-arm it; it is unsuitable as a once-per-press tracking trigger.
+The worker uses it only on one gated path; another path overwrites the
+local value before its later state comparisons. Its apparent operation
+`0x21` call reaches return-only stub `0x1046296e`, not an AF submission.
+
+The indexed function table actually contains **Subject tracking = 77**,
+row `0x1074cc98`, label 1561. Four other configurable-button handlers
+recognize it and call `0x10368b6e`, which dispatches by status to
+`0x1045a1ae` / `0x1045a21c`. Those reach native request/state routines
+`0x100774f4` / `0x100775c6` through the `0x10230832` / `0x10230866`
+wrappers. No runtime start/stop cycle was tested. Two integration gaps:
+AE-L/AF-L's logical `0x0d` handler `0x10369468` has no value-77 case,
+and `0x10368b6e` itself does not accept logical `0x0d`. A menu-only
+assignment change is insufficient. Preserve playback `0x1186`/Protect.
+
+**Status continuation completed:** `0x101925ce` copies the locked
+`0x468`-byte record at `0xc237c7b4`. Native tracking pair
+`0xc259ff0c + 0x38/+0x39` reaches record `+0x61/+0x62` through
+`0x10076314` -> `0x101925b0`. Start's `(1,0)` becomes getter state 2,
+and stop's `(0,0)` becomes state 1, with area 6. The helper's return is
+handled, not acquired. Exclusion predicate `0x1045a47e` tests nonzero
+byte `0xc23a51ad`; preserve it without inventing its human-facing name.
+Real indexed Auto-area menu rows use encoded values 600/601/602, split
+into base 6 and subtype by checked consumers. The effective-setting
+producer was not fully re-derived; details and limits are in the report.
+
+One bounded QEMU run is now done: 32 diagnostic stock-decoder calls with
+synthetic press/hold/release/chord records, modes 0 and 1, comparing
+AE-L/AF-L mask `0x2000` and configurable-button mask `0x4000`. Both
+press and hold output their same logical id; release outputs zero. The
+return register differs from output words on release and must not be used
+as a logical code. All calls and context/scratch restorations passed;
+tracking-handler/request breakpoints saw zero calls. No firmware was
+modified and no native tracking state or assignment was forced. Run:
+`private-inputs/codex-tracking-input-semantics-01` under confirmed WORK.
+
+**Queued-edge question resolved:** one additional bounded run queued
+press, hold and release through stock writer `0x102f1844`, then consumed
+them through `0x102f1d5a`. Before `0x102f1dbc`, `r0 == r5` points to
+the popped snapshot; at `0x102f1dc0`, `r5` still points to that same
+record and `r4` to its decoded output. All three distinct FIFO records
+retained the right `+0x10` press edge across decoding. Six calls and
+context/scratch restorations passed; tracking breakpoints saw zero calls.
+Run: `private-inputs/codex-tracking-queued-edge-01`; helper:
+`codex-tracking-queued-edge-private.py`. Capture the edge immediately:
+the ring mutex has already been released, so retaining its slot pointer
+across later blocking calls would risk reuse.
+
+**Single next step:** trace AE-L/AF-L's actual assignment-menu option
+rows, selected-value mapping and setter callbacks around `0x103d4222`
+and `0x103d9898`. Document the minimum coordinated changes to expose
+77 and route its action, using the verified worker edge boundary and
+native completion cleanup. Handler `0x10369468` has two direct Thumb
+call sites (`0x103020b4`, combined path `0x10302108`). A proposed gate
+must handle both, retain context-specific stock checks, and account for
+cleanup through `0x1036925e` / `0x10368402`. Do not call tracking from
+the input callback or reuse the newest global snapshot. No executable
+adapter or approved patch site is ready.
+Owner confirmed the intended shooting setting, not numeric runtime values.
+Private verification: `codex-protect-button-route-private.py` and
+`codex-tracking-native-contract-private.py` (static) and
+`codex-tracking-input-semantics-private.py` (bounded diagnostic QEMU).
+No firmware modification or runtime tracking activation was performed.
+
+**Owner usage instruction:** during this explicit session, stop research
+when the five-hour usage meter has 7% or less remaining and prepare a
+Claude handoff with the exact branch, local file state, private repro paths,
+validation and single next step. Do not push, publish or message another
+task merely to hand off. This does not authorize recurring work.
+The focused Claude pickup document is
+[tracking-claude-handoff.md](tracking-claude-handoff.md).
+
+Do not repeat menu reachability sweeps or investigate why QEMU does not
+supply this input. The Bluetooth/HCI lead and `0x10379d5a` registration
+hunt remain dropped. No tracking code or property data was injected.
+Original firmware hashes and the pinned QEMU checkout remained unchanged.
+Private helpers: `codex-property-2021-dispatch-private.py` and
+`codex-property-2021-live-private.py`; reports:
+`private-inputs/codex-property2021-live-01` and `-02` under confirmed WORK.
 
 ## Rules, unchanged
 

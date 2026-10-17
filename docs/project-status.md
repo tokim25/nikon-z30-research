@@ -28,15 +28,36 @@ approves
 merges; nobody merges their own PRs. Check main again before allocating
 F-110.
 
-**Lane 3 (AE-L/AF-L tracking) now has a proper section in handoff-codex.md
-for the first time**, with a concrete handoff point: a real event-code
-cluster (`0x2006`/`0x2020`/`0x2021`/`0x2087`, near tracking's own `0x2083`)
-was found and is the strongest lead so far, but property `0x2021`'s
-consumer could not be found by exhaustive literal-comparison search (zero
-hits, full image). Two untried next steps (live simulator breakpoint on
-the post primitive, or a masked/family-level static search) are named in
-handoff-codex.md's new Lane 3 section and in `docs/tracking-input-chain.md`.
-This is on `claude/tracking-handoff-property-2021`.
+**Lane 3 continuation, local on `codex/tracking-property-dispatch`:**
+the table-based property consumer and subscriber were resolved. The old
+dispatcher map was corrected, two bounded menu probes completed without
+reaching the cluster, and diagnostic provenance identified BLE camera-
+controller/authentication modules. The original non-Bluetooth attribution
+is withdrawn. This cluster is retired as evidence for physical AE-L/AF-L
+delivery. It supplies no verified tracking entry point. See the updated
+Lane 3 handoff and tracking-input-chain.md's final sections.
+
+The owner's Protect-button clue produced a separate static route:
+indexed button/function labels link playback assignment `0x1186` to the
+Protect action; the shooting assignment `0x1184` and snapshot bit 13
+reach a selector consumed by the live-view type-3 handler. Details are in
+tracking-protect-button.md. The continuation establishes explicit press
+edges and shows the AF-ON branch instead tests a held level. It also finds
+native Subject tracking assignment 77 and real request/state routines.
+AE-L/AF-L's assignment handler omits that case, and the shared tracking
+helper rejects its logical input. A menu-only change is insufficient.
+The native status bridge and numerical start/stop/exclusion gates are now
+traced. A bounded QEMU run of 32 synthetic stock-decoder calls returned
+the held logical id on both press and hold; tracking routines were never
+called. A second run queued three records through the stock writer and
+verified FIFO consumption and the matching edge before/after the worker's
+decoder call. The candidate boundary has the same record and output,
+but an adapter is not implemented or approved. Next: trace AE-L/AF-L's
+actual assignment-menu options and document the coordinated menu/action/
+edge-gate changes, preserving native checks and completion cleanup.
+No tracking activation tested. Details and limits are in the report's
+final dated section.
+Claude pickup: [tracking-claude-handoff.md](tracking-claude-handoff.md).
 
 ## Feature state
 
@@ -56,8 +77,9 @@ path remain unverified.
 
 A centered 5200 by 1920 capture-geometry experiment passed, but no saved RAW
 crop or NEF metadata writer is verified. The later structure-pack trace
-does not close that gap. Physical AE-L/AF-L input delivery and a tracking
-entry point remain unverified.
+does not close that gap. Native tracking request candidates are statically
+identified; physical AE-L/AF-L delivery and runtime tracking activation
+remain unverified.
 
 Single next step: find a stock menu-close event sequence that reaches
 `0x102f57e2` without a direct diagnostic call, then confirm that the guarded

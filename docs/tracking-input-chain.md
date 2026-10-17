@@ -525,6 +525,10 @@ used throughout this session).
 
 ## 2026-10-16: a real event-code cluster around property 0x2021 (not Bluetooth)
 
+**Correction:** the code-to-handler map and lock-shaped interpretation in
+this historical section are superseded by the final "bounded menu probe
+and corrected command/reply map" section below.
+
 Followed this section's own suggested next step -- decoding the `0x2006`
 touch-input branch's separate callback slot -- rather than chasing
 `0x10379d5a`'s unresolved registration mechanism further. This surfaced a
@@ -651,3 +655,276 @@ instruction scans, SHA-256 checked first; addresses and event/property
 codes only, no firmware bytes recorded.
 
 Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
+
+## 2026-10-16: table-dispatched consumer and structured payload for 0x2021
+
+Continues option 2 of the handoff above: identify the generic dispatcher
+from the post primitive before testing a masked-id hypothesis. Read-only
+static analysis of verified C1.20; no simulator or hardware execution.
+
+**Observed:** the relevant dispatcher compares complete ids loaded from
+objects, not a masked high byte. `0x10475ecc` validates the id through
+`0x10475d8c`. Its direct path reaches `0x104a22d2` -> `0x104a1e44`;
+the queued `0x040c0003` path also calls `0x104a1e44` from `0x104a1f6a`.
+That consumer looks up the incoming 16-bit id through `0x104e2f80` in a
+21-entry pointer array at `0xc236d7e4`. The lookup reads each object's
+first halfword and compares it to the incoming register. Thus no immediate
+`0x2021` comparison is required. No family mask occurs in this lookup;
+this is not a full-image exclusion of other masked dispatchers.
+
+Startup `0x104a2302` builds that array by calling the 21 getters in the
+table at `0x114d6224`. Zero-based entry 14 calls getter `0x10599318`,
+which returns object `0xc18a3cb8`; its initialized first halfword is
+`0x2021`. The existing initialized-data copy mapping was checked before
+reading the object's ROM origin. This is a getter table actually walked
+by code, unlike the withdrawn neighboring-pointer registration claim.
+
+### Payload correction
+
+The earlier "1 to 4 bytes" description understated the contract. The
+object has a **516-byte storage size**, working buffer `0xc236dce0` and
+stored buffer `0xc236dadc`. Its copy callback `0x10599352` interprets:
+
+- `+0`: a 16-bit length, accepted from 4 through 512 inclusive;
+- `+2` and `+3`: separate subtype/status-like bytes;
+- `+4`: an optional pointer to a tail of `length - 4` bytes, copied into
+  owned storage at buffer `+8`.
+
+Validator `0x1059932e` calls `0x105993e0`, which checks the length and
+subtypes `1`, `0xf`, `0x10`, `0x11`, `0x12`, `0x13`, `0x14`, `0x15`,
+then applies a separate check to byte `+3`. For example, the known
+`0x103a341a` subtype-1 producer constructs length 12 with an eight-byte
+tail; subtype `0x10` constructs length 8 with a four-byte tail. The small
+values seen before belong to structured messages. Their presence alone
+does not distinguish an AE-L/AF-L state from a command/reply protocol.
+
+There is also an exact-id check missed by the earlier immediate search:
+query wrapper `0x10475f5e` subtracts `0x2000`, then `0x21`, and rejects
+zero at `0x10475f74`. Therefore "zero direct immediate matches" cannot
+support the earlier broader statement that no code explicitly tests this
+id. This query path specifically excludes `0x2021`.
+
+### The subscriber and notification consumer
+
+Initialization `0x1037a468` copies two lists from `0x115c6868` and
+registers callback `0x1037a3b0` through `0x10475dde`:
+
+- At `0x1037a490`: ids `0x2000`, `0x2002`, `0x2087`, `0x2021`,
+  `0x2020`, registration mode 0.
+- At `0x1037a49c`: ids `0x2004`, `0x2005`, `0x2006`, `0x2007`,
+  `0x2083`, registration mode 1.
+
+The registration implementation reaches `0x104e2fb6`, which stores mode
+and callback in one of three per-object slots (`+0x18` and `+0x24`,
+stride 4). `0x104a1e44` invokes these slots with notification code
+`0x040c0021`. At that notification, `0x1037a3b0` copies the property data
+into a queued record tagged `0x2000d` and posts through `0x1037ac4c` to
+the queue object at `0xc28fbf04`.
+
+This connects to the already-known state-machine body without searching
+for its registration again: its table case for `0x2000d` is
+`0x10379ef6`, which calls `0x1037aae2`. **Boundary correction:** the
+actual table index is `event - 0x20001`, not `event - 0x20000` as the
+earlier upward-trace section summarized; the instruction uses the
+complement of `0x20000`. Case `0x2000e` reaches the previously known
+`0x10379a68` path.
+
+**Corrected in the continuation below:** this is the `0x2020` branch,
+not `0x2021`. It reaches `0x103a31a6`, which queries **property `0x2020`**,
+reads returned
+status byte `+7`, and uses pending state at `0xc28fc01c + 0x14` to gate
+follow-up work through `0x103a2fe2`. This is a concrete notification
+consumer, not yet a focus/lock implementation. Its purpose remains open.
+
+**Confidence and build implication:** high for these bounded static links
+and data contracts. The control cluster remains worth investigating, but
+is not an identified AE-L/AF-L hook. No simulator reachability, physical
+input identity, tracking activation, or successful runtime registration
+was demonstrated. The property object also has an optional serialized
+output path through `0x104a242c`; its startup enable fields are zero, so
+the path's presence does not establish active transport.
+
+### Reproduce privately and continue
+
+With the confirmed WORK directory:
+
+```sh
+"$WORK/analysis-env/bin/python" "$WORK/codex-property-2021-dispatch-private.py"
+```
+
+The private helper checks original SHA-256, initialized-data mapping,
+getter/lookup links, payload callbacks, registration lists, notification
+queue tag and table-case target. It prints a summary only, writes no
+files and remains outside Git. No original firmware was modified.
+
+**Single next step:** a bounded passive simulator probe, with positive
+navigation controls, observing id `0x2021` at `0x10475ecc`, the subscriber
+`0x1037a3b0`, and consumer `0x103a31a6`; separately observe whether
+`0x2087` reaches `0x1037aae2`. Read the live property object's registered
+slots first. If ordinary inputs never reach this cluster, record that
+bounded negative once and return to real-firmware semantics of
+`0x2020`/`0x103a2fe2`; do not start a simulator-fidelity investigation.
+
+Written by Codex in collaboration with Tony Kim.
+
+## 2026-10-16: bounded menu probe and corrected command/reply map
+
+The passive target-observation probe is complete. A branch-by-branch
+recheck also corrects an inherited dispatcher error carried into Codex's
+preceding continuation. The property-object lookup, payload contract,
+subscription and `0x2000d` queue links above stand; the attribution of
+the final handler did not. The corrected static map is:
+
+| Property id | Checked edge in `0x1037aae2` | Destination |
+| --- | --- | --- |
+| `0x2020` | delta `0x1a` -> `0x1037ab4a` | `0x103a31a6`, status notification |
+| `0x2021` | delta `0x1b` -> `0x1037ab54` | `0x103a341a`, structured subtype handler |
+| `0x2087` | delta `0x81` -> `0x1037ab3c` | `0x103a2a9c` -> `0x103a29ca`, module-state handling |
+
+The `0x2021` edge loads the payload pointer and operation flag from record
+`+4`/`+8`, then tail-branches. `0x2006` returns without calling a callback
+in this dispatcher; `0x2002` is the branch that calls global `+0x48`.
+The different mode-1 dispatcher still has its own touch-shaped `0x2006`
+path. The original description conflated these branches.
+
+### Simulator observation
+
+Two disposable pinned-QEMU runs used the original verified C1.20 image.
+Each opened the menu through the existing stock-menu fixture and made
+23 ordinary simulated key calls, covering up/down/left/right/OK/Back.
+These are debugger-assisted stock menu API calls, not physical input or
+a naturally booted sensor pipeline. Breakpoints observed the property
+post primitive, subscriber, dispatcher and status handler throughout
+startup, menu calls and intervening idle periods. Run 2 added the corrected
+`0x2021` subtype-handler breakpoint; run 1 had only the misattributed
+status-handler breakpoint.
+
+Observed in both runs:
+
+- The live pointer-array entry 14 was `0xc18a3cb8`; its first registered
+  callback slot (`+0x24`) contained Thumb-tagged `0x1037a3b1`. Other
+  callback slots and optional output-enable fields `+0xc`/`+0x10`
+  were zero. These fields stayed unchanged across snapshots.
+- The post breakpoint fired five times during startup, for ids `0x2003`,
+  `0x2009`, `0x200b`, `0x2080`, `0x2086`. No post had id `0x2021`.
+- The menu-dispatch positive control fired on all 23 calls; stack counts
+  changed among 0, 1 and 2, and run 2 produced 15 distinct rendered-frame
+  hashes. These controls establish working navigation and breakpoint
+  collection, without claiming a particular menu choice persisted.
+- Subscriber `0x1037a3b0`, dispatcher `0x1037aae2` and status handler
+  `0x103a31a6` had zero hits. Run 2 also saw zero hits at `0x103a341a`.
+  Thus `0x2087` was not delivered through the observed dispatcher during
+  either tested route.
+
+Both sessions completed, the firmware hash remained unchanged, and the
+pinned QEMU checkout remained clean. There was no direct call to a
+tracking/property handler and no tracking/property payload injection.
+Private outputs, including the simulator tools' raw session audits, stay
+outside Git. This negative applies only to the tested stock-menu fixture;
+it neither rules out real-camera delivery nor justifies repairing QEMU.
+The menu reachability question is now recorded and deprioritized.
+
+### What the real firmware does with the flag
+
+`0x103a341a` immediately returns when its operation argument is zero.
+The local-post consumer `0x104a1e44` constructs notifications with that
+flag zero. In contrast, `0x104a1d4e` calls the property's decoding callback
+at object `+0x50`, validates the result and notifies with flag 1. The
+subscriber preserves that flag in its queued record. This explains how
+the same `0x2021` id can carry an incoming operation and a locally posted
+reply without re-executing the operation on every reply.
+
+**Inference, medium confidence:** the cluster is command/reply-shaped.
+Transport and physical-button identity are still unresolved. The original
+claim that `0x2087` was the many-subtype lock dispatcher is withdrawn:
+that dispatcher actually handles `0x2021`. Proximity to `0x2083` and
+small reply values are insufficient grounds to call this an AE-L/AF-L
+hook. Nothing here reopens the old Bluetooth/HCI lead.
+
+A bounded real-firmware follow-up read the corrected status branch.
+Builder `0x103a2fe2` reads controller status through getter `0x1023001a`
+and setting checks including `0x188c` and `0x117a`, constructs an
+eight-byte record and posts property `0x2020` only when it differs. A
+pending flag at `0xc28fc01c + 0x14` serializes that status update with
+handler `0x103a31a6`. These are status/notification mechanics; no focus
+identity was established.
+
+The concrete operation still worth identifying is `0x2021` subtype
+`0x11`: the enabled branch reaches `0x103a3360`, calls
+`0x103a3520(1)` and `0x103a2e64(1)`, polls setting `0x1d0c`, checks
+`0x188c`, and calls `0x10476288` before posting a subtype-`0x11` reply.
+The disabled branch reaches `0x103a2e88`, changes the module mode and
+updates `0x2020`, with a conditional reply. This gives a specific
+build-relevant question: what camera operation does that start/stop
+sequence control? Its meaning must be resolved before choosing a hook.
+
+### Reproduce and resume
+
+```sh
+"$WORK/analysis-env/bin/python" "$WORK/codex-property-2021-dispatch-private.py"
+"$WORK/analysis-env/bin/python" "$WORK/codex-property-2021-live-private.py" \
+  --output "$WORK/private-inputs/codex-property2021-live-03"
+```
+
+The output directory must be fresh. Runs `codex-property2021-live-01`
+and `-02` are the completed evidence; the example is for a future
+reproduction, not an instruction to repeat the negative sweep now.
+The static verifier now asserts every corrected dispatcher edge and the
+notification-flag propagation in addition to its earlier checks.
+
+**Next step at this point (advanced and superseded below):** identify the subtype-`0x11` start/stop operation
+through the `0x1d0c`/`0x188c` setting meanings and `0x10476288`'s
+readiness test. Keep this a real-firmware trace. Do not pursue menu-input
+delivery or state-machine registration again.
+
+Written by Codex in collaboration with Tony Kim.
+
+## 2026-10-16: diagnostic provenance identifies a BLE controller cluster
+
+Continuing the real-firmware subtype-`0x11` trace found direct module
+provenance. This overturns the earlier **non-Bluetooth** attribution;
+it is independent of the old `0x11cf4e90` HCI lead, which was not reopened.
+
+Two diagnostic references from the actual camera-control code resolve to
+the same embedded source identifier at `0x103a3228`: `0x103a3390` in
+the subtype-`0x11` start routine uses a PC-relative subtraction, and
+`0x103a30ac` in the `0x2020` status builder uses an ADR. That identifier
+names a Bluetooth Low Energy camera-controller module. A separate ADR at
+`0x103a2c8a`, on the `0x2087` path, resolves to `0x103a2df4`, whose
+identifier names its BLE authentication module. Exact source strings stay
+in the private verifier; only provenance, addresses and interpretation
+are recorded here. The references were checked at instruction boundaries,
+not inferred from neighboring data or address proximity.
+
+The setting trace also located actual backing words: generic lookup
+`0x100f300c` uses the group table at `0x114f774c`, then descriptor table
+`0x114eb97c`; `0x1d0c`, `0x188c`, `0x117a` resolve respectively to
+`0xc2502074`, `0xc25018f0`, `0xc2534710`. The readiness wrapper
+`0x10476288` tail-branches to `0x102871a2`, which returns cached state
+and a status word for selector 0; no AF meaning is established. No
+setting's semantic name was proved. These observations do not justify
+calling the subtype an AE-L/AF-L or tracking operation.
+
+**Build decision:** retire this cluster as evidence of a physical
+AE-L/AF-L input route. It may expose remote camera-control operations,
+but neither the named switch's physical delivery nor a native tracking
+activation was demonstrated. Do not choose its generic property/reply
+handler as the physical-button hook on this evidence. Module attribution
+is high-confidence static evidence; exact remote operation semantics and
+any downstream sharing with physical controls remain open.
+
+The two original handoff options are now handled: the generic dispatch
+was resolved and the bounded menu observation completed. Neither found
+the requested physical input. No further simulator-reachability work is
+warranted on this cluster. The next independent real-firmware lead is the
+structured input snapshot: trace decoder `0x1030705a`'s incoming packet
+source and its link to the normalized switch fields (F-021/F-025/F-026).
+Require evidence of physical SW0 provenance before matching mask `0x2000`
+or a logical ID to AE-L/AF-L. This is a provenance question, not a request
+to make QEMU supply an input.
+
+The existing private static verifier now checks both diagnostic-reference
+resolutions and the setting descriptor mappings. It passes without
+changing or executing firmware. Hardware remains untouched.
+
+Written by Codex in collaboration with Tony Kim.
