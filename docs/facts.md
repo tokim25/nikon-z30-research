@@ -2562,4 +2562,63 @@ unmodified private script (simulator only, scratch memory, restored after
 each call); SHA-256 and QEMU checkout verified before and after. No
 firmware bytes recorded.
 
+F-119. Answers F-112's own open question directly: "finding the ROM-side
+initializer that populates the RAM table... to read real width/height
+values without a simulator" -- no diagnostic call needed, just a direct
+memory read after ordinary startup, walking the two-level pointer
+structure F-112 already decoded (`row = [0xc18c7de8+0x14][quality]; entry
+= row + area*4`).
+
+**Real data, for the first time.** The row-pointer array at `0xc18c7dfc`
+holds four non-null pointers (`0x115a4da8`, `0x115a4dcc`, `0x115a4db4`,
+`0x115a4dc0` for outer index 0-3), each into ordinary ROM address space
+-- confirming F-112's picture exactly: the *array of pointers* is the
+RAM-resident part (initialized at boot), each pointer's *target data* is
+static ROM. Full 4x6 table, `{width:i16, height:i16}` per cell:
+
+| outer idx | entries (6, inner idx 0-5) |
+| --- | --- |
+| 0 | `(5568,3712) (4176,2784) (2784,1856) (5568,3128) (4176,2344) (2784,1560)` |
+| 1 | `(0,0) (0,0) (0,0) (3712,3712) (2784,2784) (1856,1856)` |
+| 2 | `(5568,3128) (4176,2344) (2784,1560) (0,0) (0,0) (0,0)` |
+| 3 | `(0,0) (0,0) (0,0) (0,0) (0,0) (0,0)` |
+
+**Cross-validated against F-118's live output, three exact matches.**
+F-118's non-zero `+0x18`/`+0x1a` final-output-size results each appear
+verbatim somewhere in this table: area 0/medium's `(4176,2784)` ==
+outer-0/inner-1; area 2/medium's `(4176,2344)` == outer-0/inner-4 (also
+outer-2/inner-1, since those two rows are mirror images of each other);
+area 4/medium's `(2784,2784)` == outer-1/inner-4. This confirms the
+builder's final-output-size field and this table are the same data
+source, not a coincidence.
+
+**Correction to the obvious first guess, stated honestly rather than
+glossed over: the (outer, inner) indices are not simply (quality byte,
+area byte) in the builder's own numbering.** F-118 held quality constant
+(medium, its own byte value `1`) across all three matches above, but the
+matching *outer* table index was `0`, `0`/`2`, and `1` respectively --
+not a constant. The true transformation from the builder's (area byte,
+quality byte) to this table's (outer, inner) indices was not solved this
+pass. One pattern worth handing forward, observed not proven: outer row
+0's six entries split cleanly into a DX-shaped triple (`~3:2` ratio,
+inner 0-2) and a 16:9-shaped triple (inner 3-5, matching row 2's first
+three exactly); row 1's nonzero entries (inner 3-5 only) are all square
+(1:1-shaped). This looks like the table is organized by aspect-ratio
+family in the inner index with the size (large/medium/small) as a
+sub-position within each family-of-three, and the outer index may
+select *which combination of families is valid for that row* rather
+than being "quality" in the builder's sense -- consistent with row 3
+being all-zero the same way the builder's own areas 1 and 3 are (F-057/
+F-078). Not confirmed; flagged for whoever maps the remaining sibling
+tables (F-112's other ~8 offsets) next, since the same index puzzle
+will recur there.
+
+Confidence high for the raw table contents and the three exact matches
+(direct memory reads, verified programmatically against F-118's full
+output set, not eyeballed); low for the aspect-family index theory above
+-- explicitly not proven, offered as a lead. Method: direct remote
+memory read after ordinary simulated startup, no diagnostic call, no
+firmware modification; SHA-256 and QEMU checkout verified before and
+after. No firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

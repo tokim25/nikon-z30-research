@@ -62,9 +62,13 @@ Build 1. **F-118 did the live-simulator-read step for the geometry math
 itself**: re-running F-078's existing script confirms F-114's center-is-
 midpoint claim against real execution across all 15 tested combinations
 (not a sample), and fully explains the final-output-size field's `(0,0)`
-pattern as a consistent "no resize" sentinel. The caller/save-path
-question is unchanged by this -- still the actual remaining gap, and
-still not re-attempted after its classifier stop.
+pattern as a consistent "no resize" sentinel. **F-119 then read F-112's
+RAM-resident width/height table directly** (real values, cross-matching
+three of F-118's outputs exactly) but found the table's own indexing
+doesn't match the builder's (quality,area) byte values the simple way --
+flagged, not solved, for whoever maps the remaining sibling tables next.
+The caller/save-path question is unchanged by either -- still the actual
+remaining gap, and still not re-attempted after its classifier stop.
 
 The owner approves merges; nobody merges their own PRs. Check main again
 before allocating F-115.

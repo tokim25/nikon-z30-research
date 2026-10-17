@@ -571,6 +571,19 @@ does not touch the caller/save-path question** -- F-095/F-096/F-103's
 read stands unchanged; this only strengthens confidence in the geometry
 math, which was already high. Full detail in facts.md F-118.
 
+**Update (2026-10-17), F-112's RAM table read directly (F-119):**
+answers F-112's own open question -- real width/height values from the
+table at `0xc18c7de8`, no diagnostic call needed, just a memory read
+after ordinary startup. Three of F-118's non-zero output-size results
+match specific table entries exactly, confirming it's the same data
+source. **One correction worth flagging before anyone maps the
+remaining ~8 sibling tables F-112 found:** the table's (outer, inner)
+indices are not simply the builder's own (quality byte, area byte) --
+F-118 held quality constant across all three matches but the matching
+outer row varied. A rough aspect-family grouping (DX/16:9/1:1 clusters
+within the 6-entry rows) is offered as an unproven lead, not a solved
+mapping. Full detail in facts.md F-119.
+
 ## Lane 3: AE-L/AF-L subject tracking (new section, 2026-10-16)
 
 This lane didn't have its own section here before -- it was tracked only
