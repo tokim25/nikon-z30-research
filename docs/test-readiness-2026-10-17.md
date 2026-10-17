@@ -10,8 +10,12 @@ No push or merge. Hardware remains **NO-GO** (see
 - Relayed by the session manager (owner update, 2026-10-17): a read-only USB
   identification reports firmware 1.20 (USB version 0x0120). The owner states
   the same firmware is the original file in the private WORK copy.
-- Recorded: identity confirmed at version level (1.20), from USB and owner
-  statement. Not recorded: device serial number.
+- Later relay (session manager): a read-only device-info check with
+  `gphoto2 --summary` reports model Z 30 and version V1.20. The serial number
+  is redacted and not recorded.
+- Recorded: identity confirmed at version level (1.20), through the camera's
+  own identification (read-only) plus the owner's statement. Not recorded:
+  serial number.
 - **Byte-exact match is NOT verified.** The camera's installed image cannot be
   read read-only, so the EG hash check has not been run against the camera.
 - The local EG check remains pending: the owner's file is not in this
