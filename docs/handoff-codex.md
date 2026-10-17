@@ -2,6 +2,168 @@
 
 Known corrections: see [corrections.md](corrections.md).
 
+Owner direction for this checkpoint is recorded in
+[owner-direction-2026-10-17.md](owner-direction-2026-10-17.md): saved crop is an
+on-camera test item, not a blocker for the feature plan. Hardware remains
+NO-GO.
+Before further patch work, use [patch-readiness-checklist.md](patch-readiness-checklist.md)
+to confirm that the hook, inputs, ABI, simulator acceptance, and hardware gate
+are all explicitly accounted for.
+
+## Current session update, 2026-10-17
+
+PR #156 maintenance checkpoint: rebased onto main `c58ac95`; the only manual
+conflict was in `docs/project-status.md`, retaining both main's newer lane
+updates and this branch's evidence. F-135--F-149, owner-direction wording and
+the minimal checklist are preserved. All 123 unit tests, artifact and encoded-
+data checks, and `git diff --check` passed. No new research or experiment ran.
+
+Clean stopping point, requested by owner/session manager: no new experiment
+is running or scheduled. F-148's measured stack/flag correction passes the
+bounded paired diagnostics; F-149's RAM mappings pass startup comparisons.
+The static filename/getter thread is now closed; saved crop is reserved for
+an owner-approved on-camera test.
+Last full validation: 123 unit tests, artifact/encoded-data checks (including
+new reports directly) and `git diff --check` passed. All changes remain local
+and uncommitted on `codex/firmware-preflight-plan`; no push or PR was made.
+Before publication, include the untracked source/tests/reports in manual
+review: ordinary tracked diff statistics omit them. Older story/roadmap and
+lower handoff status prose remain historical and partly stale; current
+F-128/F-129 reports and project-status.md take precedence. Retain earlier
+private experiment tags as rejected/control evidence; do not load them as
+the current prototype or delete them during cleanup.
+
+Story-level checkpoint requested by owner: neither complete shooting workflow
+is accepted yet. Live-view bars/menu controls have assisted simulator evidence;
+actual saved RAW/JPEG crop and button-driven tracking remain unproved. The
+saved-crop question is now an on-camera test item, not a blocker. Recent
+F-135..F-147 chiefly strengthen preflight and hook review. The persisted-choice,
+quick-menu, in-strip readout and recovery stories remain open. Existing next
+step below is unchanged; no additional experiment ran during this checkpoint.
+
+Owner asked how firmware should be patched and checked before camera loading.
+The proposed offline sequence is in
+[native-firmware-preflight-plan.md](native-firmware-preflight-plan.md).
+Audit completed: [native-package-verifier-audit.md](native-package-verifier-audit.md),
+F-135. The recovered verifier accepted the original and an in-memory inverse
+reproduced the complete original package exactly. Original file unchanged;
+no firmware image written. A new private audit helper lives at WORK's
+`codex-package-roundtrip-audit-private.py`; recovered tools remain unchanged.
+Camera-side authentication/acceptance and CRC regeneration remain untested.
+F-136 implements that reader in `src/nikon_z30_research/package_container.py`;
+see [native-container-validator.md](native-container-validator.md). Synthetic
+rejection tests and the original decoded container pass. All three original
+component hashes were pinned; the unchanged round trip still passes.
+F-137 adds `src/nikon_z30_research/patch_audit.py`, a read-only exact-edit
+comparison; [native-exact-edit-audit.md](native-exact-edit-audit.md) records
+the contract and combined CRC/edit tests. The verified unchanged package
+also passed the empty-manifest baseline with zero changed bytes.
+F-138 composes those checks in `src/nikon_z30_research/preflight.py`, with
+synthetic integration tests and an unchanged original decoded-container
+baseline. See [native-combined-preflight.md](native-combined-preflight.md).
+Reports bind both inputs and the full policy; scope is decoded-container
+only and hardware readiness is not established.
+F-139 traces native body discovery/parser, confirms native effective decode
+masks and CRC table against the desktop algorithms, and finds an additional
+20-byte digest comparison outside our preflight coverage. See
+[native-updater-validation.md](native-updater-validation.md). Main EG is
+execution type 3; its handoff reaches relocated Thumb target `0xc2b10cd5`,
+not yet mapped back to source. No actual flash operation is verified.
+F-140 resolves the selector as the parser's encoded-format flag, carried in
+the per-file cache and restored on selection. The verified original predicts
+flag 1 and the extra-digest path after successful record restore; no runtime
+transition was observed. Message boundaries and suffix configuration are
+traced, but the eight bytes read from `0x10000088` remain unmapped. See
+[native-updater-digest-inputs.md](native-updater-digest-inputs.md).
+F-141 checks the startup page table and all 18 scatter records: the digest
+address maps to itself below EG, and no copy/clear covers it. This records
+the missing-input boundary, not an exhaustive later-remapping audit. Do not
+repeat literal/offset searches without new evidence. The updater RAM block
+is now mapped: ROM `0x12079f00` -> RAM `0xc2b10000`, length `0xfb0`;
+entry `0xc2b10cd5` corresponds to EG offset `0x0205abd4` (Thumb address
+`0x1207abd4` in ROM mapping). See
+[native-boot-mapping-boundary.md](native-boot-mapping-boundary.md).
+F-142 traces the native callback into erase/program/readback code. The
+initialized EG target is `0x10020000..0x12960000` (end exclusive), capacity
+43,253,760 bytes; EG payload excludes its two CRC bytes, and 9,314,248 tail
+bytes are filled with FF. Erase starts with the leading 128 KiB chunk;
+programming writes that chunk last. No updater function was executed.
+See [native-install-span.md](native-install-span.md). `0x1011a028` adjusts
+mapping; the worker handoff uses callback `0xc2b10c8b` via `0x101a27f4`.
+F-143 implements `installation.py` and integrates an optional policy into
+preflight. The model checks CRC exclusion, padding, target/protected bounds,
+chunk ordering and an expected full-span hash without constructing an image.
+Synthetic tests and the audited unchanged original baseline pass. See
+[native-installation-model.md](native-installation-model.md).
+F-144 reviews the existing F-101 overlay and later private revision read-only.
+Checked file/install bounds, branches, literal loads and displaced returns
+pass; both revisions retain a saved LR word at the state wrapper's stock
+service call, shifting its entry SP and stack-argument view by four bytes.
+Condition 3 does not pass. See [native-xpan-contract-review.md](native-xpan-contract-review.md).
+F-145 implements a supplied-boundary checker and synthetic operation tests:
+restoring the complete incoming frame before tail transfer passes; residual
+stack words, register/stack corruption and wrong returns fail. This is an
+abstract contract only; no actual wrapper implementation is approved. See
+[native-call-contract-tests.md](native-call-contract-tests.md).
+F-146 checks a private textual layout: 40-byte state wrapper plus 8-byte
+writer fits the 52-byte candidate span with four bytes spare. Fourteen forms,
+six branch distances and two literal displacements pass. Writer entry moves
+four bytes and its hook must be retargeted; no overlay was produced. See
+[native-xpan-layout-proposal.md](native-xpan-layout-proposal.md).
+F-147 executes the throwaway correction in paired pinned-QEMU processes.
+Final branches and loaded file hashes pass. Both state branches preserve
+stock service-entry r0-r12/SP/LR/caller stack; the other-screen branch still
+returns changed NZCV and fails F-145. The relocated writer consumes the same
+working return frame and reaches its original return target; scratch LR and
+flags are not certified. See [native-xpan-abi-experiment.md](native-xpan-abi-experiment.md).
+F-148 corrects application-status preservation in a throwaway overlay. Both
+state branches pass F-145 with entry flags additionally required; writer
+frame/result/return flags match the baseline. Scratch writer LR differs but
+its saved return target and mode match. No global condition-3 acceptance;
+finite assisted diagnostics only. See
+[native-xpan-flags-remediation.md](native-xpan-flags-remediation.md).
+F-149 restarts saved-crop research with verified initialized RAM addresses
+for F-110's two filename tables. Both four-pointer blocks and F-112's
+eight-word geometry header match their mapped sources after stock assisted
+startup. Nearby RAM references now exist, but reviewed ones do not yet read
+the filename-pointer fields. No save path or cropped file is established.
+See [native-save-table-ram-mapping.md](native-save-table-ram-mapping.md).
+Single next step: trace actual filename-pointer-field loads using these RAM
+addresses/module anchors, then follow their request toward file creation or
+serialization. Require a field load before naming a consumer; do not resume
+the retired builder-caller or SD-model threads.
+Missing native digest input
+and natural lifecycle/saved-crop gaps remain open.
+Private reproducible helpers:
+`$WORK/codex-boot-mapping-audit-private.py` and
+`$WORK/codex-native-updater-audit-private.py` (use WORK/analysis-env Python,
+PYTHONPATH=src). Runtime/file mapping and instruction review remain open.
+Latest private helper: `$WORK/codex-install-span-audit-private.py`.
+Overlay review helper: `$WORK/codex-xpan-contract-audit-private.py`; it reads
+the two existing overlays only and writes no overlay or firmware bytes.
+Layout helper: `$WORK/codex-xpan-layout-proposal-private.py`; captures textual
+assembler output in memory only. No final encoding or execution is verified.
+F-147 helpers: `$WORK/codex-xpan-abi-experiment-private.py` and
+`$WORK/codex-xpan-abi-compare-private.py`. Final paired fixture tag `03`;
+earlier tags `01`/`02` did not establish settled bars-on controls. New private
+overlay files exist under WORK inputs only; no combined firmware image exists.
+F-148 helpers: `$WORK/codex-xpan-flags-experiment-private.py` and
+`$WORK/codex-xpan-flags-compare-private.py`, passing paired tag `01`.
+The shared private ABI runner now reads writer location from the supplied
+manifest, retaining reproduction of its earlier layout.
+F-149 helper: `$WORK/codex-save-table-ram-audit-private.py`, recorded tag `01`.
+Both user features remain incomplete. The saved-crop path is the active
+research priority after the measured stack/flag remediation.
+No candidate image, commit, push or PR was produced.
+
+Correction to the older pending-review notes below: hardware-readiness.md now
+records the independent dissenting review and remediation attempt. The owner
+accepted a Claude session as the reviewer. The review found condition 1 only
+partly met, and remediation (a) did not reach the guard/mask. Feature build
+work remains gated pending further evidence or an explicit owner deviation.
+The complete XPan build also lacks a verified saved-crop path. Hardware remains
+NO-GO. Do not resume retired simulator event-poster archaeology by default.
+
 Rewritten 2026-10-16 by Claude, with the owner's explicit approval to edit
 this Codex-owned file (a lane exception, same as PR #50). Read this file,
 then [facts.md](facts.md), [project-status.md](project-status.md) and
@@ -20,7 +182,7 @@ project's own simulator. A card-detect/SD-command-enumeration thread
 (F-102, F-104) was explored this session and retired for exactly this
 reason — see "Lane 2" below for where it stopped and why.
 
-Main carries facts through **F-114**; check main before allocating F-115.
+Main carries facts through **F-114**; check main before allocating F-135.
 Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,
@@ -352,6 +514,11 @@ evidence moves the owner's call is the owner's decision, not something this
 pass claims to have resolved.
 
 ## Lane 2: saved-crop (does a saved RAW/JPEG actually come out cropped?)
+
+This remains an on-camera test item, not a blocker for feature work. Static
+the static filename/getter thread is now dropped: Claude's F-131--F-134
+searches found no concrete route. Any simulator run requires the owner's
+approval, and hardware remains NO-GO until separately authorized.
 
 Claude worked this in its own worktree (`nikon-savedcrop`, branch
 `claude/saved-crop-research`, now idle and available to reuse or ignore),
