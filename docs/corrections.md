@@ -100,4 +100,26 @@ it, date.
   `F-###` entries, which that file's append-only rule forbids editing in
   place -- those links now point at deleted filenames. See the
   docs-consolidation PR body for the specific `F-###` entries affected.
+
+  Old filename -> new filename, for resolving any broken link found in a
+  `facts.md` entry:
+
+  | Old filename | New filename |
+  | --- | --- |
+  | `tracking-input-source.md` | `tracking-input-chain.md` |
+  | `tracking-input-sampler.md` | `tracking-input-chain.md` |
+  | `tracking-input-records.md` | `tracking-input-chain.md` |
+  | `tracking-numeric-input-route.md` | `tracking-input-chain.md` |
+  | `tracking-queued-bank-route.md` | `tracking-input-chain.md` |
+  | `tracking-input-bank-selection.md` | `tracking-input-chain.md` |
+  | `tracking-dispatch-registration.md` | `tracking-input-chain.md` |
+  | `tracking-screen-stack.md` | `tracking-screen-state.md` |
+  | `tracking-registry-mode-state.md` | `tracking-screen-state.md` |
+  | `tracking-mask-namespaces.md` | `tracking-screen-state.md` |
+  | `tracking-ui-event-router.md` | `tracking-screen-state.md` |
+  | `tracking-sampler-consumers.md` | `tracking-sampler-payload.md` |
+  | `tracking-liveview-payload.md` | `tracking-sampler-payload.md` |
+
+  (`tracking-entry-research.md` and `tracking-feature-plan.md` were not
+  renamed; links to those two are unaffected.)
 - **Date:** 2026-10-16.
