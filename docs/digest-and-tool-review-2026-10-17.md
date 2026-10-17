@@ -55,3 +55,18 @@ directory outside the repo. Hardware remains **NO-GO**.
 - Top risk: an accidental firmware-update or write operation through a generic
   PTP tool. Do not connect the camera for a readback until a reviewed method
   exists.
+
+## 4. Digest test on the scratch copy: unresolved
+
+- Decoded components of the owner's original: `ex2090_012000.bi` (524,290
+  bytes), `_tpj04_v10a5.bin` (32,802 bytes), `eg2090_0120a0.bi` (33,939,514
+  bytes). Their offsets and sizes are recorded; no bytes are recorded.
+- Plain SHA-1 over the outer prefix-stripped package, the decoded body, and the
+  raw package does not equal the expected 20-byte digest. Appending eight bytes
+  from the EX or EG components at offset 0x88, or from the decoded body,
+  also does not match.
+- The expected digest includes the metadata transform at `0x101d3f14` that
+  the native checker applies to the eight-byte input. That transform is not
+  reproduced here, so the digest is not resolved.
+- Conclusion: the digest input at `0x10000088` remains unresolved. No local
+  copy is built on this basis.
