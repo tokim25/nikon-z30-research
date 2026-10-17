@@ -16,14 +16,18 @@ remaining thread (who posts the live-view trigger event) as a
 deliberately-dropped simulator-reachability question, not a real-
 firmware gap.
 
-**Owner call, pending review:** the owner has called build-gate condition
-1 satisfied for Lane 1 (see hardware-readiness.md's new section for the
-exact evidence and the one ambiguity it rests on). **This does not
-authorize any build-phase work yet** -- a dissenting review from Codex,
-run as its own independent session, is required first and must be
-recorded in hardware-readiness.md before proceeding; not yet done. F-109
-is on `claude/f109-event-origin-deadend`; the condition-1 call and
-dissenting-review requirement are on `claude/condition1-owner-call`.
+**Owner call, dissenting review recorded, audit fix-and-retest done
+(F-115):** the owner called build-gate condition 1 satisfied for Lane 1;
+the required dissenting review (PR #144) disagreed as worded, and a
+separate instruction-level audit (PR #145) found three things to fix.
+F-115 fixes two of the three in a private generator copy, re-runs every
+simulator control against the rebuilt overlay (all pass), and re-attempts
+the dissenting review's cheapest natural-path remediation option against
+the fixed overlay, reaching the guard and mask for the first time outside
+a diagnostic call (see hardware-readiness.md's new follow-up section).
+**Condition 1's status is unchanged** -- still not satisfied as worded;
+the owner's call is still pending on that review, and this pass does not
+claim to resolve it.
 
 **Lane 2's capture-descriptor question is accepted as settled toward the
 settings/property-dispatch reading (F-106) -- meaning the real save-crop
