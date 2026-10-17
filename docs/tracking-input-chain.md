@@ -663,11 +663,14 @@ rY, #8`-style extraction. Found one real, cleanly-decoded hit
 text/string-formatting routine (ASCII-range checks on a character buffer),
 not a property dispatcher -- unrelated to `0x2021`/`0x2087`.
 
-**This rules out only the one masking idiom tried**, not option 2 as a
-whole: an `and`/`and.w #0xff00` mask, a bitfield-extract instruction, or a
-`tbb`/`tbh` range-dispatch table keyed on the high byte were not attempted
-and remain open. Option 1 (live simulator breakpoint on `0x10475ecc`) also
-remains untried and is probably the more direct next step either way.
+Two more idioms tried in the same pass: `ubfx` bitfield-extract (zero
+hits) and `and #0xff00` (two raw hits, both false positives on inspection
+-- ordinary peripheral-register-programming code, not dispatch). **Three
+of four plausible static masking idioms are now exhausted with nothing
+found**; only a `tbb`/`tbh` range-dispatch table keyed on the high byte
+remains untried, and it needs a different search (locate jump tables
+first) rather than a quick extension of this scan. Option 1 (live
+simulator breakpoint on `0x10475ecc`) is now the more promising next step.
 Full detail in facts.md F-116.
 
 Method: read-only static decode (capstone, Thumb), full-image instruction

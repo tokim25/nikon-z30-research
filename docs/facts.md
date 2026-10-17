@@ -2419,16 +2419,32 @@ project has traced elsewhere (F-090, F-106, this file's `0x2021` entries).
 **This does not resolve Lane 3's handoff point.** It rules out the one
 specific masking idiom this scan checked (`lsr #8` immediately feeding a
 `cmp #0x20`) as a way to find `0x2021`'s consumer by this method, in the
-sense that the only clean hit it produced is provably unrelated. It does
-not rule out other masking idioms (`and`/`and.w` with `#0xff00`, a
-bitfield-extract instruction, or a `tbb`/`tbh` range-dispatch table keyed
-on the high byte) -- those were not attempted this pass. Confidence high
-for the one real hit's unrelatedness (read its full enclosing function);
-the negative result for this one idiom is otherwise as exhaustive as a
-single-idiom full-image scan can be. [tracking-input-chain.md](tracking-input-chain.md)'s
+sense that the only clean hit it produced is provably unrelated. Confidence
+high for the one real hit's unrelatedness (read its full enclosing
+function); the negative result for this one idiom is otherwise as
+exhaustive as a single-idiom full-image scan can be. Method: read-only
+static decode only; no firmware bytes recorded.
+
+**Same pass, two more idioms tried, same result.** `ubfx rX, rY, #8, #8`
+(a Thumb-2 bitfield extract of bits [15:8]) feeding a `cmp rX, #0x20`
+within a short window: zero hits anywhere in the image. `and`/`and.w rX,
+rY, #0xff00` feeding a `cmp rX, #0x2000`: two raw hits (`0x11db2d78`,
+`0x11e38b10`), both artifacts of the same matching-script limitation (an
+intervening register overwrite -- here, a reload and a *different* mask,
+`#0x3800` -- the script didn't treat as breaking the chase). Reading both
+sites' context shows ordinary peripheral/register-programming code (a
+sequence of helper calls with small integer argument setup, e.g.
+`mov.w r2, #0x800`/`#0x700`/`#0x3800`), not event/property dispatch of any
+kind. Three masking idioms tried now (`lsr #8`, `and #0xff00`, `ubfx`),
+zero genuine property-dispatch hits among them.
+
+A `tbb`/`tbh` range-dispatch table keyed on the high byte was not
+attempted -- it requires first locating candidate jump tables and decoding
+their index expression, a meaningfully different (and more involved)
+search than the three direct-compare idioms above, not a quick addition to
+this same scan. [tracking-input-chain.md](tracking-input-chain.md)'s
 option 1 (live simulator breakpoint on the post primitive `0x10475ecc`)
-remains untried and is probably the more direct next step; so is
-retrying option 2 with the other masking idioms named above. Method:
-read-only static decode only; no firmware bytes recorded.
+remains untried and, given three of four plausible static idioms are now
+exhausted with nothing found, is the more promising next step.
 
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
