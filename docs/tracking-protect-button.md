@@ -660,3 +660,75 @@ Validation: all 54 standard unit tests, both artifact scripts, and
 
 Written by Claude (Sonnet 5.5), continuing on this branch, in
 collaboration with Tony Kim.
+
+## 2026-10-16: the label-ID table is bounded and (likely) per-context, not global
+
+Traced where the `0x1cXX`/`0x1dXX` label-id values actually go, picking up
+this pass's own open item. Read-only static decode only.
+
+Both dispatcher tails (`0x1045f7c8` and `0x1045d54c`) pass the id through
+to `0x1045c968(object, id)`. That function is a **bounded linear search**:
+it reads a row count from `[[object+0x28]+0x14]` (a 16-bit field), walks
+rows of a 28-byte stride starting from `[[object+0x28]+0xc]`, matches the
+target id against a 16-bit field at each row's offset `+0x18`, and
+**returns NULL if no row matches** -- the lookup fails gracefully (no
+crash), it just silently produces no label/preview, rather than looking
+anything up dynamically or falling back to a default.
+
+Two things follow from this:
+
+1. **The table is bounded by a count field, not open-ended.** A value
+   that isn't already a row cannot resolve, so simply inventing a new
+   `0x1cXX`-style constant and writing it into a new `cmp`/`beq` case
+   (as the prior section assumed) would resolve to NULL and silently
+   fail to show a label/preview -- it would not crash, but it would not
+   work either. Either an existing row's id must be reused, or a new row
+   must be added to this table (increasing its count field), which is a
+   firmware *data* change, not just a code change, and needs its own
+   safety consideration (same category of question as Lane 1's "safe
+   place to add instructions," but for data/table space instead).
+2. **The table pointer comes from the passed-in object**
+   (`[object+0x28]`), not a fixed global address. This is consistent with
+   each settings-screen or context having its *own* local table of valid
+   preview rows, which would mean the three different ids found in the
+   prior section (`0x1ca5`, `0x1ca6`, `0x1cd8`) are not interchangeable
+   even if they described the same text -- they may belong to three
+   separate per-context tables, not three entries in one shared table.
+   **Not yet confirmed**: whether AE-L/AF-L's own settings-screen object
+   points at the same table as any of the three already-found handlers
+   (in which case reusing an existing id might actually work), or a
+   distinct one (in which case a new row is unavoidable). This requires
+   identifying AE-L/AF-L's own screen/context object and checking its
+   `+0x28` table pointer against the other three handlers' -- not done
+   in this pass.
+
+### Updated coordinated-change picture
+
+Item 1 from the prior section's three-piece plan now has a more precise,
+and slightly more cautious, shape:
+
+1. **Menu/assignment:** the two setter stubs are unchanged (confirmed
+   templates exist). The display case is **not** simply "add a cmp/beq
+   with a new constant" -- it is contingent on resolving whether AE-L/
+   AF-L's context shares a table with an existing tracking-capable
+   handler (reuse, no data change) or not (new row required, a data-
+   table change needing its own review). This is now the single most
+   important open question for the menu side.
+2. **Action dispatch** (unchanged): `0x10369468` needs a `0x4d` case;
+   `0x10368b6e`'s accepted-input set needs `0x0d`.
+3. **Press-edge gate** (unchanged): the `0x102f1dbc`/`0x102f1dc0`
+   boundary.
+
+Not yet done: identifying AE-L/AF-L's own settings-screen object and its
+`+0x28` table pointer, comparing it against the three handlers already
+traced, and -- if a new row genuinely is required -- finding whether
+zero-filled or otherwise safe space exists near that table for one more
+28-byte row (the same category of check Lane 1's instruction-space
+search did, applied to data instead of code).
+
+Validation: all 54 standard unit tests, both artifact scripts, and
+`git diff --check` passed before this edit. No commit was pushed to
+`main`; no merge is authorized from this checkpoint.
+
+Written by Claude (Sonnet 5.5), continuing on this branch, in
+collaboration with Tony Kim.
