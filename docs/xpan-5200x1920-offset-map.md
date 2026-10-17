@@ -80,3 +80,18 @@ exact manifest for the checker. Neither has been done.
   change for an exact 5200 x 1920 window is not determined.
 - Stock baseline in the same run: DX and 16:9 windows unchanged.
 - Digest input at `0x10000088`: still open.
+
+## Target 5208 x 1928 (offsets 8, 8): records and output check (2026-10-17)
+
+- Records that determine the large window: the 1:1 readout records at index
+  4 (`0x115a4d9c`, EG file offset) and index 14 (`0x115a4e14`), set to
+  5216 x 1936 in the probe. The large window follows these, not the output
+  record.
+- Output record at index 9 (`0x115a4dd8`): setting it to 5208 x 1928 leaves the
+  large window at 5208 x 1928, offsets (8, 8), and DX and 16:9 unchanged.
+  The output record is consistent with the target but does not drive it.
+- Medium and small windows with these records are 3900 x 1440 and 3906 x 1446,
+  not 65:24-exact at the same offsets; their target values are not settled.
+- Not buildable yet: the digest input at `0x10000088` is open, and the change
+  must be expressed as an exact manifest over the ROM-mapped records, which has
+  not been written or checked.
