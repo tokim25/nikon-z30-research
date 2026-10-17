@@ -83,3 +83,24 @@ that key. This names the receiver to hook. Do not add simulator probes first.
 - No hardware, no camera, no flashing. No firmware changes.
 
 Written by Claude (Haiku 5.5) in collaboration with Tony Kim.
+
+## Simulator reachability of the AE-L/AF-L press (first result)
+
+**The simulator cannot deliver an AE-L/AF-L press.** Read-only check of
+the pinned simulator's input path (`tools/gui.py`): the only keys sent are
+up, down, left, right, OK and back, mapped to event codes `0x253`, `0x254`,
+`0x257`, `0x258`, `0x27e` and `0x255`. The browser and keyboard handlers
+accept only those. No AE-L/AF-L, shutter, i-menu or info key exists in the
+map, matching the recorded key-set limit (facts F-097 note).
+
+A raw diagnostic injection into the key dispatcher `0x103ce96e` is possible
+in principle, but it would post a synthetic event code, not a press. No code
+for AE-L/AF-L is established, so that would not be a test of the button.
+No simulator run was made.
+
+### On-camera test item (not simulator-verifiable)
+
+- Press and hold AE-L/AF-L on a real Z30 running stock C 1.20 with a
+  subject in view. Record whether the reticle tracks the subject, the
+  release behavior, and whether a second press cancels. Requires the real
+  camera. Not run here; no camera contact was made.
