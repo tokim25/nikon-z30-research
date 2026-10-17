@@ -557,6 +557,20 @@ is still the fresh thread opened in F-110; do not revisit the retired
 record-builder chain (F-095 through F-106) or F-111's `0x1034exxx`
 module without new evidence pointing back to either.
 
+**Update (2026-10-17), the live-simulator-read step done for the center
+field (F-118):** re-ran F-078's existing, unmodified diagnostic-call
+script against the builder. F-114's claim that the `+0xc`/`+0xe` field
+is the exact midpoint of the top-left and bottom-right corners is now
+confirmed by live execution, not just static algebra, for two real
+cases (area 4/1:1, large and medium quality bytes). One open detail
+flagged, not a contradiction: the `+0x18`/`+0x1a` final-output-size
+field reads `(0, 0)` at the large quality byte but matches the
+bottom-right corner at medium -- not checked against F-112's table row
+directly, low cost to close if anyone wants to. **Still does not touch
+the caller/save-path question** -- F-095/F-096/F-103's read stands
+unchanged; this only strengthens confidence in the geometry math, which
+was already high. Full detail in facts.md F-118.
+
 ## Lane 3: AE-L/AF-L subject tracking (new section, 2026-10-16)
 
 This lane didn't have its own section here before -- it was tracked only

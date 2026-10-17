@@ -58,9 +58,12 @@ the builder's seven callers reaches a real save -- dropped, not
 retried; F-095/F-096 already characterized all seven and that read is
 unchanged (none confirmed as a save path, the most-traced one leaning
 away from it). This remains the single biggest open research gap for
-Build 1; the remaining concrete step is a live simulator read (the
-RAM-resident table, or the rectangle during an actual capture attempt),
-not more static search.
+Build 1. **F-118 did the live-simulator-read step for the geometry math
+itself**: re-running F-078's existing script confirms F-114's center-is-
+midpoint claim against real execution for two cases, not just static
+algebra. The caller/save-path question is unchanged by this -- still
+the actual remaining gap, and still not re-attempted after its
+classifier stop.
 
 The owner approves merges; nobody merges their own PRs. Check main again
 before allocating F-115.

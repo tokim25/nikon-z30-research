@@ -2512,4 +2512,45 @@ decode (capstone, Thumb); firmware hash and QEMU checkout verified
 before and after; no firmware bytes, overlay bytes or disassembly
 committed to the repo.
 
+F-118. Picks up Lane 2's own named next step (project-status.md: "a live
+simulator read ... not more static search") rather than Lane 3's. Re-runs
+F-078's existing diagnostic-call script against the crop-window builder
+`0x101d5b36` (no script changes -- it already reads back all 14 output
+shorts, covering every field F-113/F-114 later labeled) and checks the
+fresh numbers against F-114's centering formulas for the first time.
+
+**F-114's center claim is now confirmed by live execution, not just
+static algebra, for two real cases.** Area 4 (1:1), quality byte `0`
+(large): top-left `(8, 8)`, bottom-right `(3720, 3720)`, and the `+0xc`/
+`+0xe` field reads exactly `(1864, 1864)` -- the arithmetic midpoint of
+those two corners, matching F-114's claim exactly. Area 4, quality byte
+`1` (medium): top-left `(0, 0)`, bottom-right `(2784, 2784)`, and `+0xc`/
+`+0xe` reads `(1392, 1392)` -- again the exact midpoint. Both are live
+register-and-memory results from a real diagnostic call, not inference
+from decoded instructions.
+
+**One open detail, not a contradiction, flagged for whoever looks at
+Lane 2 next.** Area 4's `+0x18`/`+0x1a` ("final output width/height" per
+F-114) read `(0, 0)` at quality byte `0` (large) but `(2784, 2784)` --
+matching the bottom-right corner exactly, since top-left is `(0,0)` here
+-- at quality byte `1` (medium). Whether `(0,0)` at the large size means
+"no additional resize, a consumer should use the crop window's own
+dimensions instead" or something else was not checked; F-112's
+`(area, quality)` table was not read directly for this row to confirm
+which case it is. Low cost if anyone wants to close it: read the ROM
+table row directly (it's static data at a known address family, F-112),
+no live call needed.
+
+**This does not change the caller/save-path question.** F-095/F-096
+still stand: six of the builder's seven callers build small display/menu
+structs, and the seventh (the one genuinely ambiguous one) leans toward a
+settings/property handler per F-103, not a capture descriptor. This fact
+only strengthens confidence in the geometry math itself, which was
+already high; it does not touch which caller, if any, is a real save
+path -- that remains dropped per the classifier-stop handling already on
+record (F-114), not reattempted here. Method: re-run of an existing,
+unmodified private script (simulator only, scratch memory, restored after
+each call); SHA-256 and QEMU checkout verified before and after. No
+firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
