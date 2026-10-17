@@ -5,7 +5,19 @@ No push or merge. Hardware remains **NO-GO** (see
 [hardware-readiness.md](hardware-readiness.md) and
 [build-phase-gate.md](build-phase-gate.md)).
 
-## Exact-firmware identity check: NOT RUN
+## Exact-firmware identity: version level only
+
+- Relayed by the session manager (owner update, 2026-10-17): a read-only USB
+  identification reports firmware 1.20 (USB version 0x0120). The owner states
+  the same firmware is the original file in the private WORK copy.
+- Recorded: identity confirmed at version level (1.20), from USB and owner
+  statement. Not recorded: device serial number.
+- **Byte-exact match is NOT verified.** The camera's installed image cannot be
+  read read-only, so the EG hash check has not been run against the camera.
+- The local EG check remains pending: the owner's file is not in this
+  environment, so `require-verified-eg` has not run.
+
+## Exact-firmware identity check: local file check NOT RUN
 
 - The owner's original package is not present in this environment. The
   `WORK` variable is unset, and a bounded search of the home directory for
@@ -38,6 +50,6 @@ PYTHONPATH=src python3 -m nikon_z30_research require-verified-eg /path/to/extrac
 
 ## Result
 
-Test readiness is **not achieved**. The identity check is the first blocker,
-and the digest input is the principal technical blocker. Neither can be
+Test readiness is **not achieved**. Version-level identity is recorded;
+byte-exact identity is unverified, and the digest input is the principal technical blocker. Neither can be
 cleared by this session.
