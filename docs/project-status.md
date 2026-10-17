@@ -5,10 +5,10 @@ the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
 
-Main carries facts through **F-113**. F-101 merged via PR #119; F-102/F-103
+Main carries facts through **F-114**. F-101 merged via PR #119; F-102/F-103
 via PR #123; F-104 via PR #124; F-105 via PR #126; F-106 via PR #127;
 F-107 via PR #128; F-108 via PR #129; F-110 via PR #138; F-111 via PR
-#139; F-112 via PR #140. The SD-card-
+#139; F-112 via PR #140; F-113 via PR #141. The SD-card-
 detect/enumeration thread (F-102, F-104) is retired per owner direction
 (see AGENTS.md's "Priority" section and handoff-codex.md). Lane 1's
 mode-state chain is resolved through F-108; F-109 closes the one
@@ -34,21 +34,21 @@ F-110 opened a fresh angle (the firmware's actual file-naming system).
 F-111's property module was dropped on direct check (no image-area
 reference). F-112 found the real geometry table family, confirmed via
 image-area property `0x501`'s readers. **F-113 decoded the crop-window
-builder's own body for the first time** (`0x101d5b36`, central to this
-research since F-057, but never previously read internally) -- it calls
-at least six sibling tables from F-112's family to build real
-width/height pairs plus a centered-offset computation, the genuine
-shape of crop-rectangle construction. This substantially deepens
-understanding of the tool, but does not resolve F-097/F-106's
-capture-vs-estimator ambiguity: the builder is shared by all seven
-known callers, and nothing yet says which one reaches an actual save
-versus a preview (Lane 1's live-view work is exactly such a non-save
-context). This remains the single biggest open research gap for Build
-1, with several concrete next steps named in handoff-codex.md rather
-than an open-ended search.
+builder's own body for the first time** (`0x101d5b36`). **F-114
+completes the picture**: the centering arithmetic resolves to an
+unambiguous crop-rectangle descriptor (top-left corner, bottom-right
+corner, their center, final output size), and the gate function is
+trivial. A response-safety-classifier stop blocked checking which of
+the builder's seven callers reaches a real save -- dropped, not
+retried; F-095/F-096 already characterized all seven and that read is
+unchanged (none confirmed as a save path, the most-traced one leaning
+away from it). This remains the single biggest open research gap for
+Build 1; the remaining concrete step is a live simulator read (the
+RAM-resident table, or the rectangle during an actual capture attempt),
+not more static search.
 
 The owner approves merges; nobody merges their own PRs. Check main again
-before allocating F-114.
+before allocating F-115.
 
 **Lane 3 (AE-L/AF-L tracking) now has a proper section in handoff-codex.md
 for the first time**, with a concrete handoff point: a real event-code

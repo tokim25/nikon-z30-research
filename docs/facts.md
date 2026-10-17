@@ -2249,4 +2249,63 @@ xref scan (`rom_xrefs.py`) on the confirmed geometry-table function,
 SHA-256 checked first; addresses and offsets only, no firmware bytes
 recorded.
 
+F-114. Completes two of F-113's three open items; the third hit a
+response-safety-classifier stop and was dropped rather than retried,
+per this project's established handling of that situation (same as
+Lane 1's three-stop pattern on a different sub-question).
+
+**The centering arithmetic (F-113's incomplete item) is now fully
+resolved.** Labelling the three lookup results `0x1020c07c` ->
+`(W1,H1)`, `0x1020c128` -> `(W2,H2)`, `0x1020c17e` -> `(W3,H3)`, the six
+stored fields work out (treating the rounding adjustments as exact
+halving) to:
+
+| Offset | Value | Meaning |
+| --- | --- | --- |
+| `+0x10`/`+0x12` | `(W2+W3, H2+H3)` | top-left corner |
+| `+0x14`/`+0x16` | `(W1+W2-W3, H1+H2-H3)` | bottom-right corner |
+| `+0xc`/`+0xe` | `(W2+W1/2, H2+H1/2)` | the exact midpoint of the two corners above -- the window's center |
+| `+0x18`/`+0x1a` | F-112's table, `(area, quality)` | final output width/height |
+
+This is an unambiguous crop-rectangle descriptor: a top-left corner, a
+bottom-right corner, their center, and a separate final output size --
+exactly the fields a real crop-and-resize operation needs, not a
+display-label format. Confidence high; this is direct algebra on an
+already-confirmed instruction sequence, not inference.
+
+**The gate function `0x101d5ad0` is trivial and now fully read:** it
+reads a byte at `[input+0x20]` (an operating-mode/state byte on the
+same source object the area byte `[input]` and format byte
+`[input+0x26]` come from) and returns true only for values 0 or 1. The
+centered-rectangle fields (`+0xc` through `+0x1a`) are computed only
+when this mode byte is 0 or 1; any other value zeros them instead. What
+values 0/1 versus 2+ actually represent (e.g. an active-capture state
+versus idle/menu-only) was not established.
+
+**Dropped, not retried, per a response-safety-classifier stop:**
+checking F-057's seven known callers of the crop-window builder for
+which one reaches a real save operation. This exact question does not
+need new work regardless -- F-095 and F-096 already characterized all
+seven: six build small display/menu-info structs (not save paths), and
+the seventh (`0x101d5de8`, inside `0x101d5c54`) is the record-builder
+chain F-096 through F-106 already traced in depth, leaning toward a
+settings/property handler rather than a capture descriptor. The honest
+state is unchanged by this pass: no caller is confirmed as a real save
+path, and the most-traced candidate leans away from being one. Do not
+re-attempt this specific check; if it needs doing, hand it to the owner
+to run in their own terminal (the pattern already established for this
+kind of stop in this project).
+
+Observed static decode on 2026-10-16 for the two completed items,
+confidence high for both. Not yet done: mapping the rest of the
+`0x1020bfxx`/`0x1020cxxx` table family beyond the six confirmed callers
+of `0x101d5b36` itself (F-112 found roughly ten adjacent to
+`0x1020bfda`; F-113 found six more scattered further out, so the true
+extent and total count remain unmapped); and the still-open question of
+which caller, if any, is a real save path -- deliberately not pursued
+further by this session after the classifier stop above. Method:
+read-only static decode (capstone, Thumb) and direct algebra on already-
+confirmed instructions; no new firmware reads beyond what F-113 already
+covered.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
