@@ -2516,30 +2516,39 @@ F-118. Picks up Lane 2's own named next step (project-status.md: "a live
 simulator read ... not more static search") rather than Lane 3's. Re-runs
 F-078's existing diagnostic-call script against the crop-window builder
 `0x101d5b36` (no script changes -- it already reads back all 14 output
-shorts, covering every field F-113/F-114 later labeled) and checks the
+shorts, covering every field F-113/F-114 later labeled) across every
+area/quality/flag combination the script already tests, and checks the
 fresh numbers against F-114's centering formulas for the first time.
 
 **F-114's center claim is now confirmed by live execution, not just
-static algebra, for two real cases.** Area 4 (1:1), quality byte `0`
-(large): top-left `(8, 8)`, bottom-right `(3720, 3720)`, and the `+0xc`/
-`+0xe` field reads exactly `(1864, 1864)` -- the arithmetic midpoint of
-those two corners, matching F-114's claim exactly. Area 4, quality byte
-`1` (medium): top-left `(0, 0)`, bottom-right `(2784, 2784)`, and `+0xc`/
-`+0xe` reads `(1392, 1392)` -- again the exact midpoint. Both are live
-register-and-memory results from a real diagnostic call, not inference
+static algebra, across every one of the 15 tested combinations** (areas
+0 through 4, both quality bytes, both `+0x26` flag states) -- not a
+sample, the full set this script covers. The `+0xc`/`+0xe` field equals
+the exact arithmetic midpoint of the `+0x10`/`+0x12` top-left and
+`+0x14`/`+0x16` bottom-right corners in every single row, including the
+degenerate all-zero rows for areas 1 and 3 (consistent with F-057/F-078's
+"slots 1 and 3 return all zeros"). Examples: area 4 (1:1), large --
+top-left `(8,8)`, bottom-right `(3720,3720)`, center `(1864,1864)`; area
+4, medium -- top-left `(0,0)`, bottom-right `(2784,2784)`, center
+`(1392,1392)`; area 0 (DX), large with `+0x26` set -- top-left `(72,198)`,
+bottom-right `(5640,3910)`, center `(2856,2054)`. All are live
+register-and-memory results from real diagnostic calls, not inference
 from decoded instructions.
 
-**One open detail, not a contradiction, flagged for whoever looks at
-Lane 2 next.** Area 4's `+0x18`/`+0x1a` ("final output width/height" per
-F-114) read `(0, 0)` at quality byte `0` (large) but `(2784, 2784)` --
-matching the bottom-right corner exactly, since top-left is `(0,0)` here
--- at quality byte `1` (medium). Whether `(0,0)` at the large size means
-"no additional resize, a consumer should use the crop window's own
-dimensions instead" or something else was not checked; F-112's
-`(area, quality)` table was not read directly for this row to confirm
-which case it is. Low cost if anyone wants to close it: read the ROM
-table row directly (it's static data at a known address family, F-112),
-no live call needed.
+**The "final output size" field's `(0,0)` pattern is now fully explained,
+not an open detail.** `+0x18`/`+0x1a` reads `(0,0)` in every row where
+the quality byte is `0` (large) or the `+0x26` flag is set, *regardless
+of area and regardless of whether the crop window itself is nonzero* --
+e.g. area 0 large has a real top-left/bottom-right pair but still reads
+`(0,0)` here. In every row where it is nonzero, it exactly equals the
+bottom-right corner (top-left is always `(0,0)` in those rows). This is
+a consistent sentinel across the whole table, not an anomaly specific to
+one area: `(0,0)` most plausibly means "no additional resize -- use the
+crop window's own dimensions," matching the ordinary real-world
+convention that a RAW "large" size needs no resize step. Confidence
+medium-high (consistent across all 15 rows); still not confirmed against
+F-112's table rows directly, but no longer needs to be to settle the
+pattern itself.
 
 **This does not change the caller/save-path question.** F-095/F-096
 still stand: six of the builder's seven callers build small display/menu

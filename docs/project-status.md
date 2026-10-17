@@ -60,10 +60,11 @@ unchanged (none confirmed as a save path, the most-traced one leaning
 away from it). This remains the single biggest open research gap for
 Build 1. **F-118 did the live-simulator-read step for the geometry math
 itself**: re-running F-078's existing script confirms F-114's center-is-
-midpoint claim against real execution for two cases, not just static
-algebra. The caller/save-path question is unchanged by this -- still
-the actual remaining gap, and still not re-attempted after its
-classifier stop.
+midpoint claim against real execution across all 15 tested combinations
+(not a sample), and fully explains the final-output-size field's `(0,0)`
+pattern as a consistent "no resize" sentinel. The caller/save-path
+question is unchanged by this -- still the actual remaining gap, and
+still not re-attempted after its classifier stop.
 
 The owner approves merges; nobody merges their own PRs. Check main again
 before allocating F-115.

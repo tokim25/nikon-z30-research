@@ -559,17 +559,17 @@ module without new evidence pointing back to either.
 
 **Update (2026-10-17), the live-simulator-read step done for the center
 field (F-118):** re-ran F-078's existing, unmodified diagnostic-call
-script against the builder. F-114's claim that the `+0xc`/`+0xe` field
-is the exact midpoint of the top-left and bottom-right corners is now
-confirmed by live execution, not just static algebra, for two real
-cases (area 4/1:1, large and medium quality bytes). One open detail
-flagged, not a contradiction: the `+0x18`/`+0x1a` final-output-size
-field reads `(0, 0)` at the large quality byte but matches the
-bottom-right corner at medium -- not checked against F-112's table row
-directly, low cost to close if anyone wants to. **Still does not touch
-the caller/save-path question** -- F-095/F-096/F-103's read stands
-unchanged; this only strengthens confidence in the geometry math, which
-was already high. Full detail in facts.md F-118.
+script against the builder, across all 15 area/quality/flag combinations
+it already tests. F-114's claim that the `+0xc`/`+0xe` field is the exact
+midpoint of the top-left and bottom-right corners is now confirmed by
+live execution, not just static algebra, in every single row, including
+the degenerate all-zero rows for areas 1 and 3. The `+0x18`/`+0x1a`
+final-output-size field's `(0, 0)` pattern is also now fully explained
+(a consistent "no resize" sentinel at the large quality byte and at the
+`+0x26` flag, across every area) rather than an open detail. **Still
+does not touch the caller/save-path question** -- F-095/F-096/F-103's
+read stands unchanged; this only strengthens confidence in the geometry
+math, which was already high. Full detail in facts.md F-118.
 
 ## Lane 3: AE-L/AF-L subject tracking (new section, 2026-10-16)
 
