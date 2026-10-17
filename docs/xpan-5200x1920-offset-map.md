@@ -54,3 +54,13 @@ exact manifest for the checker. Neither has been done.
   `tools/guest_call.py`) is available but the object setup is not written.
 - Result: the 5200 x 1920 derivation is **not confirmed** in the simulator.
   The output-record question remains open. The digest input stays open.
+
+## Repoint method (F-079/F-080) status
+
+- F-079 and F-080 (2026-10-16) repointed the RAM pointer copy at `0xc18c7de8`
+  for indices 4, 9, 14, 19 and called the builder for area 4. Prior result:
+  large window 5208 x 1928 (offsets 8, 8); not 5200 x 1920.
+- The repro script for that method lives under the private WORK folder, which
+  is not present on this machine. Re-running it, or writing an equivalent
+  harness, needs a memory-write helper and a free RAM region for the scratch
+  records, neither of which is in `tools/`. Blocked; no run made.
