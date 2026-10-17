@@ -28,6 +28,16 @@ approves
 merges; nobody merges their own PRs. Check main again before allocating
 F-110.
 
+**Lane 3 (AE-L/AF-L tracking) now has a proper section in handoff-codex.md
+for the first time**, with a concrete handoff point: a real event-code
+cluster (`0x2006`/`0x2020`/`0x2021`/`0x2087`, near tracking's own `0x2083`)
+was found and is the strongest lead so far, but property `0x2021`'s
+consumer could not be found by exhaustive literal-comparison search (zero
+hits, full image). Two untried next steps (live simulator breakpoint on
+the post primitive, or a masked/family-level static search) are named in
+handoff-codex.md's new Lane 3 section and in `docs/tracking-input-chain.md`.
+This is on `claude/tracking-handoff-property-2021`.
+
 ## Feature state
 
 An assisted simulator prototype now loads a native hook before CPU start and
