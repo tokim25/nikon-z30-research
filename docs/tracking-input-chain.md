@@ -522,3 +522,69 @@ Written by Claude (Sonnet 5.5) in collaboration with Tony Kim, continuing
 Codex's queued-bank-route and input-bank-selection sections above
 (owner-approved lane work, same basis as the handoff-codex.md exception
 used throughout this session).
+
+## 2026-10-16: a real event-code cluster around property 0x2021 (not Bluetooth)
+
+Followed this section's own suggested next step -- decoding the `0x2006`
+touch-input branch's separate callback slot -- rather than chasing
+`0x10379d5a`'s unresolved registration mechanism further. This surfaced a
+different, more promising cluster entirely.
+
+The touch-input dispatcher's callback slot (`global base 0xc28fbf04 + 0x54
+= 0xc28fbf58`, resolved from the literal at `0x10379e58`) has three other
+literal-pool references to its base besides the known touch consumer:
+`0x1037a72c` (inside `0x1037a6fe`, an unrelated setter -- not decoded
+further), `0x1037ab68` (inside `0x1037aae2`), and `0x1037ade4` (inside
+`0x1037ad86`, a string-building helper -- not decoded further).
+
+`0x1037aae2` is its own small event-code dispatcher, structured just like
+`0x10379a68` but with different cases: code `0x2006` exactly reads a
+*different* callback slot (`[literal_base + 0x48]`, a separate global from
+the touch slot above) and calls it if non-null; delta `0x1a` (code
+`0x2020`) tail-branches to `0x103a2a9c`; delta `0x1b` (code `0x2021`)
+tail-branches to `0x103a31a6`; **delta `0x81` (code `0x2087`) tail-
+branches to `0x103a341a`** -- four codes away from this project's known
+tracking code `0x2083`, in the same family.
+
+`0x103a341a` reads a sub-code byte from offset `2` of its event struct and
+dispatches on it (values checked: `1`, `0xf`, `0x10`, `0x11`, `0x12`,
+`0x13`, `0x14`, `0x17`). **Four of these sub-codes -- `1`, `0x10`, `0x12`,
+`0x13`, `0x14` -- all build a small payload (1 to 4 bytes, encoding a
+simple state: zero/one, or one of a handful of small integers) and post
+it as property event `0x2021`** through the shared primitive
+`0x10475ecc`. Sub-code `0x11` is different: it reads one byte from
+`[[r0+4]]`, checks it against `1`, and tail-branches to one of two
+*different* functions (`0x103a3360` or `0x103a2e88`) depending on the
+result -- read-a-state-and-branch shaped, not a post.
+
+This is a materially different and more promising shape than the
+project's one prior tracking-activation lead (the `0x11cf4e90` cluster in
+tracking-entry-research.md), which resolved to Bluetooth/HCI packet
+processing. Here: a touch-input event family (`0x2006`), two adjacent
+state-change codes (`0x2020`, `0x2021`), and a multi-sub-code dispatcher
+(`0x2087`) whose sub-codes nearly all converge on posting a simple
+few-state value into `0x2021` -- the general shape of a toggle or
+lock-style control, not protocol bookkeeping. **This does not establish
+AE-L/AF-L identity.** It establishes a real, non-Bluetooth control
+cluster worth testing against that hypothesis, nothing more.
+
+Observed static decode on 2026-10-16, no classifier stop. Confidence
+high for the bounded code shapes and addresses reported; low for any
+claim about what property `0x2021` actually controls or whether this
+cluster is AE-L/AF-L specifically, Intelligent/other toggle, or something
+else entirely.
+
+Not yet done: decoding `0x10475ecc` (the shared post primitive, to see if
+it reveals anything about the property's consumer) and, more directly,
+finding what *reads* property `0x2021` -- i.e. what branch of firmware
+state actually changes when this event posts. That is the real test of
+the lock/toggle hypothesis, not anything in this event-posting chain
+itself. Sub-codes `0xf` and `0x17` of `0x103a341a` were also not fully
+decoded.
+
+Method: read-only static decode (capstone, Thumb) and literal-pool xref
+scans, SHA-256 checked first; addresses, offsets and event/property codes
+only, no firmware bytes recorded.
+
+Written by Claude (Sonnet 5.5) in collaboration with Tony Kim, continuing
+the section above.
