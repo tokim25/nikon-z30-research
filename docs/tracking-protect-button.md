@@ -885,3 +885,70 @@ Validation: all 54 standard unit tests, both artifact scripts, and
 
 Written by Claude (Sonnet 5.5), continuing on this branch, in
 collaboration with Tony Kim.
+
+## 2026-10-16: an outer per-button RAM-instance table found; stopping the static search here
+
+Followed the widget-descriptor table's own references one hop further.
+This surfaces real structure but confirms the question needs a different
+method, not more static tracing. Read-only static decode only.
+
+### Finding: a regular, 44-byte-stride table of per-button RAM instances
+
+The row-table base addresses found in the prior section
+(`0x1075af14`, `0x1075af28`) are themselves referenced as raw pointer
+words at `0x11fb84bc` and `0x11fb84e8`. Reading the surrounding memory
+finds a clean, regular outer table, stride `0x2c` (44 bytes), structure
+per entry: `[RAM object pointer, packed word, shared manager pointer
+0xc1832d50 (identical across all three entries read), two zero words,
+pointer into the row-table from the prior section]`. The RAM object
+pointers increment by exactly `0x18` (24 bytes) between entries
+(`0xc1872998`, `0xc18729b0`, `0xc18729c8`) -- each button widget type has
+its own dedicated, statically-assigned RAM record, not a shared/reused
+scratch object. The shared manager pointer (`0xc1832d50`) is common
+across every entry checked, plausibly a parent screen/controller object.
+
+The shared callback `0x1045fda1` found in the row table (prior section)
+has **677** raw pointer-word references across the full image -- a
+generic, firmware-wide default handler used by a huge number of unrelated
+widgets, not evidence of anything specific to this button cluster. Worth
+recording so it isn't mistaken for a tracking-specific link in a future
+pass.
+
+### Why this doesn't resolve the open question, and why the static search stops here
+
+The per-button RAM records are only 24 bytes -- too small to contain a
+full preview-table (each preview row alone is 28 bytes, per the prior
+section's `0x1045c968` finding). This means the `[object+0x28]` field
+the display-dispatch functions read cannot belong to one of these small
+per-button records directly; it must belong to a larger object (plausibly
+the shared manager/parent at `0xc1832d50`, or a per-screen object
+constructed when the assignment menu opens), which this static trace
+cannot distinguish from here without guessing.
+
+**This confirms the prior section's own recommendation rather than adding
+a new one:** the remaining question (is the preview table shared across
+all button widgets, or built per-instance per screen) depends on a
+runtime object layout and value that static ROM reading cannot settle by
+further inference -- continuing to guess from table shapes risks
+documenting a plausible-sounding but unverified architecture as fact.
+**Static tracing on this specific question stops here.** Live simulator
+inspection (construct the AE-L/AF-L assignment menu, read the actual
+pointer at the display function's incoming object `+0x28`, compare it
+against the same read for one of the four working buttons) is the next
+real step, not more ROM reading.
+
+### Everything else from this session's passes remains valid and unaffected
+
+To be clear about scope: this open question affects only the menu-
+display label/preview piece (item 1 of the coordinated-change plan).
+The action-dispatch template (prior section, `0x10369468`/`0x10368b6e`)
+and the press-edge gate (`0x102f1dbc`/`0x102f1dc0`, Codex's original
+pass) are unaffected and remain the most concretely specified pieces of
+the plan.
+
+Validation: all 54 standard unit tests, both artifact scripts, and
+`git diff --check` passed before this edit. No commit was pushed to
+`main`; no merge is authorized from this checkpoint.
+
+Written by Claude (Sonnet 5.5), continuing on this branch, in
+collaboration with Tony Kim.
