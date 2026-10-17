@@ -464,4 +464,113 @@ edge gate and native completion cleanup. Preserve mode-1 `0x1187` and
 playback `0x1186` as separate decisions. Do not repeat the completed FIFO,
 decoder or BLE reachability probes. No executable adapter is ready yet.
 
-Written by Codex in collaboration with Tony Kim.
+## 2026-10-16: the menu-side gap confirmed, with a working template
+
+Picked up the single next step above (Claude, continuing on this branch
+per the handoff). Read-only static decode only; no simulator run, no
+firmware modification.
+
+### `0x103d4222` is the display-side mapper, not an option list
+
+This function reads the current value of setting `0x1184` (via
+`0x10465984`, a property getter), then selects a label/preview context
+for the currently-selected function. Values 0-8 are handled by a Thumb
+`tbb [pc, r4]` jump table at `0x103d424a` (9 one-byte entries, confirmed
+by direct read: targets `0x103d42f0, 0x103d4266, 0x103d4266, 0x103d4266,
+0x103d42de, 0x103d42d8, 0x103d42d2, 0x103d42cc, 0x103d4260`). Values 9,
+`0x19` (25), `0x2a` (42) and `0x4e` (78) are each one additional
+`cmp r4,#N; beq <label>` in a linear chain immediately after the `tbb`
+bound check (`cmp r4,#8`). **This function has no case for `0x4d` (77,
+Subject tracking)** -- confirmed by reading every comparison in the
+chain; an unrecognized value falls through to the default path at
+`0x103d4266`. Adding a case does not require `tbb` table expansion (the
+table only covers 0-8); it needs one more `cmp`/`beq` in the existing
+linear chain, the same shape as the four cases already there.
+
+### `0x103d9898`'s stub cluster: zero stubs for 77 under 0x1184/0x1187, four working templates elsewhere
+
+This address opens a long run of tiny setter trampolines, each shaped
+`movs/movw r1, #<value>; movw r0, #<setting>; b.w 0x10465990` (a generic
+property-setter call) or occasionally a two-step variant that also
+writes a sub-setting (`0x1185`) immediately after. A full scan of the
+containing module (`0x103d8000`-`0x103dc000`) for every site loading
+setting `0x1184` or `0x1187` found **26 setter stubs, covering values
+`0, 4, 5, 6, 7, 8, 9, 0x19, 0x2a, 0x2c, 0x4e` -- none of them `0x4d`
+(77)**. This independently confirms, at the menu-assignment level, what
+the prior section already found at the handler level: AE-L/AF-L's
+assignment menu has no wired path to select Subject tracking at all,
+for either mode-0 (`0x1184`) or mode-1 (`0x1187`).
+
+The same scan, widened to `r1 == 0x4d` regardless of setting, found
+**the four buttons that already support tracking each have exactly this
+shape of stub**, matching this file's existing table of tracking-capable
+handlers exactly:
+
+| Stub address | Setting | Matches handler |
+| --- | --- | --- |
+| `0x103d9b62` | `0x114e` | `0x1036951a`'s mode-0 setting |
+| `0x103d9c52` | `0x1150` | `0x1036957c`'s mode-0 setting |
+| `0x103da810` | `0x1302` | `0x1036951a`'s mode-1 setting |
+| `0x103da892` | `0x1304` | `0x1036957c`'s mode-1 setting |
+
+Each is the exact pattern `movs r1, #0x4d; movw r0, #<setting>;
+b.w #0x10465990`. (Two other `r1 == 0x4d` sites, `0x103d8f4e` and
+`0x103db924`/`0x103dbbb8`, use a different calling shape -- `mov r4, r0;
+mov r0, r5; bl 0x10465990` -- for settings not yet identified in this
+pass; not decoded further here.) These four are a working, in-image
+template for exactly the stub this button is missing: the minimum menu-
+side change is two new stubs of this same three-instruction shape, one
+for `0x1184` and one for `0x1187`, each writing `0x4d`.
+
+### What a coordinated change needs, combining this with the prior section
+
+This does not change the prior section's build decision or its warnings
+-- it narrows "trace the option rows" to a confirmed, minimal shape.
+Three independent pieces, all previously identified, now need to move
+together, and none alone is sufficient:
+
+1. **Menu/assignment (this section):** one new setter stub per mode,
+   matching the four-button template exactly, writing `0x4d` to `0x1184`
+   and `0x1187`. One new `cmp`/`beq` case in `0x103d4222`'s display chain
+   so the menu shows the right label/preview once 77 is selected (not
+   decoded here: which label index or preview context the new case
+   should target -- follow the shape of the `0x19`/`0x2a`/`0x4e` cases,
+   not invented).
+2. **Action dispatch (prior section):** `0x10369468` needs a `0x4d` case
+   forwarding to `0x10368b6e`, covering both its callers (`0x103020b4`
+   and the combined-input path `0x10302108`), and `0x10368b6e`'s own
+   accepted-input set needs `0x0d` added alongside its existing
+   `0x0b, 0x28, 0x2c, 0x2d, 0x1b, 0x19` cases.
+3. **Press-edge gate (prior section):** the same-record boundary around
+   `0x102f1dbc`/`0x102f1dc0` is the verified place to read the press
+   edge without substituting a newer global snapshot; AE-L/AF-L's native
+   AF-ON branch (bit 13 of `+0x10`) cannot be reused as a once-per-press
+   trigger on its own (it tests a level, not an edge, per the prior
+   section's finding).
+
+No executable adapter was written in this pass either. This stays a
+documented, coordinated change plan -- not a patch -- consistent with
+the prior section's build decision and the project's offline/read-only
+rules.
+
+### Open after this pass
+
+- Which label/preview target the new `0x103d4222` case should reach
+  (the four-button templates' own display cases were not decoded for
+  their exact label indices).
+- The two `mov r4,r0; mov r0,r5; bl 0x10465990`-shaped `r1==0x4d` sites
+  (`0x103d8f4e`, `0x103db924`, `0x103dbbb8`) and what settings they
+  target -- possibly a third calling convention for the same stub
+  family, not yet resolved.
+- Everything the prior section already listed as open (AF-area/status
+  semantics behind `0x1044dc5a`, `0x1045a47e`'s full operational
+  identity, and runtime/hardware verification of all of the above).
+
+Validation: all 54 standard unit tests, both artifact scripts, and
+`git diff --check` passed before this edit. No commit was pushed to
+`main`; per the owner's existing instruction on this branch, no merge is
+authorized from this checkpoint either.
+
+Written by Claude (Sonnet 5.5), continuing Codex's checkpoint on this
+branch per the owner's handoff in `docs/tracking-claude-handoff.md`, in
+collaboration with Tony Kim.
