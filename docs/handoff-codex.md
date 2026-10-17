@@ -12,6 +12,12 @@ are all explicitly accounted for.
 
 ## Current session update, 2026-10-17
 
+PR #156 maintenance checkpoint: rebased onto main `c58ac95`; the only manual
+conflict was in `docs/project-status.md`, retaining both main's newer lane
+updates and this branch's evidence. F-135--F-149, owner-direction wording and
+the minimal checklist are preserved. All 123 unit tests, artifact and encoded-
+data checks, and `git diff --check` passed. No new research or experiment ran.
+
 Clean stopping point, requested by owner/session manager: no new experiment
 is running or scheduled. F-148's measured stack/flag correction passes the
 bounded paired diagnostics; F-149's RAM mappings pass startup comparisons.
