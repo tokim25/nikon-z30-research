@@ -50,7 +50,8 @@ Scope: a document-only review. I read `AGENTS.md`'s priority section,
 F-107 through F-109, and `native-xpan-liveview-hook.md`. I did not rerun the
 simulator or any script. The brief asked for a Codex session. The owner
 asked for a session other than the one that made the call, and this one was
-run by Claude, so the owner should confirm that substitution is acceptable.
+run by Claude. The owner confirmed on 2026-10-16 that this substitution is
+acceptable.
 
 **Conclusion: I disagree that condition 1 is satisfied as worded. It is
 partly met. Whether to proceed anyway is the owner's risk-acceptance
