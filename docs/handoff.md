@@ -147,3 +147,13 @@ pinned simulator and run folders in `private-inputs/`. Private scripts there:
 `native_fill_loop9_private.py` with `robust_call_private.py`,
 `menu_retest_private.py`, `geom_probe_private.py` (run name, firmware path),
 `dimtable_scan_private.py`. Keep their output private.
+
+## Update 2026-10-17: still-versus-movie guard, F-150
+
+Result: **unresolved**. The live-view hook at `0x102f5810` writes selector 1
+with no still/movie test. The guard (empty stack plus selector `0xc1821db8`
+equal to 1) does not separate still capture from movie, playback, warning or
+unavailable states. Details and addresses are in F-150. Next: identify a
+still-capture state value and trace its load before `0x102f57e2`; a movie
+exclusion has to be designed before any hook is treated as still-only. No
+camera or simulator run was made, and hardware stays NO-GO.
