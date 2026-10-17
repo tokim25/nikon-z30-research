@@ -2112,4 +2112,69 @@ read-only static decode (capstone, Thumb), full-image raw-word,
 register-arithmetic and `movw`/`movt` scans, SHA-256 checked first;
 addresses, offsets and property ids only, no firmware bytes recorded.
 
+F-112. A genuinely stronger lead for the saved-crop question than
+anything found so far, reached by abandoning F-111's module (checked
+directly: zero references to image-area property `0x501` anywhere in
+either of its two address clusters, so it is very unlikely to be
+crop-aware) and instead finding every direct reader of `0x501` itself.
+
+A full-image scan for `movw/movs r0,#0x501` followed by a getter call
+found exactly 8 sites, split between two accessor families: 6 use the
+familiar `0x10465984` getter (already known from the XPan live-view
+research); the remaining 2 use `0x10360bba`/`0x10360d3c` -- the same
+getter/setter pair F-111's quality module used. One of those two,
+`0x105a7946` (inside enclosing function `0x105a792a`), is a real
+**width/height-by-area lookup**: it reads `0x501` (or accepts an area
+value directly as a parameter), then calls `0x1020bfda(quality, area)`
+**twice**, reading a signed 16-bit value from offset `0` (width) and
+offset `2` (height) of the returned pointer each time -- the classic
+shape of a `{width, height}` struct lookup.
+
+`0x1020bfda` itself is confirmed as a genuine two-dimensional indexer:
+`row = [table_base + 0x14][quality]; return row + area*4`, i.e. an
+outer array indexed by quality/format, each entry a pointer to a row of
+4-byte `{width:i16, height:i16}` structs indexed by area. **At least
+nine sibling functions follow it immediately** (`0x1020bfe8`,
+`0x1020bff2`, `0x1020bffc`, `0x1020c006`, `0x1020c010`, `0x1020c01a`,
+`0x1020c024`, `0x1020c02e`, `0x1020c038`, ...), each with the identical
+shape but a different literal offset (`+0x14, +0x28, +0x34, +0x40,
++0x54, +0x68, +0x7c, +0x90, ...`) -- almost certainly one such table
+per save/display format class (RAW, several JPEG qualities, movie,
+etc.), not one table total.
+
+The table itself is **RAM-resident, not statically present in this
+firmware image**: `0x1020bfda`'s own literal resolves to `0xc18c7de8`
+(a RAM address), so its actual width/height content cannot be read from
+the ROM image directly. A literal-word search for that RAM address
+found only the one already-known reference (the getter's own literal);
+no ROM-side initializer or template copy was found by this method in
+this pass. This is the same category of limit this project has hit
+before (F-106's unresolved slot, Lane 1's unresolved registration) --
+live simulator inspection, not more static search, is the way to read
+the actual numbers.
+
+The lookup's result is consumed by `0x10237934`, which adjusts the
+value (adding width+height-1 when a flag is set) and calls
+`0x101ff4d2`/`0x101ff4f8` -- names not otherwise identified in this
+project, shaped like generic string/count-formatting helpers given the
+stack-buffer and `adr`-relative argument pattern. **Whether this is a
+display-label formatter (showing pixel dimensions in the image-area
+menu) or a real save-time size computation was not determined in this
+pass** -- say so plainly rather than assume either.
+
+Observed static decode and full-image scans on 2026-10-16, no
+classifier stop. Confidence high for the table/lookup structure itself
+(direct instruction-level decode); confidence low for whether this
+specific call chain (`0x105a7946` -> `0x10237934`) is on the save path
+or only a UI-preview path -- that is the open question, not the table's
+existence. Not yet done: finding the ROM-side initializer that
+populates the RAM table (to read real width/height values without a
+simulator), decoding the other 8+ sibling tables to see which save/
+format class each belongs to, and tracing `0x105a7946`'s own caller(s)
+to see whether they sit in a menu-display context or an actual
+capture/save context. Method: read-only static decode (capstone,
+Thumb), full-image property-id and raw-word scans, SHA-256 checked
+first; addresses, offsets and table structure only, no firmware bytes
+recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
