@@ -2685,3 +2685,38 @@ of a handful of the highest-frequency targets for verification; SHA-256
 checked first. No firmware bytes recorded.
 
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
+
+F-130. Lane 3 family-level search for property `0x2021`'s consumer: no
+generic dispatcher compares only the high byte (`0x20`) of an id; this
+firmware tests ids by offset from a base id instead. Full detail in
+[lane3-family-search.md](lane3-family-search.md).
+
+- **Verdict: not found.** Every high-byte idiom (shift by 8, bit-field
+  extract, mask `0xff00`, `tbb`/`tbh` on a high byte) produced only
+  unrelated hits (text shaping at `0x105afa0e`, character compares, a
+  bit-field test). A Thumb-only whole-image decode was used, so ARM
+  islands (F-120) and function-pointer tables are not covered.
+- **Why earlier searches saw nothing.** The known event dispatcher
+  `0x1037aae2` subtracts base `0x2006` and compares the difference
+  (1, `0x1a`, `0x1b`, `0x81`). It routes `0x2020` to `0x103a31a6`,
+  `0x2021` to `0x103a341a`, `0x2087` to `0x103a2a9c`. The literal `0x2021`
+  never appears in a compare, which explains F-116's clean negatives.
+- **New fixed points found by a base-offset scan.** `0x10475d8c` is an
+  allow-list check for property ids (base `0x200a`, exact members,
+  accepts `0x2020`, `0x2021`, `0x2083`, `0x2087`). Its callers are the
+  multi-id post wrappers `0x10475dde` and `0x10475e6a` and the single-id
+  wrapper `0x10475f5e`. The single-id wrapper appears to refuse an id of
+  exactly `0x2021` (hand-read flag use, not run).
+- **Event `0x2021`'s handler `0x103a341a` is a poster, not a reader.** It
+  switches on a sub-code byte at record offset 2 and posts property
+  `0x2021` via the shared primitive `0x10475ecc`. Property `0x2021` is
+  written from at least that handler and its neighbors; what reads it
+  remains unfound.
+- Confidence high for the dispatcher and allow-list structure (decoded and
+  read by hand); medium for the single-id wrapper's refusal of `0x2021`;
+  low for the absence of any other consumer (scan windows are bounded).
+  Next step is the registration table behind `0x10475ecc`, not more id
+  dispatchers. Method: Capstone Thumb decode of the full image after a
+  SHA-256 check; no firmware bytes recorded.
+
+Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
