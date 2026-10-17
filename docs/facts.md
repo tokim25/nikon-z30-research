@@ -2385,4 +2385,131 @@ disassembly (capstone, Thumb) of a private generator copy and its rebuilt
 overlay, plus disposable QEMU loader-overlay simulator runs; no firmware,
 overlay bytes or disassembly committed to the repo.
 
+F-116. Tries [tracking-input-chain.md](tracking-input-chain.md)'s option 2
+handoff: a masked/family-level static search for a dispatcher that tests
+property id `0x2021`/`0x2087` by their shared high byte (`0x20`) rather
+than by exact literal value. Negative result; the lead this scan actually
+turned up is unrelated.
+
+**Method.** A full-image linear decode (capstone, Thumb, SHA-256 checked
+first) looking for any `cmp`/`cmp.w rX, #0x20` immediately or shortly
+preceded by an extraction of `rX` as the high byte of some other register
+(`lsrs rX, rY, #8`, `ubfx` with lsb 8, or an `#0xff00` mask) -- the same
+category-plus-sub-id encoding shape F-104 found for SD command words.
+This is a genuinely different search from the prior literal-`0x2021` scans
+(`tracking-input-chain.md`'s handoff section): it looks for the *shape* of
+a masked dispatch, not a specific immediate.
+
+**Result: six raw hits, one real, zero relevant.** Four of the six are
+decode artifacts of scanning data/non-code regions as if they were Thumb
+instructions (confirmed by inspecting their surrounding context: nonsense
+instruction sequences, e.g. a `movs r0, #0x20` sitting between the
+extraction and the compare it was spuriously paired with, which the
+matching script did not detect as an intervening overwrite). One real,
+cleanly-decoded dispatcher was found at `0x105afa0e`
+(`lsrs r1, r0, #8; cmp r1, #0x20; ...; sub.w r1, r0, #0x2000; subs r1,
+#0xc; beq ...`) -- but reading its enclosing function (`0x105af9b0`
+onward) shows it is a text/string-formatting routine: the surrounding
+code checks `r0`'s low byte against ASCII-range values (`0x22`, `0x23`,
+`0x25`, `0x27`, `0x44`) and walks a character buffer, not a property-event
+struct. The `0x20xx`/`0x6xx` ranges it tests are escape-code categories in
+a format string, unrelated to the UI property-notification system this
+project has traced elsewhere (F-090, F-106, this file's `0x2021` entries).
+
+**This does not resolve Lane 3's handoff point.** It rules out the one
+specific masking idiom this scan checked (`lsr #8` immediately feeding a
+`cmp #0x20`) as a way to find `0x2021`'s consumer by this method, in the
+sense that the only clean hit it produced is provably unrelated. Confidence
+high for the one real hit's unrelatedness (read its full enclosing
+function); the negative result for this one idiom is otherwise as
+exhaustive as a single-idiom full-image scan can be. Method: read-only
+static decode only; no firmware bytes recorded.
+
+**Same pass, two more idioms tried, same result.** `ubfx rX, rY, #8, #8`
+(a Thumb-2 bitfield extract of bits [15:8]) feeding a `cmp rX, #0x20`
+within a short window: zero hits anywhere in the image. `and`/`and.w rX,
+rY, #0xff00` feeding a `cmp rX, #0x2000`: two raw hits (`0x11db2d78`,
+`0x11e38b10`), both artifacts of the same matching-script limitation (an
+intervening register overwrite -- here, a reload and a *different* mask,
+`#0x3800` -- the script didn't treat as breaking the chase). Reading both
+sites' context shows ordinary peripheral/register-programming code (a
+sequence of helper calls with small integer argument setup, e.g.
+`mov.w r2, #0x800`/`#0x700`/`#0x3800`), not event/property dispatch of any
+kind. Three masking idioms tried now (`lsr #8`, `and #0xff00`, `ubfx`),
+zero genuine property-dispatch hits among them.
+
+A `tbb`/`tbh` range-dispatch table keyed on the high byte was not
+attempted -- it requires first locating candidate jump tables and decoding
+their index expression, a meaningfully different (and more involved)
+search than the three direct-compare idioms above, not a quick addition to
+this same scan. [tracking-input-chain.md](tracking-input-chain.md)'s
+option 1 (live simulator breakpoint on the post primitive `0x10475ecc`)
+remains untried and, given three of four plausible static idioms are now
+exhausted with nothing found, is the more promising next step.
+
+F-117. Tries both remaining leads named by F-116: the fourth static
+masking idiom (`tbb`/`tbh` range dispatch) and
+[tracking-input-chain.md](tracking-input-chain.md)'s option 1 (a live
+simulator breakpoint on the shared property-post primitive `0x10475ecc`
+during ordinary navigation). Both come back negative, and the second is
+more informative than a simple miss.
+
+**`tbb`/`tbh` scan.** A full-image scan found 2,817 table-branch sites
+total -- an ordinary count for a firmware this size, and far too many to
+review individually. Checked each for a narrow gate shape only: an
+immediate `sub rX, #0x20xx` writing the table's index register directly
+in the instructions immediately preceding the branch. Zero matches. This
+is not a clean negative the way the other three idioms were: it only
+rules out *this one* index-computation shape, not `tbb`/`tbh` dispatch on
+the high byte in general (a real dispatcher could compute the index
+through intervening moves, a different immediate encoding, or a lookup
+rather than a subtraction, none of which this narrow check would catch).
+Properly exhausting this idiom would mean manually reading dispatch
+tables near each of the 2,817 sites -- not attempted, and not a
+reasonable next step without a smarter filter first.
+
+**Live simulator breakpoint, `0x10475ecc`, during ordinary navigation.**
+A private script armed a software breakpoint on the primitive and ran: an
+idle checkpoint wait, the real menu-activation helper (`0x102355ee`,
+the same call `display_session.py`'s own example uses to open the menu),
+eight real internal UI-event codes through the real key dispatcher
+(`0x103ce96e`) -- OK, back, and four directional codes confirmed in
+F-017/F-020/F-023 -- and a second idle checkpoint wait. All diagnostic
+calls, same technique this project uses throughout; no memory write of
+any property or UI state. **The primitive was never called at all --
+zero observations, for any id, across the entire sequence**, not just a
+miss on `0x2021` specifically. Firmware hash and pinned QEMU checkout
+unchanged throughout.
+
+This is a stronger, more informative negative than a miss on one id: it
+says the entire property-post mechanism this consumer search is built
+around does not fire via this call path at all in this fixture, matching
+this project's long-documented "dormant worker" pattern (F-018, F-019,
+and Lane 1's own natural-trigger gaps) rather than showing anything
+specific about `0x2021` or `0x2087`. It does not distinguish "the
+producer of `0x2006`/`0x2020`/`0x2021`/`0x2087` needs a live
+background task this fixture doesn't run" from "navigating through
+*this* screen/menu never posts those ids regardless." Confidence high for
+the zero-observation result itself (the same breakpoint technique
+correctly observed other primitives elsewhere in this project); low for
+any claim about why, since the dormant-worker explanation is inferred by
+analogy, not demonstrated for this specific primitive.
+
+**Net effect on Lane 3's handoff point:** four static masking idioms are
+now tried (one inconclusive due to volume, three clean negatives) and the
+live-breakpoint option has returned a clean, strongly dormant-worker-
+shaped negative rather than a hit. No consumer for `0x2021` has been
+found by any method attempted across F-116/F-117. The honest state is
+that this project has exhausted its cheap options on this specific
+question; what would actually move it forward is either reading
+individual `tbb`/`tbh` tables by hand near plausible call sites (slow,
+unautomatable without a better filter) or finding a way to keep the
+relevant background task alive in the simulator long enough for a real
+post to occur (a different, harder problem this project has hit
+repeatedly and not solved for any lane). Method: software breakpoints via
+the existing diagnostic-call mechanism (no debugger memory write); static
+decode (capstone, Thumb); firmware hash and QEMU checkout verified
+before and after; no firmware bytes, overlay bytes or disassembly
+committed to the repo.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
