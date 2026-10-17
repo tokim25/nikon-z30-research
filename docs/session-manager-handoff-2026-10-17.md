@@ -76,5 +76,12 @@ Claude's session manager:
 - Use Claude next for a non-simulator review of native hook feasibility,
   lifecycle gaps, and the patch-readiness checklist. Do not ask Claude to
   merge or push.
+- The reconciled checklist is now the sole gate: five simulator patch
+  essentials, two simulator acceptance essentials, one publication check, and
+  six hardware gates. Do not add preparatory requirements without a concrete
+  build decision they enable.
+- Immediate next step is only to close the authorized tracking breakpoint
+  checkpoint and stop; no masked search or tracking patch design follows until
+  its result is documented.
 - Hardware remains NO-GO. End with the exact next build decision, open risks,
   validation results, and clean repository/PR state.

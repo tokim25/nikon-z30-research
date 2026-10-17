@@ -1,51 +1,51 @@
-# Patch readiness checklist
+# Minimal patch-readiness checklist
 
-This checklist prevents more research from becoming an endless preparation
-loop. Work on a camera patch only when the required items below are either
-proved or explicitly recorded as an accepted limitation.
+Use this checklist to decide whether a concrete patch can be built. Do not
+start another research loop until the next item is identifiable and bounded.
 
-## Required for a simulator patch
+## Simulator patch essentials
 
-- [ ] Exact hook points are named for the live-view bars and, if included,
-  AE-L/AF-L tracking.
-- [ ] The image-area choice input and the tracking input are both identified
-  at the native boundary where the patch will read them.
-- [ ] Each hook's trigger and guard are specified, including ordinary startup,
-  menu return, state changes, and cleanup paths.
-- [ ] Code space, instruction mode, branch reach, literal loads, register use,
-  stack layout, flags, and return behavior fit the reserved spans.
-- [ ] The patch can be represented as an exact edit manifest without storing
-  firmware bytes or a patched image in the repository.
-- [ ] The pinned simulator loads the private overlay, with no debugger writes,
-  and passes baseline-versus-patched comparisons for all relevant states.
-- [ ] The patch does not claim saved RAW/JPEG cropping. That remains an
-  owner-approved on-camera test item and is not a blocker here.
+- [ ] Exact hooks and native input boundaries are identified for each included
+  feature. Tracking is conditional and stays out until its native entry point
+  is verified.
+- [ ] Each hook has a defined trigger, guard, cleanup, and return behavior.
+- [ ] Reserved space, instruction mode, branches, literals, registers, stack,
+  flags, and return paths pass an ABI/layout audit.
+- [ ] Every intended change is in an exact edit manifest; firmware bytes and
+  patched images stay outside the repository.
+- [ ] A private overlay loads in the pinned simulator without debugger writes.
 
-## Required before calling the patch simulator-accepted
+## Simulator acceptance essentials
 
-- [ ] Natural lifecycle checks pass, not only direct debugger or helper calls.
-- [ ] Non-target screens and modes remain unchanged.
-- [ ] Repeated transitions, cleanup, and recovery behavior are checked.
-- [ ] Tracking, if included, preserves native eligibility, chord arbitration,
-  press-edge handling, completion cleanup, and playback-protect behavior.
-- [ ] A fresh independent review confirms the ABI and branch/space audit.
-- [ ] Standard unit, artifact, encoded-data, and diff checks pass.
+- [ ] Native lifecycle passes: startup, menu return, relevant state changes,
+  repeated transitions, cleanup, recovery, and target/non-target behavior.
+- [ ] Stock-versus-patched comparisons pass, followed by an independent
+  ABI/layout review. If tracking is included, also cover eligibility, chord
+  arbitration, press edges, completion cleanup, and playback protection.
 
-## Required before any hardware test
+## Publication check
 
-- [ ] The exact original firmware identity is verified offline.
-- [ ] The read-only preflight accepts only the planned edits and policy.
-- [ ] A backup and recovery decision are documented, including the possibility
-  of Nikon service or total loss if recovery cannot be verified.
-- [ ] `hardware-readiness.md` names the exact build and says READY FOR AN
-  EXPERIMENTAL HARDWARE TEST.
-- [ ] The owner gives separate approval immediately before touching hardware.
+- [ ] Before authorized publication, run unit, artifact, encoded-data, and
+  whitespace/diff checks, then manually review the complete file set and fact
+  numbering. These checks validate publication, not feature acceptance.
 
-## Current status
+## Hardware gates
 
-- Live-view bars: hook and private simulator evidence exist, but the full
-  natural-lifecycle acceptance gate is not yet complete.
-- AE-L/AF-L tracking: property-post breakpoint experiment is authorized and
-  in progress; no patch should be designed until its result is documented.
-- Saved crop: static research is closed; on-camera test item, not a blocker.
-- Hardware: NO-GO.
+The simulator essentials must be satisfied first, unless an explicit owner
+deviation is recorded.
+
+- [ ] Verify the exact original firmware identity offline.
+- [ ] Run read-only preflight allowing only the planned edits and policy.
+- [ ] Bind the build to its exact manifest and bounded test scope.
+- [ ] Document the original backup and recovery decision, including service or
+  total-loss risk if recovery cannot be verified.
+- [ ] Mark `hardware-readiness.md` **READY FOR AN EXPERIMENTAL HARDWARE TEST**
+  with the exact build, scope, evidence, and residual risks.
+- [ ] Obtain the owner's separate approval immediately before hardware access.
+
+## Scope notes
+
+Saved RAW/JPEG crop is an owner-approved on-camera test item, not a simulator
+checkbox or feature-work blocker. Tracking patch design is deferred until the
+authorized breakpoint checkpoint establishes a native entry point. Hardware
+remains **NO-GO**.
