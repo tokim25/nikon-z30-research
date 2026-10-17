@@ -62,6 +62,14 @@ owner's words: "owner accepted the risks, 2026-10-17".
 2. **XPan still-photo guard: waived.** Without it, XPan crop lines could appear
    during movies, playback or warnings. The owner accepts that outcome.
 
+3. **Byte-exact identity of the installed firmware: waived by the owner (signed).**
+   Reported by the session manager as signed on 2026-10-17 (commit `db6a95e`
+   draft). **The reason field in the draft is still the placeholder** ("Owner:
+   state why..."); no owner reason is written in the repo. The owner's reason
+   is needed before this waiver is recorded as complete. Risk accepted: the
+   installed image may differ from the original in ways the version-level check
+   cannot detect.
+
 A waiver does not approve any camera step. It does not cover the local
 byte-exact identity check, the unresolved digest input at `0x10000088`, or the
 owner's separate final approval immediately before any hardware step. Hardware
