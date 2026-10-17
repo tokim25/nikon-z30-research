@@ -823,3 +823,65 @@ Validation: all 54 standard unit tests, both artifact scripts, and
 
 Written by Claude (Sonnet 5.5), continuing on this branch, in
 collaboration with Tony Kim.
+
+## 2026-10-16: the per-button widget-descriptor table found; the preview-table question still open
+
+Attempted to resolve the prior pass's open question (does AE-L/AF-L
+share a preview/label table with an existing tracking-capable handler,
+or need its own new row) by finding what calls the display dispatchers.
+This surfaced real architecture, but does not conclusively settle the
+question. Read-only static decode only.
+
+### A per-button widget-descriptor table exists, confirmed structurally
+
+`0x103d47b2` (the `0x114e` handler's display function) is referenced as
+a raw pointer word at `0x1075af3c`. Reading the surrounding memory finds
+a table of 20-byte (5-word) rows, each: `[fn1, fn2, shared_fn, fn3,
+fn4]`, where **word index 2 of every row is the identical constant
+`0x1045fda1`** (confirmed across 5 consecutive rows) and the other four
+words differ per row and resolve to addresses inside the known
+`0x103d4xxx`-`0x103d4bxx` handler cluster. `0x103d47b3` (Thumb-tagged
+`0x103d47b2`) sits at word index 0 of its row. `0x103d4a93` (Thumb-
+tagged `0x103d4a92`, the `0x1150` handler's display function) sits at
+word index 0 of the next-but-one row, confirming this is one row per
+button-widget type, each carrying that widget's own distinct callback
+set (display function among them), plus one callback (`0x1045fda1`)
+shared identically across every row -- plausibly a common validator or
+housekeeping routine, not decoded here. `0x103d4222` (AE-L/AF-L's own
+display function) was not found as a raw pointer word anywhere in the
+image (same register-computed-reference pattern seen elsewhere in this
+file), so its own row in this table was not directly located, though
+one almost certainly exists given the table's one-row-per-button shape.
+
+### What this does and doesn't resolve
+
+This confirms each button has a genuinely distinct row with its own
+function pointers -- consistent with, but not proof of, each row also
+having its own distinct preview/label table at runtime. The table found
+here is a **code**-pointer table (which functions to call), not the
+**data** table `0x1045c968` searches (which preview rows are valid) --
+they are different tables at different addresses, and nothing here
+establishes whether the latter is built once per widget *type* (shared
+across all buttons using the same underlying control class) or once per
+widget *instance* (separate per button, per the render context). That
+remains the open question. Resolving it needs either a live simulator
+object inspection (constructing the AE-L/AF-L assignment menu and
+reading the actual `[object+0x28]` pointer at runtime, then comparing it
+against the same read for one of the four working buttons) or finding
+the constructor/initializer for this specific widget class and reading
+where it sets that field -- neither attempted in this pass; the
+constructor was not located by the methods tried so far (a 111-hit
+syntactic scan for `str ..., [.., #0x28]` in the containing module was
+too noisy, mostly stack-slot writes, to isolate it).
+
+**Recommendation for whoever picks this up:** live simulator inspection
+is likely the faster path here, not further static search -- this is
+exactly the kind of question Lane 1 resolved by observing a running
+value rather than continuing to search ROM text for it.
+
+Validation: all 54 standard unit tests, both artifact scripts, and
+`git diff --check` passed before this edit. No commit was pushed to
+`main`; no merge is authorized from this checkpoint.
+
+Written by Claude (Sonnet 5.5), continuing on this branch, in
+collaboration with Tony Kim.
