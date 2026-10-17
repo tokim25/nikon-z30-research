@@ -2,6 +2,34 @@
 
 Known corrections: see [corrections.md](corrections.md).
 
+## Lane 0 session, 2026-10-17: task creation and passive execution verified
+
+The owner-requested ordered check below now has a positive result at step 2.
+Native startup creates APPLV, APPMENU and APP_OBS; the live-view worker is
+linked through APPLV's screen object. A 40-second passive observation after
+the existing live-view fixture reached the worker's payload builder 196
+times with flag 4, without an observation cap. A second 40-second window
+with only rare trigger breakpoints had zero hits and advanced the model's
+clock by about 190 virtual seconds. Neither reached the bit-16
+live-view-enter dispatch, live-view-ready routine, or property-post primitive.
+See [native-worker-scheduling.md](native-worker-scheduling.md), F-127.
+Step 3 was not entered: a general scheduler stall is not supported by this
+run. The actual task producing 0x2006/0x2087 remains unidentified; creation
+of APP_OBS is not proof of that producer's identity or reachability.
+
+Single next step: observe the existing live-view event object's signal/wait
+boundary and identify what supplies the missing bit 16 in real firmware,
+using the running APPLV task rather than invoking the ready handler directly.
+Keep that bounded to the named live-view lifecycle build decision. Do not
+start a machine-model rewrite or reopen the retired full-image poster scans.
+The separate codex/tracking-property-dispatch branch remains independent.
+
+The owner's follow-up asked for remaining work across every lane. The current
+evidence and concrete acceptance gaps are collected in
+[native-lane-gap-review.md](native-lane-gap-review.md). Older roadmap/status
+paragraphs below are historical where this session or F-115 through F-120
+supersede them. Hardware remains NO-GO; conditions 2 through 4 are untouched.
+
 Rewritten 2026-10-16 by Claude, with the owner's explicit approval to edit
 this Codex-owned file (a lane exception, same as PR #50). Read this file,
 then [facts.md](facts.md), [project-status.md](project-status.md) and
@@ -20,7 +48,9 @@ project's own simulator. A card-detect/SD-command-enumeration thread
 (F-102, F-104) was explored this session and retired for exactly this
 reason — see "Lane 2" below for where it stopped and why.
 
-Main carries facts through **F-114**; check main before allocating F-115.
+The session started from main carrying facts through **F-120**. F-127 is
+allocated to Lane 0 to avoid F-121 through F-126 used in separate, uncommitted
+preflight work. Those local entries are not merged evidence for this lane.
 Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,

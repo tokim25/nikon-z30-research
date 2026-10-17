@@ -1,9 +1,28 @@
 # Project status
 
-Updated 2026-10-16 by Codex. Read [handoff-codex.md](handoff-codex.md) for
+Updated 2026-10-17 by Codex. Read [handoff-codex.md](handoff-codex.md) for
 the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
+
+Lane 0's ordered checks reached a positive result at step 2: APPLV is
+created during startup and its worker's payload builder ran 196 times in
+a 40-second passive window after diagnostic setup. Its observed flags were
+always 4, with no bit-16 enter dispatch or property post observed. This
+does not support a general scheduler stall. Step 3 was not entered and no
+QEMU C source changed. See [native-worker-scheduling.md](native-worker-scheduling.md),
+F-127, for the separate trigger-only window and limits. The actual
+0x2006/0x2087 producer task remains unidentified.
+
+The next Lane 0/Lane 1 investigation is the missing live-view event signal,
+bounded to natural lifecycle acceptance. The independent
+codex/tracking-property-dispatch branch remains untouched. The owner's
+follow-up lane review is [native-lane-gap-review.md](native-lane-gap-review.md).
+This current summary supersedes older next-step claims below.
+
+Fact allocation: main starts through F-120; F-127 is used here to avoid
+F-121 through F-126 in the separate uncommitted preflight checkout. That
+checkout's work was preserved and is not included in this branch.
 
 **New, 2026-10-17, owner-requested handoff to Codex: Lane 0** (see
 handoff-codex.md's new "Lane 0" section). The dormant-worker pattern that
@@ -24,7 +43,7 @@ project's specific "zero callers" dead ends (`0x10459d80`, Lane 3's
 property dispatch) live there; flagged as a cheaper thing to check before
 touching QEMU's C source if Lane 0's steps 1-2 come back empty.
 
-Main carries facts through **F-114**. F-101 merged via PR #119; F-102/F-103
+Main carries facts through **F-120**. F-101 merged via PR #119; F-102/F-103
 via PR #123; F-104 via PR #124; F-105 via PR #126; F-106 via PR #127;
 F-107 via PR #128; F-108 via PR #129; F-110 via PR #138; F-111 via PR
 #139; F-112 via PR #140; F-113 via PR #141. The SD-card-
@@ -78,8 +97,8 @@ flagged, not solved, for whoever maps the remaining sibling tables next.
 The caller/save-path question is unchanged by either -- still the actual
 remaining gap, and still not re-attempted after its classifier stop.
 
-The owner approves merges; nobody merges their own PRs. Check main again
-before allocating F-115.
+The owner approves merges; nobody merges their own PRs. Check main and
+active lane reservations before allocating another fact.
 
 **Lane 3 (AE-L/AF-L tracking) now has a proper section in handoff-codex.md
 for the first time**, with a concrete handoff point: a real event-code

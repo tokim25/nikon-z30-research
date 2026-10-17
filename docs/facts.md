@@ -2685,3 +2685,39 @@ of a handful of the highest-frequency targets for verification; SHA-256
 checked first. No firmware bytes recorded.
 
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
+
+F-127. Lane 0's ordered check finds the live-view task is created and
+runs after the existing assisted live-view setup. A reset-time trace at
+native task wrapper `0x10219876` observes 249 creation requests without
+the 256-hit cap, including APPLV, APPMENU and APP_OBS. Their allocated
+kernel records are present before diagnostic setup. APPLV's object
+`0xc1821d44` holds worker pointer `0x102f2ca9` at `+0x40`, called by
+the generic screen task. This identifies the live-view worker; it does
+not identify whichever task produces property events `0x2006`/`0x2087`.
+
+After `liveview_session.start` returns, a 40.005-second passive window
+observes payload builder `0x102f2ad2` 196 times, all with return link
+`0x102f2cdd`, APPLV stack pointer `0xc56e2ff0` and incoming flags 4.
+No diagnostic call is in flight, and no observation cap is reached.
+No bit-16 enter dispatch, live-view-ready routine, `0x10459d80`, property
+state-machine step, `0x2087` handler or shared post primitive is observed.
+A separate 40.004-second window armed only the rare trigger addresses;
+it has zero observations and advances the model's counter by about
+189.959 virtual seconds, without breakpoint interruptions before timeout.
+
+Thus F-019/F-117's earlier negatives do not establish a globally dormant
+scheduler. The native live-view worker demonstrably runs; the missing
+event or prerequisite remains open. Step 3's general scheduler/MMIO-stall
+investigation was not entered and no QEMU source was changed. Source
+inspection also distinguishes the actual `nikon-z30-display` machine
+(display file's recovery/platform setup and GICv1 hypothesis) from the
+separate assisted machine in `nikon-z30.c`.
+
+High confidence for positive creation/execution observations; bounded
+negative for the named triggers, unknown property-producer task identity.
+Original firmware hash, pinned simulator source/binary manifest and clean
+checkout were checked before and after the successful runtime tests. All
+raw evidence and new private helper stay under WORK. Hardware remains
+NO-GO; no lifecycle acceptance, recovery-risk acceptance, or build-gate
+conditions 2 through 4 are established by this fact. Details and private
+reproduction: [native-worker-scheduling.md](native-worker-scheduling.md).
