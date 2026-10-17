@@ -20,7 +20,7 @@ project's own simulator. A card-detect/SD-command-enumeration thread
 (F-102, F-104) was explored this session and retired for exactly this
 reason — see "Lane 2" below for where it stopped and why.
 
-Main carries facts through **F-113**; check main before allocating F-114.
+Main carries facts through **F-114**; check main before allocating F-115.
 Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,
@@ -404,15 +404,33 @@ which one reaches an actual save versus a live-view/UI preview -- Lane
 also need this). It substantially deepens understanding of the tool
 itself. Full detail in facts.md F-113.
 
-**Next step:** finish decoding the centering arithmetic F-113 left
-incomplete; decode the gate function `0x101d5ad0`'s own condition; map
-the rest of the `0x1020bfxx`/`0x1020cxxx` table family (at least six
-confirmed, likely more); and -- the question every saved-crop fact since
-F-095 has shared -- determine which of the builder's seven callers
-reaches an actual file-save operation, not a preview. This is still the
-fresh thread opened in F-110; do not revisit the retired record-builder
-chain (F-095 through F-106) or F-111's `0x1034exxx` module without new
-evidence pointing back to either.
+**Update (2026-10-16), the crop-window descriptor fully resolved
+(F-114):** the centering arithmetic is now unambiguous -- top-left
+corner, bottom-right corner, their center, and a separate final
+output size from F-112's table. The gate function is trivial (an
+operating-mode byte must be 0 or 1). This is textbook crop-rectangle
+construction, fully understood at the instruction level.
+
+**Dropped, not retried:** checking F-057's seven callers for which one
+reaches a real save hit a response-safety-classifier stop. This needs
+no new attempt regardless -- F-095/F-096 already characterized all
+seven (six display/menu-info builders, one record-builder chain
+leaning away from being a save descriptor per F-106), and that read is
+unchanged. If this specific question needs pursuing further, hand it
+to the owner's own terminal rather than retrying it in a session (the
+same handling Lane 1's three-stop pattern used).
+
+**What's left, concretely:** mapping the rest of the
+`0x1020bfxx`/`0x1020cxxx` table family (six confirmed in F-113, likely
+more); and, since static tracing of "which caller is the save path" is
+now deliberately not being pursued, a live simulator read is the
+remaining way to test any of this against real behavior -- e.g.
+breakpointing `0x101d5b36` during an actual (simulated) capture
+attempt and reading the resulting rectangle, or reading F-112's
+RAM-resident table directly for the known DX/1:1/16:9 area values. This
+is still the fresh thread opened in F-110; do not revisit the retired
+record-builder chain (F-095 through F-106) or F-111's `0x1034exxx`
+module without new evidence pointing back to either.
 
 ## Lane 3: AE-L/AF-L subject tracking (new section, 2026-10-16)
 
