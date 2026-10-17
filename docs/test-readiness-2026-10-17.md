@@ -52,6 +52,21 @@ PYTHONPATH=src python3 -m nikon_z30_research require-verified-eg /path/to/extrac
 | Backup and recovery decision | Not recorded here; owner decision |
 | Owner approval immediately before any hardware step | Not given |
 
+## Owner waivers at the camera-test stage (2026-10-17)
+
+Recorded as the owner's decisions, not as gates passed. Reason, in the
+owner's words: "owner accepted the risks, 2026-10-17".
+
+1. **Lifecycle gate (build-phase-gate condition 1, natural transitions):
+   waived.** The lifecycle gate is not satisfied; the owner accepts the risk.
+2. **XPan still-photo guard: waived.** Without it, XPan crop lines could appear
+   during movies, playback or warnings. The owner accepts that outcome.
+
+A waiver does not approve any camera step. It does not cover the local
+byte-exact identity check, the unresolved digest input at `0x10000088`, or the
+owner's separate final approval immediately before any hardware step. Hardware
+remains **NO-GO**. No connection or flash was made.
+
 ## Result
 
 Test readiness is **not achieved**. Version-level identity is recorded;
