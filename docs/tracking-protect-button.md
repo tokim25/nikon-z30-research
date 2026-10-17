@@ -732,3 +732,94 @@ Validation: all 54 standard unit tests, both artifact scripts, and
 
 Written by Claude (Sonnet 5.5), continuing on this branch, in
 collaboration with Tony Kim.
+
+## 2026-10-16: the action-dispatch piece now has an exact, confirmed template
+
+Independently decoded `0x10369468` (AE-L/AF-L's own handler) and
+`0x10368b6e` (the shared tracking helper) directly, rather than relying
+on the prior handoff's summary. Both confirm exactly what was reported,
+and one of the handler's own sibling functions supplies the precise
+instruction template needed.
+
+### `0x10369468` confirmed: genuinely no `0x4d` case
+
+Full decode of `0x10369468`: it reads a mode byte, then checks `0x1184`
+(mode 0) or `0x1187` (mode 1) against `0x19` (Zoom on/off) or `0x2a`
+(center-focus), calling `0x103691fc` or `0x1036845a` on a match. No
+comparison against `0x4d` exists anywhere in the function; an
+unrecognized value falls through and returns unhandled. This matches the
+prior handoff's claim exactly, now independently confirmed by direct
+decode rather than taken on report.
+
+### A working sibling handler supplies the exact template
+
+Immediately following in the same module, `0x1036951a` (one of the four
+tracking-capable handlers, settings `0x114e`/`0x1302`, matching this
+file's own earlier table) contains, verbatim:
+
+```
+cmp r0, #0x4d
+beq #0x10369556
+...
+0x10369556: mov r0, r5      ; r5 = the logical input id for this button
+0x10369558: bl #0x10368b6e   ; the shared tracking helper
+0x1036955c: b #0x1036956a    ; join the shared cleanup tail
+0x1036956a: mov r0, r6
+0x1036956c: bl #0x1036925e   ; completion-cleanup check
+0x10369570: cbz r0, #0x10369578
+0x10369572: movs r0, #0
+0x10369574: bl #0x10368402   ; completion cleanup
+0x10369578: mov r0, r4
+0x1036957a: pop {r4, r5, r6, pc}
+```
+
+This is the exact minimal instruction shape `0x10369468` would need: one
+`cmp r0,#0x4d; beq <label>` added to its existing chain, and a new label
+that calls `0x10368b6e` with the button's own logical input id, then
+joins the same two-call cleanup sequence (`0x1036925e` then
+conditionally `0x10368402`) this working sibling already uses. Nothing
+here was invented -- it is copied directly from working code already in
+the image.
+
+### `0x10368b6e` confirmed: exact accepted-input chain, no `0x0d` case
+
+Full decode of `0x10368b6e`'s cmp chain: it explicitly checks input
+values `0x28, 0xb, 0x19, 0x1b, 0x2c, 0x2d` (confirmed instruction-by-
+instruction, matching the prior handoff's reported set exactly) and
+falls through to `0x10368bee` (returns unhandled, `r5` stays 0) for
+anything else, including `0x0d` -- AE-L/AF-L's own logical input id.
+Adding support needs one more `cmp r7,#0xd; beq <branch>` in this same
+chain, matching the shape of the `0x1b`/`0x19` cases already there (both
+of which branch into the same state-dependent start/stop logic at
+`0x10368bb0`/`0x10368bde`).
+
+### Updated coordinated-change picture
+
+Item 2 from the running plan is now fully specified with working
+templates, not just named addresses:
+
+1. **Menu/assignment** (unchanged from the prior two sections): two new
+   setter stubs (templates confirmed), and a display case contingent on
+   the still-open per-context table question (prior section).
+2. **Action dispatch (this section, now template-complete):**
+   - `0x10369468`: add `cmp r0,#0x4d; beq <new_label>`, where
+     `<new_label>` mirrors `0x10369556`'s exact shape (call
+     `0x10368b6e` with the logical input id, then the same two-call
+     cleanup sequence).
+   - `0x10368b6e`: add `cmp r7,#0xd; beq <branch>` to the existing
+     chain, mirroring the `0x1b`/`0x19` cases' shape.
+3. **Press-edge gate** (unchanged): the `0x102f1dbc`/`0x102f1dc0`
+   boundary.
+
+Still no adapter or patch written -- this documents exact templates for
+a future patch, not a patch itself. The remaining open items are
+unchanged from the prior two sections: the per-context label-id table
+question (menu side) and runtime/hardware verification of all of the
+above.
+
+Validation: all 54 standard unit tests, both artifact scripts, and
+`git diff --check` passed before this edit. No commit was pushed to
+`main`; no merge is authorized from this checkpoint.
+
+Written by Claude (Sonnet 5.5), continuing on this branch, in
+collaboration with Tony Kim.
