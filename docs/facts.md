@@ -2686,7 +2686,198 @@ checked first. No firmware bytes recorded.
 
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
 
-F-133. Caller search for the filename-table getter `0x10354350`: no static
+F-135. The recovered package verifier accepted the verified original, and
+a newly written private helper inverted its decode transform entirely in
+memory, reproducing the complete 34,496,798-byte package exactly. The source
+was reread unchanged; no firmware image was written. The verifier checks
+original package/EG identities, decoded header/layout, container CRC and all
+three component CRC residues. It contains no signature verification or
+camera-updater execution; camera-side authentication and modified-package
+acceptance remain unverified. Its original-hash gates make it unsuitable as
+a candidate validator, and its three synthetic tests do not exercise the
+container/CRC rejection paths beyond those gates. Observed source audit and
+unchanged in-memory round trip, 2026-10-17, high confidence within that scope.
+[Method, reproduction and next build decision](native-package-verifier-audit.md).
+
+F-136. A newly written read-only decoded-container validator checks exact
+length/layout, ordered unique expected names/sizes, reserved fields, component
+and container CRCs, and independently supplied unchanged-component hashes.
+Synthetic tests reject malformed inputs and a changed payload with both CRC
+levels repaired when its original hash is pinned. The decoded original passed
+with all three component hashes pinned, agreeing with the recovered verifier;
+the unchanged in-memory package round trip still passed. No firmware image
+was written. This does not establish allowed edits, encoded-package integrity
+or camera acceptance. Observed synthetic tests and read-only original-input
+validation, 2026-10-17, high confidence within that scope.
+[Contract, tests and reproduction](native-container-validator.md).
+
+F-137. A newly written read-only exact-edit auditor pins original size/hash,
+checks full original/replacement hashes for ordered nonoverlapping spans,
+rejects all other changes and reports candidate/manifest identities. Synthetic
+tests cover missing/partial/extra edits, invalid policies and a combined
+container case demonstrating that CRC validity and edit-plan compliance are
+separate requirements. The verified original package versus its unchanged
+in-memory reconstruction passed an empty manifest with zero changed bytes.
+No real firmware edits or image writes occurred. Observed synthetic tests
+and unchanged-input baseline, 2026-10-17, high confidence within that scope.
+This does not establish instruction correctness or camera acceptance.
+[Contract and reproduction](native-exact-edit-audit.md).
+
+F-138. A newly written read-only decoded-container preflight composes original
+identity, exact edits, both container checks and unchanged-component hashes
+on the same immutable inputs. It requires explicit changed-component names,
+rejects cross-component/header edits and binds the full policy in its report.
+Synthetic integration cases pass/reject as expected; the verified original's
+decoded unchanged baseline passes with zero changed bytes. No firmware image
+was written. Reports explicitly say decoded-container-only and hardware
+readiness not established. Observed tests and unchanged baseline, 2026-10-17,
+high confidence within that scope; camera updater behavior remains unverified.
+[Contract, reproduction and next real-build decision](native-combined-preflight.md).
+
+F-139. Native camera-body package discovery reaches parser `0x101cdcea`.
+All three verified-original components match native templates; EG is execution
+type 3 and reaches `0x101ce89e`, then an ARM trampoline to relocated Thumb
+target `0xc2b10cd5`. Effective native decode masks and all 256 CRC-table entries
+agree with the desktop algorithms. A separate validation path includes a
+20-byte digest comparison consistent with SHA-1; its selection predicate and
+all input sources remain unresolved, including a read from `0x10000088`
+outside EG's direct mapping. This is not proof of a signature scheme or its
+absence. Flash erase/program and camera acceptance remain unverified. Observed
+bounded static decode and private algorithm comparisons, 2026-10-17, high
+confidence in checked links/tables, inference for the digest algorithm.
+No firmware was modified or written.
+[Evidence, limits and reproduction](native-updater-validation.md).
+
+F-140. Resolves F-139's selector: the native container reader sets an
+encoded-format byte; per-file snapshot stores it at `+0x1a0`, and selection
+restores it to the field returned by `0x101cf8cc`. The verified original's
+header predicts flag 1 and validation path `0x101ce518` after successful
+record restore. This was not executed. The digest compares the first 20 outer
+package bytes against a computation over the decoded container plus an
+eight-byte transformed suffix. The suffix configuration is traced, but its
+eight-byte source at `0x10000088` remains unmapped outside EG's direct file
+mapping. No digest reproduction, firmware change or image write occurred.
+Observed static links and original-header predicates, 2026-10-17, high
+confidence in those checks; branch execution and camera acceptance unverified.
+[Input boundaries and reproduction](native-updater-digest-inputs.md).
+
+F-141. The checked startup page-table entry maps digest input `0x10000088`
+to the same physical address below EG's base. None of the 18 bounded startup
+scatter destinations covers it (three copies, fifteen zero fills). This
+records a missing-input boundary; later remapping/external boot sources are
+not ruled out. The updater relocation is resolved: descriptor `0x10034010`
+copies 4,016 bytes from ROM `0x12079f00` to RAM `0xc2b10000`, mapping Thumb
+entry `0xc2b10cd5` back to EG offset `0x0205abd4`. The entry prepares state;
+actual flash erase/program remains unverified. Observed bounded startup
+decode/table analysis and private verifier, 2026-10-17, high confidence within
+that scope. No firmware modification or image write.
+[Mapping evidence and next step](native-boot-mapping-boundary.md).
+
+F-142. The mapped main-updater callback reaches identifiable native erase,
+buffered/halfword programming, polling and readback paths. Initialized logical
+region 2 selects target `0x10020000..0x12960000` (end exclusive), capacity
+43,253,760 bytes. The 33,939,512-byte EG payload excludes its two component
+CRC bytes; preparation fills the 9,314,248-byte remainder with FF. The loop
+uses 330 chunks of 128 KiB, erases the leading chunk before programming, and
+programs it last. This is not atomicity or recovery evidence. `0x1011a028`
+handles mapping; the worker callback is submitted through `0x101a27f4`.
+Observed bounded static decode, initialized-table reads and private semantic
+verifier, 2026-10-17, high confidence within that scope. Runtime geometry,
+physical writes and recovery remain unverified. No updater function executed,
+firmware modification or image write.
+[Span, handoff and reproduction](native-install-span.md).
+
+F-143. A newly written read-only installation model checks two-byte component
+CRC exclusion, full target/padding bounds and protected ranges, reports chunk
+order and streams an expected span hash without creating an image. Combined
+preflight binds the optional model to its validated candidate component and
+includes target policy in report identity; omission is explicit. Synthetic
+tests and the audited unchanged original agree on 33,939,512 payload bytes,
+9,314,248 padding bytes and 330 chunks. Observed tests and private unchanged
+baseline, 2026-10-17, high confidence within that static scope. No firmware
+image or device operation; native digest, runtime geometry and recovery remain
+unverified.
+[Contract, validation and next review](native-installation-model.md).
+
+F-144. Read-only review of the existing F-101 guarded overlay and its later
+private revision checks nonoverlapping EG/install mappings, four original
+hook instructions, twenty direct branches and five literal loads per
+revision. Writer return matches its original frame; adjusted state-pointer
+and selector mappings agree. The later revision preserves extra argument
+registers and fixes close/guard relative alignment, but both revisions retain
+four stack bytes at the state wrapper's stock-service call. The original tail
+transfer retains incoming SP; the overlay call shifts it and the kernel
+veneer's captured stack view. Condition 3 does not pass. Exact service stack
+argument use and physical failure were not observed. Observed bounded static
+decode and existing-file audit, 2026-10-17, high confidence within that scope.
+No overlay build/change, firmware image, execution or camera access occurred.
+[Review, limits and next contract test](native-xpan-contract-review.md).
+
+F-145. A newly written supplied-boundary call checker and fourteen synthetic
+operation tests define a corrected state-wrapper contract: restore incoming
+registers, SP, LR and caller stack before tail transfer; preserve reference
+service results and caller return behavior. Invented traces pass both added-
+work branches and ARM/Thumb returns; residual/aligned stack displacement,
+argument loss, stack corruption, bad helper alignment and return corruption
+fail. Observed abstract-model tests only, 2026-10-17, high confidence within
+that scope. No firmware input or encoded instructions were used, no private
+overlay changed and no machine-code implementation is approved. F-144's
+existing-overlay rejection and hardware NO-GO remain unchanged.
+[Contract, tests and evidence boundary](native-call-contract-tests.md).
+
+F-146. A private textual proposal maps F-145's corrected contract to a
+32-byte temporary frame, fully restored before the stock-service tail
+transfer. The state wrapper including literals uses 40 bytes; its adjacent
+writer uses eight, leaving four bytes in the checked 52-byte zero span.
+Writer entry moves four bytes and its hook must be retargeted. Local assembler
+textual validation accepts fourteen forms/widths; independent arithmetic
+checks six branch distances and two literal loads. Observed static layout
+and original/existing-file checks, 2026-10-17, high confidence within that
+scope. Final external branch encodings and execution remain unverified; no
+object, overlay or firmware image was written. Condition 3 remains open.
+[Method, limits and simulator-only next experiment](native-xpan-layout-proposal.md).
+
+F-147. A throwaway private correction passes final branch decode and loaded-
+file hash checks in the pinned simulator. Paired diagnostic calls with a
+settled stock 1:1 choice show original r0-r12, SP/LR and three caller-stack
+words at the stock service on both state branches. Live-view mask flag is 1;
+other-screen flag is 0. The other-screen return changes NZCV from 8 to 6 and
+fails F-145's unchanged strict comparator. Relocated writer calls consume
+the same stock working frame and match original register/SP/target results;
+scratch LR and flags are not certified. Observed assisted QEMU diagnostics,
+2026-10-17, high confidence within that bounded scope. Original firmware and
+simulator checkout unchanged; new overlays/raw evidence stay private. No
+camera, updater execution, combined firmware image or acceptance of condition
+3. [Inputs, controls, results and next correction](native-xpan-abi-experiment.md).
+
+F-148. A private application-status-preserving overlay resolves F-147's
+measured flag mismatch. Ten final branch targets, four status-transfer
+instructions and three literal loads pass static checks; loaded file hashes
+match. Paired pinned-QEMU diagnostics pass both state contracts with entry
+flags additionally required and full return registers/CPSR equal. Mask flags
+are 1 for live view and 0 for the other state. Both writer working frames,
+r0-r12/SP results, return target/mode, CPSR and caller stack match the stock
+baseline; scratch LR differs and is explicitly not certified as identical.
+Observed finite assisted diagnostics, 2026-10-17, high confidence within that
+scope. Original firmware and simulator checkout unchanged; concrete overlays
+remain private. Natural lifecycle, global condition 3, saved crop and hardware
+readiness remain open. [Review and evidence limits](native-xpan-flags-remediation.md).
+
+F-149. F-110's stored filename-pointer tables map through the checked startup
+copy to RAM `0xc18cb5ec` and `0xc18cb7ac`. Both 16-byte pointer blocks and
+F-112's 32-byte header at `0xc18c7de8` match their initialized sources after
+unmodified stock assisted startup. A full-image aligned-word search within
+64 bytes of the two RAM bases finds three and five nearby references, none
+at the exact base. Bounded decode of one anchor confirms neighboring indexed
+halfword format/flag lookups, not a filename-field consumer or save path.
+Observed static mapping/search and bounded simulated RAM comparison,
+2026-10-17, high confidence for those mappings only. No firmware change,
+capture, cropped file or camera access. Actual filename-field consumption
+remains unresolved and is reserved for the owner-approved on-camera test; no
+static route remains open. [Evidence and limits](native-save-table-ram-mapping.md).
+
+
+F-154. Caller search for the filename-table getter `0x10354350`: no static
 route reaches it. Route classes checked over the whole image: direct and
 conditional Thumb branches, ARM branches and immediate `blx`, raw words equal
 to the entry (either Thumb bit), `movw`/`movt` construction, `adr`, bounded
@@ -2698,7 +2889,7 @@ for direct and literal references, medium overall (computed addresses and
 base-relative offset tables not modelled). Hardware remains NO-GO. Method and
 limits: [getter-caller-search.md](getter-caller-search.md).
 
-F-134. The getter `0x10354350` sits directly after a return, so nothing falls
+F-155. The getter `0x10354350` sits directly after a return, so nothing falls
 through into it, and no table-dispatched callback holds its address. The
 filename-table route is therefore a dead end for static reachability; the
 lane 2 next step to check indirect calls through tables is done and came back

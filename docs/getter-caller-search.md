@@ -2,8 +2,8 @@
 
 2026-10-17. Static analysis of the original firmware image only. No simulator,
 no QEMU, no firmware change, no camera. Only addresses and descriptions appear
-here. Follows [lane2-filename-trace.md](lane2-filename-trace.md) (F-131,
-F-132 on the unmerged lane 2 branch).
+here. Follows [lane2-filename-trace.md](lane2-filename-trace.md) (F-151,
+F-152 on the unmerged lane 2 branch).
 
 **Verdict: not found.** No route from any part of the image reaches the getter
 at `0x10354350`. Every route class below returned zero matches. Confidence is
