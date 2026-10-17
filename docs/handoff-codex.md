@@ -134,6 +134,18 @@ in [facts.md](facts.md); [tracking-input-chain.md](tracking-input-chain.md)'s
 two 2026-10-17 sections; `qemu/nikon-z30.c` and `qemu/nikon-z30-display.c`
 in the pinned `z30-qemu` checkout.
 
+**Side note, not part of this handoff's scope but worth knowing before
+digging into any "zero callers found" dead end:** F-120 confirmed this
+firmware genuinely contains ARM-mode code (a real `memcpy` routine, at
+two separate addresses, reached via Thumb `blx`-immediate), something
+every prior static scan in this project -- including this task's own
+dormant-worker reasoning -- assumed away. Nothing checked so far shows
+it's relevant to event `0x4100012`, `0x10459d80`, or Lane 3's property
+dispatch specifically, but if 1 (task-creation check) and 2 (long
+free-run) above both come back empty, checking whether a relevant
+dispatcher's one missing caller lives in an undiscovered ARM island is a
+cheaper thing to try before touching `z30-qemu`'s C source.
+
 ## Lane 1: the live-view-bars hook
 
 Claude hit the same safety-classifier stop twice in a row researching
@@ -266,6 +278,21 @@ post this event) rather than a real-firmware question -- the real camera
 obviously already delivers this event through ordinary use (F-090), and
 F-108's hook sites sit downstream of it, not upstream. A real build does
 not need this answered.
+
+**Update (2026-10-17), the "ARM-mode scanning" item checked, general
+finding not specific to this question (F-120):** this firmware does
+contain real ARM-mode code, confirmed for the first time -- a `memcpy`-
+style routine (duplicated at two separate addresses, one called from the
+InitTask entry function itself), and compiler-runtime-shaped helpers,
+all reached via genuine Thumb `blx`-immediate calls this project's
+Thumb-only decoding had never surfaced before. **This does not show
+`0x10459d80` or event `0x4100012` are themselves ARM-reachable** -- every
+confirmed site is a mundane library routine, not application logic, and
+mapping the full extent of every ARM island to check was not attempted
+(real, separately-scoped work). Worth keeping in mind for Lane 0 and for
+any future "zero callers by every static method" dead end on any lane --
+the blind spot is now confirmed real, not just theoretical. Full detail
+in facts.md F-120.
 
 **Update (2026-10-16), owner call made, pending a dissenting review:** the
 owner has called build-gate condition 1 satisfied for Lane 1 on this
