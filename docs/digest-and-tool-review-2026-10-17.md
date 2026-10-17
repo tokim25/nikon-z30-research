@@ -37,3 +37,21 @@ directory outside the repo. Hardware remains **NO-GO**.
    reviewed build or an operation-log capture before any connection.
 3. Decide whether a byte-level readback is still needed; see
    [camera-byte-readback-method.md](camera-byte-readback-method.md).
+
+## 3. Update 2026-10-17: archive location, hash search, gphoto2 command
+
+- The archive named in the request was not found under a `WORK` folder; no
+  `WORK` directory exists in the home directory. A copy is at
+  `Downloads/Nikon-Z30-Firmware-Research-M1 (1).zip`. It contains no firmware
+  image, so the original image was not matched.
+- A search of the home, Volumes and temp folders for files of the pinned
+  container size (34,496,798 bytes) or EG size (33,939,514 bytes) found none.
+  No hash comparison was possible.
+- gphoto2: **none.** No command in libgphoto2 is documented or reviewed to read
+  the installed Nikon firmware image. PTP vocabulary in `ptp.h` includes
+  firmware-update opcodes for other vendors (Canon, MTP, Leica), and this
+  review did not identify the Nikon equivalents. A generic opcode could reach
+  an update operation, so no command should be run.
+- Top risk: an accidental firmware-update or write operation through a generic
+  PTP tool. Do not connect the camera for a readback until a reviewed method
+  exists.
