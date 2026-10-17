@@ -46,6 +46,106 @@ each — a repeated safety-classifier stop on one, and the simulator's actual
 functional limits on the other — not because either question was shown to
 be unanswerable. Treat both as open research.
 
+## Lane 0: why natural triggers never fire (blocks Lane 1 and Lane 3 both)
+
+**New section, 2026-10-17, handed off at the owner's explicit request** to
+try the harder approach "if necessary to get to hardware install" after
+Claude ran out of cheap options on both lanes' natural-trigger questions
+(F-019, F-109, F-115 through F-117). Claude did not attempt this itself —
+the owner asked for it to go to Codex directly, and the scope (likely
+touching the QEMU machine model, not just Python scripts) is a better fit
+here regardless.
+
+**The pattern, stated once instead of per-lane.** Every lane that depends
+on a background worker or the RTOS's own task scheduler servicing
+something — Lane 1's live-view-enter/menu-close triggers, Lane 3's
+`0x2006`/`0x2020`/`0x2021`/`0x2087` property-event producer — comes back
+dormant. F-019: a stock refresh runs none of 14 observed worker/task
+addresses. F-109: event `0x4100012`'s poster has zero references in the
+image by four independent static methods, and is "obviously" delivered on
+real hardware (F-090) by some mechanism this simulator doesn't reproduce.
+F-117: the shared property-post primitive `0x10475ecc` was never called
+at all across an idle wait plus a real menu-activation-and-eight-key
+sequence — not a miss on one id, a miss on everything.
+
+**This is probably not "the QEMU model has no scheduler."** Read
+`qemu/nikon-z30.c` before assuming that: the machine wires a real GICv2
+IRQ controller to both CPUs and has a real `QEMUTimer`
+(`platform_timer`), gated by an `assisted` flag that only shortcuts
+specific MMIO addresses (`0x20010034`, `0x24074000`-`0x24074800`,
+`0x04287010`/`0x04287004`, the UART regs) for bring-up — it is not a pure
+host-orchestrated step machine. The more likely explanation, not yet
+checked: every observation in this project so far comes from either (a) a
+synchronous diagnostic call (`guest_call.py`'s `call()` / `display_session.py`'s
+`run_to()`) that hijacks one thread's register context, forces `pc` to a
+target function and a sentinel return address, and runs only until that
+sentinel is hit — which never gives the RTOS scheduler a reason or a
+window to switch to a different task — or (b) a short passive `run_for()`
+window too brief for whatever the worker is actually waiting on. Nobody
+in this project has yet tried a long, uninterrupted free-run (seconds to
+tens of seconds, no diagnostic call in flight, real timer/IRQ ticking)
+after setting up the right preconditions, to see whether the firmware's
+own scheduler services the worker on its own.
+
+**The actual ask, in order of cost:**
+1. **Check whether the relevant worker tasks are even created.** Find
+   where the firmware creates/registers background tasks during startup
+   (an RTOS task-create primitive should have a findable signature — this
+   project has already identified several task/screen-stack-shaped data
+   structures, e.g. `0xc181e4f0`, the various `0xc182xxxx`/`0xc2xxxxxx`
+   globals named throughout `facts.md` — reuse what's already known rather
+   than starting from zero). If a worker this project cares about (the
+   live-view worker, whatever posts `0x2006`/`0x2087`) is never created in
+   this assisted boot, that's the actual answer and the rest of this list
+   doesn't matter — document it as a fact and stop there.
+2. **If workers are created, try a long free-run instead of a diagnostic
+   call for the trigger step.** Set up state with the usual diagnostic
+   calls (as F-101/F-115/F-117's scripts already do), then switch to
+   `run_for()` with a materially longer window (tens of seconds, not the
+   few seconds used so far) with the relevant breakpoints armed via
+   `run_to(..., observe=(...))`, and see whether the scheduler reaches the
+   worker on its own. This needs no QEMU source changes, just a different
+   use of tools already in `z30-qemu/tools`.
+3. **Only if 1 and 2 both come back empty**, investigate whether the
+   `assisted` profile's MMIO shortcuts (listed above, in `nikon-z30.c`) are
+   themselves what stalls the scheduler — e.g. a real IRQ source the
+   firmware's idle/scheduler loop waits on that `assisted` mode fakes or
+   skips. This is the only item on this list that would mean touching the
+   QEMU machine model's C source, and it's the one to treat as a real,
+   possibly multi-session undertaking — not something to start speculatively
+   before 1 and 2 are tried.
+
+**What this does and does not authorize.** This is still simulator-only
+research. **Resolving this does not by itself get to hardware install** —
+`hardware-readiness.md` is explicit that install needs the owner's written
+risk acceptance plus conditions 2 through 4 (checksum/signature review,
+patcher review, recovery risk), none of which this lane touches. Treat
+"get to hardware install" as this project's long-term direction, not as
+something a scheduler fix hands to the owner automatically. The usual
+rules apply in full: offline/simulator-only, never touch the owner's real
+camera, never commit firmware bytes, overlay bytes, disassembly or patched
+images. If this turns out to need changes to `z30-qemu`'s C source (item 3
+above), that is new territory for this project's commit conventions —
+check with the owner before committing machine-model source changes, the
+same way build-phase firmware changes get owner review.
+
+Full detail behind this handoff: F-018, F-019, F-109, F-115 through F-117
+in [facts.md](facts.md); [tracking-input-chain.md](tracking-input-chain.md)'s
+two 2026-10-17 sections; `qemu/nikon-z30.c` and `qemu/nikon-z30-display.c`
+in the pinned `z30-qemu` checkout.
+
+**Side note, not part of this handoff's scope but worth knowing before
+digging into any "zero callers found" dead end:** F-120 confirmed this
+firmware genuinely contains ARM-mode code (a real `memcpy` routine, at
+two separate addresses, reached via Thumb `blx`-immediate), something
+every prior static scan in this project -- including this task's own
+dormant-worker reasoning -- assumed away. Nothing checked so far shows
+it's relevant to event `0x4100012`, `0x10459d80`, or Lane 3's property
+dispatch specifically, but if 1 (task-creation check) and 2 (long
+free-run) above both come back empty, checking whether a relevant
+dispatcher's one missing caller lives in an undiscovered ARM island is a
+cheaper thing to try before touching `z30-qemu`'s C source.
+
 ## Lane 1: the live-view-bars hook
 
 Claude hit the same safety-classifier stop twice in a row researching
@@ -178,6 +278,21 @@ post this event) rather than a real-firmware question -- the real camera
 obviously already delivers this event through ordinary use (F-090), and
 F-108's hook sites sit downstream of it, not upstream. A real build does
 not need this answered.
+
+**Update (2026-10-17), the "ARM-mode scanning" item checked, general
+finding not specific to this question (F-120):** this firmware does
+contain real ARM-mode code, confirmed for the first time -- a `memcpy`-
+style routine (duplicated at two separate addresses, one called from the
+InitTask entry function itself), and compiler-runtime-shaped helpers,
+all reached via genuine Thumb `blx`-immediate calls this project's
+Thumb-only decoding had never surfaced before. **This does not show
+`0x10459d80` or event `0x4100012` are themselves ARM-reachable** -- every
+confirmed site is a mundane library routine, not application logic, and
+mapping the full extent of every ARM island to check was not attempted
+(real, separately-scoped work). Worth keeping in mind for Lane 0 and for
+any future "zero callers by every static method" dead end on any lane --
+the blind spot is now confirmed real, not just theoretical. Full detail
+in facts.md F-120.
 
 **Update (2026-10-16), owner call made, pending a dissenting review:** the
 owner has called build-gate condition 1 satisfied for Lane 1 on this
@@ -468,6 +583,33 @@ RAM-resident table directly for the known DX/1:1/16:9 area values. This
 is still the fresh thread opened in F-110; do not revisit the retired
 record-builder chain (F-095 through F-106) or F-111's `0x1034exxx`
 module without new evidence pointing back to either.
+
+**Update (2026-10-17), the live-simulator-read step done for the center
+field (F-118):** re-ran F-078's existing, unmodified diagnostic-call
+script against the builder, across all 15 area/quality/flag combinations
+it already tests. F-114's claim that the `+0xc`/`+0xe` field is the exact
+midpoint of the top-left and bottom-right corners is now confirmed by
+live execution, not just static algebra, in every single row, including
+the degenerate all-zero rows for areas 1 and 3. The `+0x18`/`+0x1a`
+final-output-size field's `(0, 0)` pattern is also now fully explained
+(a consistent "no resize" sentinel at the large quality byte and at the
+`+0x26` flag, across every area) rather than an open detail. **Still
+does not touch the caller/save-path question** -- F-095/F-096/F-103's
+read stands unchanged; this only strengthens confidence in the geometry
+math, which was already high. Full detail in facts.md F-118.
+
+**Update (2026-10-17), F-112's RAM table read directly (F-119):**
+answers F-112's own open question -- real width/height values from the
+table at `0xc18c7de8`, no diagnostic call needed, just a memory read
+after ordinary startup. Three of F-118's non-zero output-size results
+match specific table entries exactly, confirming it's the same data
+source. **One correction worth flagging before anyone maps the
+remaining ~8 sibling tables F-112 found:** the table's (outer, inner)
+indices are not simply the builder's own (quality byte, area byte) --
+F-118 held quality constant across all three matches but the matching
+outer row varied. A rough aspect-family grouping (DX/16:9/1:1 clusters
+within the 6-entry rows) is offered as an unproven lead, not a solved
+mapping. Full detail in facts.md F-119.
 
 ## Lane 3: AE-L/AF-L subject tracking (new section, 2026-10-16)
 
