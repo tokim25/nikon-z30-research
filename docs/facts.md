@@ -2177,4 +2177,76 @@ Thumb), full-image property-id and raw-word scans, SHA-256 checked
 first; addresses, offsets and table structure only, no firmware bytes
 recorded.
 
+F-113. Decodes the crop-window builder's own body for the first time.
+`0x101d5b36` has been central to this project's saved-crop research
+since F-057 (as the function seven callers reach, studied in F-095
+through F-098), but its internals were never read -- only its existence,
+its callers, and (in F-096) the two block copies inside one caller's own
+record-assembly code. This pass reads the builder itself, reached while
+finding every caller of F-112's confirmed geometry table `0x1020bfda`
+(one of the 37 callers found, `0x101d5c38`, is inside this function, not
+a separate one as first suspected -- a backward push-scan confirms the
+real entry is `0x101d5b36`, correcting that initial read).
+
+The builder's body:
+
+1. **Three unconditional lookups, always executed:** `ldrb [r5+0x26]`
+   (a format/class byte) feeds `0x1020bfc8` (a sibling of `0x1020bfda`
+   not previously catalogued, immediately before it); then `[r5]` (an
+   area byte) plus the same format byte feed `0x1020c05c`; then `[r5]`
+   alone feeds `0x1020c072`. Each call's result is a pointer whose
+   offsets `0`/`2` (signed 16-bit width/height, the same shape F-112
+   established) are copied into the output record at `+0`/`+2`,
+   `+4`/`+6`, and `+8`/`+0xa` respectively -- three distinct
+   width/height pairs, unconditionally.
+2. **A gate, `0x101d5ad0(r5)`:** if false, the record's remaining
+   fields (`+0xc` through `+0x1a`) are all zeroed and the function
+   returns -- no crop offset is computed.
+3. **If true, a mode/quality byte at `[r5+0x22]`** (0, 1, or 2) selects
+   a value `r6` (0, 1, or 2) passed as a parameter to three more
+   lookups: `0x1020c07c`, `0x1020c128`, `0x1020c17e` (area, format and
+   `r6` all passed as arguments), each again returning a width/height
+   pointer. The three results' width/height values are combined with
+   addition and negation (`add r1,r6; rsbs r6,r6,#0; add r0,r0,r6<<1`,
+   continuing past this read) -- centering/offset arithmetic, not a
+   simple copy, consistent with computing a centered crop rectangle's
+   position from a sensor/working-area size and a target output size.
+   This arithmetic was not fully decoded to its end in this pass.
+
+This establishes, for the first time, that the long-studied crop-window
+builder performs real geometry computation using at least **six**
+distinct sibling tables from F-112's confirmed `0x1020bfda` family
+(`0x1020bfc8`, `0x1020c05c`, `0x1020c072`, `0x1020c07c`, `0x1020c128`,
+`0x1020c17e` -- meaning more sibling tables exist than the roughly ten
+found adjacent to `0x1020bfda` alone in F-112; the full family's extent
+is still not mapped). The values produced are exactly the shape a real
+crop rectangle needs (base dimensions plus a computed, conditionally-
+gated centered offset) -- this is textbook crop-window construction,
+not display-label formatting.
+
+**This does not resolve F-097/F-106's capture-vs-estimator ambiguity.**
+The builder is a shared utility reached by all seven of F-057's known
+callers; nothing here establishes which of those seven call it for a
+real save operation versus a UI/live-view preview (Lane 1's own
+live-view-bars work is exactly the kind of preview context that would
+also need a correctly-sized crop rectangle, independent of any file
+being written). It deepens understanding of the tool itself -- what it
+computes, and from which real data -- without yet answering which
+caller context uses that computation for what purpose. Observed static
+decode on 2026-10-16, no classifier stop, high confidence for the
+instruction-level reads; medium confidence for the offset layout's
+semantic interpretation (sensor/working/target dimensions plus a
+centered offset) given the shape fits but was not independently
+confirmed.
+
+Not yet done: fully decoding the centering arithmetic to its end; the
+gate function `0x101d5ad0`'s own condition; mapping the full extent of
+the `0x1020bfxx`/`0x1020cxxx` table family (likely more than six);
+and -- unchanged from every prior saved-crop fact -- determining which
+of the builder's seven callers reaches an actual file-save operation.
+Method: read-only static decode (capstone, Thumb) and a full-image
+xref scan (`rom_xrefs.py`) on the confirmed geometry-table function,
+SHA-256 checked first; addresses and offsets only, no firmware bytes
+recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

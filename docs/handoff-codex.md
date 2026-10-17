@@ -20,7 +20,7 @@ project's own simulator. A card-detect/SD-command-enumeration thread
 (F-102, F-104) was explored this session and retired for exactly this
 reason — see "Lane 2" below for where it stopped and why.
 
-Main carries facts through **F-112**; check main before allocating F-113.
+Main carries facts through **F-113**; check main before allocating F-114.
 Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,
@@ -383,16 +383,36 @@ string/count formatters) is a save-time computation or only a menu
 display-label formatter was **not determined** -- say this plainly, do
 not assume either answer. Full detail in facts.md F-112.
 
-**Next step:** trace `0x105a7946`'s own caller(s) to establish whether
-it's reached from a menu-display context or an actual capture/save
-context -- that single fact would resolve the open question above. In
-parallel or instead: use the simulator to read the actual RAM table
-contents at `0xc18c7de8` for the known DX/1:1/16:9 area values, which
-would independently confirm this is the real per-area dimension table
-regardless of which context calls it. This is a fresh thread, not a
-continuation of the record-builder chain; do not revisit that chain
-(F-095 through F-106), and do not return to F-111's `0x1034exxx` module
-without new evidence pointing back to it.
+**Update (2026-10-16), the crop-window builder's own internals decoded
+for the first time (F-113):** traced `0x105a7946` -> confirmed it's a
+menu-display getter (dropped per the plan above), then pivoted to
+finding every caller of the geometry-table function `0x1020bfda`
+itself (37 found, full-image scan) rather than one specific wrapper.
+One caller, `0x101d5c38`, turned out to sit inside `0x101d5b36` --
+**the crop-window builder this whole project has studied since F-057,
+whose own body was never decoded until now.**
+
+The builder calls at least six sibling tables from the same confirmed
+family (`0x1020bfc8`, `0x1020c05c`, `0x1020c072`, `0x1020c07c`,
+`0x1020c128`, `0x1020c17e`) to build three unconditional width/height
+pairs plus a conditionally-gated, centered-offset computation -- the
+real shape of crop-rectangle construction, not display formatting.
+This does not resolve F-097/F-106's capture-vs-estimator ambiguity
+(the builder is shared by all seven known callers; nothing here says
+which one reaches an actual save versus a live-view/UI preview -- Lane
+1's own preview work is exactly the kind of non-save context that would
+also need this). It substantially deepens understanding of the tool
+itself. Full detail in facts.md F-113.
+
+**Next step:** finish decoding the centering arithmetic F-113 left
+incomplete; decode the gate function `0x101d5ad0`'s own condition; map
+the rest of the `0x1020bfxx`/`0x1020cxxx` table family (at least six
+confirmed, likely more); and -- the question every saved-crop fact since
+F-095 has shared -- determine which of the builder's seven callers
+reaches an actual file-save operation, not a preview. This is still the
+fresh thread opened in F-110; do not revisit the retired record-builder
+chain (F-095 through F-106) or F-111's `0x1034exxx` module without new
+evidence pointing back to either.
 
 ## Lane 3: AE-L/AF-L subject tracking (new section, 2026-10-16)
 
