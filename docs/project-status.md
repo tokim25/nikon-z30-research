@@ -5,28 +5,37 @@ the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
 
-Main carries facts through **F-109**. F-101 merged via PR #119; F-102/F-103
+Main carries facts through **F-110**. F-101 merged via PR #119; F-102/F-103
 via PR #123; F-104 via PR #124; F-105 via PR #126; F-106 via PR #127;
-F-107 via PR #128; F-108 via PR #129. The SD-card-detect/enumeration
-thread (F-102, F-104) is retired per owner direction (see AGENTS.md's
-"Priority" section and handoff-codex.md). Lane 2's capture-descriptor
-question is accepted as settled toward the settings/property-dispatch
-reading (F-106). Lane 1's mode-state chain is resolved through F-108;
-F-109 closes the one remaining thread (who posts the live-view trigger
-event) as a deliberately-dropped simulator-reachability question, not a
-real-firmware gap.
+F-107 via PR #128; F-108 via PR #129; F-110 via PR #138. The SD-card-
+detect/enumeration thread (F-102, F-104) is retired per owner direction
+(see AGENTS.md's "Priority" section and handoff-codex.md). Lane 1's
+mode-state chain is resolved through F-108; F-109 closes the one
+remaining thread (who posts the live-view trigger event) as a
+deliberately-dropped simulator-reachability question, not a real-
+firmware gap.
 
 **Owner call, pending review:** the owner has called build-gate condition
 1 satisfied for Lane 1 (see hardware-readiness.md's new section for the
 exact evidence and the one ambiguity it rests on). **This does not
 authorize any build-phase work yet** -- a dissenting review from Codex,
 run as its own independent session, is required first and must be
-recorded in hardware-readiness.md before proceeding. F-109 is on
-`claude/f109-event-origin-deadend`; the condition-1 call and dissenting-
-review requirement are on `claude/condition1-owner-call`. The owner
-approves
-merges; nobody merges their own PRs. Check main again before allocating
-F-110.
+recorded in hardware-readiness.md before proceeding; not yet done. F-109
+is on `claude/f109-event-origin-deadend`; the condition-1 call and
+dissenting-review requirement are on `claude/condition1-owner-call`.
+
+**Lane 2's capture-descriptor question is accepted as settled toward the
+settings/property-dispatch reading (F-106) -- meaning the real save-crop
+mechanism remains unfound, not merely unverified.**
+`hardware-readiness.md`'s "RAW crop"/"RAW output path" rows were stale
+(citing only PR #37/#47) and understated this; corrected via PR #137.
+F-110 opens a deliberately fresh angle (the firmware's actual file-naming
+system) rather than continuing on the ruled-out record-builder chain --
+two candidate tables found, neither consumer located yet. This is the
+single biggest open research gap for Build 1.
+
+The owner approves merges; nobody merges their own PRs. Check main again
+before allocating F-111.
 
 **Lane 3 (AE-L/AF-L tracking) now has a proper section in handoff-codex.md
 for the first time**, with a concrete handoff point: a real event-code

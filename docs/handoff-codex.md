@@ -20,7 +20,7 @@ project's own simulator. A card-detect/SD-command-enumeration thread
 (F-102, F-104) was explored this session and retired for exactly this
 reason — see "Lane 2" below for where it stopped and why.
 
-Main carries facts through **F-109**; check main before allocating F-110.
+Main carries facts through **F-110**; check main before allocating F-111.
 Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,
@@ -329,13 +329,31 @@ register arithmetic on the module's wider base (`0xc18a6810`, used 52
 times across `0x10152000`-`0x1015c600`) rather than its own literal. Full
 detail in facts.md F-106.
 
-**Next step:** either find `0xc18a6890`'s producer via a register-
-arithmetic scan (not a literal match) over those 52 functions -- the last
-piece that could still flip this to (a) -- or accept (b) as the working
-answer at this point and move on; either is a defensible, build-relevant
-stopping point. Stopping at "the simulator can't
-show me SD I/O" is not, since this question's whole point is what the real
-firmware does.
+**Resolved, accepted as the working answer (owner decision, 2026-10-16):**
+(b) is the working hypothesis; the `0xc18a6890` slot-producer thread was
+not pursued further. `hardware-readiness.md`'s "RAW crop"/"RAW output
+path" rows were corrected to say so plainly: the record-builder chain is
+not the save path, and the real save-crop mechanism is still unfound --
+this was previously understated.
+
+**Update (2026-10-16), a fresh, separate angle opened (F-110):** rather
+than continuing on the (ruled-out) record-builder chain, traced the
+firmware's actual file-naming system instead. Found a real filename-
+template table (`DSC_0000.NDF/NEF/TIF/JPG`, `0x11c9a5fc`) and two
+distinct tables referencing it (`0x1204d280`, `0x1204d440`) with
+different preceding data -- one a clean six-bit format/quality bitmask
+plus two trailing label-like ids, the other five words not yet
+interpreted. Neither table's consumer was found by two tried methods
+(full-image word scan, register-arithmetic scan over one module). Full
+detail in facts.md F-110.
+
+**Next step:** find either table's consumer (a wider or different-range
+register-arithmetic scan, or a different technique entirely) -- this is
+very likely the actual file-save/naming routine, which would be the
+first real opportunity to check whether a crop region is consulted
+before a file is written. This is a fresh thread, not a continuation of
+the record-builder chain; do not revisit that chain (F-095 through
+F-106) without new evidence pointing back to it.
 
 ## Lane 3: AE-L/AF-L subject tracking (new section, 2026-10-16)
 

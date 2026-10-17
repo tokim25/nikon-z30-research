@@ -1995,4 +1995,61 @@ continue it. Method: read-only static scans (capstone, direct branch-
 immediate decoding, literal-pool word search, table-branch resolution),
 SHA-256 checked first; addresses only, no firmware bytes recorded.
 
+F-110. A fresh angle for the saved-crop question, deliberately separate
+from the record-builder chain F-095 through F-106 already exhausted (that
+chain leans toward a settings/property handler, not a save path -- see
+the correction to this project's hardware-readiness.md). This traces the
+firmware's actual file-naming system instead of the capture-descriptor
+candidate.
+
+The `.NEF` ASCII literal noted in passing by F-099 resolves to a real
+filename-template table at `0x11c9a5fc`: four 16-byte, null-padded ASCII
+entries in order -- `DSC_0000.NDF`, `DSC_0000.NEF`, `DSC_0000.TIF`,
+`DSC_0000.JPG` -- immediately followed by shooting-mode labels (`U1`,
+`U2`, `U3`, `PSAM`, `Othe[r]`). A full-image raw-word scan for pointers
+to each of the four filename strings found exactly two referencing
+tables, at `0x1204d280` and `0x1204d440`, each holding the same four
+string pointers in the same order (JPG, NEF, NDF, TIF) but with
+different preceding data:
+
+- `0x1204d280`'s preceding five words are three packed 16-bit pairs of
+  consecutive power-of-two bit flags (`0x0002/0x0004`, `0x0008/0x0010`,
+  `0x0020/0x0040`) -- a six-flag bitmask, one bit per format/quality
+  option, plausibly covering two extensions not in this four-entry
+  filename table. Two more words follow the pointers (unread until this
+  point): `0x0539` and `0x053b` (1337, 1339), shaped like label or
+  setting ids.
+- `0x1204d440`'s preceding five words (`0xc1c, 0x111c, 0x42b, 0x1123,
+  0x401`) do not fit the same bitmask pattern and were not interpreted
+  in this pass. No trailing ids follow its pointer block (all zero).
+
+Both tables are genuinely distinct data, not duplicates, referencing the
+same underlying strings -- consistent with two different save contexts
+(e.g. photo vs. movie, or two different quality/format menus) sharing one
+filename-template resource. Observed static decode and full-image word
+scan on 2026-10-16, high confidence for the table contents themselves.
+
+Neither table's own consumer was found. Two methods were tried and both
+came back empty: a full-image raw-word scan for either table's base
+address (same method that found the filename-pointer tables themselves),
+and a register-arithmetic scan (ldr-literal plus adds/mov propagation,
+the technique that resolved F-108's slot producer) over a 0x60000-byte
+window of a plausible nearby module. Neither is conclusive that no
+consumer exists -- only that these two specific techniques, in the
+range tried, did not find one. The consumer is the actual next step:
+it is very likely the real file-save/naming routine, which is the kind
+of code that could show whether and how saved dimensions or a crop
+region get chosen, something the record-builder chain never
+established.
+
+Not yet done: a wider or different-range register-arithmetic scan for
+the table consumer; decoding the `0x1204d440` table's five non-bitmask
+preceding words (possibly geometry, not format flags); and, once a
+consumer is found, tracing whether it reads any image-area/crop state
+at all before naming or writing a file. Method: read-only static decode
+(capstone, Thumb), full-image raw-word scans and a register-arithmetic
+scan, SHA-256 checked first; addresses, offsets and table contents only
+(ASCII filename templates transcribed as the existing project convention
+allows for UI/system strings, no firmware bytes otherwise recorded).
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
