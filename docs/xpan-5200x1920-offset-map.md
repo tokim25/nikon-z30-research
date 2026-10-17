@@ -110,3 +110,20 @@ exact manifest for the checker. Neither has been done.
   probe's 5208 x 1928) remains unresolved.
 - Still open: the digest input at `0x10000088`, camera acceptance, and the
   output-record question.
+
+## Static trace of the builder's record reads (2026-10-17)
+
+- Three lookup helpers (`0x1020c07c`, `0x1020c128`, `0x1020c17e`) compute record
+  addresses as: pointer table at RAM `0xc18c7de8` (offset selected per helper),
+  indexed by area/size selectors, plus `selector * 4` bytes into the record.
+  Selector 0 (large) reads the record's first u16 pair; medium and small read
+  later 4-byte pairs of the same record.
+- The large-window readout pair for area 4 is therefore the first pair of the
+  index-4 record, and the margin pair is read from a later pair. The exact
+  mapping of each pair to a window field is determined only by the probe, not
+  by this static read.
+- Consequence: a minimal edit of the first pair alone is the only candidate.
+  The existing EG identity gate (`StockImage`) rejects any modified EG by
+  design, so the repo's checker cannot pass on a modified image. No copy was
+  built; this is not a checker failure but a gate that cannot be satisfied for
+  a modified module.
