@@ -73,3 +73,11 @@ firmware, or is it only explaining a limit of this project's own simulator?**
 - Run `PYTHONPATH=src python -m unittest discover -s tests -v` and `python .github/scripts/check_artifacts.py` before publication.
 - Review the full staged diff, file list, and any history being pushed. Automated checks cannot reliably detect encoded firmware or sensitive prose.
 - Codex work occurs in explicit sessions. Recurring or background work requires separate user authorization and an actual configured automation; never promise automatic continuation.
+
+## Owner-approved camera rules (2026-10-17)
+
+The owner approved revised camera-contact rules on 2026-10-17. See
+[docs/proposed-rules-2026-10-17.md](docs/proposed-rules-2026-10-17.md).
+Read-only identification of the Z 30 is pre-approved. Any write to the camera
+still needs the owner's approval for that exact step, given in one reply.
+Firmware bytes stay on the owner's local machine and never enter the repository.
