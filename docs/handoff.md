@@ -157,3 +157,9 @@ unavailable states. Details and addresses are in F-150. Next: identify a
 still-capture state value and trace its load before `0x102f57e2`; a movie
 exclusion has to be designed before any hook is treated as still-only. No
 camera or simulator run was made, and hardware stays NO-GO.
+
+Owner direction 2026-10-17 (on-camera test as soon as possible): the XPan
+guard needs a still-photo predicate found at a read-only static point. None
+was found at `0x102f5810` (F-150), so the predicate is recorded as
+**unresolved** and this thread stops here. No camera, simulator run, push or
+merge.
