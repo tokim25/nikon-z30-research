@@ -160,6 +160,45 @@ assisted fixture. Option (a) alone does not close this. Option (b),
 or the owner's written risk acceptance in option (c), remain the ways
 forward.
 
+### Follow-up: instruction-level audit fixed and re-tested, 2026-10-17 (F-115)
+
+A separate instruction-level audit of the generator (PR #145,
+[native-xpan-liveview-hook-audit.md](native-xpan-liveview-hook-audit.md))
+found no crash-level defect but three things to fix and re-test. This pass
+fixed two of them in a private, throwaway copy of the generator -- the
+screen-activation wrapper's clobbered `r2` and the close
+wrapper/guard's stack misalignment, both same-size push/pop edits -- and
+deliberately left the third (a shared mask-clear helper that runs on every
+non-live-view screen activation) unchanged after confirming by static trace
+that properly narrowing it would require an open-ended investigation of
+which object types legitimately overlay live view, which the project's own
+priority rule says not to start for a simulator-side question.
+
+Every existing simulator control (direct area-change sequence, ten-cycle
+signal test, the `0x250` non-live-view close control, the diagnostic
+live-view-ready probe) was re-run against the rebuilt, fixed overlay and
+passed, with firmware hash and the pinned QEMU checkout unchanged.
+
+This pass also repeated option (a) above -- unchanged in method, run again
+against the *fixed* overlay. The result differs from the attempt recorded
+just above: this time the guard (`0x1002d860`) and mask helper
+(`0x1002d78c`) were both reached during the close-handler call, where
+before (against the pre-fix overlay) neither was. The mask flag's value did
+not change in this one run (already 1 before and after), so this is not a
+demonstrated flag flip on the natural-ish path -- it is the guard/mask
+being reached at all on this consumer-side path, for the first time outside
+a diagnostic dispatch call. The most likely explanation is the stack-
+alignment fix changing how the stock callback the close wrapper calls
+behaves; this was not confirmed by single-stepping and was not pursued
+further, per the task's own instruction to try one such test and stop.
+
+**Condition 1 remains the owner's call, exactly as this review left it.**
+This follow-up fixes code-quality findings from a separate audit and adds
+one more data point to the natural-path question; it does not itself
+satisfy "the relevant state transitions must pass," and nothing here
+should be read as marking condition 1 satisfied. Full detail, confidence
+levels and the full set of control results: `docs/facts.md` F-115.
+
 | Requirement | Evidence | Remaining gap |
 | --- | --- | --- |
 | Live-view framing | Prior native guide lines; PR #43 adds persistent native black masks after diagnostic setup. | Natural startup and supported state lifecycle. |

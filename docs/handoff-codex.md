@@ -199,6 +199,43 @@ review from Codex, run as its own independent session, is required first
 the review's exact scope. Record the review's conclusion there when it
 happens.
 
+**Update (2026-10-17), dissenting review recorded and an instruction-level
+audit done (F-115, fix-and-retest pass):** the dissenting review (PR #144)
+disagreed that condition 1 is satisfied as worded -- see
+[hardware-readiness.md](hardware-readiness.md). Separately, an
+instruction-level audit (PR #145,
+[native-xpan-liveview-hook-audit.md](native-xpan-liveview-hook-audit.md))
+reviewed the private guarded-hook generator and found no crash-level
+defect but three things worth fixing and re-testing: `r2` clobbered on the
+screen-activation wrapper's tail call, 4-byte stack misalignment in the
+close wrapper and guard, and a shared mask-clear helper that runs on every
+non-live-view screen activation, not just live-view's own.
+
+F-115 fixed the first two (same-size push/pop bitmask edits; re-disassembled
+every routine after rebuilding) and re-ran every existing simulator control
+against the fixed overlay -- all passed, firmware hash and QEMU checkout
+unchanged. It deliberately left the third (the shared helper) unchanged:
+tracing it confirmed the audit's concern is architecturally real (the
+activation path is a generic per-object-type dispatch, not live-view-
+specific), but properly narrowing it would require an open-ended trace of
+which object types are legitimate live-view overlays -- exactly what this
+project's priority rule says not to start for a simulator-side question.
+
+F-115 also repeated the dissenting review's cheapest remediation option
+(preset the mode-state byte via the firmware's own setter, call the real
+close handler `0x10460c3c` directly) against the fixed overlay. Unlike the
+same test against the pre-fix overlay (PR #146, where the guard and mask
+were never reached), this run reached both the guard and the mask helper on
+the close-handler's own code path -- the first time this project has
+observed that happen outside a diagnostic dispatch call. The mask flag's
+value did not change in this one run (it was already 1 before and after),
+so this does not demonstrate a flag flip caused by the close path, and the
+likely explanation (the stack-alignment fix changing the stock callback's
+behavior) was not pursued further. **Condition 1's status is unchanged by
+any of this** -- the dissenting review still stands, and whether this new
+evidence moves the owner's call is the owner's decision, not something this
+pass claims to have resolved.
+
 ## Lane 2: saved-crop (does a saved RAW/JPEG actually come out cropped?)
 
 Claude worked this in its own worktree (`nikon-savedcrop`, branch

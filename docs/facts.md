@@ -2308,4 +2308,81 @@ read-only static decode (capstone, Thumb) and direct algebra on already-
 confirmed instructions; no new firmware reads beyond what F-113 already
 covered.
 
+F-115. Fixes two of the three concrete findings from the instruction-level
+audit on PR #145 ([native-xpan-liveview-hook-audit.md](native-xpan-liveview-hook-audit.md))
+in a private, throwaway copy of the guarded-hook generator, rebuilds the
+private overlay, and re-runs every existing simulator control against it.
+
+**Finding 2 (r2 clobbered) and finding 3 (stack alignment), fixed.** The
+screen-activation wrapper's push/pop went from `{r0,r1,r4,lr}` to
+`{r0,r1,r2,r3,r4,lr}`, so all four argument registers the call site sets up
+survive the wrapper's intervening call before the real target runs. The
+close wrapper and the guard each went from pushing `{lr}` alone to pushing
+`{r4,lr}`, restoring 8-byte stack alignment for the stock callback and the
+guard's own read. All three changes are same-size push/pop bitmask edits
+only; no other offset in any of the three routines moves. Re-disassembled
+every routine and every rewritten branch with capstone after the rebuild:
+all targets and offsets are exactly as intended.
+
+**Finding 1 (shared mask-clear helper), investigated but deliberately left
+unchanged.** Traced the shared helper the audit flagged (`0x102355ee`
+through `0x102355f4`) to its one caller, `0x10198d12`, which is itself one
+entry in a long, flat sequence of individual `b.w` stubs -- a generic
+per-object-type activation dispatch table, not something specific to
+live-view or to the handful of object types this project has already
+named. This confirms the audit's concern is architecturally real: the
+activation path the hook sits on is shared across many unrelated object
+types, not just live-view's overlays. Properly narrowing the clear
+condition (e.g. to "live-view layer is deactivating" rather than "any
+other object is activating") would require identifying which of the many
+object types reaching this generic dispatch are legitimate screen
+overlays during live view -- an open-ended trace this project's own
+priority rule says not to start for a simulator-side question. Left the
+existing behavior (clear mask on any non-live-view activation) unchanged
+as the safest, no-regression choice, and recorded this as a deliberate,
+evidence-backed deferral rather than a fix.
+
+**Re-run controls, all passed against the fixed overlay:** the direct
+1:1/DX/1:1/16:9 sequence; ten alternating menu/live-view signal cycles; the
+internal `0x250` non-live-view close event (the mask correctly stays off --
+the field name `natural_return_passed` checks for the *rejected* unguarded
+behavior, so `false` here is the passing result, matching this project's
+own documented design intent); and the diagnostic live-view-ready probe
+(`passed: true`). Firmware hash and pinned QEMU checkout were asserted
+unchanged before and after every run.
+
+**One natural-path attempt against the fixed overlay, with a materially
+different result than the same test against the pre-fix overlay (PR
+#146).** Repeated the dissenting review's cheapest remediation option --
+preset the mode-state byte via the firmware's own setter (not a debugger
+write) and call the real close handler `0x10460c3c` directly -- against
+this fixed overlay. Against the *pre-fix* overlay, the guard (`0x1002d860`)
+and mask helper (`0x1002d78c`) were never reached. Against the *fixed*
+overlay, both were reached (observed twice each during the one close-handler
+call), including the guard being hit with the live-view object and selector
+value the guard is designed to admit on. The observed mask flag was already
+1 before this call and stayed 1 after, so this run does not by itself show
+a flag flip caused by the close path -- it shows, for the first time, that
+the guard and mask are *reached* on this consumer-side path when the state
+the real setter writes is present, rather than being silently skipped. The
+most likely explanation is the stack-alignment fix (finding 3): the close
+wrapper's stock callback previously ran 4 bytes off 8-byte alignment, which
+plausibly diverted or truncated execution before the subsequent guard call
+ran. This explanation was not pursued further (would require single-
+stepping the stock callback under both overlays, the kind of open-ended
+simulator-fidelity trace this project's priority rule says to avoid) --
+recorded as observed, not as a proven cause. Per the task's own instruction
+to try exactly one such test and stop, no further variants (e.g. a
+different preset value, or starting from flag 0) were attempted.
+
+Confidence: high for the two fixed findings and the re-run controls (direct
+disassembly plus simulator result); medium for the natural-path result
+(one run, cause not confirmed); the finding-1 deferral is a documented
+choice, not a finding. This does not change condition 1's status --
+[hardware-readiness.md](hardware-readiness.md)'s dissenting review still
+stands, and that call remains the owner's to make. Method: static
+disassembly (capstone, Thumb) of a private generator copy and its rebuilt
+overlay, plus disposable QEMU loader-overlay simulator runs; no firmware,
+overlay bytes or disassembly committed to the repo.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
