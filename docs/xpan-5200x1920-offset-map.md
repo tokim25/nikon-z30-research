@@ -1,0 +1,152 @@
+# XPan 5200 x 1920 centered: partial offset map (static, scratch copy)
+
+2026-10-17. Read-only static mapping on a scratch working copy of the owner's
+original. Restricted bytes, decoded module and raw output stay outside the
+repo; only addresses, sizes and values listed here are recorded. No patch,
+no manifest, no checker run, no flash, no camera access. Hardware remains
+**NO-GO**.
+
+## Identity
+
+- Original container SHA-256 matched the pinned value (size 34,496,798).
+- Decoded EG passed the existing stock-module identity check (size 33,939,514,
+  SHA-256 pinned in [milestone-1-recovery.md](milestone-1-recovery.md)).
+
+## Candidate sites for the 1:1 slot (EG, ROM address to file offset = address - 0x10020000)
+
+| Address | Current u16 pair | Meaning (inferred) | Probe change |
+| --- | --- | --- | --- |
+| `0x115a4d5c` | (936, 0) | 1:1 internal origin | origin 192,896 in probe |
+| `0x115a4d9c` | (3728, 3728) | 1:1 readout area, large | area 5216 x 1936 in probe |
+| `0x115a4dd8` | (3712, 3712) | 1:1 output, large | derived 5200 x 1920 in probe |
+| `0x115a4e14` | (3728, 3728) | 1:1 readout area, second table | not in probe; check |
+
+Neighbouring 16:9 origin pair at `0x115a4d54` is (0, 292) and DX origin pair
+at `0x115a4d58` is (0, 0); these are not edited.
+
+## Not established
+
+- Whether the probe's origin and area values map one-to-one to the entries
+  above. The probe changed guest memory, not these file bytes.
+- Whether the output record at `0x115a4dd8` must change for the 5200 x 1920
+  result, or is derived.
+- The second table entry at `0x115a4e14`, and the other repeated 3712 entries
+  near `0x115a4e80`.
+- Retouch Trim's square-forcing for the 1:1 slot (table A), not mapped here.
+
+## Next
+
+A probe-level check: in the simulator, confirm which entries must change, using
+a temporary guest-memory edit that is never written to a file. Then produce the
+exact manifest for the checker. Neither has been done.
+
+## RAM mapping and probe status (2026-10-17, scratch copy)
+
+- The per-area pointer table at ROM `0x12049a7c` (38 entries) is outside the
+  scatter source range, so its entries are read as ROM addresses, not RAM
+  copies. Index 4 points to `0x115a4d9c` (1:1 readout area record) and index 9
+  to `0x115a4dd8` (1:1 output record); the 1:1 readout pair there matches the
+  table above.
+- Writes to those addresses would be debugger writes into ROM-mapped data. Not
+  yet checked whether the pinned QEMU accepts them.
+- The crop-builder probe was not run. It needs a constructed input object and
+  the area/origin lookups in a started state; the harness (`tools/run.py`,
+  `tools/guest_call.py`) is available but the object setup is not written.
+- Result: the 5200 x 1920 derivation is **not confirmed** in the simulator.
+  The output-record question remains open. The digest input stays open.
+
+## Repoint method (F-079/F-080) status
+
+- F-079 and F-080 (2026-10-16) repointed the RAM pointer copy at `0xc18c7de8`
+  for indices 4, 9, 14, 19 and called the builder for area 4. Prior result:
+  large window 5208 x 1928 (offsets 8, 8); not 5200 x 1920.
+- The repro script for that method lives under the private WORK folder, which
+  is not present on this machine. Re-running it, or writing an equivalent
+  harness, needs a memory-write helper and a free RAM region for the scratch
+  records, neither of which is in `tools/`. Blocked; no run made.
+
+## Repoint probe run (2026-10-17, pinned QEMU, scratch copy)
+
+- Ran the F-079/F-080 RAM-write helper (`claude-xpan-records2-private.py`),
+  copied from the private WORK folder into a scratch root. The helper was not
+  edited or run in place. Only guest memory changed; the original pointers were
+  restored and verified; the firmware file is unchanged.
+- Large size, area 4, with XPan-shaped records (readout 5216 x 1936; output
+  5200 x 1920 at index 9): window **5208 x 1928**, offsets (8, 8). Not 5200 x 1920.
+  The same result as F-080.
+- Output record: setting the output record to 5200 x 1920 does **not** produce
+  a 5200 x 1920 window. The window follows the readout and margin records, so
+  the output record alone is insufficient. Which of the other records must
+  change for an exact 5200 x 1920 window is not determined.
+- Stock baseline in the same run: DX and 16:9 windows unchanged.
+- Digest input at `0x10000088`: still open.
+
+## Target 5208 x 1928 (offsets 8, 8): records and output check (2026-10-17)
+
+- Records that determine the large window: the 1:1 readout records at index
+  4 (`0x115a4d9c`, EG file offset) and index 14 (`0x115a4e14`), set to
+  5216 x 1936 in the probe. The large window follows these, not the output
+  record.
+- Output record at index 9 (`0x115a4dd8`): setting it to 5208 x 1928 leaves the
+  large window at 5208 x 1928, offsets (8, 8), and DX and 16:9 unchanged.
+  The output record is consistent with the target but does not drive it.
+- Medium and small windows with these records are 3900 x 1440 and 3906 x 1446,
+  not 65:24-exact at the same offsets; their target values are not settled.
+- Not buildable yet: the digest input at `0x10000088` is open, and the change
+  must be expressed as an exact manifest over the ROM-mapped records, which has
+  not been written or checked.
+
+## Manifest status for readout records 4 and 14 (2026-10-17)
+
+- Stock values (EG file, u16 x 12) at the readout record for index 4
+  (`0x115a4d9c`) and index 14 (`0x115a4e14`) are read; index 14 differs from
+  index 4 only in its later pairs.
+- The repoint probe wrote only a 6-short scratch record (5216 x 1936, 0, 0,
+  3912, 1452), not a full in-place record. The in-place 12-short record's
+  remaining fields for 5216 x 1936 are not determined by the probe, so an exact
+  manifest cannot be written from the evidence.
+- No scratch build was produced. The checker was not run on a modified image.
+  The copy is therefore not built, and the window target (5200 x 1920 vs the
+  probe's 5208 x 1928) remains unresolved.
+- Still open: the digest input at `0x10000088`, camera acceptance, and the
+  output-record question.
+
+## Static trace of the builder's record reads (2026-10-17)
+
+- Three lookup helpers (`0x1020c07c`, `0x1020c128`, `0x1020c17e`) compute record
+  addresses as: pointer table at RAM `0xc18c7de8` (offset selected per helper),
+  indexed by area/size selectors, plus `selector * 4` bytes into the record.
+  Selector 0 (large) reads the record's first u16 pair; medium and small read
+  later 4-byte pairs of the same record.
+- The large-window readout pair for area 4 is therefore the first pair of the
+  index-4 record, and the margin pair is read from a later pair. The exact
+  mapping of each pair to a window field is determined only by the probe, not
+  by this static read.
+- Consequence: a minimal edit of the first pair alone is the only candidate.
+  The existing EG identity gate (`StockImage`) rejects any modified EG by
+  design, so the repo's checker cannot pass on a modified image. No copy was
+  built; this is not a checker failure but a gate that cannot be satisfied for
+  a modified module.
+
+## Per-pair probe on index 4 (2026-10-17, scratch, pinned QEMU)
+
+- Stock index-4 record (12 u16) with one pair at a time set to 5216 x 1936:
+  each of pairs 0 to 5 leaves the large window at 3720 x 3720, offsets (8, 8),
+  the stock value.
+- So no single pair of index 4 changes the large window. The earlier 5208 x 1928
+  result required index 4 and index 14 to change together; the window depends
+  on both records jointly.
+- Field-level mapping: **not settled**. A full mapping needs joint probes over
+  pairs of indices 4 and 14, which this run did not do.
+- Build: not attempted; the repo's `StockImage` gate refuses any modified EG by
+  design, so the checker result would be a refusal.
+
+## Joint single-pair probe, index 4 and index 14 (2026-10-17, scratch)
+
+- All 36 combinations (one pair of index 4 x one pair of index 14, each set to
+  5216 x 1936, rest stock): every large window stayed 3720 x 3720, offsets (8, 8).
+- No combination reproduces 5208 x 1928. The earlier result needed several
+  pairs changed together with non-stock values, so the field mapping is not
+  settled by single-pair edits.
+- Build: not attempted. The repo's `StockImage` gate refuses any modified EG by
+  design; the checker result would be a refusal.

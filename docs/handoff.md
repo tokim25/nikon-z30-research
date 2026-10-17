@@ -7,6 +7,20 @@ Kept for history; do not use for current status.
 
 Date: 2026-10-15. Update this whenever work is in progress.
 
+
+## Current checkpoint, 2026-10-17 (read-only build decision)
+
+Status: standalone-EG route verified only to the digest boundary; not a
+build-ready route. The eight-byte digest input at `0x10000088` is unresolved
+(F-140, F-141). Full decision and minimum XPan edit set:
+[xpan-build-decision.md](xpan-build-decision.md). Hardware remains NO-GO.
+WonderLantern's install claim conflicts with the traced digest branch and is
+unverified here. `native-claude-build-research-handoff.md` is absent on main.
+
+Single next step (Codex): decide whether the eight digest bytes at
+`0x10000088` come from package content or device state, by tracing the
+metadata transform `0x101d3f14` and its callback chain.
+
 ## State
 
 - Native guides work in the simulator in live view
@@ -147,3 +161,19 @@ pinned simulator and run folders in `private-inputs/`. Private scripts there:
 `native_fill_loop9_private.py` with `robust_call_private.py`,
 `menu_retest_private.py`, `geom_probe_private.py` (run name, firmware path),
 `dimtable_scan_private.py`. Keep their output private.
+
+## Update 2026-10-17: still-versus-movie guard, F-150
+
+Result: **unresolved**. The live-view hook at `0x102f5810` writes selector 1
+with no still/movie test. The guard (empty stack plus selector `0xc1821db8`
+equal to 1) does not separate still capture from movie, playback, warning or
+unavailable states. Details and addresses are in F-150. Next: identify a
+still-capture state value and trace its load before `0x102f57e2`; a movie
+exclusion has to be designed before any hook is treated as still-only. No
+camera or simulator run was made, and hardware stays NO-GO.
+
+Owner direction 2026-10-17 (on-camera test as soon as possible): the XPan
+guard needs a still-photo predicate found at a read-only static point. None
+was found at `0x102f5810` (F-150), so the predicate is recorded as
+**unresolved** and this thread stops here. No camera, simulator run, push or
+merge.
