@@ -2385,4 +2385,50 @@ disassembly (capstone, Thumb) of a private generator copy and its rebuilt
 overlay, plus disposable QEMU loader-overlay simulator runs; no firmware,
 overlay bytes or disassembly committed to the repo.
 
+F-116. Tries [tracking-input-chain.md](tracking-input-chain.md)'s option 2
+handoff: a masked/family-level static search for a dispatcher that tests
+property id `0x2021`/`0x2087` by their shared high byte (`0x20`) rather
+than by exact literal value. Negative result; the lead this scan actually
+turned up is unrelated.
+
+**Method.** A full-image linear decode (capstone, Thumb, SHA-256 checked
+first) looking for any `cmp`/`cmp.w rX, #0x20` immediately or shortly
+preceded by an extraction of `rX` as the high byte of some other register
+(`lsrs rX, rY, #8`, `ubfx` with lsb 8, or an `#0xff00` mask) -- the same
+category-plus-sub-id encoding shape F-104 found for SD command words.
+This is a genuinely different search from the prior literal-`0x2021` scans
+(`tracking-input-chain.md`'s handoff section): it looks for the *shape* of
+a masked dispatch, not a specific immediate.
+
+**Result: six raw hits, one real, zero relevant.** Four of the six are
+decode artifacts of scanning data/non-code regions as if they were Thumb
+instructions (confirmed by inspecting their surrounding context: nonsense
+instruction sequences, e.g. a `movs r0, #0x20` sitting between the
+extraction and the compare it was spuriously paired with, which the
+matching script did not detect as an intervening overwrite). One real,
+cleanly-decoded dispatcher was found at `0x105afa0e`
+(`lsrs r1, r0, #8; cmp r1, #0x20; ...; sub.w r1, r0, #0x2000; subs r1,
+#0xc; beq ...`) -- but reading its enclosing function (`0x105af9b0`
+onward) shows it is a text/string-formatting routine: the surrounding
+code checks `r0`'s low byte against ASCII-range values (`0x22`, `0x23`,
+`0x25`, `0x27`, `0x44`) and walks a character buffer, not a property-event
+struct. The `0x20xx`/`0x6xx` ranges it tests are escape-code categories in
+a format string, unrelated to the UI property-notification system this
+project has traced elsewhere (F-090, F-106, this file's `0x2021` entries).
+
+**This does not resolve Lane 3's handoff point.** It rules out the one
+specific masking idiom this scan checked (`lsr #8` immediately feeding a
+`cmp #0x20`) as a way to find `0x2021`'s consumer by this method, in the
+sense that the only clean hit it produced is provably unrelated. It does
+not rule out other masking idioms (`and`/`and.w` with `#0xff00`, a
+bitfield-extract instruction, or a `tbb`/`tbh` range-dispatch table keyed
+on the high byte) -- those were not attempted this pass. Confidence high
+for the one real hit's unrelatedness (read its full enclosing function);
+the negative result for this one idiom is otherwise as exhaustive as a
+single-idiom full-image scan can be. [tracking-input-chain.md](tracking-input-chain.md)'s
+option 1 (live simulator breakpoint on the post primitive `0x10475ecc`)
+remains untried and is probably the more direct next step; so is
+retrying option 2 with the other masking idioms named above. Method:
+read-only static decode only; no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

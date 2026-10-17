@@ -64,6 +64,12 @@ the post primitive, or a masked/family-level static search) are named in
 handoff-codex.md's new Lane 3 section and in `docs/tracking-input-chain.md`.
 This is on `claude/tracking-handoff-property-2021`.
 
+**F-116 tried the masked-search option for one idiom (high-byte-via-
+`lsr #8`), negative:** the one real hit it found is an unrelated
+text-formatting routine, not a property dispatcher. Other masking idioms
+(`and #0xff00`, bitfield-extract, `tbb`/`tbh`) and the live-simulator
+breakpoint option both remain untried and are the actual next steps.
+
 ## Feature state
 
 An assisted simulator prototype now loads a native hook before CPU start and

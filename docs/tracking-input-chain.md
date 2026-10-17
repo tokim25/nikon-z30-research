@@ -651,3 +651,26 @@ instruction scans, SHA-256 checked first; addresses and event/property
 codes only, no firmware bytes recorded.
 
 Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
+
+## 2026-10-17: option 2 tried for one masking idiom, negative (F-116)
+
+Tried this section's option 2: a full-image search for a dispatcher that
+tests property ids by their high byte (`0x20`) rather than by exact
+literal value, the same category-plus-sub-id shape F-104 found for SD
+commands. Searched specifically for `cmp rX, #0x20` fed by an `lsrs rX,
+rY, #8`-style extraction. Found one real, cleanly-decoded hit
+(`0x105afa0e`) and four decode artifacts; the one real hit is a
+text/string-formatting routine (ASCII-range checks on a character buffer),
+not a property dispatcher -- unrelated to `0x2021`/`0x2087`.
+
+**This rules out only the one masking idiom tried**, not option 2 as a
+whole: an `and`/`and.w #0xff00` mask, a bitfield-extract instruction, or a
+`tbb`/`tbh` range-dispatch table keyed on the high byte were not attempted
+and remain open. Option 1 (live simulator breakpoint on `0x10475ecc`) also
+remains untried and is probably the more direct next step either way.
+Full detail in facts.md F-116.
+
+Method: read-only static decode (capstone, Thumb), full-image instruction
+scan, SHA-256 checked first; addresses only, no firmware bytes recorded.
+
+Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
