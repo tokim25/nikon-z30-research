@@ -4,7 +4,7 @@ This directory is the project root. Never initialize Git in a parent directory.
 
 ## Start here
 
-Before anything else, read your lane's handoff file. It records the current
+Before anything else, read [docs/session-manager-brief.md](docs/session-manager-brief.md) for the current project state, owner rules, and blockers. Then read your lane's handoff file. It records the current
 state, the single next step, and how to resume after a stalled session.
 
 - Codex: [docs/handoff-codex.md](docs/handoff-codex.md), tracking research.
