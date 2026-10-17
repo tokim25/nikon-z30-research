@@ -127,3 +127,16 @@ exact manifest for the checker. Neither has been done.
   design, so the repo's checker cannot pass on a modified image. No copy was
   built; this is not a checker failure but a gate that cannot be satisfied for
   a modified module.
+
+## Per-pair probe on index 4 (2026-10-17, scratch, pinned QEMU)
+
+- Stock index-4 record (12 u16) with one pair at a time set to 5216 x 1936:
+  each of pairs 0 to 5 leaves the large window at 3720 x 3720, offsets (8, 8),
+  the stock value.
+- So no single pair of index 4 changes the large window. The earlier 5208 x 1928
+  result required index 4 and index 14 to change together; the window depends
+  on both records jointly.
+- Field-level mapping: **not settled**. A full mapping needs joint probes over
+  pairs of indices 4 and 14, which this run did not do.
+- Build: not attempted; the repo's `StockImage` gate refuses any modified EG by
+  design, so the checker result would be a refusal.
