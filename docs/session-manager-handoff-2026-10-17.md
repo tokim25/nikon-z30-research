@@ -56,3 +56,25 @@ Read first: [owner-direction-2026-10-17.md](owner-direction-2026-10-17.md),
 - Whether to merge the three research branches.
 - Whether to clear the older branches that are already merged into main.
 - Whether to strictly enforce the rule that commits happen only when asked.
+
+## Next token-checkpoint handoff to Claude
+
+When usage approaches the standing 10% reserve, share this summary with
+Claude's session manager:
+
+- PR #156 contains the Codex preflight and native-trace work; review it, but do
+  not merge it without the owner.
+- Facts F-135--F-149 are renumbered and validated against current `main`.
+- Claude's F-130--F-134 branches were reviewed and have no fact-number clash;
+  they remain unmerged.
+- Saved-crop static research is closed. It is an owner-approved on-camera test
+  item, not a blocker, and no simulator run should be started for it without
+  fresh approval.
+- The only active experiment is the owner-approved simulator breakpoint on the
+  shared property-post primitive for AE-L/AF-L tracking. Record whether it
+  fires, then stop; do not design a patch until the result is documented.
+- Use Claude next for a non-simulator review of native hook feasibility,
+  lifecycle gaps, and the patch-readiness checklist. Do not ask Claude to
+  merge or push.
+- Hardware remains NO-GO. End with the exact next build decision, open risks,
+  validation results, and clean repository/PR state.

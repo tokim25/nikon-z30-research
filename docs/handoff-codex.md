@@ -6,6 +6,9 @@ Owner direction for this checkpoint is recorded in
 [owner-direction-2026-10-17.md](owner-direction-2026-10-17.md): saved crop is an
 on-camera test item, not a blocker for the feature plan. Hardware remains
 NO-GO.
+Before further patch work, use [patch-readiness-checklist.md](patch-readiness-checklist.md)
+to confirm that the hook, inputs, ABI, simulator acceptance, and hardware gate
+are all explicitly accounted for.
 
 ## Current session update, 2026-10-17
 

@@ -3,6 +3,8 @@
 Owner direction: [owner-direction-2026-10-17.md](owner-direction-2026-10-17.md).
 The saved-crop question is an on-camera test item, not a blocker for feature
 work. Hardware remains NO-GO.
+Patch work is governed by [patch-readiness-checklist.md](patch-readiness-checklist.md);
+do not begin another patch loop until its required inputs are explicit.
 
 Updated 2026-10-17 by Codex. Read [handoff-codex.md](handoff-codex.md) for
 the current integration map and next step. Older paused-lane notes are stale.
