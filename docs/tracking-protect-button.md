@@ -574,3 +574,89 @@ authorized from this checkpoint either.
 Written by Claude (Sonnet 5.5), continuing Codex's checkpoint on this
 branch per the owner's handoff in `docs/tracking-claude-handoff.md`, in
 collaboration with Tony Kim.
+
+## 2026-10-16: both open questions from the prior pass resolved
+
+Picked up both items the prior section left open, in parallel. Read-only
+static decode only; no simulator run, no firmware modification.
+
+### The three unresolved `r1==0x4d` sites are not a mystery -- they're the remaining two handlers' stubs
+
+`0x103d8f4e`, `0x103db924` and `0x103dbbb8` (the different calling shape
+flagged as open) are **read-modify-write "swap" stubs**: each reads the
+setting's current value first (`bl 0x10465984`), saves it (`mov r4,r0`),
+writes the new value (`r1 = 0x4d`), calls the setter, then returns the
+*old* value in `r1` (`mov r1,r4`) before popping -- a confirm/undo shape,
+not a different feature. Their settings:
+
+| Stub | Setting | Matches |
+| --- | --- | --- |
+| `0x103d8f4e` | `0x1141` | `0x1036938c`'s mode-0 setting |
+| `0x103db924` | `0x1170` | `0x1036938c`'s mode-1 setting |
+| `0x103dbbb8` | `0x1173` | `0x103693ee`'s mode-1 setting |
+
+Combined with the prior section's four-stub table, this accounts for the
+menu-side wiring of **all four** tracking-capable handlers across both
+modes (the remaining `0x1144` stub, `0x103693ee`'s mode-0 setting, was
+not individually located but is expected to exist with the same shape
+given the other seven do). No open calling-convention question remains;
+both stub shapes (plain post, and read/write/return-old) are accounted
+for and neither implies anything AE-L/AF-L-specific.
+
+### The display-case label IDs are per-button, not shared -- AE-L/AF-L needs a genuinely new one
+
+Located the other three handlers' own display dispatchers (same shape as
+`0x103d4222`: read the setting via `0x10465984`, then a `cmp`/`beq` chain
+per selectable value) and read each one's case for `0x4d`:
+
+| Handler's display dispatcher | Setting | `0x4d` case's label/preview ID |
+| --- | --- | --- |
+| `0x103d47b2` | `0x114e` | `0x1ca5` |
+| `0x103d4a92` | `0x1150` | `0x1ca6` |
+| `0x103d680e` | `0x1302` | `0x1cd8` |
+
+All three IDs differ. This rules out a single shared "Subject tracking"
+preview constant reused across buttons -- each handler's dispatcher
+carries its own distinct ID for the same selected value, allocated as
+part of that handler's own numbering (note `0x1ca5`/`0x1ca6` are
+sequential, consistent with per-handler allocation at table-build time,
+not a semantic grouping). **This means AE-L/AF-L's new case in
+`0x103d4222` cannot simply reuse one of these existing IDs -- it needs
+its own new label/preview-context ID**, following the same allocation
+pattern as the three found here, not an invented or borrowed value. What
+exactly that ID should reference (which string/preview resource) was not
+traced in this pass -- the IDs found (`0x1ca5`, `0x1ca6`, `0x1cd8`) are
+themselves opaque constants whose consuming table was not decoded here.
+
+### Updated coordinated-change picture
+
+This replaces the prior section's open item 1 (menu/display case) with
+a concrete answer: a new case is needed, but it requires **a newly
+allocated label/preview ID**, not just a new `cmp`/`beq` referencing an
+existing one. The two-piece-plus-gate picture from the prior section is
+now:
+
+1. **Menu/assignment:** two new setter stubs (one of the two known
+   shapes, following any of the seven examples now located) for `0x1184`
+   and `0x1187`, **plus** a new `cmp r4,#0x4d; beq <label>` case in
+   `0x103d4222` pointing at a *newly allocated* label/preview ID (not
+   reusable from the three found here) -- and whatever table or resource
+   that ID indexes into has not yet been traced.
+2. **Action dispatch** (unchanged from prior section): `0x10369468`
+   needs a `0x4d` case; `0x10368b6e`'s accepted-input set needs `0x0d`.
+3. **Press-edge gate** (unchanged from prior section): the
+   `0x102f1dbc`/`0x102f1dc0` boundary.
+
+Still no adapter or patch written. Not yet done: tracing what the
+`0x1cXX`-range IDs actually index into (a string table, a preview-image
+table, or something else), and whether allocating a new one in that same
+range is as simple as it sounds or requires its own table-expansion
+consideration (the same kind of "safe instruction/data space" question
+Lane 1 had to resolve for its own hook).
+
+Validation: all 54 standard unit tests, both artifact scripts, and
+`git diff --check` passed before this edit. No commit was pushed to
+`main`; no merge is authorized from this checkpoint.
+
+Written by Claude (Sonnet 5.5), continuing on this branch, in
+collaboration with Tony Kim.
