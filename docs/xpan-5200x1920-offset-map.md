@@ -64,3 +64,19 @@ exact manifest for the checker. Neither has been done.
   is not present on this machine. Re-running it, or writing an equivalent
   harness, needs a memory-write helper and a free RAM region for the scratch
   records, neither of which is in `tools/`. Blocked; no run made.
+
+## Repoint probe run (2026-10-17, pinned QEMU, scratch copy)
+
+- Ran the F-079/F-080 RAM-write helper (`claude-xpan-records2-private.py`),
+  copied from the private WORK folder into a scratch root. The helper was not
+  edited or run in place. Only guest memory changed; the original pointers were
+  restored and verified; the firmware file is unchanged.
+- Large size, area 4, with XPan-shaped records (readout 5216 x 1936; output
+  5200 x 1920 at index 9): window **5208 x 1928**, offsets (8, 8). Not 5200 x 1920.
+  The same result as F-080.
+- Output record: setting the output record to 5200 x 1920 does **not** produce
+  a 5200 x 1920 window. The window follows the readout and margin records, so
+  the output record alone is insufficient. Which of the other records must
+  change for an exact 5200 x 1920 window is not determined.
+- Stock baseline in the same run: DX and 16:9 windows unchanged.
+- Digest input at `0x10000088`: still open.
