@@ -2052,4 +2052,64 @@ scan, SHA-256 checked first; addresses, offsets and table contents only
 (ASCII filename templates transcribed as the existing project convention
 allows for UI/system strings, no firmware bytes otherwise recorded).
 
+F-111. Continues F-110's fresh angle. Neither filename-table consumer
+(`0x1204d280`, `0x1204d440`) was found by any of three tried methods
+this pass -- a full-image raw-word scan, a full-image `ldr`-literal
+register-arithmetic scan (resolving `ldr rX,[pc,#imm]` plus `adds`/`mov`
+propagation across all 15.7 million decoded instructions in the image),
+and a full-image `movw`/`movt` pair scan (direct 32-bit constant
+construction, bypassing literal pools entirely) -- all three came back
+with zero hits for either table address. A wide dump of the surrounding
+region (`0x1204d000`-`0x1204d600`) found other structured data (repeated
+small-integer id sequences, a run of ASCII spaces) but no further
+instance of the two tables' own shape, so they do not appear to be two
+entries of one larger indexed array with a findable common base either.
+
+A different search succeeded: F-110's two trailing words after the first
+table's filename pointers, `0x0539` and `0x053b`, are not isolated --
+a full-image scan for `movw`/`cmp` referencing either value as an
+immediate found 31 hits, clustered in two modules
+(`0x1034e000`-`0x1034fb00`, 8 hits; `0x104dd000`-`0x104e1400`, 9 hits).
+Decoding the first cluster's entry point, `0x1034e674`, finds a real
+property-driven settings handler: it reads a mode/selector property
+(`0x2010`), then, depending on an earlier condition, reads either
+`0x0539` or `0x1838` into a working register, then `0x053a`/`0x1839`
+into another, and dispatches on the result (values 1, 2, 3) into
+branches that compute three more sequential property ids each
+(`0x0540`, `0x0544`, `0x0548` for one branch). This is a genuine
+property-id family -- `0x539`-`0x53b`, `0x540`, `0x544`, `0x548`,
+`0x1838`, `0x1839` -- being actively read and dispatched on by name, not
+a coincidence of nearby numbers, and it directly includes the exact two
+values (`0x539`, `0x53b`) found appended to the first filename table in
+F-110.
+
+A second function in the same module, `0x1034e86c`, reads an incoming
+mode byte, searches a small 2-entry array for a match, and on specific
+outcomes calls `0x1034e4cc`, `0x1035e7d6`/`0x10360d3c` (a setter,
+paired with the getter `0x10360bba` used throughout the first function)
+with property `0x0539`, then a refresh-style call (`0x1021994a` with
+argument `0x32`). `0x1035e7d6` itself, and its sibling `0x1035e7f4`,
+resolved to generic stride-8 search-and-return helpers (binary/linear
+search over a small fixed array, used with several different small
+lookup tables elsewhere in the same module for unrelated fixed keys,
+e.g. `0x1035e852`'s wrapper) -- shared utility code, not evidence
+specific to this property family on their own.
+
+Inferred, confidence medium: this `0x1034exxx` module is very likely the
+firmware's actual image-quality/format setting handler (reading and
+writing which RAW/JPEG/TIFF variant is selected), given it operates
+directly on the same property ids found attached to the filename-
+template table. This is the closest this research has come to the real
+save-path code since abandoning the record-builder chain (F-095-F-106).
+Not established: the literal instruction that dereferences
+`0x1204d280`/`0x1204d440` themselves (still not found), what the second
+module cluster at `0x104ddxxx`-`0x104e1xxx` does (not decoded in this
+pass), and -- the actual question this whole thread exists to answer --
+whether anything in this property family reads or writes a crop/image-
+area state before a file gets named or saved. Observed static decode
+and full-image scans on 2026-10-16, no classifier stop. Method:
+read-only static decode (capstone, Thumb), full-image raw-word,
+register-arithmetic and `movw`/`movt` scans, SHA-256 checked first;
+addresses, offsets and property ids only, no firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

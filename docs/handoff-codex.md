@@ -20,7 +20,7 @@ project's own simulator. A card-detect/SD-command-enumeration thread
 (F-102, F-104) was explored this session and retired for exactly this
 reason — see "Lane 2" below for where it stopped and why.
 
-Main carries facts through **F-110**; check main before allocating F-111.
+Main carries facts through **F-111**; check main before allocating F-112.
 Hardware access stays **NO-GO**
 ([hardware-readiness.md](hardware-readiness.md)); nothing here authorizes
 touching a real camera. Build-phase work is open for the owner's own,
@@ -347,13 +347,27 @@ interpreted. Neither table's consumer was found by two tried methods
 (full-image word scan, register-arithmetic scan over one module). Full
 detail in facts.md F-110.
 
-**Next step:** find either table's consumer (a wider or different-range
-register-arithmetic scan, or a different technique entirely) -- this is
-very likely the actual file-save/naming routine, which would be the
-first real opportunity to check whether a crop region is consulted
-before a file is written. This is a fresh thread, not a continuation of
-the record-builder chain; do not revisit that chain (F-095 through
-F-106) without new evidence pointing back to it.
+**Update (2026-10-16), the real module found via a different route
+(F-111):** the first table's two trailing words (`0x539`, `0x53b`) led,
+via a full-image property-id scan (not a table-address search), to a
+real property-driven settings handler at `0x1034e674` that actively
+reads and dispatches on a family of related ids (`0x539`-`0x53b`,
+`0x540`, `0x544`, `0x548`, `0x1838`, `0x1839`) -- very likely the
+firmware's actual image-quality/format setting handler. This is the
+closest this research has come to real save-path code since abandoning
+the record-builder chain. Three separate methods (full-image word scan,
+full-image register-arithmetic scan, full-image `movw`/`movt` pair scan)
+still could not find the literal instruction dereferencing either table
+address directly -- that specific question is now lower priority than
+following the property-id family itself. Full detail in facts.md F-111.
+
+**Next step:** decode `0x1034e674`'s full branch structure (modes 1/2/3,
+each computing its own sequential property-id block) and the second
+module cluster at `0x104ddxxx`-`0x104e1xxx` (not yet touched), looking
+specifically for anything that reads or writes crop/image-area state in
+either. This is a fresh thread, not a continuation of the record-builder
+chain; do not revisit that chain (F-095 through F-106) without new
+evidence pointing back to it.
 
 ## Lane 3: AE-L/AF-L subject tracking (new section, 2026-10-16)
 

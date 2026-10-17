@@ -5,7 +5,7 @@ the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
 
-Main carries facts through **F-110**. F-101 merged via PR #119; F-102/F-103
+Main carries facts through **F-111**. F-101 merged via PR #119; F-102/F-103
 via PR #123; F-104 via PR #124; F-105 via PR #126; F-106 via PR #127;
 F-107 via PR #128; F-108 via PR #129; F-110 via PR #138. The SD-card-
 detect/enumeration thread (F-102, F-104) is retired per owner direction
@@ -29,13 +29,17 @@ settings/property-dispatch reading (F-106) -- meaning the real save-crop
 mechanism remains unfound, not merely unverified.**
 `hardware-readiness.md`'s "RAW crop"/"RAW output path" rows were stale
 (citing only PR #37/#47) and understated this; corrected via PR #137.
-F-110 opens a deliberately fresh angle (the firmware's actual file-naming
-system) rather than continuing on the ruled-out record-builder chain --
-two candidate tables found, neither consumer located yet. This is the
-single biggest open research gap for Build 1.
+F-110 opened a fresh angle (the firmware's actual file-naming system)
+rather than continuing on the ruled-out record-builder chain. F-111
+followed the table's trailing property ids (not the table address
+itself) to a real property-driven settings handler at `0x1034e674`,
+very likely the actual image-quality/format module -- the closest this
+research has come to real save-path code so far. Still open: whether
+anything in that property family touches crop/image-area state. This
+remains the single biggest open research gap for Build 1.
 
 The owner approves merges; nobody merges their own PRs. Check main again
-before allocating F-111.
+before allocating F-112.
 
 **Lane 3 (AE-L/AF-L tracking) now has a proper section in handoff-codex.md
 for the first time**, with a concrete handoff point: a real event-code
