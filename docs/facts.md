@@ -2512,4 +2512,176 @@ decode (capstone, Thumb); firmware hash and QEMU checkout verified
 before and after; no firmware bytes, overlay bytes or disassembly
 committed to the repo.
 
+F-118. Picks up Lane 2's own named next step (project-status.md: "a live
+simulator read ... not more static search") rather than Lane 3's. Re-runs
+F-078's existing diagnostic-call script against the crop-window builder
+`0x101d5b36` (no script changes -- it already reads back all 14 output
+shorts, covering every field F-113/F-114 later labeled) across every
+area/quality/flag combination the script already tests, and checks the
+fresh numbers against F-114's centering formulas for the first time.
+
+**F-114's center claim is now confirmed by live execution, not just
+static algebra, across every one of the 15 tested combinations** (areas
+0 through 4, both quality bytes, both `+0x26` flag states) -- not a
+sample, the full set this script covers. The `+0xc`/`+0xe` field equals
+the exact arithmetic midpoint of the `+0x10`/`+0x12` top-left and
+`+0x14`/`+0x16` bottom-right corners in every single row, including the
+degenerate all-zero rows for areas 1 and 3 (consistent with F-057/F-078's
+"slots 1 and 3 return all zeros"). Examples: area 4 (1:1), large --
+top-left `(8,8)`, bottom-right `(3720,3720)`, center `(1864,1864)`; area
+4, medium -- top-left `(0,0)`, bottom-right `(2784,2784)`, center
+`(1392,1392)`; area 0 (DX), large with `+0x26` set -- top-left `(72,198)`,
+bottom-right `(5640,3910)`, center `(2856,2054)`. All are live
+register-and-memory results from real diagnostic calls, not inference
+from decoded instructions.
+
+**The "final output size" field's `(0,0)` pattern is now fully explained,
+not an open detail.** `+0x18`/`+0x1a` reads `(0,0)` in every row where
+the quality byte is `0` (large) or the `+0x26` flag is set, *regardless
+of area and regardless of whether the crop window itself is nonzero* --
+e.g. area 0 large has a real top-left/bottom-right pair but still reads
+`(0,0)` here. In every row where it is nonzero, it exactly equals the
+bottom-right corner (top-left is always `(0,0)` in those rows). This is
+a consistent sentinel across the whole table, not an anomaly specific to
+one area: `(0,0)` most plausibly means "no additional resize -- use the
+crop window's own dimensions," matching the ordinary real-world
+convention that a RAW "large" size needs no resize step. Confidence
+medium-high (consistent across all 15 rows); still not confirmed against
+F-112's table rows directly, but no longer needs to be to settle the
+pattern itself.
+
+**This does not change the caller/save-path question.** F-095/F-096
+still stand: six of the builder's seven callers build small display/menu
+structs, and the seventh (the one genuinely ambiguous one) leans toward a
+settings/property handler per F-103, not a capture descriptor. This fact
+only strengthens confidence in the geometry math itself, which was
+already high; it does not touch which caller, if any, is a real save
+path -- that remains dropped per the classifier-stop handling already on
+record (F-114), not reattempted here. Method: re-run of an existing,
+unmodified private script (simulator only, scratch memory, restored after
+each call); SHA-256 and QEMU checkout verified before and after. No
+firmware bytes recorded.
+
+F-119. Answers F-112's own open question directly: "finding the ROM-side
+initializer that populates the RAM table... to read real width/height
+values without a simulator" -- no diagnostic call needed, just a direct
+memory read after ordinary startup, walking the two-level pointer
+structure F-112 already decoded (`row = [0xc18c7de8+0x14][quality]; entry
+= row + area*4`).
+
+**Real data, for the first time.** The row-pointer array at `0xc18c7dfc`
+holds four non-null pointers (`0x115a4da8`, `0x115a4dcc`, `0x115a4db4`,
+`0x115a4dc0` for outer index 0-3), each into ordinary ROM address space
+-- confirming F-112's picture exactly: the *array of pointers* is the
+RAM-resident part (initialized at boot), each pointer's *target data* is
+static ROM. Full 4x6 table, `{width:i16, height:i16}` per cell:
+
+| outer idx | entries (6, inner idx 0-5) |
+| --- | --- |
+| 0 | `(5568,3712) (4176,2784) (2784,1856) (5568,3128) (4176,2344) (2784,1560)` |
+| 1 | `(0,0) (0,0) (0,0) (3712,3712) (2784,2784) (1856,1856)` |
+| 2 | `(5568,3128) (4176,2344) (2784,1560) (0,0) (0,0) (0,0)` |
+| 3 | `(0,0) (0,0) (0,0) (0,0) (0,0) (0,0)` |
+
+**Cross-validated against F-118's live output, three exact matches.**
+F-118's non-zero `+0x18`/`+0x1a` final-output-size results each appear
+verbatim somewhere in this table: area 0/medium's `(4176,2784)` ==
+outer-0/inner-1; area 2/medium's `(4176,2344)` == outer-0/inner-4 (also
+outer-2/inner-1, since those two rows are mirror images of each other);
+area 4/medium's `(2784,2784)` == outer-1/inner-4. This confirms the
+builder's final-output-size field and this table are the same data
+source, not a coincidence.
+
+**Correction to the obvious first guess, stated honestly rather than
+glossed over: the (outer, inner) indices are not simply (quality byte,
+area byte) in the builder's own numbering.** F-118 held quality constant
+(medium, its own byte value `1`) across all three matches above, but the
+matching *outer* table index was `0`, `0`/`2`, and `1` respectively --
+not a constant. The true transformation from the builder's (area byte,
+quality byte) to this table's (outer, inner) indices was not solved this
+pass. One pattern worth handing forward, observed not proven: outer row
+0's six entries split cleanly into a DX-shaped triple (`~3:2` ratio,
+inner 0-2) and a 16:9-shaped triple (inner 3-5, matching row 2's first
+three exactly); row 1's nonzero entries (inner 3-5 only) are all square
+(1:1-shaped). This looks like the table is organized by aspect-ratio
+family in the inner index with the size (large/medium/small) as a
+sub-position within each family-of-three, and the outer index may
+select *which combination of families is valid for that row* rather
+than being "quality" in the builder's sense -- consistent with row 3
+being all-zero the same way the builder's own areas 1 and 3 are (F-057/
+F-078). Not confirmed; flagged for whoever maps the remaining sibling
+tables (F-112's other ~8 offsets) next, since the same index puzzle
+will recur there.
+
+Confidence high for the raw table contents and the three exact matches
+(direct memory reads, verified programmatically against F-118's full
+output set, not eyeballed); low for the aspect-family index theory above
+-- explicitly not proven, offered as a lead. Method: direct remote
+memory read after ordinary simulated startup, no diagnostic call, no
+firmware modification; SHA-256 and QEMU checkout verified before and
+after. No firmware bytes recorded.
+
+F-120. Closes one specific item F-109 flagged as untried ("ARM-mode
+scanning") -- not by answering F-109's actual question, but by
+confirming, for the first time in this project, that this firmware
+genuinely contains ARM-mode code at all. Every static decode this
+project has ever done (including F-109's four exhaustive methods) was
+Thumb-only; this checks whether that was ever actually wrong to assume.
+
+**Real ARM-mode code confirmed, not hypothetical.** A full-image Thumb
+scan for `blx` with an immediate operand (the only Thumb instruction that
+unconditionally switches the core to ARM state) found 16,066 raw hits
+across 7,693 distinct targets -- almost all of that volume is the same
+scan-artifact noise this project has hit repeatedly this session (data
+decoded as if it were code). But the small number of high-frequency
+targets are real: spot-checked four of them by decoding as ARM32 from
+their own address, and all four are clean, idiomatic ARM code, not
+garbage:
+
+- `0x10199bdc`/`0x10199cf0` (2,144 + 2,763 call sites): a textbook ARM
+  `memcpy`-style routine -- 32-byte block transfer with `ldm`/`stm`, a
+  byte-aligned tail-handling continuation. One of the two sites
+  (`0x10199bdc`) is called directly from the InitTask entry function
+  (`0x10053070`), the single most central checkpoint this entire
+  project's tooling waits on -- genuinely live, heavily-used code, not an
+  obscure corner.
+- `0x11d6cc24` (23 call sites): byte-for-byte the same `memcpy` logic as
+  `0x10199cf0`, at a completely different address -- a second, separate
+  linked copy, consistent with a large multi-module firmware statically
+  linking its own C runtime per module rather than sharing one copy.
+- `0x1027f154` (156 call sites) and `0x1027ed08` (219 call sites): shaped
+  like ordinary ARM EABI compiler-runtime helpers (sign/magnitude
+  handling consistent with a software divide/modulo routine; a `clz`-
+  based normalization step), not application logic.
+
+**What this does and does not mean.** It means this project's blanket
+assumption of Thumb-only code was wrong, and that any future "zero
+callers found by every static method" dead end (F-103's `0x10156714`,
+F-109's `0x10459d80`, this session's F-116/F-117 for Lane 3) *could* in
+principle be explained by a caller living inside one of these ARM
+islands, invisible to a Thumb decoder the same way data regions produce
+garbage Thumb. **It does not show that any specific one of them is** --
+every confirmed-real example found this pass is a mundane compiler
+runtime helper (memcpy, a divide-shaped routine), not application-level
+event dispatch, and it would be architecturally unusual for a firmware's
+own UI/property-notification logic to be hand-written in ARM mode while
+everything else is Thumb. Mapping the full extent of every ARM island
+and checking whether any of them references `0x10459d80`, `0x4100012`,
+or a property-`0x2021`-shaped dispatcher was not attempted -- that is
+real, separately-scoped work (find each ARM region's boundaries, decode
+it as ARM, search it the same way F-109 searched Thumb code), not a
+quick addition to this scan, and is exactly the kind of open-ended
+simulator/methodology trace AGENTS.md's priority rule cautions against
+starting speculatively. Flagged for whoever (likely Codex, alongside
+Lane 0) has reason to revisit one of those specific dead ends next, not
+pursued further here.
+
+Confidence high for the four spot-checked sites being genuine ARM code
+(clean decode, one directly confirmed live via a well-known caller);
+low/unknown for the remaining 7,689 distinct targets, most of which are
+presumed noise but were not individually checked. Method: full-image
+Thumb decode scanning for `blx`-immediate (capstone), then ARM32 decode
+of a handful of the highest-frequency targets for verification; SHA-256
+checked first. No firmware bytes recorded.
+
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.

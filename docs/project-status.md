@@ -5,6 +5,25 @@ the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
 
+**New, 2026-10-17, owner-requested handoff to Codex: Lane 0** (see
+handoff-codex.md's new "Lane 0" section). The dormant-worker pattern that
+blocks both Lane 1's and Lane 3's natural-trigger questions (F-019,
+F-109, F-115 through F-117) is handed off as its own thread rather than
+re-attempted per-lane. Likely needs the QEMU machine model
+(`z30-qemu/qemu/nikon-z30.c`), not just Python scripts -- a better fit for
+Codex regardless of the owner's specific ask. Explicitly: resolving this
+does not by itself authorize or reach hardware install; that still needs
+the owner's separate written risk acceptance (hardware-readiness.md) and
+conditions 2 through 4.
+
+**F-120 found this firmware genuinely contains ARM-mode code** (a real
+`memcpy` routine at two separate linked addresses, plus compiler-runtime-
+shaped helpers), confirmed via live code decode -- something every prior
+static scan in this project assumed away. Does not show any of the
+project's specific "zero callers" dead ends (`0x10459d80`, Lane 3's
+property dispatch) live there; flagged as a cheaper thing to check before
+touching QEMU's C source if Lane 0's steps 1-2 come back empty.
+
 Main carries facts through **F-114**. F-101 merged via PR #119; F-102/F-103
 via PR #123; F-104 via PR #124; F-105 via PR #126; F-106 via PR #127;
 F-107 via PR #128; F-108 via PR #129; F-110 via PR #138; F-111 via PR
@@ -47,9 +66,17 @@ the builder's seven callers reaches a real save -- dropped, not
 retried; F-095/F-096 already characterized all seven and that read is
 unchanged (none confirmed as a save path, the most-traced one leaning
 away from it). This remains the single biggest open research gap for
-Build 1; the remaining concrete step is a live simulator read (the
-RAM-resident table, or the rectangle during an actual capture attempt),
-not more static search.
+Build 1. **F-118 did the live-simulator-read step for the geometry math
+itself**: re-running F-078's existing script confirms F-114's center-is-
+midpoint claim against real execution across all 15 tested combinations
+(not a sample), and fully explains the final-output-size field's `(0,0)`
+pattern as a consistent "no resize" sentinel. **F-119 then read F-112's
+RAM-resident width/height table directly** (real values, cross-matching
+three of F-118's outputs exactly) but found the table's own indexing
+doesn't match the builder's (quality,area) byte values the simple way --
+flagged, not solved, for whoever maps the remaining sibling tables next.
+The caller/save-path question is unchanged by either -- still the actual
+remaining gap, and still not re-attempted after its classifier stop.
 
 The owner approves merges; nobody merges their own PRs. Check main again
 before allocating F-115.
