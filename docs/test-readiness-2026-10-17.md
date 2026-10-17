@@ -64,9 +64,7 @@ owner's words: "owner accepted the risks, 2026-10-17".
 
 3. **Byte-exact identity of the installed firmware: waived by the owner (signed).**
    Reported by the session manager as signed on 2026-10-17 (commit `db6a95e`
-   draft). **The reason field in the draft is still the placeholder** ("Owner:
-   state why..."); no owner reason is written in the repo. The owner's reason
-   is needed before this waiver is recorded as complete. Risk accepted: the
+   draft). Owner's reason, as given: "I assume the risks." Risk accepted: the
    installed image may differ from the original in ways the version-level check
    cannot detect.
 
