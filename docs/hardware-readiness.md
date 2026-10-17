@@ -11,7 +11,7 @@ FOR AN EXPERIMENTAL HARDWARE TEST**, or **HARDWARE VALIDATED**. The current
 state is below the first of those for the complete feature set.
 
 ## Owner call on build-gate condition 1, Lane 1 (live-view-bars hook) --
-## pending a dissenting review, 2026-10-16
+## dissenting review recorded, 2026-10-16
 
 The owner has called `build-phase-gate.md`'s condition 1 ("the simulator
 must show the feature working without a debugger memory write, and the
@@ -40,7 +40,103 @@ the trigger event sufficient given the natural trigger itself still was not
 found; and is there anything else this call missed. Record the review's
 conclusion here, in this section, when it happens -- agreeing, disagreeing,
 or asking the owner to decide. Until that review is recorded, treat this
-call as not yet in effect for any build step.
+call as not yet in effect for any build step. The review is recorded
+below and does not support treating the call as in effect.
+
+### Dissenting review (independent Claude session, 2026-10-16)
+
+Scope: a document-only review. I read `AGENTS.md`'s priority section,
+`build-phase-gate.md`, the Lane 1 section of `handoff-codex.md`, F-101 and
+F-107 through F-109, and `native-xpan-liveview-hook.md`. I did not rerun the
+simulator or any script. The brief asked for a Codex session. The owner
+asked for a session other than the one that made the call, and this one was
+run by Claude. The owner confirmed on 2026-10-16 that this substitution is
+acceptable.
+
+**Conclusion: I disagree that condition 1 is satisfied as worded. It is
+partly met. Whether to proceed anyway is the owner's risk-acceptance
+decision, and it should be recorded as an explicit deviation from the gate,
+not as the gate having passed.**
+
+**1. Does diagnostic-call evidence satisfy "the relevant state transitions
+must pass"?** Not on a plain reading, for three reasons.
+
+- The gate defines its own first state as passing "natural-startup, state,
+  control and stress checks in the pinned simulator." Condition 1 is the
+  measurable form of that state, so "natural" is part of the gate's intent
+  even though condition 1's sentence leaves it out.
+- The project's own documents say the check was not run. The hook doc's
+  Limits section says a true return from the menu to live view "has not been
+  observed" and that "natural transition coverage ... remain[s] open." This
+  file's table still lists "Natural startup and supported state lifecycle"
+  and "verified return to live view" as remaining gaps. The owner call sits
+  directly above those rows and contradicts them. Both cannot be current.
+- "Without a debugger memory write" is met, because the overlay loads before
+  CPU start. But every one of the three trigger moments was exercised by a
+  synthetic stand-in: direct stock row callbacks for the area change, an
+  "audited screen-activation call" for the menu pick, and a diagnostic type-2
+  dispatch for live-view-ready. None was reached by the firmware's own
+  control flow. The diagnostic call also ran with the live-view worker
+  dormant, so the state it returned into is not the state a running camera
+  has.
+
+**2. Is F-108's mechanism-level understanding enough?** It is a real gap,
+not a formality.
+
+- The only bug this effort found was in an unnatural path. The unguarded
+  close hook turned the mask on in the `0x24e`/`0x250` non-live-view close.
+  The guard (empty stack plus selector 1) was designed against that case and
+  was never exercised on the transition it is meant to allow. That the guard
+  admits the real return to live view is inferred, and F-101 rates it
+  medium confidence.
+- F-108 links event `0x4100012` to the hook only through `0xc181f6fc`, which
+  is not the selector byte the guard reads (`0xc1821db8`). F-108 itself
+  rates "this is the natural trigger" medium confidence. The match to
+  F-090's two calls is real corroboration but is not an observation.
+- F-109 then found no reference of any kind to the dispatcher `0x10459d80`
+  across the whole image, using four methods. F-109 allows that it may be
+  dead code in this build. The justification that the real camera "obviously
+  already delivers" the event rests on F-090 showing live view works, and
+  that does not show this event is the path. So F-108's trigger may not be
+  the live one. F-109 was correctly deprioritized as a simulator question,
+  but it also removes the support the owner call leans on.
+- A diagnostic call from the test harness does not reproduce the calling
+  context of a real trigger: thread, stack depth, interrupt or lock state,
+  and timing. The hook adds code on a path that runs in that context. Those
+  are the properties the gate's condition 3 asks to be reviewed, and no one
+  has recorded that review for these insertion points.
+
+**3. What else the call missed or understated.**
+
+- Only the mask hook was tested. The area-change trigger was never driven
+  through the real `i` menu (the simulator has no such button), and the
+  design's own checklist items (menu cleanup, focus graphics, reboot) remain
+  open in the table above.
+- The four candidate spans are zero-filled in the image and have no
+  references found. On hardware, whether zero-filled regions are writable
+  or covered by a checksum or signature is unknown. That belongs to
+  conditions 2 and 3, but the owner call reads as if instruction space is
+  settled. It is settled for the simulator only.
+- The call is labeled "Lane 1 specifically", but the build order in the
+  gate's test plan is the XPan bars and the saved crop together. Condition 1
+  met for the hook alone says nothing about the crop half.
+
+**What would close this, in order of cost.** (a) Run the real close handler
+`0x10460c3c` with `0xc181f6fc` preset to 4 through the loader overlay, not
+the debugger. That exercises the real consumer and the guard on the
+transition it must admit, without needing to know who posts the event.
+(b) Run the guarded hook with the live-view worker active, if the fixture
+can be made to do so. (c) If neither is feasible, the owner can accept the
+residual risk in writing: naming that the three triggers were observed only
+through diagnostic calls, that the guard's admit path is inferred, and that
+the event poster is unknown. The gate permits accepted risk for recovery
+(condition 4), but it has no such waiver for condition 1, so the owner
+should amend the gate or record this as a deviation rather than let
+"satisfied" stand.
+
+**Status of the call after this review:** not satisfied as worded; no
+build-phase work on this feature should start on the strength of it until
+the owner either has (a) or (b) done or records the deviation in (c).
 
 | Requirement | Evidence | Remaining gap |
 | --- | --- | --- |
