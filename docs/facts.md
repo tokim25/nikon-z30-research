@@ -2685,3 +2685,23 @@ of a handful of the highest-frequency targets for verification; SHA-256
 checked first. No firmware bytes recorded.
 
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
+
+F-133. Caller search for the filename-table getter `0x10354350`: no static
+route reaches it. Route classes checked over the whole image: direct and
+conditional Thumb branches, ARM branches and immediate `blx`, raw words equal
+to the entry (either Thumb bit), `movw`/`movt` construction, `adr`, bounded
+`tbb`/`tbh` tables, and fall-through into the entry. Every class returned
+zero matches. The scanner was validated on a known getter (498 direct call
+sites, matching the lane 2 note) and on neighbouring entries, which all have
+callers. Verdict: not found. Observed static scan, 2026-10-17, high confidence
+for direct and literal references, medium overall (computed addresses and
+base-relative offset tables not modelled). Hardware remains NO-GO. Method and
+limits: [getter-caller-search.md](getter-caller-search.md).
+
+F-134. The getter `0x10354350` sits directly after a return, so nothing falls
+through into it, and no table-dispatched callback holds its address. The
+filename-table route is therefore a dead end for static reachability; the
+lane 2 next step to check indirect calls through tables is done and came back
+empty. Recommended next step: treat the filename-table route as low priority
+and return to the real file-creation boundary (the card-write path) per
+AGENTS.md. Observed static scan, 2026-10-17, medium confidence.
