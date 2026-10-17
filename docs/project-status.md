@@ -5,6 +5,17 @@ the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
 
+**New, 2026-10-17, owner-requested handoff to Codex: Lane 0** (see
+handoff-codex.md's new "Lane 0" section). The dormant-worker pattern that
+blocks both Lane 1's and Lane 3's natural-trigger questions (F-019,
+F-109, F-115 through F-117) is handed off as its own thread rather than
+re-attempted per-lane. Likely needs the QEMU machine model
+(`z30-qemu/qemu/nikon-z30.c`), not just Python scripts -- a better fit for
+Codex regardless of the owner's specific ask. Explicitly: resolving this
+does not by itself authorize or reach hardware install; that still needs
+the owner's separate written risk acceptance (hardware-readiness.md) and
+conditions 2 through 4.
+
 Main carries facts through **F-114**. F-101 merged via PR #119; F-102/F-103
 via PR #123; F-104 via PR #124; F-105 via PR #126; F-106 via PR #127;
 F-107 via PR #128; F-108 via PR #129; F-110 via PR #138; F-111 via PR

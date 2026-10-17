@@ -46,6 +46,94 @@ each — a repeated safety-classifier stop on one, and the simulator's actual
 functional limits on the other — not because either question was shown to
 be unanswerable. Treat both as open research.
 
+## Lane 0: why natural triggers never fire (blocks Lane 1 and Lane 3 both)
+
+**New section, 2026-10-17, handed off at the owner's explicit request** to
+try the harder approach "if necessary to get to hardware install" after
+Claude ran out of cheap options on both lanes' natural-trigger questions
+(F-019, F-109, F-115 through F-117). Claude did not attempt this itself —
+the owner asked for it to go to Codex directly, and the scope (likely
+touching the QEMU machine model, not just Python scripts) is a better fit
+here regardless.
+
+**The pattern, stated once instead of per-lane.** Every lane that depends
+on a background worker or the RTOS's own task scheduler servicing
+something — Lane 1's live-view-enter/menu-close triggers, Lane 3's
+`0x2006`/`0x2020`/`0x2021`/`0x2087` property-event producer — comes back
+dormant. F-019: a stock refresh runs none of 14 observed worker/task
+addresses. F-109: event `0x4100012`'s poster has zero references in the
+image by four independent static methods, and is "obviously" delivered on
+real hardware (F-090) by some mechanism this simulator doesn't reproduce.
+F-117: the shared property-post primitive `0x10475ecc` was never called
+at all across an idle wait plus a real menu-activation-and-eight-key
+sequence — not a miss on one id, a miss on everything.
+
+**This is probably not "the QEMU model has no scheduler."** Read
+`qemu/nikon-z30.c` before assuming that: the machine wires a real GICv2
+IRQ controller to both CPUs and has a real `QEMUTimer`
+(`platform_timer`), gated by an `assisted` flag that only shortcuts
+specific MMIO addresses (`0x20010034`, `0x24074000`-`0x24074800`,
+`0x04287010`/`0x04287004`, the UART regs) for bring-up — it is not a pure
+host-orchestrated step machine. The more likely explanation, not yet
+checked: every observation in this project so far comes from either (a) a
+synchronous diagnostic call (`guest_call.py`'s `call()` / `display_session.py`'s
+`run_to()`) that hijacks one thread's register context, forces `pc` to a
+target function and a sentinel return address, and runs only until that
+sentinel is hit — which never gives the RTOS scheduler a reason or a
+window to switch to a different task — or (b) a short passive `run_for()`
+window too brief for whatever the worker is actually waiting on. Nobody
+in this project has yet tried a long, uninterrupted free-run (seconds to
+tens of seconds, no diagnostic call in flight, real timer/IRQ ticking)
+after setting up the right preconditions, to see whether the firmware's
+own scheduler services the worker on its own.
+
+**The actual ask, in order of cost:**
+1. **Check whether the relevant worker tasks are even created.** Find
+   where the firmware creates/registers background tasks during startup
+   (an RTOS task-create primitive should have a findable signature — this
+   project has already identified several task/screen-stack-shaped data
+   structures, e.g. `0xc181e4f0`, the various `0xc182xxxx`/`0xc2xxxxxx`
+   globals named throughout `facts.md` — reuse what's already known rather
+   than starting from zero). If a worker this project cares about (the
+   live-view worker, whatever posts `0x2006`/`0x2087`) is never created in
+   this assisted boot, that's the actual answer and the rest of this list
+   doesn't matter — document it as a fact and stop there.
+2. **If workers are created, try a long free-run instead of a diagnostic
+   call for the trigger step.** Set up state with the usual diagnostic
+   calls (as F-101/F-115/F-117's scripts already do), then switch to
+   `run_for()` with a materially longer window (tens of seconds, not the
+   few seconds used so far) with the relevant breakpoints armed via
+   `run_to(..., observe=(...))`, and see whether the scheduler reaches the
+   worker on its own. This needs no QEMU source changes, just a different
+   use of tools already in `z30-qemu/tools`.
+3. **Only if 1 and 2 both come back empty**, investigate whether the
+   `assisted` profile's MMIO shortcuts (listed above, in `nikon-z30.c`) are
+   themselves what stalls the scheduler — e.g. a real IRQ source the
+   firmware's idle/scheduler loop waits on that `assisted` mode fakes or
+   skips. This is the only item on this list that would mean touching the
+   QEMU machine model's C source, and it's the one to treat as a real,
+   possibly multi-session undertaking — not something to start speculatively
+   before 1 and 2 are tried.
+
+**What this does and does not authorize.** This is still simulator-only
+research. **Resolving this does not by itself get to hardware install** —
+`hardware-readiness.md` is explicit that install needs the owner's written
+risk acceptance plus conditions 2 through 4 (checksum/signature review,
+patcher review, recovery risk), none of which this lane touches. Treat
+"get to hardware install" as this project's long-term direction, not as
+something a scheduler fix hands to the owner automatically. The usual
+rules apply in full: offline/simulator-only, never touch the owner's real
+camera, never commit firmware bytes, overlay bytes, disassembly or patched
+images. If this turns out to need changes to `z30-qemu`'s C source (item 3
+above), that is new territory for this project's commit conventions —
+check with the owner before committing machine-model source changes, the
+same way build-phase firmware changes get owner review.
+
+Full detail behind this handoff: F-018, F-019, F-109, F-115 through F-117
+in [facts.md](facts.md); [tracking-input-chain.md](tracking-input-chain.md)'s
+two 2026-10-17 sections; `qemu/nikon-z30.c` and `qemu/nikon-z30-display.c`
+in the pinned `z30-qemu` checkout.
+
 ## Lane 1: the live-view-bars hook
 
 Claude hit the same safety-classifier stop twice in a row researching
