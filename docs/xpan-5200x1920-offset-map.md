@@ -39,3 +39,18 @@ at `0x115a4d58` is (0, 0); these are not edited.
 A probe-level check: in the simulator, confirm which entries must change, using
 a temporary guest-memory edit that is never written to a file. Then produce the
 exact manifest for the checker. Neither has been done.
+
+## RAM mapping and probe status (2026-10-17, scratch copy)
+
+- The per-area pointer table at ROM `0x12049a7c` (38 entries) is outside the
+  scatter source range, so its entries are read as ROM addresses, not RAM
+  copies. Index 4 points to `0x115a4d9c` (1:1 readout area record) and index 9
+  to `0x115a4dd8` (1:1 output record); the 1:1 readout pair there matches the
+  table above.
+- Writes to those addresses would be debugger writes into ROM-mapped data. Not
+  yet checked whether the pinned QEMU accepts them.
+- The crop-builder probe was not run. It needs a constructed input object and
+  the area/origin lookups in a started state; the harness (`tools/run.py`,
+  `tools/guest_call.py`) is available but the object setup is not written.
+- Result: the 5200 x 1920 derivation is **not confirmed** in the simulator.
+  The output-record question remains open. The digest input stays open.
