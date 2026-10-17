@@ -1,6 +1,6 @@
 # Lane 2: tracing loads of the filename-pointer fields
 
-2026-10-17. F-131, F-132. Read-only static analysis of the original firmware
+2026-10-17. F-151, F-152. Read-only static analysis of the original firmware
 image. No simulator, no QEMU, no firmware change, no camera. Only addresses
 and descriptions appear here.
 
