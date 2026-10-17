@@ -138,6 +138,28 @@ should amend the gate or record this as a deviation rather than let
 build-phase work on this feature should start on the strength of it until
 the owner either has (a) or (b) done or records the deviation in (c).
 
+### Attempt at remediation option (a), 2026-10-16
+
+Ran the review's cheapest option. Read-only/simulator-only; no firmware
+modified, no hardware touched.
+
+A loader-overlay row presetting `0xc181f6fc` to `4` (loaded before CPU
+start, exactly like every other overlay row -- not a debugger write) did
+**not** survive to the point of the call: by the time the diagnostic call
+ran, the byte read back as `1`. The exact writer was not identified in
+this pass.
+
+A diagnostic call to the firmware's own setter (`0x10457dac`, F-108),
+not a memory write, did set the byte to `4` and it held through the
+close-handler call. The close handler's own internal chain executed
+exactly as F-107/F-108 predicted. The overlay's guard and mask were
+**not reached** -- consistent with this same doc's own "natural
+transition coverage ... remain[s] open" gap and the live-ready probe's
+documented limit that the natural worker caller stays dormant in this
+assisted fixture. Option (a) alone does not close this. Option (b),
+or the owner's written risk acceptance in option (c), remain the ways
+forward.
+
 | Requirement | Evidence | Remaining gap |
 | --- | --- | --- |
 | Live-view framing | Prior native guide lines; PR #43 adds persistent native black masks after diagnostic setup. | Natural startup and supported state lifecycle. |
