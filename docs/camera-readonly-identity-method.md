@@ -15,7 +15,8 @@ non-read-only operation and needs a separate design and approval.
 
 ## What it reads
 
-- Standard PTP GetDeviceInfo (operation 0x1001) over USB. It returns the
+- Standard PTP GetDeviceInfo (operation 0x1001) over USB, if the tool issues
+  only that operation. The tool-level check above shows this is not yet proven. It returns the
   device's manufacturer, model, device version string and the vendor
   extension info, which the owner's earlier USB check reported as firmware
   1.20 (USB version 0x0120).
@@ -31,15 +32,26 @@ non-read-only operation and needs a separate design and approval.
 - Alternative: a small standard-library Python script issuing only
   GetDeviceInfo. This is not written and would need review.
 
-## Proof that it cannot write
+## Proof that it cannot write: NOT MET
 
-- Not proven. Read-only status depends on the command set. `--summary` issues
-  GetDeviceInfo and related query operations. Confirming it cannot send
-  SetDevicePropValue or any object-write operation requires auditing the exact
-  installed tool version's source or its operation log for the run.
-- Require: an operation log, either a USB packet capture or the tool's debug
-  trace, showing only query operations (opcode list recorded before approval).
-- Do not run with any option that sets, deletes, or uploads anything.
+Source review of libgphoto2's PTP camlib (`camlibs/ptp2/library.c`, default
+branch fetched read-only on 2026-10-17; not pinned to a commit) found
+write-capable calls, so `gphoto2` is not read-only as shipped:
+
+- `camera_exit` calls `ptp_nikon_changecameramode(params, 0)` when the control
+  mode flag is set.
+- `camera_capture_preview` and the Nikon capture path call
+  `ptp_nikon_changecameramode(params, 1)` and set the Nikon recording-media
+  property. These run only for capture requests, not for `--summary`.
+- `fixup_cached_deviceinfo` writes the MTP session-initiator property on a
+  vendor-specific branch. Its comment names another vendor, but Nikon
+  applicability was not traced.
+- The Nikon open/init path was not fully traced, so the summary path's exact
+  operation list is unverified.
+
+An operation log is therefore required before any claim of read-only status,
+and a read-only check must use a tool or build that omits these calls. This
+method is not approved.
 
 ## Comparison to our original file
 
