@@ -2895,6 +2895,50 @@ Needed: a state value that marks still capture, traced to a load before
 
 
 
+F-151. The pointer slots of F-110's two filename tables sit 0x14 bytes after
+each table base (five header words come first), so F-129's 16-byte
+comparisons covered header words, not pointers. Stored slots are
+`0x1204d294` and `0x1204d454`; initialized RAM slots are `0xc18cb600` and
+`0xc18cb7c0`. Both blocks hold four pointers into the `0x11c9a5fc` template
+table in F-110's order (JPG, NEF, NDF, TIF). Redone anchor search (84 and
+260 bytes) with Thumb literal-load tracing finds exactly four word loads of
+first-table slots, all in one selector getter at `0x10354350` (loads at
+`0x10354366`, `0x1035436a`, `0x1035436e`, `0x10354372`): selector 0/1/2/3
+returns slot 0/1/3/2. No second-table slot load exists. Observed static
+decode, 2026-10-17, high confidence for those loads and the offset
+correction. No firmware change, simulator use or camera access.
+[Method and limits](lane2-filename-trace.md).
+
+F-152. The getter `0x10354350` has no static reference anywhere in the image:
+no Thumb `bl`/`blx`/`b.w`, short or conditional `b`, ARM branch, raw function
+pointer (either Thumb bit) or `movw`/`movt` construction; the scanner was
+validated on a known getter with 498 call sites and its adjacent neighbours
+all have callers. Neither filename table has a located consumer that reaches
+file creation or RAW/JPEG serialization. Verdict: not found. Observed static
+scan, 2026-10-17, high confidence that no direct reference exists, unknown
+for indirect calls or a block-copy reader. Hardware remains NO-GO. Next step
+and limits: [lane2-filename-trace.md](lane2-filename-trace.md).
+
+
+F-150. Still-versus-movie predicate at the live-view hook `0x102f5810`:
+unresolved. Inside the live-view type-2 handler `0x102f57e2`, the only branch
+before the selector write is a bit test on a byte at `0xc181b4b4`. It skips
+one call to `0x104bd3c0`, and both paths rejoin at `0x102f580c`. The write at
+`0x102f5810` stores selector 1 into `0xc1821d44 + 0x74` through setter
+`0x104b9116`, with no still, movie, playback, warning or unavailable test.
+The guard (empty stack plus selector 1) therefore cannot separate still
+capture from movie recording, and it cannot exclude those states. Movie live
+view is admitted if it reaches this worker (inferred, medium). The byte at
+`0xc181b4b4` is not identified, and the bit-6 gate's meaning is unknown. This
+conflicts with the design rule that movie mode stays off
+([xpan-bars-design.md](xpan-bars-design.md)). Observed static decode, high
+confidence; the natural caller and worker trigger remain unobserved (F-019).
+Needed: a state value that marks still capture, traced to a load before
+`0x102f57e2`. Hook stays out of build decisions until then.
+[Evidence and limits](native-xpan-liveview-hook.md).
+
+
+
 F-153. Lane 3 family-level search for property `0x2021`'s consumer: no
 generic dispatcher compares only the high byte (`0x20`) of an id; this
 firmware tests ids by offset from a base id instead. Full detail in
