@@ -677,3 +677,42 @@ Method: read-only static decode (capstone, Thumb), full-image instruction
 scan, SHA-256 checked first; addresses only, no firmware bytes recorded.
 
 Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
+
+## 2026-10-17: both remaining leads tried, both negative (F-117)
+
+Tried the fourth static masking idiom (`tbb`/`tbh` range dispatch) and
+option 1 (a live simulator breakpoint on the post primitive `0x10475ecc`
+during ordinary navigation). Both negative.
+
+The `tbb`/`tbh` scan found 2,817 table-branch sites image-wide -- far too
+many to review by hand -- and zero matched a narrow gate shape (an
+immediate `sub rX, #0x20xx` writing the index register directly before
+the branch). This only rules out that one narrow shape, not `tbb`/`tbh`
+dispatch on the high byte in general; a real dispatcher could compute the
+index less directly. Not a clean negative like the other three idioms.
+
+The live-breakpoint test is the more informative result: armed on
+`0x10475ecc`, then ran an idle checkpoint, real menu activation
+(`0x102355ee`), eight real internal UI-event codes through the real key
+dispatcher (`0x103ce96e` -- OK, back, four directional codes, all from
+F-017/F-020/F-023), and a second idle checkpoint. **The primitive was
+never called at all, for any id, across the whole sequence** -- not a
+miss on `0x2021` specifically, but zero property posts of any kind via
+this call path. Matches this project's long-documented dormant-worker
+pattern (F-018, F-019) rather than saying anything specific about
+`0x2021`/`0x2087`.
+
+**Handoff, updated:** no consumer for `0x2021` found by any method tried
+across F-116/F-117 (three clean-negative static idioms, one inconclusive-
+by-volume static idiom, one dormant-worker-shaped simulator negative).
+What's left is either reading `tbb`/`tbh` tables by hand near plausible
+sites (slow, no good filter yet) or finding a way to keep the relevant
+background task alive long enough in the simulator for a real post to
+happen -- the same harder problem this project has hit on other lanes and
+not solved. Full detail in facts.md F-117.
+
+Method: software breakpoints via the existing diagnostic-call mechanism
+(no memory write); static decode (capstone, Thumb); firmware hash and
+QEMU checkout verified before and after; no firmware bytes recorded.
+
+Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
