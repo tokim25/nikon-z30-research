@@ -123,3 +123,18 @@ it, date.
   (`tracking-entry-research.md` and `tracking-feature-plan.md` were not
   renamed; links to those two are unaffected.)
 - **Date:** 2026-10-16.
+
+## Geometry endpoints versus output dimensions (F-162)
+
+- **Original claim:** later sections of xpan-5200x1920-offset-map.md treat
+  the probe's endpoint pair 5208 by 1928 as a crop-size mismatch and interpret
+  joint index-4/index-14 probes as testing the rectangle dimensions.
+- **Correction:** the rectangle starts at 8,8, so those endpoints give exactly
+  5200 by 1920, as xpan-capture-geometry-probe.md already recorded. The large
+  rectangle-dimension source is group 3/index 19; indices 4/14 alone do not
+  exercise it. The native arithmetic/table mapping, 256 synthetic cases and
+  both preserved full-builder probe reports agree. This does not establish
+  all-size, preview, saved-file or camera acceptance.
+- **Corrected in:** [native-xpan-5200-contract.md](native-xpan-5200-contract.md),
+  the partial offset map's leading correction, handoff/status and F-162.
+- **Date:** 2026-10-17.

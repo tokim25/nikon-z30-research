@@ -84,3 +84,17 @@ firmware copy stays on their own machine, never in this repository. Hardware
 steps, once authorized, are done by the owner alone.
 
 Written by Claude (Sonnet 5.5) in collaboration with Tony Kim.
+
+## Owner-directed tracking activation test, 2026-10-17
+
+The owner directs that physical AE-L/AF-L press-to-start/stop activation,
+which the simulator cannot supply, be tested later with the tracking-enabled
+patch on the real Z 30. This is a narrow deviation from condition 1 above for
+that physical input/activation behavior only. It records an unverified test
+objective; it is not simulator acceptance, a passed result, or permission to
+write the camera. Tracking still follows the approved order (after the XPan
+test), and every other applicable build, integrity, recovery, readiness, and
+immediate per-write approval condition remains in force. The device test must
+record a bounded first press, native start/stop/cancel outcomes, repeat/held
+behavior, and unchanged playback Protect behavior; stop after a failed or
+ambiguous first press.

@@ -4,58 +4,77 @@
 camera operation and contains no installation procedure. Current rules are
 [AGENTS.md](../AGENTS.md) and [build-phase-gate.md](build-phase-gate.md).
 
-Latest transfer update: review the native standalone-EG route recorded in
-[Claude's consolidated handoff](native-claude-build-research-handoff.md)
-before extending the outer-package digest investigation below. That separate
-format may remove the outer digest dependency; its complete contract remains
-unverified. No complete candidate or READY record exists. The older
-minimum-test section describes the outer-package route, not proof that every
-native format requires its missing input. Hardware NO-GO is unchanged.
-Later main records owner waivers for lifecycle, still-photo guard and installed
-byte-exact identity in session-manager-brief.md/test-readiness-2026-10-17.md.
-Those supersede earlier retained-gate wording below, without changing absent
-measurements or granting hardware approval. Local original-hash checks remain
-required; the installed-identity waiver does not waive them.
+**Current 2026-10-17 addendum:** the private offline XPan stills candidate and
+its 176-span manifest now exist; see [Codex handoff](handoff-codex.md) and
+[fact F-198](facts.md). Exact edits, protected fields, unchanged length,
+native CRC, capacity and preview-table layout pass an independent read-back
+audit. This does not establish Nikon updater acceptance or hardware behavior.
+Lifecycle condition 1 remains **unmet** by the owner's latest disposition;
+older statements below that call it waived are superseded. Hardware remains
+NO-GO, and no camera contact or write is authorized.
 
-## Minimum-test stopping point
+The native standalone-EG route is documented in
+[native-standalone-eg-route.md](native-standalone-eg-route.md). A private
+offline candidate now exists, but no READY record exists. The historical
+outer-package digest investigation below applies only to that alternative
+format; it does not block the standalone-EG candidate. Hardware NO-GO is
+unchanged.
+
+**F-163 correction:** bounded static decode resolves the branch for the
+standalone format. Standalone EG is discovery type 2 and selects native CRC
+validation; the unresolved 20-byte digest branch is selected for encoded
+body-package type 4. The missing eight-byte input does not block the
+standalone-EG route. F-198's private candidate passes parser-capacity and
+compatibility-field preservation checks, but native updater acceptance and
+hardware readiness remain unverified.
+See [native route contract](native-standalone-eg-route.md). Hardware NO-GO is
+unchanged.
+The owner waived the XPan still-photo guard and accepted possible area-4
+playback/movie/warning side effects. The latest disposition keeps lifecycle
+condition 1 unmet; earlier lifecycle-waiver wording below is superseded.
+Installed-firmware byte identity remains waived at version level only. The
+private extracted EG source itself passes the exact size/SHA-256 verifier.
+
+## Minimum-test stopping point (historical F-163 review; superseded by F-198)
 
 Latest owner direction: do not pursue simulator completeness or low-value
-research. Use the existing bounded evidence to prepare the smallest justified
-stills-only XPan test; record unmeasured behavior as residual risk. Do not
-expand tests merely to explain missing simulator behavior. This changes the
-work priority; it does not turn missing measurements into passes or authorize
-camera access. The earlier explicit decision to retain lifecycle condition 1
-has not been silently reversed.
+research. The latest state and risk decisions are recorded in the addendum at
+the top of this file and in session-manager-brief.md. Lifecycle condition 1
+remains unmet; the still-photo guard side-effect waiver is separate and does
+not authorize camera access.
 
-**Smallest next technical blocker: reproduce the native package digest.**
-F-161 now verifies native compression and suffix-loop arithmetic against
-synthetic controls and adds a baseline-first read-only digest verifier.
-Those checks do not recover the suffix or reproduce the original digest.
-See [arithmetic verification](native-digest-arithmetic-verification.md).
-The known additional check consumes an eight-byte input at `0x10000088`,
-outside the captured EG module. F-140/F-141 already locate this missing-input
-boundary. The original round trip and CRC checks do not cover it. There is
-no accepted final modified camera package to approve while this remains
-unresolved. See [digest inputs](native-updater-digest-inputs.md) and
-[mapping boundary](native-boot-mapping-boundary.md).
+The outer-package digest remains unresolved. F-161 verifies native
+compression and suffix-loop arithmetic against synthetic controls, but does
+not recover the suffix or reproduce the original digest. The check consumes
+an eight-byte input at `0x10000088`, outside the captured EG module. F-163
+establishes that standalone EG discovery type 2 selects native CRC validation,
+while the digest branch is selected for encoded body-package type 4. The
+missing input does not block a standalone-EG candidate. The private candidate
+passes the recorded parser-capacity and protected-field checks, but Nikon
+updater acceptance remains unverified. See [digest
+inputs](native-updater-digest-inputs.md), [mapping
+boundary](native-boot-mapping-boundary.md), and [standalone
+route](native-standalone-eg-route.md).
 
-The single next technical step is to supply that independently verified
-input from an authorized offline source, or establish a verified equivalent
-that reproduces the original digest check. No such source is identified in
-the current record. Do not guess bytes, substitute simulator defaults, reuse
-the original digest for changed content, alter the validation-path flag, or
-start another literal-search/mapping loop. The prior identity-only camera
-permission does not authorize memory acquisition to obtain it.
+If using the outer-package route, supply independently verified input from
+an authorized offline source or establish a verified equivalent that
+reproduces the original digest. Do not guess bytes, substitute simulator
+defaults, reuse the original digest for changed content, alter the
+validation-path flag, or start another literal-search/mapping loop. The
+prior identity-only camera permission does not authorize memory acquisition
+to obtain it. The private candidate's parser capacity and protected fields
+have passed offline checks; Nikon updater acceptance remains unverified.
 
-Once that blocker is resolved, the finite remaining preparation is:
+At the time this historical stopping-point plan was written, the standalone
+parser contract and full edit manifest remained unfinished. F-198/F-199
+supersede those build steps. Remaining hardware gates are:
 
 1. Bind one XPan-only candidate to its exact original, edit manifest and
-   final package hash; independently check only planned changes, component/
-   container integrity, native digest and installation bounds.
-2. Finish review of that exact candidate's layout/call behavior for the
-   named test. Record the remaining guard/lifecycle uncertainties and obtain
-   the owner's concrete disposition of the retained lifecycle gate; do not
-   resume open-ended simulator work.
+   final artifact hash; independently check only planned changes, standalone
+   parser compatibility/capacity, native CRC and installation bounds. The
+   outer digest applies only if the outer-package route is chosen.
+2. Review the exact candidate's residual behavior for a future named test.
+   Lifecycle condition 1 remains unmet; do not describe it as waived.
 3. Bind the verified original backup, bounded observations/stop rules and
    service-or-total-loss risk acceptance to that build. When the required
    gate decisions and checks are complete, name the test in
@@ -64,9 +83,12 @@ Once that blocker is resolved, the finite remaining preparation is:
 **Stop immediately at that readiness point.** Report the exact package
 hash, test scope and residual risks, then request separate immediate owner
 approval before any camera action. No camera instructions or operation are
-part of this preparation. Current stopping point is instead **blocked on
-the missing digest input, not READY**; the other outstanding gates below
-are not claimed complete.
+part of this preparation. That historical stopping point was superseded by
+F-198/F-199: a private offline candidate and manifest now pass exact-byte,
+layout and CRC checks. The candidate remains **not READY** because lifecycle
+condition 1 remains unmet, Nikon updater acceptance is unproven, recovery/risk
+records remain open, and separate immediate approval for any camera write has
+not been given. The outer-package digest does not block the standalone route.
 
 ### Bounded source check, 2026-10-17
 
@@ -105,8 +127,9 @@ hardware action or readiness promotion occurred.
 - The existing F-148 prototype has twelve hashed overlay entries. F-156
   shows controlled rendering and ten setting cycles; F-148/F-160 add bounded
   state/writer/ready/close call-contract evidence.
-- The owner explicitly chose to keep lifecycle condition 1 unmet. No
-  simulator-coverage exception or modified-test approval was granted.
+- The owner's latest disposition keeps lifecycle condition 1 unmet. Natural
+  lifecycle coverage remains unproved and no modified-test approval was
+  granted. The earlier waiver wording is superseded.
 
 Reference overlay manifest SHA-256:
 `5a933892e98effb0ba114adc1ad0e3a4be40daf2cac021df73e8bc1661ef37c9`.
@@ -116,9 +139,9 @@ This is a diagnostic-overlay identity, not a camera-package identity.
 
 | Build gate | What still prevents acceptance |
 | --- | --- |
-| 1. Relevant simulator transitions without debugger memory writes | Natural startup, genuine menu return, playback and warning exclusion remain unproved. Assisted calls and finer-stepped confirmation do not fill this gap. The owner retained this requirement. |
-| 2. Exact original and only planned changes | No final modified camera package has passed independent exact-edit/container/integrity checks. The additional native digest remains unreproduced because an eight-byte input at `0x10000088` is unmapped. |
-| 3. Exact-build code review | Finite ABI/layout checks pass, but global acceptance is not established. No proven still-photo eligibility guard is available; empty stack plus selector 1 does not guarantee protection of excluded states. |
+| 1. Relevant simulator transitions without debugger memory writes | Lifecycle condition 1 remains unmet. Natural startup, genuine menu return, playback and warning exclusion remain unproved. |
+| 2. Exact original and only planned changes | Private F-198 candidate passes independent exact-edit, protected-field, length/capacity, native CRC and table-layout checks. Nikon modified-EG updater acceptance remains unverified; the unresolved outer digest applies only to that alternative route. |
+| 3. Exact-build code review | Finite ABI/layout checks pass, but global acceptance of a complete candidate is not established. The owner waived the still-photo guard requirement and accepts the risk that bars may show during movies, playback or warnings; this remains unvalidated behavior. |
 | 4. Backup and recovery decision | Bind the preserved original backup and service-or-total-loss acceptance to the exact proposed build/test, with its residual risks and stop rules. No verified independent recovery route exists. |
 | 5. Named readiness record | `hardware-readiness.md` remains NO-GO; no exact camera build/test is marked READY FOR AN EXPERIMENTAL HARDWARE TEST. |
 | 6. Immediate owner approval | Separate approval of that concrete modified-firmware test has not been given. The read-only authorization does not transfer to it. |
@@ -133,10 +156,18 @@ Still-photo menu/playback/warning requirements remain open. See
 The tracking audit has no verified AE-L/AF-L physical press/release-to-native
 acquisition contract, reticle/completion/cancellation path or coexistence
 acceptance. Synthetic tracking behavior and menu-input traces do not prove
-native tracking. This blocks tracking-enabled firmware, not an XPan-only
-candidate containing no tracking edits. See
+native tracking. The owner assigns those items to the tracking-patch device
+test as recorded below. See
 [tracking audit](tracking-entry-research.md) and
 [input-chain limits](tracking-input-chain.md).
+
+**Owner disposition, 2026-10-17:** because the simulator cannot supply the
+physical AE-L/AF-L press, the owner directs that tracking activation be tested
+with a tracking-enabled patch on the real Z 30. Treat this as an explicit
+unverified test objective, not a passed gate or blanket hardware approval.
+Keep the test order (XPan first, tracking alone second, combined third),
+package-integrity checks, exact-build review, backup/risk binding and
+immediate per-write approval. Tracking remains unbuilt and hardware NO-GO.
 
 ## Narrowest first test and owner decision
 
@@ -152,13 +183,13 @@ with saved RAW/JPEG crop verification, without tracking edits or combined
 features. Saved-crop uncertainty is an on-camera verification item, not an
 additional simulator blocker. No concrete hardware package is ready now.
 
-The next hardware-related owner confirmation is closure of the existing
-read-only session. There is no modified-test approval to seek while the
-retained lifecycle gate remains unmet. When every required gate is met,
-the owner must approve the exact build/package hash, bounded test scope,
-stop rules and service-or-total-loss risk immediately before personally
-performing that test. General “Go,” version identification and earlier
-general risk acceptance do not substitute for that decision.
+The next hardware-related status item is closure of the existing read-only
+session. Lifecycle condition 1 remains unmet; the required
+XPan first-test order, accepted package, exact-build review, backup/risk and
+stop records still apply. For each write, the owner must approve the exact
+build/package hash and bounded test scope immediately before personally
+performing it. General “Go,” version identification and earlier general risk
+acceptance do not substitute for that decision.
 
 The eventual approval must explicitly identify the final package SHA-256,
 the one owner-performed stills-only XPan/crop test, its stop rules and the
@@ -184,5 +215,6 @@ immediate owner approval is absent. Unexplained camera behavior during any
 authorized activity ends that activity's approved scope; it does not permit
 diagnostic commands, settings changes or improvised recovery.
 
-Preparation of this report involved repository review only: no simulator,
-patch encoding/build, camera connection, power-cycle, configuration or flash.
+Preparation of this report involved repository review and bounded static
+decode only: no simulator, patch encoding/build, camera connection,
+power-cycle, configuration or flash.

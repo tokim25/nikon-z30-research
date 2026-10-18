@@ -1,5 +1,12 @@
 # XPan 5200 x 1920 centered: partial offset map (static, scratch copy)
 
+Correction, F-162: [exact geometry contract](native-xpan-5200-contract.md).
+Bounds `(8,8)` to `(5208,1928)` describe a **5200 by 1920** rectangle.
+The rectangle dimensions come from group 3/index 19, not indices 4/14 alone.
+The later endpoint-as-dimension and joint-probe interpretations below are
+superseded on those points; retained here as historical observations. No
+complete firmware edit manifest or camera acceptance is implied.
+
 2026-10-17. Read-only static mapping on a scratch working copy of the owner's
 original. Restricted bytes, decoded module and raw output stay outside the
 repo; only addresses, sizes and values listed here are recorded. No patch,

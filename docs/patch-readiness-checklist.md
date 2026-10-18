@@ -6,9 +6,15 @@ start another research loop until the next item is identifiable and bounded.
 ## Simulator patch essentials
 
 - [ ] Exact hooks and native input boundaries are identified for each included
-  feature. Tracking is conditional and stays out until its native entry point
-  is verified.
+  feature. Tracking's physical input/activation remains unverified; include it
+  only under the owner's recorded disposition to test it in the tracking patch
+  on the real device after package and other readiness gates pass.
 - [ ] Each hook has a defined trigger, guard, cleanup, and return behavior.
+- [ ] For tracking, the candidate action adapter has a bounded simulator
+  request/state control for fresh start, held/repeat suppression, fresh
+  second-edge stop/cancel, combined input, and ineligible states. The physical
+  AE-L/AF-L delivery remains the owner's explicitly assigned device-test
+  objective; this exception does not cover candidate-side action uncertainty.
 - [ ] Reserved space, instruction mode, branches, literals, registers, stack,
   flags, and return paths pass an ABI/layout audit.
 - [ ] Every intended change is in an exact edit manifest; firmware bytes and
@@ -36,8 +42,11 @@ test-readiness-2026-10-17.md. Apply those named waivers to the camera-test
 decision without labelling missing measurements as passes. No hardware
 approval follows from this publication task.
 
-The simulator essentials must be satisfied first, unless an explicit owner
-deviation is recorded.
+The simulator essentials must be satisfied first, except for the physical
+tracking activation path covered by the owner's recorded deviation in
+[build-phase-gate.md](build-phase-gate.md). All tracking synthetic behavior,
+guards, cleanup, allocation, ABI/layout checks, and all unrelated simulator
+acceptance remain required.
 
 - [ ] Verify the exact original firmware identity offline.
 - [ ] Run read-only preflight allowing only the planned edits and policy.
@@ -51,9 +60,10 @@ deviation is recorded.
 ## Scope notes
 
 Saved RAW/JPEG crop is an owner-approved on-camera test item, not a simulator
-checkbox or feature-work blocker. Tracking patch design is deferred until the
-authorized breakpoint checkpoint establishes a native entry point. Hardware
-remains **NO-GO**.
+checkbox or feature-work blocker. Tracking's physical button-to-native
+activation is assigned to the later tracking-patch device test under the
+owner's recorded deviation; it remains unverified. Hardware remains
+**NO-GO**.
 
 The owner subsequently narrowed XPan work to stills only. Movie-transition
 coverage and a still/movie exclusion predicate do not block that simulator
