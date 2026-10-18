@@ -172,6 +172,11 @@ See
 Read this before any other doc. It is the short state of the project. Deeper
 detail lives in the linked docs; open them only when a step needs them.
 
+**Not an engineer?** Read
+[plain-language-overview.md](plain-language-overview.md) first. It explains what
+the project is, where it stands, and the rules, without the jargon. The rest of
+this brief is written for the people doing the work.
+
 ## Owner rules (approved 2026-10-17)
 
 - Read-only identification of the Z 30 is pre-approved. Any camera write needs
