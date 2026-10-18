@@ -1,5 +1,13 @@
 # Project status
 
+## PR #155 review checkpoint
+
+Lane 0 F-127 verifies task creation and passive worker execution. Main conflicts
+are reconciled without rewriting merged facts. See native-worker-scheduling.md
+and native-lane-gap-review.md; their old next steps are historical. Saved-file
+correctness is an on-camera test item. Current owner waivers and hardware
+NO-GO remain as recorded in session-manager-brief.md. No new runtime test.
+
 Owner direction: [owner-direction-2026-10-17.md](owner-direction-2026-10-17.md).
 The saved-crop question is an on-camera test item, not a blocker for feature
 work. Hardware remains NO-GO.
@@ -13,6 +21,17 @@ Updated 2026-10-17 by Codex. Read [handoff-codex.md](handoff-codex.md) for
 the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
+
+Owner-authorized merges: PR #170 merged at 5c68bea; PR #155 is reconciled
+against it and awaits passing updated CI before the separately authorized
+merge. This owner instruction explicitly overrides the earlier self-merge
+restriction for these two PRs only. No other merge or hardware authorized.
+No complete camera firmware artifact exists: private bars overlays and a
+private tracking object/in-memory candidate are components, not installable
+builds. Primary blocker: validate the native output format/integrity contract
+(outer digest unresolved; standalone EG review incomplete), then finish the
+XPan crop/label/preview edit contract and exact-artifact checks. No new
+address-decoding research, build or firmware encoding in this merge task.
 
 Owner review: [PR #155](https://github.com/tokim25/nikon-z30-research/pull/155)
 updated at e655f5d, conflict-free with passing CI; preflight/handoff

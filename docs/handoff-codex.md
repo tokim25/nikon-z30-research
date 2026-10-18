@@ -2,6 +2,15 @@
 
 Known corrections: see [corrections.md](corrections.md).
 
+## PR #155 reconciliation, 2026-10-17
+
+Lane 0 F-127 verifies native APPLV creation and 196 passive worker iterations.
+A general scheduler stall is not supported in that fixture; property-producer
+identity and complete lifecycle remain unproved. See native-worker-scheduling.md.
+Old next-step proposals are historical: follow session-manager-brief.md and
+current owner waivers, not simulator-completeness or closed save-path traces.
+No hardware permission or firmware change; owner review remains required.
+
 Owner direction for this checkpoint is recorded in
 [owner-direction-2026-10-17.md](owner-direction-2026-10-17.md): saved crop is an
 on-camera test item, not a blocker for the feature plan. Hardware remains
@@ -11,6 +20,20 @@ to confirm that the hook, inputs, ABI, simulator acceptance, and hardware gate
 are all explicitly accounted for.
 
 ## Current session update, 2026-10-17
+
+Approved merge checkpoint: the owner explicitly overrode the earlier
+owner-merge-only process. PR #170 merged at 5c68bea after passing CI. PR #155
+is being reconciled with that main; only its facts append conflicted, and
+all main facts plus unique F-127 are preserved. Merge #155 only after its
+updated checks pass. No other PR is approved by this instruction.
+Build status from existing evidence: private F-148 bars overlay and private
+tracking object/in-memory candidate exist; no complete XPan or installable
+firmware image exists. Most important blocker is a verified artifact-format/
+integrity contract: full outer package needs the unresolved digest input;
+standalone EG is a native lead, not yet fully validated. Complete crop/label/
+preview edits, exact-build preflight/review and risk binding remain. Saved
+RAW/JPEG correctness is reserved for camera testing; owner waivers remain
+as recorded. No new research, firmware build/encoding or hardware access.
 
 Owner-authorized publication completed: [PR #155](https://github.com/tokim25/nikon-z30-research/pull/155)
 is reconciled at e655f5d, conflict-free with passing CI; not merged.
