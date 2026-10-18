@@ -3,6 +3,9 @@
 Owner direction: [owner-direction-2026-10-17.md](owner-direction-2026-10-17.md).
 The saved-crop question is an on-camera test item, not a blocker for feature
 work. Hardware remains NO-GO.
+Latest scope clarification: XPan simulator work stays focused on stills;
+movie-transition/predicate evidence is not a blocker. Movie behavior is
+unvalidated. Still-photo ABI and lifecycle requirements remain applicable.
 Patch work is governed by [patch-readiness-checklist.md](patch-readiness-checklist.md);
 do not begin another patch loop until its required inputs are explicit.
 
@@ -10,6 +13,113 @@ Updated 2026-10-17 by Codex. Read [handoff-codex.md](handoff-codex.md) for
 the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
+
+Owner review: [PR #155](https://github.com/tokim25/nikon-z30-research/pull/155)
+updated at e655f5d, conflict-free with passing CI; preflight/handoff
+[PR #170](https://github.com/tokim25/nikon-z30-research/pull/170) contains the
+reconciled research and synthetic digest verifier. Neither PR was merged.
+Primary local suite: 130 passing tests; scanners/lane/diff checks pass.
+Unrelated owner-rule addition remains uncommitted and preserved. No hardware,
+firmware build/encoding or expanded research in this publication task.
+
+Publication reconciliation against main 512e6b3: preserve merged F-135--F-155;
+renumber only our six unmerged findings to F-156--F-161. Later owner waivers
+for lifecycle, still-photo guard and byte-exact installed identity are recorded
+in session-manager-brief.md and test-readiness-2026-10-17.md. Earlier retained-
+gate statements below are historical. No waiver is hardware approval or proof
+of measured behavior; modified firmware remains NO-GO.
+
+Owner-requested pause/handoff to Claude: see
+[consolidated session/permissions packet](native-claude-build-research-handoff.md).
+Includes tracking's separate candidate review and observed stack-allocation
+increment; no installable tracking image or natural activation accepted.
+Publication is now owner-authorized for review; no hardware authorized. New static evidence
+identifies a native standalone-EG discovery/parser/CRC route, potentially
+removing the outer-package digest dependency for that format. Complete route
+and compatibility review remain open; no candidate image was built and
+hardware remains NO-GO. F-148 alone is bars-only, not the complete crop/label
+feature. Next task: Claude's bounded static route and complete-edit contract.
+
+Transfer cleanup preserves all research and seven registered worktrees;
+only generated Python caches removed. Fact IDs F-081/F-110 repeat on main;
+the local F-150 collision is resolved by renumbering our unmerged entries to
+F-156--F-161. Merged findings remain unchanged.
+
+### Earlier checkpoints (historical; current handoff above takes precedence)
+
+F-161: native SHA-1 compression arithmetic passes twelve synthetic lengths;
+native suffix-loop arithmetic passes 1,024 synthetic cases. New read-only
+package digest verifier checks the supplied original before a candidate and
+fails closed without its eight-byte suffix. Total 130 unit tests pass. The
+actual Z30 suffix/input remains unavailable, so the original package digest
+is still unverified and hardware remains NO-GO. See
+[scope and reproduction](native-digest-arithmetic-verification.md).
+
+Latest owner priority: no simulator-completeness or low-value research loops.
+Prepare the smallest justified XPan-only hardware test, then stop at the
+exact-build READY gate for separate owner approval. First technical blocker
+is the native package digest's missing eight-byte input outside captured EG;
+no authorized offline source/equivalent is identified. No new camera access
+or memory acquisition is authorized. Current state remains blocked/NO-GO.
+See the minimum-test stopping point in
+[native-real-camera-readiness.md](native-real-camera-readiness.md).
+
+Current consolidated hardware decision:
+[native-real-camera-readiness.md](native-real-camera-readiness.md).
+Modified-firmware test remains NO-GO; the separately authorized read-only
+identity check does not waive any modified-build gate. Its closure is still
+unreported. No hardware or simulator work was performed for this report.
+
+Owner chose to keep the stills lifecycle gate unmet: existing controls establish
+diagnostic rendering/setting/ABI behavior, but the harness lacks verified
+native startup/menu-return/playback/warning coverage. No new run repeated the
+known input-route limits. Exact F-148 identities reverified. Condition 1
+remains unmet; no owner exception was granted. See
+[native-xpan-lifecycle-decision.md](native-xpan-lifecycle-decision.md).
+
+The separately authorized owner-operated identity/version check is reported
+complete through step 5: NIKON DSC Z 30, reported camera version “1.2,” USB
+IDs 04b0/0452. Idle shutdown/disconnection (step 6) is not yet reported.
+This is not installed-firmware hash verification or modified-build approval.
+See [native-hardware-gate-recommendation.md](native-hardware-gate-recommendation.md).
+
+F-160: bounded close/live-ready contracts pass four stock/candidate pairs.
+Known native callback inputs, callee-saved registers, aligned/balanced stack,
+return flags and ready result pass; measured volatile differences are dead
+at the named continuations. Retain exact F-148 wrappers. Global review and
+native menu acceptance remain open. See
+[native-xpan-close-ready-contracts.md](native-xpan-close-ready-contracts.md).
+
+F-159: a bounded read-only stop-provenance check identifies shared flash
+identity/geometry initialization; the outer operation remains unknown.
+No new simulator run or patch change. Further flash-response explanation
+work is retired; menu acceptance stays open. Next build-focused task:
+remaining close/live-ready hook contract review. See F-159 in
+[native-xpan-menu-boundaries.md](native-xpan-menu-boundaries.md).
+
+F-158 supersedes the next-control instruction below: the single approved
+writer-disabled/coarse control still stops at the same simulated flash
+access. Menu mask remains off; post-menu bars check was not reached.
+Writer redirection is not necessary for this observed stop, so removal is
+not an established remedy. Patch unchanged, menu acceptance open; checkpoint
+stopped pending owner selection of further bounded work. See the F-158
+section of [native-xpan-menu-boundaries.md](native-xpan-menu-boundaries.md).
+
+Latest stills checkpoint, F-157: stock/coarse menu confirmation returns;
+candidate/coarse stops on unmodeled simulated flash access. Finer candidate
+observations return through the original caller with count-3 mask exclusion
+and matching frame/SP/target. This instrumentation-sensitive result does not
+establish a fix. Next bounded control omits only candidate writer-branch
+redirection while retaining all other overlays and coarse inputs/observations.
+See [native-xpan-menu-boundaries.md](native-xpan-menu-boundaries.md).
+
+Current stills checkpoint, F-156: exact F-148 overlay passes callback-driven
+pixel and ten-cycle controls. Candidate menu confirmation failed to return
+in two attempts; an unmodified control returned. Menu acceptance remains
+unproved. Next: bounded stock/candidate comparison at the confirmation
+writer/state boundaries. See [native-xpan-stills-controls.md](native-xpan-stills-controls.md).
+
+### Main-lane reports preserved during reconciliation
 
 **New, 2026-10-17, for Codex — PR #167: consolidated firmware static map.**
 [firmware-map-2026-10-17.md](firmware-map-2026-10-17.md) is an
