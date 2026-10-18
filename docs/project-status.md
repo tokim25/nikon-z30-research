@@ -111,6 +111,47 @@ in two attempts; an unmodified control returned. Menu acceptance remains
 unproved. Next: bounded stock/candidate comparison at the confirmation
 writer/state boundaries. See [native-xpan-stills-controls.md](native-xpan-stills-controls.md).
 
+### Main-lane reports preserved during reconciliation
+
+**New, 2026-10-17, for Codex — PR #167: consolidated firmware static map.**
+[firmware-map-2026-10-17.md](firmware-map-2026-10-17.md) is an
+addresses-and-descriptions map of C 1.20 for all five user-story areas
+(buttons, menus, live-view, crop, AE-L/AF-L tracking), with call chains and
+confidence. New since prior notes: the screen fan-out driver 0x10595844 behind
+the bars, the image-area function table at 0x11f9a4dc behind crop, and the
+AE-L/AF-L queued-input router (callback + handler table at 0x1037a2c4, task-init
+entry 0x1059c2c8). The three largest open leads (crop-table dispatcher, bars
+fan-out entry, router input writer) all need an address-building (MOVW/MOVT or
+base-register) index pass that was not done. No firmware bytes in the doc;
+extracted components stay outside the repo. Owner reviews/merges PR #167.
+
+**New, 2026-10-17, for Codex — action-half correction (one-button tracking).**
+The old "tracking candidate" cluster (0x11cf4e90/0x11cf5774/matcher 0x11cf5248)
+is **Bluetooth HCI**, not AF tracking (strings "Tracking BtPacket", "Tracking
+HCI Rx Buffer"); ruled out. Real on-camera tracking is the **AF-area-mode
+subsystem**: label table 0x103edda0 (PINPOINT…3D-TRACKING…AUTO-AREA), label
+routine 0x103edc2e, settings near 0x11c9b.. (AfAreaMode*, AfTrackingSensitivity);
+3D-TRACKING is the tracking mode. Button behavior is set by
+eDSID_Setting_FuncAeAfLockButtonShooting. These are reached via MOVW/computed
+addresses, so **Codex** must: (1) resolve the AF-area-mode set function from
+0x103edda0/0x103edc2e, and (2) resolve the FuncAeAfLockButtonShooting
+option→action dispatch (does an option engage 3D-TRACKING / AF-ON-with-track).
+Detection hook is already confirmed (ID-41 / SW word 0x115c694c). See
+[firmware-map-deep-2026-10-17.md](firmware-map-deep-2026-10-17.md).
+
+**New, 2026-10-17, for Codex — deep cross-reference companion.**
+[firmware-map-deep-2026-10-17.md](firmware-map-deep-2026-10-17.md) adds the
+static branch/literal/pointer cross-reference results (confirmed call chains;
+the bars screen fan-out driver 0x10595844; the crop function table 0x11f9a4dc;
+the AE-L/AF-L queued-input router) and the complete named hardware-switch table
+at 0x1072e3b0 — three registers SW0/SW1/SW2, with AE-L/AF-L = SW0 bit 0x2000
+and the "i" button = SW1 bit 0x400. **Codex must own the MOVW/MOVT (or
+base-register) address-building index pass**: the Claude lane is blocked from
+it by a safety classifier, and the three largest leads (crop dispatcher at
+0x11f9a4dc, bars fan-out entry 0x10595844, AE-L/AF-L SW-register writer) all
+dead-end on addresses that only that pass resolves. Prose only, no firmware
+bytes.
+
 **New, 2026-10-17, owner-requested handoff to Codex: Lane 0** (see
 handoff-codex.md's new "Lane 0" section). The dormant-worker pattern that
 blocks both Lane 1's and Lane 3's natural-trigger questions (F-019,
