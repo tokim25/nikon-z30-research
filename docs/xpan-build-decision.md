@@ -1,5 +1,33 @@
 # XPan stills: build decision on the standalone-EG route
 
+## Current offline candidate status (F-198/F-199)
+
+A private 176-span standalone-EG candidate now passes exact manifest, byte-
+diff, protected-field, length/capacity, native-CRC and preview-table layout
+checks. It remains outside Git with its firmware-derived manifest in
+owner-only storage. No exact-candidate native updater acceptance, natural
+lifecycle coverage, or camera behavior is claimed; hardware remains NO-GO.
+
+## Codex correction: standalone EG avoids the outer digest (F-163)
+
+The earlier route verdict below is superseded on this point. Static decode of
+the verified original shows that the extra 20-byte digest is selected only
+for discovery type 4 with its encoded-header flag set. The native standalone
+EG is discovery type 2; the same selector returns zero, so the caller takes
+the native file-CRC path at `0x101ce324` and then dispatches execution type 3
+to the shared updater. The missing eight-byte digest input therefore does
+not block a standalone-EG candidate. It still blocks any candidate sent
+through the encoded outer-body path. No check was disabled or changed.
+
+The standalone route is the selected candidate format. Parser capacity,
+compatibility-field preservation, all-size crop/preview edits and exact
+candidate byte/layout/CRC checks have since been completed for the offline
+artifact. Version-policy semantics and Nikon updater acceptance remain
+unverified. See
+[native-standalone-eg-route.md](native-standalone-eg-route.md).
+
+## Earlier route analysis (historical; corrected by F-163 and F-198)
+
 2026-10-17. Claude, read-only static review. No simulator run, no patch
 encoding, no camera access, no installation workflow. Hardware remains
 **NO-GO**. The native-claude-build-research-handoff.md named in the request

@@ -1,6 +1,110 @@
 # Project status
 
-## PR #155 review checkpoint
+## Engineering route update, 2026-10-17
+
+F-191/F-192 establish that the public 65:24 profile is not a drop-in: it uses
+area 2, persisted profile state and a grid rather than our area-4 replacement
+of 1:1 plus black bars. F-198 records a private 176-span standalone-EG
+candidate and an independent byte-level audit. Four area-4 preview-table
+entries set slot 4 to 480x176 and 1080x400; other slots, strides, thumbnail,
+headers and metadata are preserved. The candidate and manifest remain in
+owner-only storage outside Git; audit details are in
+[handoff-codex.md](handoff-codex.md) and [facts.md](facts.md). The accepted
+still-guard waiver leaves playback/movie/warning effects unmeasured. Lifecycle
+condition 1 remains unmet, native updater acceptance is unproven, and camera
+access remains NO-GO.
+
+F-200 checked the existing pinned-QEMU path with the exact private candidate.
+Both its launcher and C machine loader enforce the stock firmware hash, so the
+candidate is rejected before emulation. The simulator was not modified. Treat
+this as a closed simulator limitation; it does not invalidate the audited
+standalone-EG candidate or establish native updater acceptance. Hardware
+remains NO-GO.
+
+## Codex resumed build work, 2026-10-17
+
+The owner directed Codex to continue this work rather than hand it to Claude.
+The private standalone-EG architecture is recorded in
+[native-xpan-build-architecture.md](native-xpan-build-architecture.md). F-198
+emits a candidate with the exact original gate, reviewed manifest and private
+writer; the independent audit verifies exact listed spans, no unplanned
+changes beyond the native CRC trailer, length/capacity, protected fields and
+area-4 table layout. F-166 establishes the `0x2940000` parser capacity and
+preservation of offset `0x10`; F-165 validates crop descriptors with synthetic
+guest RAM. The artifact is testable offline but not camera-ready. Lifecycle
+condition 1 remains unmet; no camera access or write is authorized.
+
+### Historical research before the F-198 candidate
+
+The notes in this section record earlier intermediate findings; the current
+candidate scope and remaining gates are summarized above.
+
+F-170 executed all three direct preview-buffer constructors synthetically.
+F-198 changes only area-4 slot 4 in the getter and direct-buffer tables;
+non-target slots and both stride tables pass an independent unchanged-byte
+audit. Playback/movie/warning effects remain accepted but unmeasured.
+F-171 further shows the `0x10142d86` wrapper has direct preview/object-rebuild
+callers of unproved capture role, so an area-4 test alone is insufficient.
+At that point, capture-caller discrimination and stock generic/playback
+behavior were still hook requirements; F-198 superseded that hook design
+with the accepted table-only candidate.
+F-172 rejects the full adjacent zero run as a cave; a smaller 1,642-byte
+subspan is only a candidate pending address-use and executable-layout review.
+The previous capture-hook and code-location research is superseded for this
+data-only candidate by the owner's still-photo-guard waiver. Lifecycle and
+native updater acceptance remain unresolved.
+F-173 traces several wrappers into existing-record object constructors, but
+none proves a capture-only route. The design now evaluates a minimal native
+EG-tail payload plus a local veneer, based on the same-version upstream build
+pattern; loaded extent and branch/ABI contracts remain unverified.
+F-174 confirms candidate 4-byte patch windows are within BL reach of the
+nearby zero subspan and validates a register-preserving literal veneer in a
+synthetic assembly check. It does not clear that subspan as executable.
+F-175 bounds a minimal append at `0x1207e038` before the CRC, within the known
+native destination span; executable mapping remains to be checked.
+F-176 completes the localized text-span map in a private text-only manifest;
+this does not create or validate a candidate.
+F-177 rules out the `0x1021e7a8` caller path as a capture guard because it
+attaches or reuses existing record-linked preview objects. Exact capture
+caller discrimination remains the first build blocker.
+F-178 consolidates the localized text and proposed area-4 geometry into a
+private 160-span exact data manifest; it remains incomplete and is not a
+firmware candidate. F-179 leaves the type-`0x24` registration dispatch
+unresolved after bounded direct-reference sweeps.
+F-180 follows the native image-record builder to two existing-object
+materialization/refresh routes and rejects it as a capture hook until record
+provenance is proved. Next, trace the source of a newly captured still into
+the builder or identify a per-record capture-origin field; do not patch the
+shared lifecycle path based on area/selector alone.
+F-181 verifies the original EG CRC-16/XMODEM trailer and adds a synthetic-only
+in-memory composer/auditor. Ten tests pass; it has not been run on firmware,
+and it does not close the preview hook or metadata policy.
+F-182 runs the composer against the verified original and current private
+160-span data manifest in memory; exact spans, length and CRC pass. The
+incomplete output was discarded. No feature candidate exists.
+F-183 adds the complete-plan parser gate and 14 synthetic tests; its status
+marker does not itself prove semantic review. F-184 traces the dimension-
+based preview adapter to object creation/attachment, but leaves its dispatch
+and still-capture provenance unresolved. Neither finding approves a hook or
+candidate. Continue with actual still-capture producer tracing and close the
+offset-0x24 metadata policy.
+F-185 adds a private writer requiring the reviewed manifest hash and exact
+source gate, with out-of-repository paths, no-overwrite behavior, and a full
+read-back audit. Four synthetic filesystem tests pass; 148 tests pass across
+the suite. F-186 verifies output file mode `0600`. No real candidate was
+written. F-188 narrows metadata handling to post-CRC, selector-based policy
+callbacks; the standalone callback and version-comparison semantics remain
+unresolved, so preserve offset `0x24` exactly.
+F-189 adds the exact 12-span F-148 bars overlay to the private data manifest.
+All 172 spans pass exact in-memory composition and CRC/length audit; temporary
+output was discarded. Capture-preview hook edits are still missing.
+
+## Historical project and merge checkpoints
+
+The following checkpoints are retained for context and are superseded by the
+current engineering summary at the top of this file.
+
+### PR #155 review checkpoint
 
 Lane 0 F-127 verifies task creation and passive worker execution. Main conflicts
 are reconciled without rewriting merged facts. See native-worker-scheduling.md
@@ -20,7 +124,37 @@ do not begin another patch loop until its required inputs are explicit.
 Updated 2026-10-17 by Codex. Read [handoff-codex.md](handoff-codex.md) for
 the current integration map and next step. Older paused-lane notes are stale.
 
-## Open work
+Owner disposition for tracking: simulator cannot supply the physical
+AE-L/AF-L press, so press-to-start/stop behavior is assigned to the later
+tracking-patch device test. The private tracking manifest/source are verified
+against the extracted original, but no image exists. The standalone-EG
+format/integrity contract remains open; hardware is NO-GO. The prescribed
+first modified test remains XPan, then tracking alone, then combined.
+
+### Earlier open-work checkpoints
+
+F-163 resolves the native format split: standalone EG discovery type 2 is
+checked by the native CRC path and bypasses the unresolved body-package
+digest selected for type 4. This makes standalone EG the preferred build
+format; it does not prove a candidate accepted by the camera. F-166 closes
+the numeric file capacity and direct compatibility-field rule. The complete
+XPan edit manifest still needs preview hooks and geometry edits, plus the
+offset-0x24 metadata/version disposition. F-176 supplies the private 144-span
+localized label/size text manifest. F-165 validates the proposed
+crop values and output sizes through the native full builder. See
+[native route decision](native-standalone-eg-route.md). No firmware candidate
+was built or encoded.
+
+F-162 resolves the scoped large-size geometry question: bounds
+`(8,8,5208,1928)` are exactly 5200x1920. Native arithmetic and both original
+probe reports agree; 256 synthetic arithmetic cases pass. Group 3/index 19
+provides rectangle dimensions; indices 4/14 alone cannot exercise that field.
+See [exact contract](native-xpan-5200-contract.md). No new simulator, firmware
+encoding, saved-file research, tracking work or camera access. Complete
+artifact integrity, label and preview contracts remain open.
+PR #170 merged at 5c68bea and #155 at 71133cd under the owner's explicit
+override; exact merged main passes 130 tests and required scanners/diff checks.
+This geometry follow-up is local/uncommitted, with no new PR authorization.
 
 Owner-authorized merges: PR #170 merged at 5c68bea; PR #155 is reconciled
 against it and awaits passing updated CI before the separately authorized

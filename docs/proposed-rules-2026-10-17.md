@@ -54,3 +54,14 @@ Item 7 is approved: the owner may waive a named gate at the camera-test stage.
 Each waiver must name the gate, give the owner's reason, and appear in the
 readiness record. The lifecycle gate and the XPan still-photo guard are not
 waived by default; each needs its own explicit, named waiver.
+
+## Proposed addition: on-camera reads beyond identification
+
+Status: APPROVED by the owner on 2026-10-17.
+
+9. An on-camera read beyond the identity check may proceed only if:
+   (a) a specific read method has been written up and reviewed for write paths;
+   (b) the owner approves that exact method in one reply; and
+   (c) a recovery plan for a failed or corrupting read is recorded before the step.
+10. Nothing in item 9 permits unreviewed memory access or any firmware-update
+    route on the camera.

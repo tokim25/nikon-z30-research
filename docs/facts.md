@@ -3089,3 +3089,532 @@ raw evidence and new private helper stay under WORK. Hardware remains
 NO-GO; no lifecycle acceptance, recovery-risk acceptance, or build-gate
 conditions 2 through 4 are established by this fact. Details and private
 reproduction: [native-worker-scheduling.md](native-worker-scheduling.md).
+
+F-162. The scoped area-4/large/mode-0 geometry descriptor's rectangle bounds
+`(8,8,5208,1928)` represent exactly 5200 by 1920, not a 5208 by 1928 output.
+Original arithmetic instructions read dimensions from group 3/index 19,
+margin from group 5/index 29 and inset from group 6/index 34. Indices 4/14
+alone do not supply the rectangle dimensions, explaining the later negative
+joint probes. Native lookup/initializer mapping, arithmetic evaluation,
+256 synthetic cases and both preserved original full-builder probe reports
+agree. Origin is separately read; with the recorded area/origin the crop is
+centered in the parent. Observed bounded static analysis and prior-evidence
+recheck, 2026-10-17, high confidence within the large normal-context scope.
+Not a complete edit manifest, all-sizes contract or saved-file validation.
+No new simulator, firmware image/encoding, tracking or hardware work.
+[Exact field mapping, correction and limits](native-xpan-5200-contract.md).
+
+F-163. The native standalone-EG route does not enter the unresolved outer-
+package digest branch. Its discovery row is type 2; selector `0x101cf8cc`
+returns the encoded-header flag only for discovery type 4, so caller
+`0x10234440` sends type 2 to `0x101ce324` for native file-CRC validation.
+Successful execution type 3 then removes the two CRC trailer bytes from the
+updater length and reaches shared updater `0x101ce89e`. The digest branch at
+`0x101ce518` remains applicable to the encoded body-package path. Observed
+through bounded static decode of the verified original, 2026-10-17, high
+confidence for branch selection; no updater execution or camera acceptance.
+Parser capacity, compatibility/version semantics and complete XPan edits
+remain open. [Route and build contract](native-standalone-eg-route.md).
+
+F-164. Bounded static decode of the verified original resolves area-4 crop
+selection for the normal builder context: the crop-dimension, margin and
+inset helper families select pair indices 0/3/5 for large/medium/small. This
+supports a consistent proposed 65:24 output set of 5200×1920, 3900×1440 and
+2600×960; the known margins produce the previously checked large bounds and
+candidate centered medium/small rectangles. Independent arithmetic and
+pointer-table checks pass, but the full native builder was not rerun. The
+capture small/large preview getters use a distinct capture-size selector;
+the pinned upstream C 1.20 investigation identifies separate direct-buffer
+constructors that bypass them and a fixed 160×120 thumbnail path. These
+preview hooks and their ABI are not yet validated for area 4. Observed static
+decode and synthetic arithmetic, 2026-10-17, high confidence in selector
+indices and arithmetic within the inspected context; medium for the complete
+feature edit set. No candidate, firmware write, simulator or camera access.
+[All-size geometry and preview contract](native-xpan-all-sizes-preview-contract.md).
+
+F-165. A fresh pinned-QEMU full native crop-builder comparison validates the
+proposed area-4 large/medium/small descriptors using temporary synthetic guest
+RAM records. The builder returns the 5200×1920 large rectangle from bounds
+(8,8)–(5208,1928), the 3900×1440 medium rectangle, and the 2600×960 small
+rectangle; the large output's endpoint fields are not its width/height. The
+baseline descriptors were also captured for all three size selectors. Guest
+records and pointer slots were restored in `finally`; verified original
+firmware SHA-256 and the pinned QEMU checkout hash/status match before and
+after. Observed bounded assisted-simulator diagnostics, 2026-10-17, high
+confidence for this native builder path and data set only. This does not test
+capture, preview buffers, natural lifecycle, label edits, parser acceptance,
+artifact integrity or camera behavior. No firmware file was modified and no
+camera accessed. Raw evidence and output remain private.
+[Method, complete descriptors and limits](native-xpan-all-sizes-preview-contract.md).
+
+F-166. A read-only startup of the pinned stock QEMU image reads the native
+standalone parser's initialized capacity as `0x2940000` bytes, equal to the
+upstream C 1.20 platform constant. The verified original EG is 33,939,514
+bytes, below this bound; a same-length candidate preserves the size
+precondition. Static parser decode shows the four-byte compatibility field
+at file offset `0x10` is compared with the currently loaded module's field at
+the same offset, so the patch must preserve it exactly. The eight metadata
+bytes at file offset `0x24` are parsed for execution type 3, but their later
+version-policy consumer is still open. Observed native configuration read and
+static decode, 2026-10-17, high confidence for capacity and direct comparison
+semantics only. No firmware writes, simulator source changes, updater
+execution, or camera access. Raw bytes and reports remain private.
+[Route, value sources and unresolved metadata policy](native-standalone-eg-route.md).
+
+F-167. The English 1:1 menu label (string 1454) is 13 UTF-16 code units.
+The proposed `65:24  (24x9)` label is also 13 code units, so this one in-place
+replacement does not shift packed-string offsets. The neighboring displayed
+size lines are separate entries and are not yet mapped to all three XPan
+output sizes; do not treat the label fit as a complete menu-text edit. Observed
+read-only decode of the verified original and length arithmetic, 2026-10-17,
+high confidence for the English label only. No firmware change, candidate or
+camera access. [Label and remaining text work](xpan-build-decision.md).
+
+F-168. A hash-verified whole-image Thumb-2 `BL` sweep finds 16 direct calls
+to the four preview getter families. They span image-record builders, a
+generic dispatcher, display sizing and other contexts; a global getter-table
+change would affect unrelated callers. At `0x1038face`, the caller reads
+capture selector `+0x226`, separately forms the area record at `+0x208`, and
+subsequently uses that record when scaling preview output. The builder at
+`0x1014319e` has four getter sites and reads both fields elsewhere in its
+body, but branch-local guard availability is not established. These are
+candidate tracing points, not accepted hooks. Observed static decode of the
+verified original, 2026-10-17, high confidence for the listed direct
+references and local field accesses only; indirect calls, parent call chains,
+buffer capacity, natural capture behavior and ABI remain open. No firmware or
+simulator changes and no camera access. [Caller map and next checks](native-xpan-preview-callers.md).
+
+F-169. Cross-checking the verified original's preview tables corrects the
+area-4 preview target. Getter backing lists at `0x115a4cfc` and `0x115a4d10`
+select five area slots; slot 4 is 480×480 small preview and 1080×1080 large
+preview, with 120×120 in the separate thumbnail-size list. Independent direct
+buffer tables at `0x1157223c` and `0x11572264` have the same slot-4 dimensions;
+the adjacent row strides are 960 and 2160. Fitting the exact 5200×1920 XPan
+large still into the slot-4 width limits and rounding height to nearest four
+pixels yields candidate previews 480×176 and 1080×400. The upstream 640×236 /
+1920×708 values belong to its area-2 design and must not be copied. Its
+investigation identifies three direct buffer constructors (`0x10142d86`,
+`0x1014376e`, `0x101464c4`) and five hook sites; local Thumb disassembly
+confirms the sites lie in those native constructors. These sites and dimensions
+are leads only: no area-4 hook ABI, allocation, output-structure or playback
+contract has been executed. Observed static table values and local instruction
+cross-check, 2026-10-17, high confidence in values/locations, medium in their
+behavioral role. No firmware change, simulator run, camera access or candidate.
+[Tables, address map and next checks](native-xpan-preview-callers.md).
+
+F-170. Three native direct-buffer constructors were executed in pinned QEMU
+with synthetic guest records. In constructors `0x1014376e` and `0x10142d86`,
+the slot-4 output fields followed synthetic large-preview `1080×400` and
+small-preview `480×176` dimensions; their size-related output fields changed
+accordingly. Constructor `0x101464c4` also returned with those synthetic
+dimension pairs from a nested slot-4 record, while its fixed thumbnail fields
+remained 160×120; its area guard was not established. A
+control call to `0x10142d86` with area 0 while the shared guest table was
+changed showed that table mutation also alters non-target output. Therefore
+the values are viable constructor inputs, but a capture/area-4-scoped shadow
+table or equivalent guarded hook is required; global table edits are unsafe.
+All guest table entries and scratch records were restored, original firmware
+identity and pinned QEMU checkout were unchanged. Observed bounded synthetic
+constructor calls, 2026-10-17, high confidence for the fields exercised;
+allocation capacity, per-hook ABI/guards, real capture and preview pixels
+remain unverified. No candidate or camera access.
+[Constructor map and test limits](native-xpan-preview-callers.md).
+
+F-171. A verified-original Thumb `BL` sweep finds the direct buffer wrapper
+`0x10142f5e` called from `0x1009f8c6`, `0x100a356a`, and `0x100a579c`.
+`0x1009f8c6` lies in a creator that selects a preview slot from an input
+dimension; the other two lie in object-rebuild paths that pass the current
+record at `+0x3a4`. These are shared record-construction contexts, not proven
+capture-only routes. The constructor's area-4 field check therefore cannot
+by itself establish a safe hook; exact caller/capture discrimination and
+old-photo behavior must be demonstrated before patching. Observed bounded
+static callsite scan and local caller decode, 2026-10-17, high confidence for
+the direct references, unknown for indirect callers and full semantic role.
+No candidate, simulator mutation, or camera access.
+[Caller map and limits](native-xpan-preview-callers.md).
+
+F-172. A hash-gated zero-span audit rejects treating the entire
+`0x1002d884–0x10030006` run as free code space: direct pointer values from
+elsewhere in the EG target 110 distinct addresses within that run. A smaller
+aligned all-zero subspan, `0x1002d996–0x1002e000` (1,642 bytes), has no direct
+pointer hits, no whole-image Thumb branch targets from the bounded decoder,
+and no detected Thumb MOVW/MOVT address pair. This makes it a candidate for
+further code-space review, not an approved cave: base-register address
+construction, linker/section boundaries, and executable mapping have not
+been closed. Observed static byte/reference scans of the verified original,
+2026-10-17, high confidence for the checked direct references and zero span;
+medium or lower for all possible indirect/computed uses. No firmware or
+simulator changes and no candidate.
+[Preview/build architecture](native-xpan-build-architecture.md).
+
+F-173. A hash-verified direct Thumb `BL` trace follows the preview-constructor
+wrappers upward. Wrapper `0x10143862` has a direct caller at `0x1021e7a8`;
+wrapper `0x1014389c` is called at `0x100a0b9c` in an existing-record object
+construction path; and wrapper `0x101465e8` for direct constructor
+`0x101464c4` is called at `0x1009ece0` after an object-type check (`+0x0d ==
+0x24`) and a non-null-field check (`+0x144`). These remain generic
+object/record construction contexts; none is proved to mean new-still capture
+or to exclude playback/rebuild. Caller-level capture scoping remains open.
+Observed bounded static decode and full-image direct-call sweep of the
+verified original, 2026-10-17, high confidence for direct references and local
+data flow only. No patch, candidate or camera access.
+[Preview caller map](native-xpan-preview-callers.md).
+
+F-174. Instruction-width review identifies candidate four-byte patch windows
+near the five direct-buffer hook sites at `0x10142de4`, `0x10142e42`,
+`0x101437a0`, `0x10146518`, and `0x10146550`. Each spans complete Thumb
+instructions. Branch arithmetic puts each window within about 1.1 MiB of the
+candidate zero subspan at `0x1002d996`, inside Thumb-2 `BL` reach; the native EG
+tail is about 31.9 MiB away and needs an intermediate veneer. A synthetic
+LLVM assembly check confirms an eight-byte `LDR.W PC` literal veneer can
+transfer to a Thumb-tagged appended stub without clobbering a general
+register. This proves only encoding geometry: cave executable mapping,
+exhaustive address-use, displaced-instruction behavior, hook ABI and capture
+guard remain open. Observed bounded original-instruction decode plus synthetic
+assembly/address arithmetic, 2026-10-17, high confidence for instruction
+widths and branch ranges only. No original bytes changed or candidate built.
+[Build and hook layout](native-xpan-build-architecture.md).
+
+F-175. Address arithmetic for a bounded code append places the start of code
+inserted immediately before the verified original's two-byte CRC at
+`0x1207e038` (Thumb pointer `0x1207e039`). The native parser's `0x2940000`-byte
+installation span from `0x10020000` ends at `0x12960000`; the original payload
+leaves 9,314,248 bytes of modeled `0xFF` padding, so a small append stays under
+the known capacity. This supports payload-size and branch-distance planning
+only; it does not prove that the appended range is executable or camera
+accepted. Observed arithmetic over F-142/F-166 values, 2026-10-17, high
+confidence for the numeric bounds. No firmware bytes changed or candidate
+built. [Build architecture](native-xpan-build-architecture.md).
+
+F-176. Against the SHA-256-pinned original EG, the three 36-entry language
+tables provide indexed UTF-16 spans for the existing 1:1 label and its L/M/S
+size strings (IDs 1454, 1456–1458). A private text-only manifest records 144
+non-overlapping edits across all languages, each using the same byte length
+as its source span; bounds, UTF-16 alignment, replacement fit and source hash
+were checked. The plan contains firmware-derived spans and remains in
+owner-only storage outside the repository. This closes string-span mapping
+and exact-length fit only; translated display semantics, preview hooks,
+metadata policy and all other edits remain open. No candidate or camera
+access. [Build architecture](native-xpan-build-architecture.md).
+
+F-177. Local disassembly of the `0x10143862` caller at `0x1021e7a8` places it
+inside the routine beginning at `0x1021e3f4`. That routine obtains and
+initializes/reuses record-linked objects, creates a preview object when a
+nested object field is empty, stores the returned object into the parent, and
+continues object attachment/state handling. This is an existing-object
+lifecycle path, not evidence of a new-still capture boundary; do not use this
+call site as the capture discriminator. A whole-image direct-branch check
+found no direct call to the enclosing entry; computed/indirect dispatch is
+not resolved. Observed bounded static disassembly of the verified original,
+2026-10-17, high confidence for local operations and branch edges, unknown
+for indirect entry/caller semantics. No firmware or camera access.
+[Preview caller map](native-xpan-preview-callers.md).
+
+F-178. A hash-pinned offline composition combines the F-176 text spans with
+the mapped area-4 origin, padded extent, L/M/S outputs, crop dimensions,
+margins and insets into a private 160-span exact data manifest. Each span has
+expected/replacement bytes and hashes; 144 localized UTF-16 spans and 16
+two-byte geometry spans are non-overlapping. Source identity and all expected
+bytes were rechecked, and applying the manifest to memory preserved the
+original length. This is a proposed data-only edit set, not a candidate; the
+preview hooks, bars payload, metadata policy, native CRC and complete
+out-of-manifest audit remain open. The manifest remains in owner-only storage
+outside the repository. Observed offline manifest build
+and read-back, 2026-10-17, high confidence for span/hash/non-overlap checks;
+medium for downstream correctness of proposed geometry values. No firmware
+output or camera access. [Build architecture](native-xpan-build-architecture.md).
+
+F-179. Whole-module reference sweeps found no Thumb PC-relative literal/ADR
+reference or ARM PC-relative literal/ADR reference into the inspected object
+constructor table regions around `0x1200d000`, `0x1200ddb8` and
+`0x1200e480`; no whole-image MOVW/MOVT pair formed those candidate addresses.
+The type-`0x24` constructor pointer itself occurs in a data entry, but the
+entry's registration/dispatch source is still unresolved. These bounded
+negative scans do not rule out base-relative or runtime-populated references.
+Observed hash-pinned offline scans of the verified original, 2026-10-17,
+high confidence for the tested reference forms only. No firmware output or
+camera access. [Preview caller map](native-xpan-preview-callers.md).
+
+F-180. A hash-pinned Thumb-2 call sweep finds the area-4 preview-record helper
+`0x1014319e` called from `0x10143708` inside native constructor `0x101436c2`.
+That constructor is reached at `0x100a42d8` when an object's `+0x320` record
+is absent, and at `0x101eccb0` while an existing object is being refreshed;
+the latter route also checks object state before filling the missing record.
+Both routes materialize records from current object state, and neither proves
+a new-still capture boundary. The helper reads the area and preview selector,
+but those fields alone are not a capture discriminator. This rejects the
+builder as an approved hook pending a capture-origin proof. Observed bounded
+static decode and whole-image halfword-aligned `BL` sweep of the verified
+original, 2026-10-17, high confidence for the call edges and local field flow;
+unknown for the indirect dispatch and lifecycle semantics. No candidate or
+camera access. [Preview caller map](native-xpan-preview-callers.md).
+
+F-181. The verified original standalone EG's stored big-endian two-byte
+trailer equals CRC-16/XMODEM (polynomial 0x1021, initial value 0) over all
+preceding bytes, and processing the complete file yields zero residue. A new
+standard-library-only in-memory composer/auditor implements that trailer rule,
+same-length exact spans, optional payload insertion immediately before the
+trailer, protected fields at offsets 0x10 and 0x24, capacity bounds, and a
+full unchanged-region audit. Ten synthetic tests pass; no real firmware was
+passed to the composer and no candidate was emitted. The actual verified
+original was read only for the CRC comparison. Observed offline calculation,
+2026-10-17, high confidence for this original and CRC convention; no camera
+access or artifact. [Composer API](../src/nikon_z30_research/standalone_eg.py)
+and [architecture](native-xpan-build-architecture.md).
+
+F-182. The new composer/auditor was exercised in memory against the exact
+hash-verified original and private F-178 160-span text/geometry manifest. It
+accepted all 160 same-length spans, preserved the original file length,
+recomputed a valid native CRC, and reported 2,286 changed bytes under its
+accounting. The manifest remains explicitly data-only/incomplete; the output
+was discarded and no candidate file was written. This confirms the tool can
+apply the current exact data plan to the pinned input, not that the feature
+edits are semantically complete or camera-accepted. Observed bounded offline
+composition and read-back audit, 2026-10-17, high confidence for span/hash/
+length/CRC checks; no simulator or camera access. [Build architecture](native-xpan-build-architecture.md).
+
+F-183. The in-memory standalone-EG composer now exposes a parser for a
+private exact-span manifest and refuses plans not explicitly marked
+`COMPLETE_REVIEWED_PLAN`, not bound to the pinned Z 30 EG identity/load base,
+or with malformed span hashes, offsets, lengths, or append-payload identity.
+The composer then independently checks source CRC/identity, ordered spans,
+protected header ranges, capacity and every unplanned output region. Fourteen
+synthetic tests cover the parser and composer; the status marker is a caller
+assertion, not evidence that the plan has passed engineering review. No
+complete plan or firmware candidate exists. Observed standard-library unit
+tests, 2026-10-17, high confidence for rejection behavior on the fixtures;
+no camera or candidate use. [Composer](../src/nikon_z30_research/standalone_eg.py).
+
+F-184. Local review of the dimension-based preview-slot adapter at
+`0x1009f884` finds it selects a preview slot from input dimensions, creates a
+preview object, and attaches the result to a parent object. The direct wrapper
+call at `0x1009f8c6` reaches the already-known shared buffer constructor. A
+whole-image direct Thumb `BL` scan and raw pointer-word scan found no direct
+entry reference to the adapter; indirect dispatch and its upstream event
+source remain unresolved. This is a preview-object construction route, not a
+proven still-capture guard and not an approved hook. Observed bounded
+static review of the verified original, 2026-10-17, high confidence for the
+local dimension-selection and attachment behavior; unknown for its dispatch
+and capture provenance. No candidate or camera access.
+[Preview caller map](native-xpan-preview-callers.md).
+
+F-185. A private standalone-EG file writer now requires a caller-supplied
+SHA-256 for the reviewed manifest, invokes the exact-original gate before
+composition, rejects project-repository paths and existing output files,
+checks the native parser capacity, and reopens/audits the written result.
+If the read-back audit fails, it removes only the output file it created.
+Four filesystem tests use synthetic EG fixtures; the complete suite passes
+148 tests. The manifest digest is a caller assertion, not proof that someone
+reviewed the plan. The writer has not been run on the real original or a
+feature manifest, and no candidate exists. Observed synthetic unit tests,
+2026-10-17, high confidence for the tested filesystem and refusal behavior;
+no camera access. [Private builder](../src/nikon_z30_research/private_eg_builder.py).
+
+F-186. The private candidate writer creates output with mode `0600`
+(owner read/write only) after exclusive creation, and a synthetic filesystem
+test verifies that mode. This limits accidental exposure of any future local
+candidate; it does not change candidate readiness. No real firmware or
+candidate was written. Observed local unit test on the current filesystem,
+2026-10-17, high confidence for the tested mode and write path. [Private
+builder](../src/nikon_z30_research/private_eg_builder.py).
+
+F-187. The private writer was run against the exact verified original and
+the current private 160-span data-only manifest using a fresh private output
+path. The original-identity gate passed, the manifest's incomplete status
+was rejected, and the output path remained absent. This is a real-input
+fail-closed build-gate check only: it does not produce or validate an XPan
+candidate. Observed local builder invocation, 2026-10-17, high confidence
+for exact source identity and incomplete-plan refusal; no camera access.
+[Build architecture](native-xpan-build-architecture.md).
+
+F-188. Read-only inspection confirms that the eight-byte field at standalone
+EG offset `0x24` is printable, version-like text in the verified original.
+The parser passes it through formatter `0x101d3f14`; after CRC validation,
+the checker dispatches through selector-based policy callbacks, some of which
+also call that formatter. This locates metadata formatting after integrity
+validation but does not prove whether the field is compared
+against the installed version or only displayed. Preserve all eight bytes;
+the exact callback selected for the standalone route remains to be mapped.
+Observed bounded static decode and in-memory byte classification,
+2026-10-17, high confidence for text shape and call flow only. No candidate
+or camera access. [Standalone route](native-standalone-eg-route.md).
+
+F-189. The exact private F-148 bars overlay was merged with F-178's
+text/geometry plan after verifying the pinned original identity, all 12
+before-span hashes, all 12 replacement-file hashes, and non-overlap with the
+160 existing edits. The resulting private manifest has 172 exact spans. The
+composer audited an in-memory result against the verified original; length
+and native CRC passed, with 2,456 changed bytes under its accounting. The
+temporary candidate bytes were discarded. The manifest remains explicitly
+incomplete because preview hooks/capture provenance and metadata callback
+semantics are unresolved. The manifest remains in owner-only storage outside
+the repository, with owner-only permissions.
+Observed offline manifest merge and full composer audit, 2026-10-17, high
+confidence for source/span/hash/non-overlap/length/CRC checks; no simulator or
+camera access. [Build architecture](native-xpan-build-architecture.md).
+
+F-190. A one-time passive read of the pinned QEMU 10.2.4 runtime selector
+returned zero at `0xc259c8e4`; the statically decoded selector subtracts six,
+then takes the out-of-range fallback for this value. The run booted the exact
+verified local original and did not call firmware functions or write guest
+memory. This is only the incomplete simulator's startup state, not evidence
+of the camera's selected version-policy callback. Do not continue probing
+this simulator state; trace the native dataflow or leave the metadata
+semantics unresolved. Observed, 2026-10-17, high confidence for this single
+QEMU read and low relevance to camera behavior. No camera access.
+
+F-191. The current public Wonder Lantern Z30 C 1.20 source documents a
+65:24 aspect profile with native still-size selection, capture-specific
+embedded-preview dimensions, and a custom area-2 workflow; it reports user
+camera validation. Its profile uses L/M/S dimensions 5568×2056,
+4176×1544, and 2784×1024 and keeps the fixed 160×120 thumbnail unchanged.
+This is a concrete same-model/same-firmware implementation to evaluate as a
+baseline for our testable patch, rather than continuing to invent the
+unresolved area-4 preview hooks. It does not supply our separate black-bars
+overlay, prove our existing F-148 integration, or establish our lifecycle
+gate. Source claims and dimensions observed in public project documentation,
+2026-10-17; not independently reproduced by this project and not a camera
+authorization. [Aspect profile](https://github.com/WonderLantern/wonder-lantern-z30/blob/main/docs/aspect-profiles.md),
+[build contract](https://github.com/WonderLantern/wonder-lantern-z30/blob/main/docs/build.md).
+
+F-192. Comparison with the requested feature contract shows the public
+65:24 profile is not a drop-in candidate: it selects area 2 through a
+multi-profile persistent setting and uses a native grid reference; our
+candidate replaces the stored 1:1 choice in area 4 and has a separate
+black-bars overlay. The upstream source is useful as a same-firmware
+reference for capture-specific preview handling and profile isolation, but
+does not satisfy the requested menu/area/overlay behavior. Preserve the
+area-4 plan and do not substitute the different behavior to make a candidate
+easier. Observed documentation and project-contract comparison, 2026-10-17,
+high confidence for the stated behavior difference. No code or camera access.
+[Preview comparison](native-xpan-preview-callers.md),
+[build architecture](native-xpan-build-architecture.md).
+
+F-193. At the pinned same-firmware source commit, the upstream 65:24
+implementation has explicit return-address allowlists for its small/large
+preview-getter hooks. The 7 small and 5 large callsites overlap our local
+capture-record builder/scaler inventory and omit two known display/scaling
+callers. Its verifier executes the listed callers and one excluded caller,
+checking stock pointer/value fallback and callee-saved registers across
+profiles, areas and indices. This provides a concrete method and candidate
+allowlist for our generic getter hooks, but its area-2/profile-index-1 guard
+does not transfer to area 4 without exact index/ABI validation. Its separate
+direct-buffer hook checks profile plus area but not the outer caller; our
+constructor has known rebuild callers, so this does not close direct-buffer
+provenance. Observed in pinned public source commit
+`f6630588810f6ecb9363bc7881fccb47e4fdb87b`, 2026-10-17; no local firmware
+execution, candidate or camera access. [Cross-check](native-xpan-preview-callers.md).
+
+F-194. Static decode of the verified local original shows wrapper
+`0x10142f5e` saves its caller LR in a 16-byte frame, then calls constructor
+`0x10142d86`; the constructor pushes 24 bytes before its direct-table hook at
+`0x10142de4`. At that hook, the wrapper's original caller LR is recoverable
+at `[sp,#36]`, enabling a caller-specific direct-buffer guard without a
+global one-shot flag. The three known wrapper callers are the dimension-based
+creator at `0x1009f8c6` and two existing-object rebuild paths
+(`0x100a356a`, `0x100a579c`). This suggests a testable hook mechanism but
+does not establish any caller as new-still-only; a full synthetic wrapper-to-
+constructor run must verify the stack contract, and the first caller's
+upstream indirect dispatch/provenance remains open. Observed bounded decode,
+2026-10-17, high confidence for frame arithmetic from instructions; no code
+change or camera access. [Preview caller map](native-xpan-preview-callers.md).
+
+F-195. Bounded disassembly of `0x1009f884` shows a dimension-based
+preview-object factory: it reads input width at `+0x0a`, selects a preview
+choice, writes it to record `+0x226`, allocates a resource, calls the shared
+constructor wrapper, and attaches the result to a parent object at `+0x28`.
+There is no local still-capture predicate, area-4 check, or capture-origin
+read. The then-reported negative whole-image reference sweep was incomplete:
+F-196 finds two direct calls to this factory from `0x1021d946`. This still
+disqualifies the factory itself as a capture hook; its callers and input
+records need provenance review. Observed read-only disassembly of the exact
+verified original, 2026-10-17; no code change or camera access.
+[Preview caller map](native-xpan-preview-callers.md).
+
+F-196. A hash-verified Thumb `BL` sweep finds two calls to the
+dimension-based preview factory `0x1009f884`, at `0x1021d952` and
+`0x1021d994`, both within helper `0x1021d946`. A further whole-image direct
+call sweep finds one caller of that helper at `0x1021da84`, reached from
+dispatcher `0x1021d9e2` only when input flag bit 20 is set. The helper obtains
+current object/record state, builds preview objects, attaches one at parent
+`+0x28`, then clears state and invokes an indirect continuation. This gives
+a concrete event-dispatch route to trace, but does not identify bit 20 as a
+new-still event or prove either input record is capture-only. No direct Thumb
+`BL` to the dispatcher was found; one aligned word at `0x1021dd08` contains
+its Thumb pointer, suggesting table-based dispatch whose registration/use
+remains unknown. Trace that table use and the producer/meaning of the flag;
+preserve the generic route unless capture provenance is established. The
+earlier F-184/F-195 negative direct reference claim is corrected. Observed
+bounded decode and complete direct
+Thumb-call sweep of the verified original, 2026-10-17, high confidence for
+direct call edges and local flag/data flow; event meaning remains unknown.
+No candidate or camera access. [Preview caller map](native-xpan-preview-callers.md).
+
+F-197. Static review of initializer `0x1021dac2` shows it constructs callback
+registration records using identifiers from the adjacent static table, loads
+the Thumb callback pointer `0x1021d9e3` at `0x1021db04`, and passes the
+record through shared registration routine `0x10199cae`. That routine builds
+a callback object and delegates to common service code. The identifier lookup
+and service semantics are not yet mapped, so this establishes a registered
+event-callback route, not the event's meaning. The callback's bit-20 branch
+still lacks evidence tying it to a new still. Next resolve the registration
+identifier into its producer/consumer and trace where the callback flags and
+current object originate. Observed bounded static disassembly of the verified
+original, 2026-10-17, high confidence for local calls and data flow; event
+semantics and capture provenance remain unknown. No candidate or camera
+access. [Preview caller map](native-xpan-preview-callers.md).
+
+F-198. The owner's current XPan still-photo-guard waiver accepts that
+area-4 preview dimensions may also affect movie, playback or warning
+contexts. This removes capture-caller provenance as a prerequisite for the
+offline candidate, while lifecycle condition 1 remains unmet and hardware
+approval remains separate. A private complete 176-span manifest combines
+144 localized UTF-16 text edits, 16 area-4 geometry edits, 12 F-148 bars
+edits, and four area-4 preview-table edits. Only slot 4 changes in the getter
+and direct-buffer tables: 480x480 becomes 480x176 and 1080x1080 becomes
+1080x400; other slots, row strides, thumbnail, and protected fields remain
+unchanged. The private builder produced a 33,939,514-byte standalone-EG
+candidate from the verified source. Its SHA-256 is
+`6614df3aa5d8b8b223953db7eb680ff04684ddac6730cc98397e907c2cadb6a1`; the
+manifest SHA-256 is
+`32de8d4d87ac2bb41ea0d450b647f23e15346dfd58712fc9c2fad34ca656374a`.
+Independent checks confirmed exact listed edits, no unplanned byte changes
+outside the regenerated two-byte CRC trailer, unchanged source length,
+protected offsets 0x10/0x24, native CRC residue, parser-capacity fit, mode
+0600, unchanged non-target slots/strides, and the four intended preview
+values. Candidate and manifest remain in owner-only storage outside the
+repository; neither is in Git.
+F-170 previously executed the native preview constructors synthetically with
+the same dimensions, but the modified file has not been exercised by camera
+hardware or accepted by a native updater. Observed local builder plus
+independent read-back audit, 2026-10-17, high confidence for byte/layout/CRC
+properties; camera acceptance and residual UI behavior remain unverified.
+No camera access or write. [Build architecture](native-xpan-build-architecture.md).
+
+F-199. Re-opened the known verified C 1.20 EG, private F-198 candidate and
+private 176-span manifest. The original identity gate, complete-manifest
+parser, manifest hashes, exact-span composition, independent full-file audit,
+native CRC/residue, file length/capacity and artifact permissions passed
+again. A separate layout check confirmed slots 0–3 remain unchanged in both
+getter tables and both direct-buffer dimension tables; slot 4 is 480×176 and
+1080×400 in each; both five-entry row-stride tables are byte-identical with
+slot-4 strides 960/2160. Candidate SHA-256 remains
+`6614df3aa5d8b8b223953db7eb680ff04684ddac6730cc98397e907c2cadb6a1`, manifest
+SHA-256 remains `32de8d4d87ac2bb41ea0d450b647f23e15346dfd58712fc9c2fad34ca656374a`.
+This is offline byte/layout verification only; it does not establish Nikon
+updater acceptance, lifecycle coverage or camera behavior. No camera access
+or write. [Current handoff](handoff-codex.md).
+
+F-200. A bounded attempt to run the exact private F-198 candidate through the
+existing pinned QEMU found that the standard Python launcher rejects its
+non-stock hash, then source inspection and a direct pinned-binary launch
+confirmed that the QEMU C machine loader independently enforces the exact
+stock length and SHA-256 before emulation. The launch stopped at that guard;
+the simulator did not execute the candidate. The QEMU checkout and binary
+remain unchanged. This is a simulator input-policy limitation, not evidence
+for or against Nikon updater acceptance. Per the project priority rule, record
+the dead end and stop this simulator path rather than weaken its guard or
+modify the pinned simulator. The private candidate, firmware, and runtime logs
+remain outside Git. Observed local verifier attempt and source review,
+2026-10-17; high confidence for rejection at the launcher and C guard; no
+camera access or write. [Current handoff](handoff-codex.md).

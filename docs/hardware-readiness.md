@@ -4,6 +4,13 @@ Reviewed 2026-10-16. **NO-GO for hardware testing or installation.**
 Personal build-phase authorization does not grant permission to connect,
 flash or install on the owner's camera. No installable firmware was produced.
 
+Current XPan update (2026-10-17): a private offline standalone-EG candidate
+exists and passes independent exact-edit, layout, length and native-CRC
+checks (F-198). Nikon updater acceptance, lifecycle condition 1 and hardware
+behavior remain unverified; condition 1 is explicitly unmet. This candidate
+does not change this record's NO-GO status or authorize camera contact/write.
+See [Codex handoff](handoff-codex.md) for the private artifact identity.
+
 This checkpoint does not certify hardware safety. Safety cannot be proved
 before the first camera test. It tracks progress toward three states defined in
 [build-phase-gate.md](build-phase-gate.md): **SIMULATOR ACCEPTED**, **READY
