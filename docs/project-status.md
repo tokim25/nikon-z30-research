@@ -26,6 +26,13 @@ contexts. The owner directs keeping the waiver as scoped, excluding editor
 outputs; no capture-hook investigation or candidate build is planned.
 Hardware remains NO-GO under unmet lifecycle condition 1.
 
+F-205 records the owner's narrower requirement that future preview changes be
+still-capture-only and leave playback/editor unchanged. The four named caller
+contexts still have no proven capture-origin gate: one is a dimension-based
+factory, two rebuild existing objects, and one refreshes an existing object.
+The upstream bit-20 event semantics remain unresolved. Do not build or advance
+hardware readiness until a gate and its playback/editor exclusion are proved.
+
 F-200 checked the existing pinned-QEMU path with the exact private candidate.
 Both its launcher and C machine loader enforce the stock firmware hash, so the
 candidate is rejected before emulation. The simulator was not modified. Treat

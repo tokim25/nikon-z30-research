@@ -3648,3 +3648,21 @@ Lifecycle condition 1 remains unmet, so hardware preflight remains blocked. No
 candidate build or camera access.
 [Preview caller map](native-xpan-preview-callers.md) and [test-readiness
 record](test-readiness-2026-10-17.md).
+
+F-205. The owner reopened capture-path research with the narrower requirement
+that preview edits affect still capture only and leave playback/editor outputs
+unchanged, specifically at wrapper call sites `0x1009f8c6`, `0x100a356a`,
+`0x100a579c`, and refresh caller `0x101eccb0`. Existing hash-pinned static
+findings do not provide such a gate. `0x1009f8c6` is inside a dimension-based
+preview-object factory with no local capture-origin predicate (F-184/F-195);
+`0x100a356a` and `0x100a579c` rebuild objects from current records (F-171);
+`0x101eccb0` refreshes an existing object and fills a missing record (F-180).
+The possible upstream dispatcher gate tests bit 20, but its event meaning and
+record provenance are unresolved (F-196/F-197). Therefore no still-only gate
+is established at these four contexts, and playback/editor exclusion is not
+proved. The remaining evidence needed is a statically traced capture-origin
+predicate whose producer and semantics exclude rebuild, refresh, playback and
+editor contexts, plus proof that it dominates each relevant hook without
+changing shared outputs. No candidate was built and no camera was accessed
+for this finding. Observed review of the cited pinned-original findings,
+2026-10-17; [caller map](native-xpan-preview-callers.md).

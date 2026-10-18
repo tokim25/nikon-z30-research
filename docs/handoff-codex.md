@@ -45,6 +45,21 @@ continue capture-hook research, build a new candidate, or proceed to hardware
 preflight. Lifecycle condition 1 remains unmet. See F-204 and the [caller
 map](native-xpan-preview-callers.md).
 
+### F-205 still-only gate review
+
+The owner has now narrowed the requirement: any XPan preview changes must
+apply only to still capture and must leave playback/editor outputs unchanged.
+Review of the four named contexts found no proven gate: `0x1009f8c6` is called
+from a dimension-based preview factory with no local capture predicate;
+`0x100a356a` and `0x100a579c` rebuild existing objects; `0x101eccb0` refreshes
+an existing object. The possible upstream bit-20 dispatcher condition has
+unknown event semantics and record provenance, so it cannot be treated as a
+still-only gate. Do not build a candidate or proceed to camera readiness on
+this evidence. Remaining work requires tracing a capture-origin predicate
+that excludes playback/editor and proves dominance at all relevant edit
+points. See F-205 and the caller map. The existing waiver remains as scoped,
+editor excluded; lifecycle condition 1 remains unmet.
+
 ## Historical research log (superseded where it conflicts with F-198/F-199)
 
 F-191/F-192 comparison closes the baseline question: the public 65:24 feature

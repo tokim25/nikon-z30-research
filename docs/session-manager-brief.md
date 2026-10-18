@@ -37,6 +37,13 @@ warning effects; the owner directs keeping that waiver as scoped, excluding
 editor outputs. Do not resume hook tracing or advance hardware readiness;
 lifecycle condition 1 remains unmet.
 
+F-205 records the owner's requirement that any preview change be still-only
+and leave playback/editor unchanged. Static evidence at the four named shared
+contexts shows a dimension-based factory, two object rebuilds and one existing
+object refresh, with no proven capture-origin gate. The bit-20 event remains
+unidentified. No candidate build or hardware step is authorized by this
+finding; require capture-origin and output-exclusion proof first.
+
 ## Codex resumed build work, 2026-10-17
 
 The owner asked Codex to devise and pursue the camera-loadable patch, not

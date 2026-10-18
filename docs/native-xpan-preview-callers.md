@@ -333,3 +333,19 @@ effects. The owner directs keeping the waiver as scoped; editor outputs are
 not added. Do not claim editor isolation or include editor behavior in an
 accepted test scope. This is a documentation disposition only; no candidate
 was built and no camera was accessed. Lifecycle condition 1 remains unmet.
+
+## Still-only gate review (F-205)
+
+The owner now requires preview changes to affect still capture only and leave
+playback/editor unchanged, with a gate at the four shared contexts named in
+F-205. The existing evidence does not establish one. At `0x1009f8c6`, the
+wrapper is called from a dimension-based factory that has no local
+capture-origin predicate (F-184/F-195). `0x100a356a` and `0x100a579c` are
+existing-object rebuild callers (F-171). `0x101eccb0` is an existing-object
+refresh path that fills a missing record (F-180). The upstream dispatcher
+tests bit 20, but the flag's event meaning and record provenance remain
+unknown (F-196/F-197); it is not a proven still-only guard. Thus the gate is
+not found. The blocking gap is a traced capture-origin value, its producer
+and semantics, and proof that the predicate excludes playback/editor and
+dominates every relevant edit at these contexts. No candidate was built and
+no camera was accessed for this review.
