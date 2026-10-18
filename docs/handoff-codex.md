@@ -60,6 +60,20 @@ that excludes playback/editor and proves dominance at all relevant edit
 points. See F-205 and the caller map. The existing waiver remains as scoped,
 editor excluded; lifecycle condition 1 remains unmet.
 
+### F-206 bounded stopping point
+
+The repository-only trace adds no caller/producer evidence beyond F-171,
+F-180 and F-196/F-197. The unresolved evidence is the producer and semantics
+of bit 20 at dispatcher `0x1021d9e2`, the registered callback key/service
+meaning, and the new-still versus reused-object provenance of the current and
+nested records consumed by `0x1021d946`. The F-198 global area-4 table edit
+cannot meet the owner's new playback/editor exclusion requirement. Do not
+build or test it under this scope. The safe next step is for the owner to
+provide or point to an already-authorized, bytes-free decode of those edges;
+until then keep preview changes blocked. A guarded override with stock
+fallback is only a design constraint, not a proven hook. No firmware artifact
+or hardware was accessed in this continuation.
+
 ## Historical research log (superseded where it conflicts with F-198/F-199)
 
 F-191/F-192 comparison closes the baseline question: the public 65:24 feature

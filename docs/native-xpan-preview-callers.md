@@ -349,3 +349,19 @@ not found. The blocking gap is a traced capture-origin value, its producer
 and semantics, and proof that the predicate excludes playback/editor and
 dominates every relevant edit at these contexts. No candidate was built and
 no camera was accessed for this review.
+
+## Bounded static stopping point (F-206)
+
+The repository contains no further static decode for the upstream event
+producer/key or the provenance of the current and nested records. The
+unresolved edge is exact: identify the producer and meaning of bit 20 tested
+by `0x1021d9e2`, then prove whether the records used by `0x1021d946` describe
+a new still or a reused playback/editor/rebuild object. The other named paths
+remain object rebuild/refresh routes, and no predicate is shown to dominate
+a capture-only edit. The F-198 table-only artifact changes the shared area-4
+slot values globally, so it cannot satisfy the owner's current playback/editor
+exclusion requirement. Do not use that approach under the new scope. Resume
+only from an existing, owner-authorized static decode of the missing producer
+and record provenance; otherwise keep preview changes blocked. A future
+caller-guarded override with stock fallback is a design constraint, not an
+established hook. No new firmware access or hardware contact occurred.

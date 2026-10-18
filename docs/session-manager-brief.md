@@ -44,6 +44,13 @@ object refresh, with no proven capture-origin gate. The bit-20 event remains
 unidentified. No candidate build or hardware step is authorized by this
 finding; require capture-origin and output-exclusion proof first.
 
+F-206 marks a bounded static stop: project evidence does not decode the bit-20
+producer/event key or the provenance of records used by the callback. The
+F-198 global area-4 table edit is incompatible with the current requirement
+to leave playback/editor unchanged. Safest next step: owner supplies or points
+to an already-authorized, bytes-free decode of those missing edges; until then
+keep preview changes blocked and do not test the existing table-only artifact.
+
 ## Codex resumed build work, 2026-10-17
 
 The owner asked Codex to devise and pursue the camera-loadable patch, not

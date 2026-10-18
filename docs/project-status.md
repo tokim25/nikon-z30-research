@@ -33,6 +33,12 @@ factory, two rebuild existing objects, and one refreshes an existing object.
 The upstream bit-20 event semantics remain unresolved. Do not build or advance
 hardware readiness until a gate and its playback/editor exclusion are proved.
 
+F-206 bounds the current static trace: no further producer/key or record-
+provenance decode exists in repository evidence. The F-198 table-only artifact
+changes shared area-4 slot values and cannot meet the owner's newer
+playback/editor exclusion requirement. Keep preview patch work blocked until
+the missing edges are available in an owner-authorized static decode.
+
 F-200 checked the existing pinned-QEMU path with the exact private candidate.
 Both its launcher and C machine loader enforce the stock firmware hash, so the
 candidate is rejected before emulation. The simulator was not modified. Treat

@@ -3666,3 +3666,23 @@ editor contexts, plus proof that it dominates each relevant hook without
 changing shared outputs. No candidate was built and no camera was accessed
 for this finding. Observed review of the cited pinned-original findings,
 2026-10-17; [caller map](native-xpan-preview-callers.md).
+
+F-206. The still-only gate trace reaches a bounded static dead end using the
+repository's existing caller/dispatcher records. A focused search of project
+documentation found no additional decoded producer for the input flag at
+`0x1021d9e2`, no mapping for the callback key registered by
+`0x1021dac2` through `0x10199cae`, and no new provenance for the current
+object/record consumed by `0x1021d946`. The exact unresolved edges are the
+source/semantics of bit 20 and whether the current and nested records came
+from a new still or an existing playback/editor/rebuild object (F-196/F-197).
+The three direct wrapper call sites include two existing-object rebuilds;
+the fourth named context refreshes an existing object (F-171/F-180). No
+predicate is shown to dominate a still-only edit. The existing F-198
+table-only artifact globally changes area-4 slot-4 dimensions and therefore
+cannot meet the owner's newer requirement to leave playback/editor unchanged.
+Safe continuation requires an existing owner-authorized, bytes-free static
+decode of those producers and records; until then, do not build or test a
+preview patch. A future implementation must prove a caller-guarded override
+with stock fallback outside the new-still predicate; this is a design
+constraint, not a proven hook. No firmware bytes were accessed for this
+finding and no hardware was touched. [Caller map](native-xpan-preview-callers.md).
