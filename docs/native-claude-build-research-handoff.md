@@ -1,5 +1,19 @@
 # Claude research handoff: path to a real-camera test build
 
+Current publication record: [PR #155](https://github.com/tokim25/nikon-z30-research/pull/155)
+updated at `e655f5d` (mergeable, CI passing); this packet and the preflight work
+are [PR #170](https://github.com/tokim25/nikon-z30-research/pull/170), research
+commit `1674371` and main synchronization `81598fe`, followed by this record.
+Both await owner review, neither merged. Only unmerged fact IDs were changed
+to F-156--F-161; all latest-main facts preserved. Primary 130 tests and required
+scanners/lane/diff checks pass. No firmware bytes, dumps, proprietary tables
+or installable patches in the reviewed publication; no firmware encoding,
+address-decoding research or camera work. Owner-authored rule addition in
+proposed-rules-2026-10-17.md is preserved byte-for-byte but intentionally left
+uncommitted, outside this PR. Earlier no-publication statements below record
+the pre-publication checkpoint. Owner decides merges; Claude's separate
+research pickup remains the standalone-EG contract review.
+
 2026-10-17. Owner requested pausing Codex and handing research to Claude.
 No camera access, simulator run, patch encoding, firmware output, commit,
 push or PR occurred during this handoff investigation. Earlier local changes

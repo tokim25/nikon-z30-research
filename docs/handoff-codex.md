@@ -12,6 +12,18 @@ are all explicitly accounted for.
 
 ## Current session update, 2026-10-17
 
+Owner-authorized publication completed: [PR #155](https://github.com/tokim25/nikon-z30-research/pull/155)
+is reconciled at e655f5d, conflict-free with passing CI; not merged.
+Preflight/handoff work is [PR #170](https://github.com/tokim25/nikon-z30-research/pull/170),
+research commit 1674371 plus main reconciliation 81598fe and this publication
+record. All 130 tests/scanners/lane/diff checks pass locally; no firmware bytes,
+dumps, tables or installable patches published. F-156--F-161 are unique against
+main 512e6b3; merged findings preserved. The unrelated approved owner-rule
+addition remains uncommitted in proposed-rules-2026-10-17.md, restored exactly
+from its transfer backup. No firmware build, address decoding or hardware work.
+Claude's next task remains the standalone-EG contract review, separately from
+this publication. Owner decides both merges; Codex research remains paused.
+
 Publication checkpoint: current session-manager-brief.md and main's
 test-readiness-2026-10-17.md record later owner waivers for lifecycle,
 still-photo guard and byte-exact installed identity. These supersede earlier

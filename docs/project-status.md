@@ -14,6 +14,14 @@ the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
 
+Owner review: [PR #155](https://github.com/tokim25/nikon-z30-research/pull/155)
+updated at e655f5d, conflict-free with passing CI; preflight/handoff
+[PR #170](https://github.com/tokim25/nikon-z30-research/pull/170) contains the
+reconciled research and synthetic digest verifier. Neither PR was merged.
+Primary local suite: 130 passing tests; scanners/lane/diff checks pass.
+Unrelated owner-rule addition remains uncommitted and preserved. No hardware,
+firmware build/encoding or expanded research in this publication task.
+
 Publication reconciliation against main 512e6b3: preserve merged F-135--F-155;
 renumber only our six unmerged findings to F-156--F-161. Later owner waivers
 for lifecycle, still-photo guard and byte-exact installed identity are recorded
