@@ -1,5 +1,29 @@
 # Codex handoff
 
+## Current continuation — Lane 3 tracking candidate, 2026-10-17
+
+F-202 closes the static side-control question and fixes the candidate's
+synthetic start/stop cycle. Playback Protect remains on `0x1186`; the new
+shooting assignment is `0x1184=77`, and the action path is limited to shooting
+context/mode 0. Mode-1 `0x1187` remains out of scope. The first unforced cycle
+run showed that a native start changed the internal pair while the helper's
+public status record stayed idle. The private candidate now uses native locked
+status setter `0x101925b0` to publish the pair after a handled request. In a
+memory-only QEMU run, the next fresh press then reached native stop without
+fabricated active state; a held/no-decision record made no request. The
+updated private candidate assembles and links at 1,000 code bytes, uses 480
+bytes of added simultaneous stack within the funded 1,024-byte increment, and
+passes the bounded CFG/frame review. Details: [tracking cycle review](tracking-cycle-review.md).
+
+This is still a candidate request/status cycle, not proof of physical input,
+successful AF acquisition, camera scheduling, or asynchronous device
+lifecycle. No firmware image or overlay was written. The task-allocation
+diagnostic stopped at its integrity guard because this task-local QEMU copy
+has no Git metadata for the recorded pinned revision; do not bypass that guard.
+Playback Protect was not dynamically exercised. Next, complete the
+standalone-EG format/integrity preflight and exact private-manifest review;
+then satisfy the existing readiness and separate camera-write approval gates.
+
 ## Current continuation, 2026-10-17
 
 ### F-198/F-199 current state

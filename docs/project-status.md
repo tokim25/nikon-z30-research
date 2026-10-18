@@ -2,6 +2,18 @@
 
 ## Engineering route update, 2026-10-17
 
+F-202 advances Lane 3: candidate shooting assignment `0x1184=77` remains
+separate from playback Protect `0x1186`, and the action is scoped to shooting
+mode 0. The unforced memory-only cycle test found stale helper status after a
+start request. The private candidate now publishes the native request pair
+through the existing locked status setter, and a second fresh decision takes
+the stop path without injected active status. This verifies the candidate's
+constructed request/status cycle only; physical input, AF acquisition and
+camera lifecycle remain unverified. The revised candidate passes assembly,
+link and bounded ABI/frame review. No image or overlay exists. See
+[tracking cycle review](tracking-cycle-review.md); standalone-EG package
+integrity and the separate hardware readiness gates remain open.
+
 F-191/F-192 establish that the public 65:24 profile is not a drop-in: it uses
 area 2, persisted profile state and a grid rather than our area-4 replacement
 of 1:1 plus black bars. F-198 records a private 176-span standalone-EG
