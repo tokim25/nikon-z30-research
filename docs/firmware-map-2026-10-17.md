@@ -1,5 +1,9 @@
 # Firmware static map, C 1.20 (2026-10-17)
 
+Deeper cross-reference results and the full hardware-switch map are in the
+companion [firmware-map-deep-2026-10-17.md](firmware-map-deep-2026-10-17.md).
+
+
 A consolidated address-and-description map of the owner's verified C 1.20
 package, assembled for Codex. It is a reference map only: addresses, call
 chains and confidence levels. It contains no firmware bytes, no hex or base64
