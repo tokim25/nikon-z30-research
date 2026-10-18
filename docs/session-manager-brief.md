@@ -30,6 +30,13 @@ reviewing the unresolved capture-path specificity. The waiver and its
 unmeasured side effects remain in effect; lifecycle condition 1 is still
 unmet, and this decision does not authorize camera contact or a write.
 
+F-204 closes the capture-path inquiry as unproven: shared factory, rebuild and
+refresh callers prevent a new-still-only claim, and no evidence shows playback
+or editor outputs are unchanged. The current waiver names playback, movie and
+warning effects; the owner directs keeping that waiver as scoped, excluding
+editor outputs. Do not resume hook tracing or advance hardware readiness;
+lifecycle condition 1 remains unmet.
+
 ## Codex resumed build work, 2026-10-17
 
 The owner asked Codex to devise and pursue the camera-loadable patch, not

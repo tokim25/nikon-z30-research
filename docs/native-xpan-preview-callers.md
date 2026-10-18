@@ -309,3 +309,27 @@ area-4 playback behavior is clean; the residual risk is within the recorded
 scope. The exact private 176-span manifest and candidate passed independent
 byte/layout/CRC checks (F-198). Natural lifecycle condition 1 remains unmet,
 and the candidate is not authorized for camera use.
+
+## Capture-path disposition (F-204)
+
+Neither required proof is established. No hook is proven exclusive to new
+still-image creation: wrapper `0x10142f5e` has a dimension-based factory
+caller at `0x1009f8c6` and existing-object rebuild callers at `0x100a356a`
+and `0x100a579c`; constructor `0x101436c2` is reached both from
+missing-record construction at `0x100a42d8` and existing-object refresh at
+`0x101eccb0`. The dispatcher route through `0x1021d946` branches on bit 20,
+whose event meaning is unresolved. These findings do not establish
+new-still provenance (F-171, F-180, F-196).
+
+Nor is it proven that the table edit leaves playback or editor outputs
+unchanged. Generic getter and object-rebuild routes are shared, and the
+candidate changes area-4 slot-4 dimensions for any consumer selecting that
+slot. Intended still previews are affected by design; playback/editor object
+construction and refresh may select the same entries. Movie and warning
+effects are also unmeasured. No output-by-output exclusion test exists.
+
+F-201 records the owner's waiver for possible playback, movie and warning
+effects. The owner directs keeping the waiver as scoped; editor outputs are
+not added. Do not claim editor isolation or include editor behavior in an
+accepted test scope. This is a documentation disposition only; no candidate
+was built and no camera was accessed. Lifecycle condition 1 remains unmet.

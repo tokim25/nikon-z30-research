@@ -3629,3 +3629,22 @@ that guard and does not waive lifecycle condition 1, native updater
 acceptance, other readiness/recovery requirements, or the separate approval
 required for any exact camera write. No camera access or write. Observed direct
 owner disposition, 2026-10-17. [Test-readiness record](test-readiness-2026-10-17.md).
+
+F-204. The capture-path decision remains unresolved on both proof routes. No
+new-still-exclusive hook is established: wrapper `0x10142f5e` is called from
+dimension-based factory `0x1009f8c6` and existing-object rebuild callers
+`0x100a356a`/`0x100a579c`; constructor `0x101436c2` is reached from missing-
+record construction at `0x100a42d8` and existing-object refresh at
+`0x101eccb0`. The event meaning for the bit-20 dispatcher path is unknown
+(F-171/F-180/F-196). No evidence proves playback/editor output is unchanged:
+generic getter and object-rebuild routes share the area-4 slot-4 tables
+changed by the candidate. Affected or potentially affected contexts are
+intended still previews, playback/editor object construction or refresh, and
+the already-waived but unmeasured movie/warning contexts. F-201 records the
+owner's waiver for playback/movie/warning effects. The owner directs keeping
+that waiver as scoped; editor outputs are not added to it. Editor isolation is
+unproven and editor behavior must remain outside any accepted test scope.
+Lifecycle condition 1 remains unmet, so hardware preflight remains blocked. No
+candidate build or camera access.
+[Preview caller map](native-xpan-preview-callers.md) and [test-readiness
+record](test-readiness-2026-10-17.md).

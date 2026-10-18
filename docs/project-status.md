@@ -19,6 +19,13 @@ waived despite the capture path not being proven specific to new stills. The
 accepted playback/movie/warning effects remain unmeasured; lifecycle condition
 1 stays unmet and the decision grants no camera-write authorization.
 
+F-204 finds neither a new-still-exclusive hook nor proof that playback/editor
+outputs are unchanged. The candidate's shared area-4 tables may affect still
+previews, playback/editor object paths, and the already-waived movie/warning
+contexts. The owner directs keeping the waiver as scoped, excluding editor
+outputs; no capture-hook investigation or candidate build is planned.
+Hardware remains NO-GO under unmet lifecycle condition 1.
+
 F-200 checked the existing pinned-QEMU path with the exact private candidate.
 Both its launcher and C machine loader enforce the stock firmware hash, so the
 candidate is rejected before emulation. The simulator was not modified. Treat

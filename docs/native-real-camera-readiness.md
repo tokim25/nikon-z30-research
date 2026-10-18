@@ -35,6 +35,11 @@ condition 1 unmet; earlier lifecycle-waiver wording below is superseded.
 Installed-firmware byte identity remains waived at version level only. The
 private extracted EG source itself passes the exact size/SHA-256 verifier.
 
+F-204 did not establish a new-still-only hook or prove unchanged playback or
+editor output. The existing waiver covers the named playback/movie/warning
+risks; the owner directs keeping that waiver as scoped, excluding editor
+output. This does not change lifecycle condition 1 or current NO-GO status.
+
 ## Minimum-test stopping point (historical F-163 review; superseded by F-198)
 
 Latest owner direction: do not pursue simulator completeness or low-value

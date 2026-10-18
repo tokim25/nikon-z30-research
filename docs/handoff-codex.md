@@ -33,6 +33,18 @@ existing still-photo guard waiver after the capture path was found not to be
 proven new-still-specific; the accepted playback/movie/warning side effects
 remain unmeasured.
 
+### F-204 capture-path disposition
+
+No new-still-exclusive hook is proven, and playback/editor output isolation is
+not proven. Shared callers include dimension-based construction, existing-
+object rebuild and refresh paths; area-4 slot-4 edits can be observed by any
+consumer selecting that slot. The existing waiver covers possible
+playback/movie/warning effects, but does not cover editor outputs. The owner
+directs keeping the waiver as scoped; editor outputs are not added. Do not
+continue capture-hook research, build a new candidate, or proceed to hardware
+preflight. Lifecycle condition 1 remains unmet. See F-204 and the [caller
+map](native-xpan-preview-callers.md).
+
 ## Historical research log (superseded where it conflicts with F-198/F-199)
 
 F-191/F-192 comparison closes the baseline question: the public 65:24 feature
