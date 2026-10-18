@@ -3618,3 +3618,14 @@ modify the pinned simulator. The private candidate, firmware, and runtime logs
 remain outside Git. Observed local verifier attempt and source review,
 2026-10-17; high confidence for rejection at the launcher and C guard; no
 camera access or write. [Current handoff](handoff-codex.md).
+
+F-201. After reviewing that the shared preview/capture constructors are not
+proven specific to new still-image creation, the owner explicitly reaffirmed
+the existing XPan still-photo-guard waiver (“Keep the waiver.”). The current
+candidate may therefore retain its area-4 preview-table edits without a
+capture-origin guard, with the already-recorded possible playback, movie and
+warning-context effects accepted but unmeasured. This waiver is limited to
+that guard and does not waive lifecycle condition 1, native updater
+acceptance, other readiness/recovery requirements, or the separate approval
+required for any exact camera write. No camera access or write. Observed direct
+owner disposition, 2026-10-17. [Test-readiness record](test-readiness-2026-10-17.md).

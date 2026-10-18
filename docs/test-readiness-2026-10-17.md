@@ -17,6 +17,13 @@ The owner's latest answer keeps lifecycle condition 1 **unmet**; earlier
 waiver language is superseded. Hardware remains NO-GO. No connection,
 write or flash was made or authorized.
 
+**Owner reaffirmation, 2026-10-17 (F-201):** after reviewing that the shared
+preview/capture path is not proven specific to new still-image creation, the
+owner said to keep the XPan still-photo guard waiver. Possible area-4
+preview-table effects in playback, movie or warning contexts remain accepted
+and unmeasured. This does not waive lifecycle condition 1 or authorize a
+camera write; hardware remains NO-GO.
+
 ## Exact-firmware identity: version level only
 
 - Relayed by the session manager (owner update, 2026-10-17): a read-only USB
