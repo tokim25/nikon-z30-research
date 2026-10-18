@@ -28,7 +28,10 @@ continue simulator work by weakening that guard or modifying the simulator;
 this is one documented simulator limitation, not a build blocker. The
 candidate remains a testable offline artifact, but native updater acceptance,
 lifecycle condition 1, recovery/readiness checks and separate exact-step camera
-authorization still gate any hardware test.
+authorization still gate any hardware test. In F-201 the owner reaffirmed the
+existing still-photo guard waiver after the capture path was found not to be
+proven new-still-specific; the accepted playback/movie/warning side effects
+remain unmeasured.
 
 ## Historical research log (superseded where it conflicts with F-198/F-199)
 

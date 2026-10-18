@@ -14,6 +14,11 @@ still-guard waiver leaves playback/movie/warning effects unmeasured. Lifecycle
 condition 1 remains unmet, native updater acceptance is unproven, and camera
 access remains NO-GO.
 
+F-201 records the owner's reaffirmation that the XPan still-photo guard remains
+waived despite the capture path not being proven specific to new stills. The
+accepted playback/movie/warning effects remain unmeasured; lifecycle condition
+1 stays unmet and the decision grants no camera-write authorization.
+
 F-200 checked the existing pinned-QEMU path with the exact private candidate.
 Both its launcher and C machine loader enforce the stock firmware hash, so the
 candidate is rejected before emulation. The simulator was not modified. Treat

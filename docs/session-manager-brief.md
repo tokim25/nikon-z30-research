@@ -25,6 +25,11 @@ risk is accepted but unmeasured. Lifecycle condition 1 remains unmet and
 hardware remains NO-GO. See [preview map](native-xpan-preview-callers.md) and
 [build architecture](native-xpan-build-architecture.md).
 
+F-201 records the owner's reaffirmation of the still-photo guard waiver after
+reviewing the unresolved capture-path specificity. The waiver and its
+unmeasured side effects remain in effect; lifecycle condition 1 is still
+unmet, and this decision does not authorize camera contact or a write.
+
 ## Codex resumed build work, 2026-10-17
 
 The owner asked Codex to devise and pursue the camera-loadable patch, not
