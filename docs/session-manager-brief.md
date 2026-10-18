@@ -2,6 +2,21 @@
 
 ## Engineering route update, 2026-10-17
 
+Lane 3 F-202 resolves the candidate's playback-Protect separation statically
+and corrects its candidate-side start/stop status cycle. The action changes
+only shooting assignment `0x1184`; Protect remains `0x1186`, while movie-mode
+`0x1187` is not handled. The candidate publishes the native tracking pair
+through the existing locked setter after a handled request. A bounded
+memory-only QEMU cycle now takes start then stop without an injected status
+fixture; this does not prove physical input, AF acquisition or camera
+lifecycle. The updated private source assembles/links and passes the bounded
+ABI/frame audit. F-203 records the subsequent private standalone-EG image,
+which passed exact-span, protected-header, capacity and native-CRC read-back
+checks. It has not been loaded by QEMU or accepted by Nikon's updater.
+Remaining candidate-side runtime controls, hardware readiness and exact
+camera-write approval remain open. Details:
+[tracking cycle review](tracking-cycle-review.md).
+
 F-191/F-192 conclude the public same-camera 65:24 profile is not a drop-in:
 it uses area 2, persisted profile state and a grid reference, whereas our
 target replaces stored 1:1 in area 4 and requires black bars. Keep our area-4

@@ -3629,3 +3629,31 @@ that guard and does not waive lifecycle condition 1, native updater
 acceptance, other readiness/recovery requirements, or the separate approval
 required for any exact camera write. No camera access or write. Observed direct
 owner disposition, 2026-10-17. [Test-readiness record](test-readiness-2026-10-17.md).
+
+F-202. The tracking candidate keeps shooting assignment `0x1184` separate
+from playback Protect assignment `0x1186`; its action requires shooting
+context/mode 0 and value 77, while mode-1 `0x1187` remains out of scope. A
+bounded unforced cycle run exposed stale helper status after native start:
+native pair `(1,0)` did not reach the public status pair before a second fresh
+decision, so the unmodified adapter selected start again. The candidate now
+publishes the native pair through the firmware's existing locked setter
+`0x101925b0` after a handled request. In a memory-only candidate run, fresh
+presses reached native start then stop with no injected active status, and the
+held/no-decision control called neither request. Assembly/link/layout and
+bounded ABI/frame checks passed; maximum added stack is 480 bytes of the
+funded 1024-byte increment. This proves the constructed candidate request/
+status cycle only, not physical input, target acquisition, camera scheduling,
+or asynchronous hardware lifecycle. No firmware image or overlay was written;
+no camera access or write. Observed private static/QEMU checks, 2026-10-17.
+[Tracking cycle review](tracking-cycle-review.md).
+
+F-203. The revised tracking candidate was composed privately as a standalone
+EG with the exact-original private builder and complete 45-span manifest. Its
+independent read-back audit passed exact planned changes, protected header
+fields, unchanged file length, parser-capacity fit and native CRC/residue. The
+artifact is 33,939,514 bytes, below the 0x2940000-byte parser capacity, and
+owner-only. The byte-bearing manifest and image remain outside Git. This is an
+offline test artifact, not evidence of Nikon updater acceptance, camera
+execution, hardware behavior or readiness; no camera access or write occurred.
+Observed private composition/read-back, 2026-10-17.
+[Tracking cycle review](tracking-cycle-review.md).
