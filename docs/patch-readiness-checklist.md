@@ -31,6 +31,11 @@ start another research loop until the next item is identifiable and bounded.
 
 ## Hardware gates
 
+Current owner waivers are recorded in session-manager-brief.md and
+test-readiness-2026-10-17.md. Apply those named waivers to the camera-test
+decision without labelling missing measurements as passes. No hardware
+approval follows from this publication task.
+
 The simulator essentials must be satisfied first, unless an explicit owner
 deviation is recorded.
 
@@ -49,3 +54,8 @@ Saved RAW/JPEG crop is an owner-approved on-camera test item, not a simulator
 checkbox or feature-work blocker. Tracking patch design is deferred until the
 authorized breakpoint checkpoint establishes a native entry point. Hardware
 remains **NO-GO**.
+
+The owner subsequently narrowed XPan work to stills only. Movie-transition
+coverage and a still/movie exclusion predicate do not block that simulator
+candidate; movie behavior remains unvalidated. This scope clarification does
+not relax the ABI checker or the stills lifecycle acceptance requirements.

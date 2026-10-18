@@ -2,6 +2,16 @@
 
 Recorded by the Claude session manager at the owner's request.
 
+## Latest priority: minimum justified camera test
+
+The session manager conveyed the owner's direction to stop pursuing simulator
+completeness and further low-value research. Prepare the smallest justified
+modified-firmware test once essential gates are met; stop at readiness and
+report the exact approval needed before the first camera action. No camera
+access or flashing is authorized by this preparation request. The previous
+explicit decision to keep the lifecycle gate unmet is not automatically a
+waiver; report bounded evidence and residual risks for a concrete decision.
+
 ## Saved-crop question is not a blocker
 
 The owner's direction: being unable to confirm, through static reading or the
@@ -19,6 +29,15 @@ What this means for planning:
 - Research that would only prove a save path statically (for example, the
   filename-getter and record-builder threads) has lower priority than
   preparing a safe, owner-approved on-camera test plan.
+
+## Stills-only XPan scope clarification
+
+The owner subsequently directed: "We won’t use XPan for movies. Keep it
+focused on stills and keep going." A still/movie transition or exclusion
+predicate is therefore not a blocker for the current stills-only simulator
+candidate. Movie behavior remains unvalidated; this does not establish that
+bars disable in movie mode. Continue stills area selection, live-view/menu
+behavior and existing ABI checks. Hardware authorization is unchanged.
 
 ## Session-manager operating notes (from the same direction)
 

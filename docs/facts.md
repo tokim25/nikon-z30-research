@@ -2975,6 +2975,85 @@ empty. Recommended next step: treat the filename-table route as low priority
 and return to the real file-creation boundary (the card-write path) per
 AGENTS.md. Observed static scan, 2026-10-17, medium confidence.
 
+F-156. Under the owner's clarified stills-only scope, the exact private F-148
+overlay passes controlled native-setting-callback rendering: target/DX/target/
+16:9 yield 214/0/214/0 full-width black rows. Outside the known animation band,
+target differences are confined to mask rows and non-target frames match the
+baseline. Ten target/DX setting cycles preserve bounds and screen-stack count;
+final DX clears the mask. Two candidate native menu-confirmation attempts did
+not return; one fresh stock control returned. Cause/rate and natural menu
+return remain unproved. Observed bounded assisted simulator controls,
+2026-10-17, high confidence within that scope. Original firmware and pinned
+simulator unchanged; raw evidence stays private. Movie behavior unvalidated
+and no longer a prerequisite for this stills-only work. Hardware NO-GO.
+[Results and bounded next comparison](native-xpan-stills-controls.md).
+
+F-157. Paired assisted menu-confirmation traces show stock/coarse returning
+and exact F-148 candidate/coarse stopping on an unmodeled simulated flash
+write, not timeout. Original writer-boundary registers/CPSR and ten stack
+words match; choice is 1 in both. Finer candidate observations return through
+the original caller: native stack count 3 skips mask drawing, guard NZCVQ is
+preserved, and r0–r8/SP/return target match the working frame. Scratch LR
+differs as in F-148. Mixed completion with different breakpoint sets does
+not identify a cause or certify menu acceptance. Earlier F-156 candidate
+nonreturns share this stop PC and were also not timeouts. Observed bounded
+assisted simulator traces, 2026-10-17, high confidence within that scope.
+No overlay/code change; original firmware and pinned QEMU unchanged. Raw
+evidence stays private; all sessions closed; camera untouched, hardware NO-GO.
+[Boundaries, limits and writer-path control](native-xpan-menu-boundaries.md).
+
+F-158. One owner-approved writer-disabled control omits only writer-branch
+redirection, retaining the eleven other exact F-148 overlays and nine coarse
+candidate observation points. Original writer loading and retained hashes
+pass. Confirmation still stops at the same unmodeled simulated flash access,
+PC `0xc2b1065c`, without timeout. Writer-boundary registers/CPSR and ten stack
+words match stock; choice 1, mask 0, stack count 3. Post-confirmation live
+activation and bars check are not reached. Writer redirection is not necessary
+for this observed stop; removal is not an established fix. Observed one
+bounded assisted-simulator control, 2026-10-17, high confidence within that
+scope. No other control or patch change; firmware/QEMU unchanged, session
+closed, raw evidence private. Menu acceptance remains open; hardware NO-GO.
+[Control identity, comparison and decision](native-xpan-menu-boundaries.md).
+
+F-159. Bounded original-code decode and the retained F-157/F-158 stop LR
+identify a cached flash identity/geometry initializer as the stopped command
+helper's immediate caller. Information, erase and program wrappers share
+that initializer. The outer caller is not captured, so this is not evidence
+identifying installation, setting persistence or patch corruption. Later
+identity/geometry reads and the initialized flag are static observations,
+not completed execution. Observed read-only landmarks and existing contexts,
+2026-10-17, high confidence within that scope. No new simulator run, overlay,
+firmware modification or hardware access. Keep menu acceptance open; retire
+further simulator flash-response explanation work.
+[Provenance, limits and next build task](native-xpan-menu-boundaries.md).
+
+F-160. Four paired stock/exact-F-148 diagnostic cases cover target/DX with
+live-ready and phase-3 notification wrappers; all eight calls return. Native
+inputs, known registered callback inputs, r4–r11, aligned helper SPs,
+balanced return SP, caller-stack words and full return CPSR pass. Ready's
+original r0 result is preserved. Measured volatile return differences are
+overwritten by the named native continuations before use. The reviewed
+callback builds its own outgoing stack arguments; these normal-call frames
+do not replace F-145's exact state-kernel stack contract. Observed bounded
+static review and assisted QEMU diagnostics, 2026-10-17, high confidence
+within that scope. No patch change; global condition 3 and natural menu
+acceptance remain open. Original/QEMU unchanged, both sessions closed,
+raw evidence private, camera untouched.
+[Contracts, differences and acceptance limits](native-xpan-close-ready-contracts.md).
+
+F-161. A new private bounded instruction evaluator matches original EG SHA-1
+compression arithmetic to hashlib on twelve synthetic message lengths and
+matches the native eight-byte suffix-loop arithmetic to its closed form on
+1,024 synthetic cases. Standard initialization/padding are supplied by the
+helper; native config parsing/update/finalization are not executed. No seed
+or suffix is recovered and the original package digest remains unverified.
+A new public read-only verifier requires a supplied eight-byte suffix and
+checks original before candidate; seven synthetic tests pass, 130 total.
+Observed offline arithmetic comparisons, 2026-10-17, high confidence within
+that bounded scope; not whole-updater emulation or package acceptance.
+No firmware output, simulator boot, hardware access or readiness waiver.
+[Method, limits and private reproduction](native-digest-arithmetic-verification.md).
+
 F-127. Lane 0's ordered check finds the live-view task is created and
 runs after the existing assisted live-view setup. A reset-time trace at
 native task wrapper `0x10219876` observes 249 creation requests without
