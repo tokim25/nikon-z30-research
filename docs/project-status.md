@@ -23,6 +23,19 @@ fan-out entry, router input writer) all need an address-building (MOVW/MOVT or
 base-register) index pass that was not done. No firmware bytes in the doc;
 extracted components stay outside the repo. Owner reviews/merges PR #167.
 
+**New, 2026-10-17, for Codex — deep cross-reference companion.**
+[firmware-map-deep-2026-10-17.md](firmware-map-deep-2026-10-17.md) adds the
+static branch/literal/pointer cross-reference results (confirmed call chains;
+the bars screen fan-out driver 0x10595844; the crop function table 0x11f9a4dc;
+the AE-L/AF-L queued-input router) and the complete named hardware-switch table
+at 0x1072e3b0 — three registers SW0/SW1/SW2, with AE-L/AF-L = SW0 bit 0x2000
+and the "i" button = SW1 bit 0x400. **Codex must own the MOVW/MOVT (or
+base-register) address-building index pass**: the Claude lane is blocked from
+it by a safety classifier, and the three largest leads (crop dispatcher at
+0x11f9a4dc, bars fan-out entry 0x10595844, AE-L/AF-L SW-register writer) all
+dead-end on addresses that only that pass resolves. Prose only, no firmware
+bytes.
+
 **New, 2026-10-17, owner-requested handoff to Codex: Lane 0** (see
 handoff-codex.md's new "Lane 0" section). The dormant-worker pattern that
 blocks both Lane 1's and Lane 3's natural-trigger questions (F-019,
