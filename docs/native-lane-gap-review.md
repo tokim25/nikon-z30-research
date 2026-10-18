@@ -1,5 +1,12 @@
 # Remaining work across the research lanes
 
+Historical evidence review, retained with PR #155. Its proposed next steps
+below predate the owner's later scope and waivers. Current direction is in
+[session-manager-brief.md](session-manager-brief.md): saved RAW/JPEG correctness
+is an on-camera test item, not a static-research blocker; simulator completeness
+is not required; named waivers are recorded in test-readiness-2026-10-17.md.
+This report does not authorize hardware or reopen retired tracing threads.
+
 Reviewed 2026-10-17 at the owner's request, against main through F-120
 and Lane 0's F-127 observations. This is a gap review, not a claim that
 the other lanes' experiments were rerun. Hardware remains NO-GO.

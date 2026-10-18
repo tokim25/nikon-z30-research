@@ -85,6 +85,11 @@ investigation must start from the actual recorded command and device options.
 
 ## Interpretation and next step
 
+Update for PR #155 reconciliation: the next-step proposal below is historical.
+The owner subsequently directed against simulator-completeness loops and
+recorded lifecycle/guard waivers. Preserve these observations; follow the
+current session-manager brief before authorizing any new investigation.
+
 F-019 and F-117 remain valid descriptions of their bounded observations.
 They do not establish that APPLV was absent or that the RTOS could not run
 it. The stronger common explanation, a globally dormant scheduler, is now

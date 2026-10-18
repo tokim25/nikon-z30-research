@@ -1,28 +1,62 @@
 # Project status
 
+## PR #155 review checkpoint
+
+Lane 0 F-127 verifies task creation and passive worker execution. Main conflicts
+are reconciled without rewriting merged facts. See native-worker-scheduling.md
+and native-lane-gap-review.md; their old next steps are historical. Saved-file
+correctness is an on-camera test item. Current owner waivers and hardware
+NO-GO remain as recorded in session-manager-brief.md. No new runtime test.
+
+Owner direction: [owner-direction-2026-10-17.md](owner-direction-2026-10-17.md).
+The saved-crop question is an on-camera test item, not a blocker for feature
+work. Hardware remains NO-GO.
+Patch work is governed by [patch-readiness-checklist.md](patch-readiness-checklist.md);
+do not begin another patch loop until its required inputs are explicit.
+
 Updated 2026-10-17 by Codex. Read [handoff-codex.md](handoff-codex.md) for
 the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
 
-Lane 0's ordered checks reached a positive result at step 2: APPLV is
-created during startup and its worker's payload builder ran 196 times in
-a 40-second passive window after diagnostic setup. Its observed flags were
-always 4, with no bit-16 enter dispatch or property post observed. This
-does not support a general scheduler stall. Step 3 was not entered and no
-QEMU C source changed. See [native-worker-scheduling.md](native-worker-scheduling.md),
-F-127, for the separate trigger-only window and limits. The actual
-0x2006/0x2087 producer task remains unidentified.
+**New, 2026-10-17, for Codex — PR #167: consolidated firmware static map.**
+[firmware-map-2026-10-17.md](firmware-map-2026-10-17.md) is an
+addresses-and-descriptions map of C 1.20 for all five user-story areas
+(buttons, menus, live-view, crop, AE-L/AF-L tracking), with call chains and
+confidence. New since prior notes: the screen fan-out driver 0x10595844 behind
+the bars, the image-area function table at 0x11f9a4dc behind crop, and the
+AE-L/AF-L queued-input router (callback + handler table at 0x1037a2c4, task-init
+entry 0x1059c2c8). The three largest open leads (crop-table dispatcher, bars
+fan-out entry, router input writer) all need an address-building (MOVW/MOVT or
+base-register) index pass that was not done. No firmware bytes in the doc;
+extracted components stay outside the repo. Owner reviews/merges PR #167.
 
-The next Lane 0/Lane 1 investigation is the missing live-view event signal,
-bounded to natural lifecycle acceptance. The independent
-codex/tracking-property-dispatch branch remains untouched. The owner's
-follow-up lane review is [native-lane-gap-review.md](native-lane-gap-review.md).
-This current summary supersedes older next-step claims below.
+**New, 2026-10-17, for Codex — action-half correction (one-button tracking).**
+The old "tracking candidate" cluster (0x11cf4e90/0x11cf5774/matcher 0x11cf5248)
+is **Bluetooth HCI**, not AF tracking (strings "Tracking BtPacket", "Tracking
+HCI Rx Buffer"); ruled out. Real on-camera tracking is the **AF-area-mode
+subsystem**: label table 0x103edda0 (PINPOINT…3D-TRACKING…AUTO-AREA), label
+routine 0x103edc2e, settings near 0x11c9b.. (AfAreaMode*, AfTrackingSensitivity);
+3D-TRACKING is the tracking mode. Button behavior is set by
+eDSID_Setting_FuncAeAfLockButtonShooting. These are reached via MOVW/computed
+addresses, so **Codex** must: (1) resolve the AF-area-mode set function from
+0x103edda0/0x103edc2e, and (2) resolve the FuncAeAfLockButtonShooting
+option→action dispatch (does an option engage 3D-TRACKING / AF-ON-with-track).
+Detection hook is already confirmed (ID-41 / SW word 0x115c694c). See
+[firmware-map-deep-2026-10-17.md](firmware-map-deep-2026-10-17.md).
 
-Fact allocation: main starts through F-120; F-127 is used here to avoid
-F-121 through F-126 in the separate uncommitted preflight checkout. That
-checkout's work was preserved and is not included in this branch.
+**New, 2026-10-17, for Codex — deep cross-reference companion.**
+[firmware-map-deep-2026-10-17.md](firmware-map-deep-2026-10-17.md) adds the
+static branch/literal/pointer cross-reference results (confirmed call chains;
+the bars screen fan-out driver 0x10595844; the crop function table 0x11f9a4dc;
+the AE-L/AF-L queued-input router) and the complete named hardware-switch table
+at 0x1072e3b0 — three registers SW0/SW1/SW2, with AE-L/AF-L = SW0 bit 0x2000
+and the "i" button = SW1 bit 0x400. **Codex must own the MOVW/MOVT (or
+base-register) address-building index pass**: the Claude lane is blocked from
+it by a safety classifier, and the three largest leads (crop dispatcher at
+0x11f9a4dc, bars fan-out entry 0x10595844, AE-L/AF-L SW-register writer) all
+dead-end on addresses that only that pass resolves. Prose only, no firmware
+bytes.
 
 **New, 2026-10-17, owner-requested handoff to Codex: Lane 0** (see
 handoff-codex.md's new "Lane 0" section). The dormant-worker pattern that
@@ -43,7 +77,69 @@ project's specific "zero callers" dead ends (`0x10459d80`, Lane 3's
 property dispatch) live there; flagged as a cheaper thing to check before
 touching QEMU's C source if Lane 0's steps 1-2 come back empty.
 
-Main carries facts through **F-120**. F-101 merged via PR #119; F-102/F-103
+Local F-135 on `codex/firmware-preflight-plan`: recovered package verifier
+audited; unchanged in-memory decode/re-encode reproduced the original exactly.
+See [native-package-verifier-audit.md](native-package-verifier-audit.md).
+No modified firmware image was written. Local F-136 implements the decoded
+container reader with synthetic rejection tests; all three original components
+also passed with their hashes pinned. See
+[native-container-validator.md](native-container-validator.md).
+Local F-137 implements exact-edit manifest comparison with synthetic and
+combined CRC/edit checks; the unchanged package baseline passes with zero
+changed bytes. See [native-exact-edit-audit.md](native-exact-edit-audit.md).
+Local F-138 combines those checks in one decoded-container preflight, tested
+with synthetic modified containers and the unchanged original baseline.
+See [native-combined-preflight.md](native-combined-preflight.md).
+Local F-139 identifies native body-package parsing, confirms decoder-mask
+and CRC-table equivalence, and finds an additional 20-byte digest check
+not covered by our preflight. EG installation reaches a relocated target;
+physical flash writes remain unverified. See
+[native-updater-validation.md](native-updater-validation.md).
+Local F-140 traces the encoded-format flag through parser/cache/selection;
+the original statically predicts the extra-digest branch after record restore.
+Expected digest/message/suffix boundaries are traced, but an eight-byte source
+at `0x10000088` remains unmapped. See
+[native-updater-digest-inputs.md](native-updater-digest-inputs.md).
+Local F-141 finds no digest-input mapping in the startup page table or 18
+scatter records. It maps the updater RAM block to verified EG source bytes;
+see [native-boot-mapping-boundary.md](native-boot-mapping-boundary.md).
+Local F-142 identifies native erase/program/readback paths and the initialized
+43,253,760-byte EG target, including 9,314,248 bytes of tail padding. No
+native update was executed. See [native-install-span.md](native-install-span.md).
+Local F-143 adds the read-only installation model to preflight; synthetic
+tests and the unchanged audited original baseline pass. See
+[native-installation-model.md](native-installation-model.md).
+Local F-144 reviews both existing private overlay revisions. Mapped layout
+checks pass, but both retain a four-byte stack displacement at the state
+wrapper's stock-service call; condition 3 remains unmet. See
+[native-xpan-contract-review.md](native-xpan-contract-review.md).
+Local F-145 adds a supplied-boundary contract checker and synthetic operation
+tests. The abstract restored-frame tail transfer passes; existing real
+overlay code is not approved. See [native-call-contract-tests.md](native-call-contract-tests.md).
+Local F-146 checks textual instruction forms and layout: the corrected state
+wrapper plus adjacent writer uses 48 of 52 bytes. Writer entry/hook must move;
+no final overlay encoding or execution was checked. See
+[native-xpan-layout-proposal.md](native-xpan-layout-proposal.md).
+Local F-147 runs that correction in paired pinned-QEMU fixtures. Measured
+service-entry stack/register preservation passes; the other-state return
+changes NZCV and still fails the strict contract. Writer relocation/frame
+checks pass within diagnostic scope. See
+[native-xpan-abi-experiment.md](native-xpan-abi-experiment.md).
+Local F-148 resolves the measured flag mismatch in a new private overlay:
+both strict state cases pass with entry flags additionally required; writer
+frame/results/CPSR match the baseline. Scratch writer LR still differs;
+saved return target/mode match. See
+[native-xpan-flags-remediation.md](native-xpan-flags-remediation.md).
+Local F-149 restarts saved-crop research with initialized RAM mappings for
+F-110's two filename-pointer tables, cross-checked after stock assisted
+startup. Nearby references are found; actual filename-field consumption and
+save creation remain unproved. See
+[native-save-table-ram-mapping.md](native-save-table-ram-mapping.md).
+Next: trace actual filename-pointer loads from those RAM mappings toward
+serialization/file creation. Full lifecycle and global code review remain open.
+Camera-side acceptance remains unverified.
+
+Main carries facts through **F-114**. F-101 merged via PR #119; F-102/F-103
 via PR #123; F-104 via PR #124; F-105 via PR #126; F-106 via PR #127;
 F-107 via PR #128; F-108 via PR #129; F-110 via PR #138; F-111 via PR
 #139; F-112 via PR #140; F-113 via PR #141. The SD-card-
@@ -97,8 +193,8 @@ flagged, not solved, for whoever maps the remaining sibling tables next.
 The caller/save-path question is unchanged by either -- still the actual
 remaining gap, and still not re-attempted after its classifier stop.
 
-The owner approves merges; nobody merges their own PRs. Check main and
-active lane reservations before allocating another fact.
+The owner approves merges; nobody merges their own PRs. Check main again
+before allocating F-135.
 
 **Lane 3 (AE-L/AF-L tracking) now has a proper section in handoff-codex.md
 for the first time**, with a concrete handoff point: a real event-code
@@ -140,12 +236,16 @@ path remain unverified.
 
 A centered 5200 by 1920 capture-geometry experiment passed, but no saved RAW
 crop or NEF metadata writer is verified. The later structure-pack trace
-does not close that gap. Physical AE-L/AF-L input delivery and a tracking
-entry point remain unverified.
+does not close that gap; settle it with the separately authorized on-camera
+test when appropriate, not as a prerequisite for feature work. Physical
+AE-L/AF-L input delivery and a tracking entry point remain unverified.
 
-Single next step: find a stock menu-close event sequence that reaches
-`0x102f57e2` without a direct diagnostic call, then confirm that the guarded
-hook restores the mask.
+The immediate F-147 flag defect is resolved by F-148. Active priority:
+F-149 is the final static filename-table trace: no concrete route to the
+filename getter or save path remains, so this static thread is dropped. The
+actual crop question is reserved for the separately authorized on-camera test
+and is not a blocker.
+Retired simulator event-poster searches are not the default next step.
 
 ## Decisions and limits
 
