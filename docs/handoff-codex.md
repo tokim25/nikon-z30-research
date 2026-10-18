@@ -13,16 +13,19 @@ memory-only QEMU run, the next fresh press then reached native stop without
 fabricated active state; a held/no-decision record made no request. The
 updated private candidate assembles and links at 1,000 code bytes, uses 480
 bytes of added simultaneous stack within the funded 1,024-byte increment, and
-passes the bounded CFG/frame review. Details: [tracking cycle review](tracking-cycle-review.md).
+passes the bounded CFG/frame review. F-203 then composed it as a private
+33,939,514-byte standalone-EG image with exact-span, header, capacity and CRC
+read-back checks passing. Details: [tracking cycle review](tracking-cycle-review.md).
 
 This is still a candidate request/status cycle, not proof of physical input,
 successful AF acquisition, camera scheduling, or asynchronous device
-lifecycle. No firmware image or overlay was written. The task-allocation
-diagnostic stopped at its integrity guard because this task-local QEMU copy
-has no Git metadata for the recorded pinned revision; do not bypass that guard.
-Playback Protect was not dynamically exercised. Next, complete the
-standalone-EG format/integrity preflight and exact private-manifest review;
-then satisfy the existing readiness and separate camera-write approval gates.
+lifecycle. The private image has not been loaded by QEMU or accepted by Nikon's
+updater. The task-allocation diagnostic stopped at its integrity guard because
+this task-local QEMU copy has no Git metadata for the recorded pinned revision;
+do not bypass that guard. Playback Protect was not dynamically exercised.
+Next, finish bounded candidate-side combined-input, ineligible-state and menu
+controls, then complete the readiness record and separate camera-write
+approval gates.
 
 ## Current continuation, 2026-10-17
 

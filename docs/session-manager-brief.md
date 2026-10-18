@@ -10,8 +10,11 @@ through the existing locked setter after a handled request. A bounded
 memory-only QEMU cycle now takes start then stop without an injected status
 fixture; this does not prove physical input, AF acquisition or camera
 lifecycle. The updated private source assembles/links and passes the bounded
-ABI/frame audit, but there is no firmware image or overlay. Package/integrity,
-readiness and exact camera-write approval remain open. Details:
+ABI/frame audit. F-203 records the subsequent private standalone-EG image,
+which passed exact-span, protected-header, capacity and native-CRC read-back
+checks. It has not been loaded by QEMU or accepted by Nikon's updater.
+Remaining candidate-side runtime controls, hardware readiness and exact
+camera-write approval remain open. Details:
 [tracking cycle review](tracking-cycle-review.md).
 
 F-191/F-192 conclude the public same-camera 65:24 profile is not a drop-in:

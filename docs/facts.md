@@ -3646,3 +3646,14 @@ status cycle only, not physical input, target acquisition, camera scheduling,
 or asynchronous hardware lifecycle. No firmware image or overlay was written;
 no camera access or write. Observed private static/QEMU checks, 2026-10-17.
 [Tracking cycle review](tracking-cycle-review.md).
+
+F-203. The revised tracking candidate was composed privately as a standalone
+EG with the exact-original private builder and complete 45-span manifest. Its
+independent read-back audit passed exact planned changes, protected header
+fields, unchanged file length, parser-capacity fit and native CRC/residue. The
+artifact is 33,939,514 bytes, below the 0x2940000-byte parser capacity, and
+owner-only. The byte-bearing manifest and image remain outside Git. This is an
+offline test artifact, not evidence of Nikon updater acceptance, camera
+execution, hardware behavior or readiness; no camera access or write occurred.
+Observed private composition/read-back, 2026-10-17.
+[Tracking cycle review](tracking-cycle-review.md).

@@ -10,9 +10,11 @@ through the existing locked status setter, and a second fresh decision takes
 the stop path without injected active status. This verifies the candidate's
 constructed request/status cycle only; physical input, AF acquisition and
 camera lifecycle remain unverified. The revised candidate passes assembly,
-link and bounded ABI/frame review. No image or overlay exists. See
-[tracking cycle review](tracking-cycle-review.md); standalone-EG package
-integrity and the separate hardware readiness gates remain open.
+link and bounded ABI/frame review. F-203 composed a private standalone-EG image
+and passed exact-span, protected-header, capacity and native-CRC read-back
+checks. Nikon updater acceptance, complete candidate-side runtime controls and
+hardware readiness remain open. See [tracking cycle review](tracking-cycle-review.md);
+no camera access or write is authorized by this checkpoint.
 
 F-191/F-192 establish that the public 65:24 profile is not a drop-in: it uses
 area 2, persisted profile state and a grid rather than our area-4 replacement

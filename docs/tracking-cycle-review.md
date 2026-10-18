@@ -45,7 +45,8 @@ simultaneous stack depth is 480 bytes against the candidate's dedicated
 1024-byte increment. Assembly/linking and the independent bounded CFG/frame
 review passed: 1,000 code bytes, 1,010 occupied bytes including padding,
 45 planned spans and 25 checked relocations. No firmware image or overlay
-was written.
+was written at that checkpoint; F-203 below records the subsequent private
+standalone-EG composition.
 
 This closes the **candidate's synthetic request/status cycle** by keeping
 the helper's status view synchronized with the native request pair. It does
@@ -62,3 +63,22 @@ independent candidate ABI/frame verifier, and the bounded QEMU cycle
 diagnostic. Repository test suite and publication scanners are run before
 any PR. Private firmware, source artifacts, and raw diagnostic output remain
 outside Git.
+
+## 2026-10-17: private standalone-EG composition (F-203)
+
+The revised 45-span candidate was composed with the repository's
+`build_private_eg_candidate` gate, using the exact verified original and a
+complete private manifest. The builder's independent read-back audit passed
+all exact-span comparisons, protected offsets, unchanged source length,
+parser-capacity limit, and native CRC/residue checks. The resulting private
+standalone-EG candidate is 33,939,514 bytes, below the 0x2940000-byte parser
+capacity, with owner-only file permissions. The image and byte-bearing
+manifest remain outside the repository; their exact hashes are retained in
+private storage.
+
+This makes the tracking candidate an offline test artifact, not a camera-ready
+or updater-accepted build. The pinned simulator did not load this image; the
+cycle check ran the same reviewed edits in guest memory. No updater, camera,
+or hardware-write path was exercised. Package acceptance, full candidate
+runtime/lifecycle controls, backup/recovery readiness, and separate immediate
+owner approval remain open.
