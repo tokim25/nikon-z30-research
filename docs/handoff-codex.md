@@ -12,6 +12,266 @@ are all explicitly accounted for.
 
 ## Current session update, 2026-10-17
 
+Publication checkpoint: current session-manager-brief.md and main's
+test-readiness-2026-10-17.md record later owner waivers for lifecycle,
+still-photo guard and byte-exact installed identity. These supersede earlier
+retained-gate statements below; waivers are not passing measurements or
+hardware approval. No hardware/build work is part of this publication.
+F-135--F-149 are already merged and preserved. Only unmerged local
+F-150--F-155 were renumbered to F-156--F-161 against main 512e6b3.
+
+PAUSED at the owner's request for handoff to Claude. Read
+[native-claude-build-research-handoff.md](native-claude-build-research-handoff.md)
+first when resuming. Consolidated packet includes tracking's separate-checkout
+candidate/allocation/placement/constructed-control status, exact hardware
+approval boundary, public-repo triage and permissions-parity checklist.
+Its static standalone-route review remains the single next Claude task;
+tracking stays out of the first test. No permissions are assumed transferable.
+New concrete lead: original native discovery type 2
+recognizes standalone EG, parses it separately and selects CRC validation
+without the outer-package digest path. Static landmarks agree with upstream
+standalone-installation reports; complete compatibility/version/buffer contracts
+still need review before adoption. Outer digest remains unresolved but may
+not be needed for that format. No flag/check was changed. Critical scope:
+F-148 covers bars only; label and capture/preview geometry are not in it.
+Current upstream aspect-profile work has relevant area-sync/preview findings,
+but uses area 2, whereas our requested replacement is area 4. Other requested
+repo triage is in the handoff. No image, simulator run, encoding, hardware,
+publication or new fact number. Single next step belongs to Claude: bounded
+static standalone-route and minimum complete-edit contract. Keep lifecycle
+condition 1 unproved (later owner waiver as above); do not repeat digest
+source loops or infer readiness.
+
+Transfer cleanup: all substantive local/untracked files and all seven
+worktrees preserved. See the cleanup record in
+native-claude-build-research-handoff.md. F-081/F-110 duplicates are inherited
+from main. The cross-branch F-150 collision is resolved by renumbering only
+our unmerged findings to F-156--F-161. Generated Python caches only were removed.
+
+### Earlier checkpoints (historical; current handoff above takes precedence)
+
+F-161: owner's Do it completed a bounded digest engineering checkpoint.
+New private instruction evaluator matches native SHA-1 compression arithmetic
+against hashlib on twelve synthetic message lengths and native suffix-loop
+arithmetic against its closed form on 1,024 synthetic cases. Native config
+parser/update/finalize were not executed; no suffix recovered and original
+digest still unverified. New public read-only package_digest verifier requires
+an eight-byte suffix, checks original first, then candidate; seven synthetic
+tests added, total 130 pass. No firmware output, simulator boot or hardware.
+See native-digest-arithmetic-verification.md for exact scope/private helper
+identity. This supersedes the earlier no-code checkpoint below. Single next
+step remains independently justified offline Z30 suffix/input evidence and
+original-digest reproduction; do not ask owner for camera acquisition or
+mistake synthetic passes for resolution. Local/uncommitted, no publication.
+
+Bounded digest-source check completed: recovered verifier hash matches F-135;
+its call structure and pinned upstream container reader have original-hash/
+CRC checks, not a native modified-package digest implementation. Focused
+public-source lookup found WonderLantern/nikon-fw-key-tool: Z30 decoding is
+listed, but digest recovery/repacking is limited to Z8/Z9. Its EXPEED 6
+instruction-constant hint did not establish a usable Z30 replacement; actual
+Z30 setup still copies the external eight-byte source into digest state.
+No foreign code installed/executed, no key guesses, simulator or hardware.
+Owner does not know of an existing boot capture/verifier; do not ask them
+to obtain camera data. Current stopping point remains blocked, not READY.
+Next technical step needs verified Z30 digest recovery/input evidence; do
+not repeat these same source checks without new evidence or request camera
+approval for a package that has not passed. Source references recorded in
+native-real-camera-readiness.md. All 123 tests and artifact/encoded-data/diff
+checks pass; local uncommitted documentation, no publication.
+
+Latest owner direction stops simulator-completeness/low-value research.
+Minimum-test preparation now prioritizes one hard technical blocker: native
+package digest needs eight verified bytes at 0x10000088 outside captured EG.
+F-140/F-141 already establish this missing-input boundary; do not repeat
+searches, guess inputs, change the validation path or access hardware to fill
+it. No authorized offline source/equivalent is identified. Single next step:
+supply independently verified digest input/equivalent and reproduce the
+original check, then final exact-candidate preflight/review/risk record.
+See the new minimum-test stopping-point section in
+[native-real-camera-readiness.md](native-real-camera-readiness.md).
+No package is accepted, so status remains blocked/NO-GO, not READY. Retained
+lifecycle gate has not been silently waived; residual coverage gets a concrete
+owner disposition rather than more simulator-completeness work. Stop once
+the exact-build READY gate is genuinely met and report its hash/scope/risk
+for separate immediate owner approval; no camera action follows automatically.
+No simulator, encoding/build, camera or publication this checkpoint. All 123
+tests and artifact/encoded-data/diff checks pass; changes local/uncommitted.
+
+Future-camera readiness consolidated in
+[native-real-camera-readiness.md](native-real-camera-readiness.md).
+Modified firmware remains NO-GO: retained lifecycle gate, final package/native
+digest, global exact-build review, exact-test backup/risk record, named READY
+record and immediate approval are not complete. Read-only check is reported
+through step 5, closure not yet reported. No new hardware activity authorized.
+First eventual modified test remains XPan stills plus saved-crop verification,
+without tracking; tracking audit lacks native activation/cancellation proof.
+Recovery is service-or-total-loss risk, not safe or verified recovery.
+Next owner hardware decision is session closure confirmation; exact-build
+modified-test approval comes only after required gates pass. This was repo
+review/documentation only: no simulator, encoding, build or camera operation.
+All 123 tests and artifact/encoded-data/diff checks pass. Local uncommitted
+on codex/firmware-preflight-plan; no commit/push/PR.
+
+Owner reports read-only instructions 1–5 complete: camera version “1.2,”
+consistent with target C 1.20; host identity NIKON DSC Z 30, vendor/product
+04b0/0452, USB product version 0120, 480 Mb/s. Serial/full host report
+excluded from Git. User-reported observations only: no installed-code hash
+or zero-write guarantee. Step 6 idle shutdown/disconnection is not yet
+reported complete; that is the single next owner step. No agent camera
+operation or expanded access. Owner explicitly retained the unmet lifecycle
+gate; modified firmware remains NO-GO. Result recorded in
+native-hardware-gate-recommendation.md. Documentation/123-test checks pass;
+no commit/push/PR.
+
+Owner directly chose to keep lifecycle condition 1 unmet. Separately, the
+session manager conveyed explicit narrow read-only connection authorization;
+the owner asked Codex to choose the tool. Selected camera firmware-version
+display plus macOS System Information USB identity view (local app metadata
+11.0/build 915, read without hardware probing), after official Nikon/Apple
+documentation review. Owner-operated instructions, evidence and stop rules
+are appended to native-hardware-gate-recommendation.md. This is not a traffic
+audit or zero-write guarantee; no camera-control commands or update tools.
+No further permission requested for the already-authorized narrow scope.
+Next single step: owner performs only that bounded check and reports model/
+C version and USB identity or the stop condition encountered. No agent
+connection, hardware command or settings change; modified firmware NO-GO.
+Standard 123 tests and artifact/encoded-data/diff checks pass; no publication.
+
+Hardware-gate recommendation written at
+[native-hardware-gate-recommendation.md](native-hardware-gate-recommendation.md).
+Recommend a separately approved, owner-operated identity/version-only
+connection first. Existing rules grant no automatic read-only exception;
+exact method review and immediate owner authorization are still absent.
+Modified-firmware gates remain unmet/NO-GO. Recovery basis is accepted
+service-or-total-loss risk for planning, explicitly not safe or a verified
+recovery path; exact-build/test consent is still separate. XPan eligibility
+and tracking gaps do not block a bounded stock read-only step, but retain
+their feature-specific modified-build gates. Single next decision: owner
+approval of the narrowly defined read-only scope/exception, followed by
+method review and session-specific go-ahead. No hardware, patch, commit,
+push or PR. Standard 123 tests and artifact/encoded-data/diff checks pass.
+
+Lifecycle acceptance checkpoint: route inventory confirms the requested
+end-to-end workflow cannot currently be established by the existing harness.
+Historical 24f/251/252 events retain the last menu entry; 24e/250 close to
+another mode; GUI Back and playback/warning routes do not supply acceptance.
+No new simulator run or arbitrary event/activation was used to claim success.
+Exact F-148 manifest/all twelve file identities reverified read-only.
+Concrete owner decision packet:
+[native-xpan-lifecycle-decision.md](native-xpan-lifecycle-decision.md).
+Condition 1 remains unmet unless the owner explicitly records a deviation
+for native startup/menu-return/playback/warning coverage. No waiver or camera
+approval inferred from Go. Next single step: obtain that specific acceptance
+decision; offline preparation remains allowed, hardware remains NO-GO.
+All 123 tests and artifact/encoded-data/diff checks passed; changes local,
+uncommitted, no PR. No new research fact number allocated for this inventory.
+
+Static branch review completed for claude/sharp-bartik-ed4fb7 at 9a60deb
+against current remote/local main 8802ab7. No proven still-photo predicate
+at 0x102f5810; empty stack plus selector 1 is insufficient to guarantee
+excluded-state protection, but actual movie/playback reachability or damage
+was not established. No proven static replacement guard found. Camera-ready
+NO-GO remains; owner-authorized offline stills prototype remains in scope
+without reopening the superseded movie prerequisite. Single decision: retain
+the hook only at that bounded prototype status. Branch F-150 was subsequently
+merged; the formerly colliding local finding is now F-156.
+See [native-xpan-guard-branch-review.md](native-xpan-guard-branch-review.md).
+No simulator/encoding/build/patch change or hardware. Review stopped here;
+no publication or other lane edits. Documentation checks passed.
+
+F-160 completes the bounded close/live-ready contract review on exact F-148.
+Four paired cases (target/DX, ready/phase3) all return. Native inputs, known
+runtime callback inputs, r4–r11, aligned/balanced stack, caller-stack words
+and return CPSR pass. Ready preserves its original r0 result. Volatile
+differences are listed explicitly and overwritten by the named native
+continuations before use. No patch change is indicated by these cases.
+See [native-xpan-close-ready-contracts.md](native-xpan-close-ready-contracts.md).
+Private bars-only checklist/build-decision packet updated to this evidence;
+no global condition-3 or natural-menu acceptance is claimed. Next required
+evidence is a native menu return without diagnostic live activation or finer
+stepping; do not repeat the retired flash-response investigation. The owner
+must select any deviation from that acceptance gate; none is inferred.
+Both sessions closed; original/QEMU unchanged. All 123 tests and artifact/
+encoded-data/diff checks passed. Local uncommitted docs, no PR/hardware.
+
+F-159: owner's subsequent Go authorized the next bounded read-only check.
+The stop's LR maps to cached flash identity/geometry discovery. That native
+initializer is shared by information, erase and program wrappers; retained
+evidence lacks the outer caller, so no installation/persistence/corruption
+cause is established. No new simulator run or patch change. Menu acceptance
+remains open. Retire flash-response explanation work here; next single build
+task is close/live-ready native hook contract review, using the exact F-148
+overlay and original continuations. Existing private preliminary decodes:
+codex-xpan-remaining-wrapper-review-01.json and
+codex-xpan-remaining-wrapper-callers-01.json; neither is a completed audit.
+See F-159 in [native-xpan-menu-boundaries.md](native-xpan-menu-boundaries.md).
+Standard 123 tests and artifact/encoded-data/diff checks passed. All changes
+local/uncommitted; no hardware or publication.
+
+F-158: the one owner-approved writer-disabled control is complete. Omitting
+only writer-branch redirection, with all eleven other overlays and nine coarse
+candidate observation points retained, still stops at the same simulated
+flash access/PC. Writer boundary matches stock; choice 1, menu mask off,
+stack count 3. Subsequent live activation/bars check was not reached.
+Writer redirection is not necessary for the observed stop; removing it is
+not an established fix. Keep patch unchanged and menu acceptance open.
+Stop here: no additional control or lifecycle/model work authorized for this
+checkpoint. Next decision belongs to owner selection of a bounded follow-up.
+See the F-158 section of [native-xpan-menu-boundaries.md](native-xpan-menu-boundaries.md).
+Private evidence tag writer-disabled-01; session closed; firmware/QEMU
+unchanged. Standard validation: 123 tests and artifact/encoded-data/diff checks
+passed. Local uncommitted documentation only; no publication or hardware.
+
+F-157 completed the paired menu-boundary observation. Stock/coarse returns;
+candidate/coarse stops on an unmodeled simulated flash write, not timeout.
+Writer entry-to-return-boundary registers and stack match stock. Candidate
+with finer breakpoints returns through the original caller, count 3 skips
+the mask, NZCVQ/frame/SP/target checks pass. Mixed, instrumentation-sensitive
+completion is not a fix or menu acceptance. No code/overlay change.
+Single next step: coarse comparison with only writer-branch redirection
+omitted from candidate loading, retaining all other overlays and inputs.
+This informs that hook's inclusion; do not open a flash-model fidelity trace.
+See [native-xpan-menu-boundaries.md](native-xpan-menu-boundaries.md).
+All sessions closed; firmware/QEMU unchanged; local uncommitted, no PR.
+
+F-156 stills-only controls reuse the exact F-148 overlay. Callback-driven
+rendering passes target/DX/target/16:9: 214/0/214/0 black rows. Ten setting
+cycles pass with unchanged bounds/stack count, final DX mask off. Two native
+menu-confirmation attempts on the candidate did not return; one stock control
+returned. Do not assign a cause from that small sample or claim menu acceptance.
+Next bounded step: paired stock/candidate menu-confirmation observations at
+the writer/state boundaries. Movie evidence remains out of the prerequisite
+set. See [native-xpan-stills-controls.md](native-xpan-stills-controls.md).
+
+Owner scope correction: still/movie transition evidence is not a blocker for
+the current stills-only candidate. Movie behavior remains unvalidated; do not
+claim it is disabled. The earlier predicate-review NO-GO below is superseded
+on that scope point only. Continue bounded stills controls on the exact F-148
+overlay without weakening ABI checks or treating assisted calls as natural
+menu return. See owner-direction-2026-10-17.md.
+
+Still-photo predicate follow-up stopped UNKNOWN: reviewed mode-object/event
+evidence does not establish a native still/movie field/value mapping or a
+validated movie-switch input for the required paired control. The exposed GUI
+has only navigation/OK/Back inputs; this is not proof that no firmware route
+exists. No arbitrary internal-mode event or selector was treated as a movie
+control. Paired behavior and cleanup ordering remain unverified; no new
+overlay or simulator run occurred. Private result:
+`$WORK/private-inputs/codex-xpan-still-predicate-review-01.json`.
+Next decision: retain build NO-GO pending one verified native still/movie
+input/transition route and semantic mapping for the bounded paired test.
+
+Bars-only planning checkpoint after PR #156 merge: private packet at
+`$WORK/private-inputs/codex-xpan-bars-spec-01` contains the existing F-148
+reference specification, twelve before/after-hashed edit spans, minimal
+checklist, native-lifecycle test plan and NO-GO build decision. First essential
+unknown: a verified still-photo eligibility/disable predicate at the hooks;
+choice, empty stack and selector 1 do not establish movie/playback exclusion.
+Next single evidence: native predicate field/value mapping with a paired
+still/movie control and cleanup ordering. Stopped on that unknown as directed;
+no new overlay or simulator run, no saved-crop/tracking work, no publication.
+
 PR #156 maintenance checkpoint: rebased onto main `c58ac95`; the only manual
 conflict was in `docs/project-status.md`, retaining both main's newer lane
 updates and this branch's evidence. F-135--F-149, owner-direction wording and
@@ -167,14 +427,14 @@ NO-GO. Do not resume retired simulator event-poster archaeology by default.
 Rewritten 2026-10-16 by Claude, with the owner's explicit approval to edit
 this Codex-owned file (a lane exception, same as PR #50). Read this file,
 then [facts.md](facts.md), [project-status.md](project-status.md) and
-[AGENTS.md](AGENTS.md) before doing anything. This version adds a second
+[AGENTS.md](../AGENTS.md) before doing anything. This version adds a second
 handed-off lane (saved-crop) on top of the first (live-view-bars hook); both
 are below. If you remember an older copy of this file with fact numbers
 below F-050, ignore it.
 
 ## Read this first
 
-**Owner direction, 2026-10-16 — read [AGENTS.md](AGENTS.md)'s new "Priority"
+**Owner direction, 2026-10-16 — read [AGENTS.md](../AGENTS.md)'s new "Priority"
 section first.** This project tests modded firmware on the owner's own real
 camera; every thread should lead toward a concrete patch, hook point, or
 build decision for the real firmware, not toward explaining a limit of this

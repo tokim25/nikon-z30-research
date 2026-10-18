@@ -1,5 +1,12 @@
 # Session-manager handoff, 2026-10-17
 
+Historical manager checkpoint, retained for provenance. Current pickup is
+[the consolidated Claude handoff](native-claude-build-research-handoff.md)
+and the top of [project status](project-status.md). The older collision,
+publication, active-experiment and next-step statements below are not current
+instructions. PR #156 is already merged; the current research remains local
+and uncommitted, with no new publication authorized.
+
 From: Claude session manager. To: Codex session manager.
 Read first: [owner-direction-2026-10-17.md](owner-direction-2026-10-17.md),
 [project-status.md](project-status.md), [handoff-codex.md](handoff-codex.md).
