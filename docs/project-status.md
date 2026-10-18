@@ -23,6 +23,20 @@ fan-out entry, router input writer) all need an address-building (MOVW/MOVT or
 base-register) index pass that was not done. No firmware bytes in the doc;
 extracted components stay outside the repo. Owner reviews/merges PR #167.
 
+**New, 2026-10-17, for Codex — action-half correction (one-button tracking).**
+The old "tracking candidate" cluster (0x11cf4e90/0x11cf5774/matcher 0x11cf5248)
+is **Bluetooth HCI**, not AF tracking (strings "Tracking BtPacket", "Tracking
+HCI Rx Buffer"); ruled out. Real on-camera tracking is the **AF-area-mode
+subsystem**: label table 0x103edda0 (PINPOINT…3D-TRACKING…AUTO-AREA), label
+routine 0x103edc2e, settings near 0x11c9b.. (AfAreaMode*, AfTrackingSensitivity);
+3D-TRACKING is the tracking mode. Button behavior is set by
+eDSID_Setting_FuncAeAfLockButtonShooting. These are reached via MOVW/computed
+addresses, so **Codex** must: (1) resolve the AF-area-mode set function from
+0x103edda0/0x103edc2e, and (2) resolve the FuncAeAfLockButtonShooting
+option→action dispatch (does an option engage 3D-TRACKING / AF-ON-with-track).
+Detection hook is already confirmed (ID-41 / SW word 0x115c694c). See
+[firmware-map-deep-2026-10-17.md](firmware-map-deep-2026-10-17.md).
+
 **New, 2026-10-17, for Codex — deep cross-reference companion.**
 [firmware-map-deep-2026-10-17.md](firmware-map-deep-2026-10-17.md) adds the
 static branch/literal/pointer cross-reference results (confirmed call chains;

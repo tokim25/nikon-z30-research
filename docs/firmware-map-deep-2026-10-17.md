@@ -123,6 +123,46 @@ register words — is still being traced.
   literal/pointer references; the live bits arrive through register-indirect
   or MOVW-built addresses, so it is a Codex lead.
 
+## Action half: tracking-activation subsystem (corrected)
+
+"One-button tracking" needs an **action** target (what starts subject tracking)
+to wire the AE-L/AF-L detection hook to. This pass corrected which subsystem
+that is.
+
+- **The earlier "tracking candidate" cluster is Bluetooth, not AF tracking.**
+  The functions 0x11cf4e90 / 0x11cf4ea0 / dispatcher 0x11cf5774 / matcher
+  0x11cf5248 belong to Bluetooth HCI packet handling: nearby strings are
+  "Tracking BtPacket" (0x11cf4dbc), "Tracking HCI Rx Buffer" (0x11cf51d0),
+  "Bluetooth" (0x11cc70d0), "Read Remote Features", "Remote name request".
+  The word "Tracking" there means tracking Bluetooth packets. This cluster is
+  **ruled out** as the one-button-tracking action target, and its registration
+  is not relevant to tracking.
+- **On-camera subject tracking is the AF-area-mode subsystem.** The AF-area
+  mode label table is at 0x103edda0: PINPOINT, SINGLE-POINT, WIDE-AREA(S),
+  WIDE-AREA(L), DYNAMIC-AREA, **3D-TRACKING** (label 0x103eddfc), AUTO-AREA.
+  The label routine is at 0x103edc2e. AF settings sit near 0x11c9b.. (e.g.
+  AfAreaMode*, AfTrackingSensitivityMovie). Subject tracking is the
+  3D-TRACKING AF-area mode (with subject detection in Wide/Auto modes).
+- **The AE-L/AF-L button's behavior is governed by**
+  `eDSID_Setting_FuncAeAfLockButtonShooting` (and `...Movie`).
+- The AF-area label table and the 3D-TRACKING string have **no plain
+  branch/literal/pointer references** — they are reached through MOVW/computed
+  addresses, so the AF-area-mode consumer/set function and the button
+  option→action dispatch need the address-building pass (Codex lane).
+
+Revised action-half questions for the Codex lane:
+1. Resolve the AF-area-mode consumer/set function from label table 0x103edda0 /
+   label routine 0x103edc2e.
+2. Resolve the `eDSID_Setting_FuncAeAfLockButtonShooting` option→action
+   dispatch: whether an option engages 3D-TRACKING / AF-ON-with-tracking — the
+   hook that turns an AE-L/AF-L press into subject tracking.
+
+**Bottom line for one-button tracking:** the detection hook is confirmed
+(ID-41 / SW-bank word 0x115c694c); the action target is now correctly located
+(AF-area 3D-TRACKING mode), replacing the mistaken Bluetooth candidate; the
+exact set function and the button-option mapping remain for the Codex address
+pass.
+
 ## Open leads, by weight
 
 1. **AE-L/AF-L transport (largest).** Mask 0x2000 is firmly placed (SW0 bit,
