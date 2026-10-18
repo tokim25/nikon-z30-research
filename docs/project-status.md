@@ -11,6 +11,18 @@ the current integration map and next step. Older paused-lane notes are stale.
 
 ## Open work
 
+**New, 2026-10-17, for Codex — PR #167: consolidated firmware static map.**
+[firmware-map-2026-10-17.md](firmware-map-2026-10-17.md) is an
+addresses-and-descriptions map of C 1.20 for all five user-story areas
+(buttons, menus, live-view, crop, AE-L/AF-L tracking), with call chains and
+confidence. New since prior notes: the screen fan-out driver 0x10595844 behind
+the bars, the image-area function table at 0x11f9a4dc behind crop, and the
+AE-L/AF-L queued-input router (callback + handler table at 0x1037a2c4, task-init
+entry 0x1059c2c8). The three largest open leads (crop-table dispatcher, bars
+fan-out entry, router input writer) all need an address-building (MOVW/MOVT or
+base-register) index pass that was not done. No firmware bytes in the doc;
+extracted components stay outside the repo. Owner reviews/merges PR #167.
+
 **New, 2026-10-17, owner-requested handoff to Codex: Lane 0** (see
 handoff-codex.md's new "Lane 0" section). The dormant-worker pattern that
 blocks both Lane 1's and Lane 3's natural-trigger questions (F-019,
