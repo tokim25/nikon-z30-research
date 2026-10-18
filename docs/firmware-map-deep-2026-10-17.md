@@ -105,6 +105,24 @@ to an input code in 0x1073b400; the firmware scans the SW registers to produce
 input codes elsewhere, and that scan — plus the code that writes the SW
 register words — is still being traced.
 
+## SW-register read path and the live scan
+
+- The named-switch table is consumed only by an isolated registrar/naming
+  module (fn 0x1033ce76): debug naming, not the live input scan.
+- The live read path for AE-L/AF-L, by confirmed index edges: handler
+  0x103a3d14 (maps mask 0x2000 → logical ID 41) → dispatcher 0x103a3b9c (reads
+  the SW-bank word at 0x115c694c) → consumer 0x103a3f9e → setter 0x101e383a →
+  structured record 0xc1811e74. The mask→ID-41 step relies on the prior repo
+  fact; that handler body is MOVW/register-indirect and was not re-decoded.
+- The input-map consumer (fn 0x10459342, map 0x1073b400) is a parallel
+  translator whose junction with this path is not established.
+- **Cleanest AE-L/AF-L hook candidate:** the ID-41 handler/dispatcher pair
+  operating on the SW-bank word 0x115c694c.
+- Writers: fn 0x103a3df6 only initializes the bank pointer (store at
+  0x103a3e58), not the bits. The bit-source writer was not found via plain
+  literal/pointer references; the live bits arrive through register-indirect
+  or MOVW-built addresses, so it is a Codex lead.
+
 ## Open leads, by weight
 
 1. **AE-L/AF-L transport (largest).** Mask 0x2000 is firmly placed (SW0 bit,
