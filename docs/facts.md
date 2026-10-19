@@ -3629,3 +3629,2678 @@ that guard and does not waive lifecycle condition 1, native updater
 acceptance, other readiness/recovery requirements, or the separate approval
 required for any exact camera write. No camera access or write. Observed direct
 owner disposition, 2026-10-17. [Test-readiness record](test-readiness-2026-10-17.md).
+
+F-204. The capture-path decision remains unresolved on both proof routes. No
+new-still-exclusive hook is established: wrapper `0x10142f5e` is called from
+dimension-based factory `0x1009f8c6` and existing-object rebuild callers
+`0x100a356a`/`0x100a579c`; constructor `0x101436c2` is reached from missing-
+record construction at `0x100a42d8` and existing-object refresh at
+`0x101eccb0`. The event meaning for the bit-20 dispatcher path is unknown
+(F-171/F-180/F-196). No evidence proves playback/editor output is unchanged:
+generic getter and object-rebuild routes share the area-4 slot-4 tables
+changed by the candidate. Affected or potentially affected contexts are
+intended still previews, playback/editor object construction or refresh, and
+the already-waived but unmeasured movie/warning contexts. F-201 records the
+owner's waiver for playback/movie/warning effects. The owner directs keeping
+that waiver as scoped; editor outputs are not added to it. Editor isolation is
+unproven and editor behavior must remain outside any accepted test scope.
+Lifecycle condition 1 remains unmet, so hardware preflight remains blocked. No
+candidate build or camera access.
+[Preview caller map](native-xpan-preview-callers.md) and [test-readiness
+record](test-readiness-2026-10-17.md).
+
+F-205. The owner reopened capture-path research with the narrower requirement
+that preview edits affect still capture only and leave playback/editor outputs
+unchanged, specifically at wrapper call sites `0x1009f8c6`, `0x100a356a`,
+`0x100a579c`, and refresh caller `0x101eccb0`. Existing hash-pinned static
+findings do not provide such a gate. `0x1009f8c6` is inside a dimension-based
+preview-object factory with no local capture-origin predicate (F-184/F-195);
+`0x100a356a` and `0x100a579c` rebuild objects from current records (F-171);
+`0x101eccb0` refreshes an existing object and fills a missing record (F-180).
+The possible upstream dispatcher gate tests bit 20, but its event meaning and
+record provenance are unresolved (F-196/F-197). Therefore no still-only gate
+is established at these four contexts, and playback/editor exclusion is not
+proved. The remaining evidence needed is a statically traced capture-origin
+predicate whose producer and semantics exclude rebuild, refresh, playback and
+editor contexts, plus proof that it dominates each relevant hook without
+changing shared outputs. No candidate was built and no camera was accessed
+for this finding. Observed review of the cited pinned-original findings,
+2026-10-17; [caller map](native-xpan-preview-callers.md).
+
+F-206. The still-only gate trace reaches a bounded static dead end using the
+repository's existing caller/dispatcher records. A focused search of project
+documentation found no additional decoded producer for the input flag at
+`0x1021d9e2`, no mapping for the callback key registered by
+`0x1021dac2` through `0x10199cae`, and no new provenance for the current
+object/record consumed by `0x1021d946`. The exact unresolved edges are the
+source/semantics of bit 20 and whether the current and nested records came
+from a new still or an existing playback/editor/rebuild object (F-196/F-197).
+The three direct wrapper call sites include two existing-object rebuilds;
+the fourth named context refreshes an existing object (F-171/F-180). No
+predicate is shown to dominate a still-only edit. The existing F-198
+table-only artifact globally changes area-4 slot-4 dimensions and therefore
+cannot meet the owner's newer requirement to leave playback/editor unchanged.
+Safe continuation requires an existing owner-authorized, bytes-free static
+decode of those producers and records; until then, do not build or test a
+preview patch. A future implementation must prove a caller-guarded override
+with stock fallback outside the new-still predicate; this is a design
+constraint, not a proven hook. No firmware bytes were accessed for this
+finding and no hardware was touched. [Caller map](native-xpan-preview-callers.md).
+
+F-207. A bounded read-only decode of the verified EG shows initializer
+`0x1021dac2` registers callback `0x1021d9e3` using generic registry ID
+`0x1003a`. The ID lookup helper `0x10218832` indexes a 28-byte-stride runtime
+registry table. In the pinned QEMU at the reviewed revision, a standard
+assisted live-view startup initialized the record for `0x1003a` with the
+service label `BACKEND`; one observed callback entry had input flags `0x10`.
+The probe did not observe bit 20 or correlate that startup callback to a
+particular fixture/API call. This identifies a generic backend registration,
+not a capture-only event or producer for bit 20, and establishes no still-only
+hook. Observed static lookup/registration flow and read-only initialized guest
+RAM, 2026-10-17; high confidence for the key label and sampled flags, event
+semantics and record provenance remain unknown. No repository firmware data,
+candidate, or camera access. [Preview caller map](native-xpan-preview-callers.md).
+
+F-208. The exact bit-20 producer edge is now decoded. Preview callback
+`0x1021d9e2` tests bit 20 and calls `0x1021d946`, which reads the module's
+current-object slot at state offset `+0x60`. Setter `0x10220fd6` accepts an
+object pointer, fills that slot only when empty, and posts event/property
+`0x100000` through `0x10199cdc`; this matches the callback's bit-20 test. A
+bounded direct-Thumb-call sweep finds two direct setter callers:
+`0x1015672c` supplies a pointer derived from a runtime object, and
+`0x103e5d1c` supplies a stack-built descriptor from a generic backend worker
+path (`0x103e5bdc`), entered from `0x103e5e88` on a queued bit-24 branch. No
+still-capture predicate is present in these decoded paths; indirect callers
+remain outside the direct sweep. Thus bit 20 represents first assignment of
+a generic current object, not a proven new-still signal. The object origins
+are not proven to exclude playback/editor, so this event is not a safe
+still-only hook. Static call/data flow, verified EG, 2026-10-17; high
+confidence for the local setter/event edge, medium for end-to-end callback
+delivery, capture provenance unresolved. No candidate or camera access.
+[Preview caller map](native-xpan-preview-callers.md).
+
+F-209. The queued bit-24 route was followed one layer farther. Worker
+`0x103e5e70` tests queue bit 24 and calls descriptor builder `0x103e5bdc`;
+that builder reads shared backend state, constructs a multi-record descriptor,
+and calls the same current-object setter `0x10220fd6`. Its bit-24 notifier is
+`0x103e89c2`, reached through branch stub `0x1056a636` from shared helper
+`0x1055f834`. A full-image direct-branch scan finds multiple callers of
+`0x1055f834` across backend/state-management paths, including explicit
+cleanup/invalidation paths. The helper has no capture argument or local
+capture predicate. This is stronger evidence that the event is shared object
+state/invalidation, not a still-only signal; it still does not prove the
+origin of every descriptor or exclude playback/editor. Static Thumb trace of
+the verified EG, 2026-10-17; high confidence for the call edges, medium for
+semantic characterization. [Preview caller map](native-xpan-preview-callers.md).
+
+F-210. A bounded read-only run of the pinned stock QEMU watched the bit-24
+notifier, descriptor builder, current-object setter, and preview callback
+during standard assisted live-view startup and four ordinary UI navigation
+inputs. None fired in the observed windows. Firmware identity remained
+unchanged and the QEMU checkout stayed clean. This says only that this
+simulator sequence does not exercise the route; it is not evidence that the
+route is unreachable on the camera and does not provide capture provenance.
+Observed simulator result, 2026-10-17; high confidence for the bounded run,
+no inference about real-camera reachability. No candidate or camera access.
+
+F-211. The second direct caller of setter `0x10220fd6` is routine
+`0x10156714`. It supplies a base-derived object pointer only when two shared
+table counters satisfy `r1 < r0`, then proceeds through a state-indexed
+descriptor walk that reads several backend values. No capture-origin test is
+visible in the decoded entry. A full-image direct-BL sweep and an exact
+halfword-aligned pointer-word scan found no direct caller/reference to this
+entry; computed/registered dispatch remains possible. A bounded stock-QEMU
+startup/navigation observation also did not hit this routine or the setter.
+This leaves the routine's inbound dispatch and table semantics unresolved;
+it does not prove camera unreachability or a capture-only route. Static and
+simulator observation, 2026-10-17; high confidence for local conditions and
+bounded absences, semantic provenance unresolved. [Preview caller map](native-xpan-preview-callers.md).
+
+F-212. A private one-button subject-tracking hook candidate passed a bounded
+constructed-context guard test in the pinned QEMU. The tested copy-hook cases
+accepted only a fresh press in the intended context/mode, with the expected
+worker ownership and unconsumed state; held, release, other context, other
+mode, wrong owner, and consumed-state cases followed stock behavior. Both
+candidate-entry cases preserved seeded registers/flags and stack geometry,
+and accepted-path cleanup restored the caller stack and return state. This
+test directly constructed the worker context; it did not establish natural
+worker admission, prove the on-camera press-to-start/stop cycle, or execute a
+complete modified firmware image. Static evidence separately identifies the
+native Subject tracking action enum and a shared configurable-action route,
+but action activation/cancellation semantics remain unverified. This advances
+the hook ABI/guard evidence only; the candidate is not ready for a real-camera
+test. Read-only pinned-QEMU test, 2026-10-18; high confidence for the
+constructed guard/ABI cases, no inference about natural dispatch or camera
+behavior. No firmware bytes or dumps in the repository; no camera access.
+
+F-214. A private pinned-QEMU call-path comparison tested the candidate's
+AE-L/AF-L action adapter in its constructed accepted context and the native
+Fn Subject tracking handler independently. Both reached shared helper
+`0x10368b6e` with the same action selector (`r0=45`); both then reached
+`0x1045a47e` with the same request tuple (`r0=0x20`, `r1=1`,
+`r2=0xc201685c`, `r3=1`). The candidate adapter completed with its worker
+context restored. This establishes that it reuses the native Subject
+tracking request path rather than inventing a second tracking state machine.
+The consumer object is unmodeled in this QEMU run, so it cannot show the AF
+area-mode transition or prove a real-camera toggle. The official Z 30 manual
+defines the behavior contract: in Auto-area AF (including people/animal
+variants), the assigned control starts tracking and pressing it again ends
+tracking; it does not list AE-L/AF-L as a stock assignment for this role.
+The candidate's normal worker admission and full image ABI remain unverified;
+this is a native-action hook validation, not a complete testable image.
+Read-only pinned-QEMU diagnostic plus official manual, 2026-10-18; high
+confidence for matching call arguments, no inference about consumer
+execution, worker admission, or camera behavior. No firmware bytes/dumps in
+the repository and no camera access.
+
+F-213. A separate private memory-only candidate run in the pinned QEMU reached
+the standard boot checkpoint and the powered simulated live-view setup. The
+candidate's worker TCB and expected allocation were present before an explicit
+native object notification; that notification returned and the saved worker
+stack pointer changed afterward. The bounded probes recorded no worker-entry
+or cleanup hits, so this shows only that the task existed and its context
+changed after notification. It does not show a natural AE-L/AF-L press
+reaching the candidate hook, successful hook admission, or subject-tracking
+activation/cancellation. The original firmware hash and simulator checkout
+were checked by the private harness; no camera access. Read-only simulator
+diagnostic, 2026-10-18; high confidence for the sampled task/notification
+observations, no inference about button delivery or action semantics.
+
+F-215. The AF-area-label/OK trace distinguishes AF-area selection from the
+Z 30's Subject-tracking operation. The AF-area option table has eight
+selectable rows: Single-point, four Wide-area variants, and Auto-area AF,
+Auto-area AF (people), and Auto-area AF (animals). It contains no selectable
+3D-TRACKING row; the `3D-TRACKING` string reference at `0x103edc2e` belongs to
+a label-output path and does not establish an activation entry. The option
+mapper at `0x10430c8c` reads the option table rooted at `0x1074a688`; the mode
+setter at `0x1042b2d8` maps Auto-area encodings 600/601/602 to base mode 6 and
+submodes 0/1/2 in properties `0x0c2b`/`0x0c3d`. The generic OK/J menu
+dispatcher `0x103ce96e` invokes the current UI object's registered event
+callback. In the AF-area option path, that callback stores the selected mode;
+it is not the Subject-tracking action call. Nikon's Z 30 manual describes
+Subject tracking as a separate operation available while one of the three
+Auto-area modes is selected: J enters the reticle stage, a second J begins
+tracking, and another J ends it; W(Q) exits the mode. The assigned-control
+action has the same start/end semantics. Thus the build-relevant route is the
+native Subject-tracking action already compared in F-214, while the AF-area
+menu trace supplies its mode precondition, not the activation hook. Static
+findings and official manual, 2026-10-18; high confidence for option-table
+contents and setter encoding, no direct firmware proof here of the live-view
+J callback or tracking state transitions. No firmware bytes/dumps in the
+repository and no camera access.
+
+F-234. Attempted a synthetic stack watermark around the private Subject-
+tracking candidate adapter in pinned QEMU. The adapter returned, but the
+probe observed zero native action calls and no candidate/native path; only a
+64-byte boundary region changed. Therefore the measurement provides no
+candidate stack-depth or headroom evidence and does not close the stack gate.
+The private harness did not verify each restoration write, but its disposable
+QEMU process exited; the verified original firmware hash and simulator
+checkout remained unchanged. Treat this as an inconclusive harness attempt,
+not firmware behavior. Private QEMU output stayed outside the repository,
+2026-10-18; low confidence for stack semantics, high confidence that the
+required native path was not observed. No camera access or firmware bytes in
+the repository.
+
+F-219. A further static trace separates the 3D-TRACKING label and the
+shooting-view J path from the native Subject-tracking action. In the renderer
+containing the label block at `0x103edda0`, selector byte `[r4+0x83] == 8`
+chooses the 3D-TRACKING text and passes it to text helper `0x1027f3cc`; this
+is presentation of a descriptor value, not an action call, and the descriptor
+producer/semantics remain unresolved. The selectable AF-area mapper and
+setter remain `0x10430c8c` and `0x1042b2d8`; Auto-area value 600 stores base
+mode 6/submode 0, with no direct call from that selection path to the native
+action helper. For UI event `0x27e`, dispatcher `0x103ce96e` calls filter
+`0x104e2cbc`; the filter first consults runtime key-to-function lookup
+`0x10460ba2`, which can invoke a registered callback. A separate matching
+screen-context path calls generic live-view input handler `0x102f1e10`
+(arguments include `r0=0`, `r1=1`). That handler compares input/status state
+through `0x102f1cae` and `0x102f0e1e`; a full direct-branch sweep found no
+direct edge from this handler to native action helper
+`0x10368b6e` or request service `0x1045a47e`. The callback table is reached
+through a runtime screen object, so the actual J callback and any indirect
+route from it to tracking remain unidentified. This strengthens the negative
+conclusion that the text label is not a demonstrated tracking hook, but does
+not establish camera-side J behavior or alter F-214's action-45 hook evidence.
+Read-only, hash-verified static decode, 2026-10-18; high confidence for the
+local dispatch/formatting edges, unresolved dynamic callback and descriptor
+semantics. No firmware bytes/dumps in the repository, no modified image, and
+no camera access.
+
+F-216. A bounded static audit of the private AE-L/AF-L candidate's storage
+and layout inputs did not clear its remaining patch-readiness gates. The
+worker candidate frame is 540 bytes, including 424 bytes added below the
+native worker's observed frame, and the enclosing known frame makes an
+848-byte prefix against a configured 8,192-byte task stack. This leaves a
+nominal 7,344 bytes before callees, but worst-case call-chain headroom is not
+verified. The proposed code spans total 1,408 bytes and data spans total 896
+bytes; the spot checks found zero-filled regions and no hits in the bounded
+pointer/branch scans, but they do not prove executable mapping or a complete
+code layout. The native Subject-tracking menu manifest requires 952 data
+bytes before an additional 72-byte navigation table; the candidate's reviewed
+data spans are insufficient, and the alternative added region remains only a
+candidate. No assembly encoding or complete overlay was produced. Therefore
+the candidate remains unsuitable for a camera test. Private static audit,
+2026-10-18; high confidence for the listed arithmetic and explicit audit
+limits, no conclusion about runtime reachability, complete layout, or camera
+behavior. No firmware bytes/dumps in the repository and no camera access.
+
+F-217. A private pinned-QEMU memory-only integration probe assembled and
+linked the current AE-L/AF-L candidate in memory, applied all 45 planned edits
+to guest RAM after booting the hash-verified stock image, and invoked the
+candidate action adapter twice from a deliberately constructed worker
+context. Both invocations completed, restored the context, and reached helper
+`0x10368b6e` with action 45 followed by the same `0x1045a47e` request tuple
+seen in F-214. The worker allocation observed in this run was 11,264 bytes.
+The original firmware hash remained unchanged and the pinned QEMU checkout
+was clean. This demonstrates composition, relocation, and repeated adapter
+dispatch in the tested synthetic context. The probe manually initialized the
+worker context and did not deliver a natural AE-L/AF-L press; the consumer
+object is unmodeled, so identical requests do not demonstrate the actual
+start-then-cancel transition. It also does not prove executable mapping in a
+camera load, worst-case stack headroom, or full image acceptance. Private
+memory-only pinned-QEMU run, 2026-10-18; high confidence for these bounded
+observations, no inference about natural admission or camera behavior. No
+firmware image written, no firmware bytes/dumps in the repository, and no
+camera access.
+
+F-218. A follow-up from the AF-area label catalog and the OK/J dispatcher
+separates a display label from the Z 30's selectable AF-area options.
+The block at `0x103edda0` is text, not an option or jump table; the label
+selection path at `0x103edc2e` supplies the `3D-TRACKING` label to a shared
+text-output helper. The actual selectable table rooted at `0x1074a688` has
+eight entries: Single-point AF; Wide-area AF (S), (L), (L-people), and
+(L-animals); Auto-area AF; Auto-area AF (people); and Auto-area AF (animals).
+Its Auto-area
+entries encode 600/601/602. Selecting Auto-area and confirming it reaches the
+AF-area setter, which stores base mode 6 and submode 0/1/2; it does not invoke
+the Subject-tracking action. The physical J/OK input maps to UI event `0x27e`
+and the generic key dispatcher invokes the active screen's callback. Static
+cross-references show a route from that dispatcher/filter family to the
+central live-view handler, but do not identify the shooting-view J callback
+or prove that it calls the native Subject-tracking action. A powered stock
+QEMU probe that directly invoked event `0x27e` hit only the dispatcher entry,
+not the live-view/action breakpoints; this synthetic call is inconclusive
+about the real callback. Accordingly, the 3D-TRACKING text is not evidence of
+a selectable Z 30 mode or the Subject-tracking hook. The build-relevant hook
+remains the action-45 route matched to Nikon's native Subject-tracking
+assignment handler in F-214. Read-only static decode and option-table
+enumeration, plus a bounded stock-QEMU synthetic event, 2026-10-18; high
+confidence for table contents and setter behavior, no conclusion about the
+live-view J callback or camera transition. No firmware bytes/dumps in the
+repository and no camera access.
+
+F-220. A bounded instruction-level trace of native action helper
+`0x10368b6e` narrows, but does not fully decode, the Subject-tracking toggle
+cycle. Selector `0x2d` (45) reaches a state-dependent branch using state from
+`0x1044dc5a`; it first checks a shared boolean gate through `0x1045a47e`,
+which reads byte `+5` from object `0xc23a51a8`. If the gate is clear, state
+0/1 dispatches through `0x1045a1ae` and posts internal event `0x3b`, state 2
+uses `0x1045a1e6`/event `0x3c`, and state 3 uses `0x1045a21c`/event `0x3d`.
+The gate object is distinct from the nearby state object at `0xc23a5368`; its
+0-4 byte-`+5` transitions cannot be attributed to tracking. No decoded string,
+property or hardware state ties events `0x3b`-`0x3d` to tracking start/end,
+and the gate's producer remains unresolved. This confirms that the action-45
+route is stateful inside Nikon's handler, consistent with the user-control
+start/stop contract in F-214, but it does not prove which branch starts or
+ends tracking or demonstrate a successful cycle. The camera-test question
+therefore remains a behavior test, not a reason to add a second patch-side
+state machine. Read-only, hash-verified static decode, 2026-10-18; high
+confidence for selector, branch conditions, object read and event-post edges;
+event semantics and camera behavior unconfirmed. No firmware bytes/dumps in
+the repository and no camera access.
+
+F-221. A follow-up trace of action 45 and the AF-area state mapper corrects
+the destination and semantics recorded in F-214 and F-220. Address
+`0x1045a47e` is a boolean gate: it calls `0x102240ac`, reads a separate
+status bit from object `0xc23a51a8`, and returns the boolean. It is not the
+request service, and the previously reported request tuple at that address
+is not confirmed. The action helper `0x10368b6e` calls state mapper
+`0x1044dc5a`, which snapshots 0x468 bytes and selects an internal state from
+snapshot offsets `+0x44`, `+0x61`, and `+0x62`. Base mode 6 with submode 0
+maps state bytes 0/2 to internal state 1 and byte 1 to state 0; submode 1
+maps byte 0 to state 2 and bytes 1/2 to state 3; submode 2 maps like
+submode 0. The `0x10368b6e` selector-45 branch then routes internal states
+0/1, 2, and 3 respectively through `0x1045a1ae`, `0x1045a1e6`, and
+`0x1045a21c`, subject to the shared boolean gate. The first helper calls
+`0x10230832`, the second `0x10230856`, and the third `0x10230866`; each then
+passes an internal value to `0x1046296e`, whose body is only `bx lr`, so
+these are not demonstrated event posts. `0x10230832` continues into
+`0x1019596e`, which checks AF-subsystem readiness/state and writes a
+mode-dependent byte before invoking further helpers, but those effects do
+not identify tracking start versus stop. Selector 45 therefore demonstrably
+consults AF-area mode/state and delegates to distinct native helper paths;
+this is stronger patch-design evidence for keeping the Auto-area AF
+precondition and using Nikon's action than F-214's request-service wording,
+but the snapshot fields' exact identity with public properties and the
+start/cancel semantics remain unproved. The candidate still lacks natural
+AE-L/AF-L hook admission, camera-load executable mapping, worst-case stack
+proof, and a complete test image. Read-only, hash-verified static decode,
+2026-10-18; high confidence for the listed control flow and instructions,
+medium for correlating snapshot bytes with the public Auto-area mode, and no
+conclusion on tracking start/stop or camera behavior. No firmware bytes/dumps
+in the repository and no camera access.
+
+F-222. A bounded continuation through the action-45 helper callees shows how
+the people submode diverges, without resolving the helper semantics. For
+base mode 6/submode 1, the mapper's state 0 becomes internal state 2 and
+reaches `0x1045a1e6` -> `0x10230856` -> `0x10162f14` -> `0x1007756e`; state
+1 or 2 becomes internal state 3 and reaches `0x1045a21c` -> `0x10230866` ->
+`0x10162f18` -> `0x100775c6`. The last two routines operate on a shared
+configuration/state object (including fields at offsets `+0x10`, `+0x1c`,
+`+0x20`, `+0x38`, `+0x39`, `+0x40`, `+0x624`, `+0x628`, and `+0x629`),
+with branches on that object's state and results from shared config helpers.
+For submodes 0 and 2, both mapped states 0 and 1 reach the same helper chain
+`0x1045a1ae` -> `0x10230832`; it passes input 0 to `0x1019596e`, whose
+readiness-gated path writes byte 6 to an AF-related object field (input 1
+would write 7, but action 45's observed caller supplies 0). These are
+stateful operations, not semantic labels. No decoded evidence identifies
+which helper means tracking start, cancellation, or another AF operation;
+the manual remains the only source for the external start-on-press / stop-on-
+second-press contract. This narrows the static map and confirms native
+state-dependent handling, but does not verify the camera cycle or make the
+candidate test-ready. Read-only, hash-verified Thumb disassembly,
+2026-10-18; high confidence for call chain and literal field accesses, no
+confidence assigned to start/stop labels. No firmware bytes/dumps in the
+repository and no camera access.
+
+F-223. Reinspection of the queued-input consumer corrects a prior physical
+input attribution. Handler `0x103a3d14` processes event code `0x2083` and
+constructs logical ID/operation records; consumer `0x103a3f9e` maps each
+record ID through the selected table, applies the mapped mask to staging word
+`0xc18c9a68`, and calls setter `0x101e383a` if the staging word changes.
+It does not read a physical SW-bank word. `0x115c694c` belongs to the
+surrounding module's object/initialization path and is not the consumer's
+input word. Thus the separate facts “ID 41 maps to mask `0x2000`” and
+“AEAF_LOCK is named with mask `0x2000`” do not establish physical button
+delivery to ID 41 or to the candidate accessor hook `0x102f14b2`. The one-button action-45
+design remains separate, but its physical AE-L/AF-L admission is unresolved.
+Read-only bounded review of hash-verified Thumb disassembly, 2026-10-18; high
+confidence for this consumer's data flow, no conclusion on hardware
+transport. No firmware bytes/dumps in the repository and no camera access.
+
+F-224. The candidate hook address `0x102f14b2` is the common exit inside
+record accessor `0x102f1412`: it unlocks the accessor's mutex, moves the
+selected record pointer from `r4` to the return register, and returns it.
+The accessor can select the 400-byte-stride ring at `0xc2008ea0` or the
+separate record at `0xc200a7a0`, depending on its mode argument. Therefore
+`0x102f14b2` is an accessor-return hook, not a copy operation or a physical
+button handler. It gives the candidate a selected-record pointer, but the
+record's physical AE-L/AF-L provenance remains unproved. This refines F-212's
+hook description and makes the unresolved trigger boundary explicit. Static
+reinspection of hash-verified Thumb disassembly, 2026-10-18; high confidence
+for instruction placement and return data flow, no conclusion on physical
+input origin. No firmware bytes/dumps in the repository and no camera access.
+
+F-225. The candidate's ring-record mask checks are consistent with the
+paired mask-difference record built by `0x102f199a`; they are not internally
+contradictory. Helper `0x101dd502` stores its two inputs at relative offsets
+0/+4, their XOR at +8, first-input-only bits at +12, and second-input-only
+bits at +16. The first block begins at record offset +4 and is built from
+`input1 | input2` versus `input2`. Thus the candidate's checks at record
+offsets +4/+8/+12/+16 for bit `0x2000` set/clear/set/set describe a bit
+present only in `input1` for that pair. The builder's callers are
+`0x1039e1d4` and `0x1046497e`; neither caller by itself proves that this bit
+originated at physical AE-L/AF-L. The candidate's edge predicate is therefore
+structurally plausible, but its source attribution remains unresolved. Static
+reinspection of hash-verified Thumb disassembly, 2026-10-18; high confidence
+for record layout and bit algebra, no physical-input conclusion. No firmware
+bytes/dumps in the repository and no camera access.
+
+F-226. A focused re-read of the configurable-button routines narrows the
+AE-L/AF-L remap design and corrects the role of the apparent dispatcher
+sites. Fn1's configured-action handler `0x1036957c` reads setting `0x1150`,
+recognizes action value `0x4d` (77), and calls Nikon's Subject-tracking helper
+`0x10368b6e`. AE-L/AF-L's separate handler `0x10369468` reads `0x1184` (and
+`0x1187` in its alternate mode), tests values 25 and 42, and does not call
+action 45. The callers at `0x103020b4` and `0x10302108` are part of a
+dispatcher that combines the handlers' returned bits into a status mask;
+they are not established physical-key action callbacks and should not be
+used as the remap hook. The sound patch design remains to detect a fresh
+physical AE-L/AF-L press and invoke the native action-45 handler, but the
+candidate input record's physical source is still unknown (F-223–F-225).
+The evidence does not yet establish whether the camera's AE-L/AF-L menu can
+be extended to offer action 77 or whether a direct button-route patch is
+needed. Auto-area AF remains the correct operating precondition. Static
+Thumb control-flow review of the hash-verified image, 2026-10-18; high
+confidence for these function relationships and return-mask use, no
+conclusion on physical admission, menu behavior, or camera cycle. No
+firmware bytes/dumps in the repository and no camera access.
+
+F-227. The registered input-snapshot callback `0x102f2eae` is a more direct
+AE-L/AF-L route candidate than the unproven record-accessor hook. It calls
+`0x102f0d14`, which updates/compares the input snapshot and returns a broad
+change indication; the callback then checks mask `0x2000` in its input record.
+When the AE-L/AF-L assignment setting `0x1184` equals 9 (AF-ON), that branch
+posts event `0x14` through `0x1044e68c`. This connects the named AEAF_LOCK
+switch mask to the existing AE-L/AF-L assignment behavior and event route.
+However, the branch tests the current bit after any qualifying snapshot
+change; the reviewed code does not show a per-button rising-edge check. An
+unrelated input change while AE-L/AF-L is held could therefore re-enter this
+branch. A patch that substitutes action 45 here needs a verified per-button
+fresh-edge guard and must preserve the stock AF-ON path when that assignment
+is selected. Static Thumb review of the registered callback and comparator,
+2026-10-18; high confidence for the observed conditional/event flow, no
+conclusion that the callback runs only on a physical press or that action 45
+can be safely inserted. No firmware bytes/dumps in the repository and no
+camera access.
+
+F-228. F-226's warning about calls `0x103020b4` and `0x10302108` was too
+strong: those sites are within the same input/action dispatcher family that
+also calls Fn1 handler `0x1036957c`, whose value-77 path invokes action 45.
+Their return values are combined into a mask, but that alone does not make
+the sites mere status queries or rule them out as part of action routing.
+The calls specifically reach AE-L/AF-L handler `0x10369468`; its reviewed
+body still does not invoke action 45. The unresolved point is how the
+dispatcher cases are selected from physical key input and whether extending
+the AE-L/AF-L handler is the correct remap seam. Treat the dispatcher as a
+live candidate for that trace, not as either a confirmed physical callback
+or an excluded hook. Static reinspection of the shared input/action switch,
+2026-10-18; high confidence for the sibling call/callee behavior, no
+conclusion on physical-key delivery. No firmware bytes/dumps in the
+repository and no camera access.
+
+F-229. A separate live-view input mapper walks the group-1 mask table and
+maps mask `0x2000` to logical input ID 13; the UI input table maps ID 13 to
+event `0x28b`, whose indexed label is “AE-L/AF-L button.” The registered
+snapshot callback `0x102f2eae` tests the same `0x2000` bit and routes the
+existing AF-ON assignment. This gives the callback a stronger native
+AE-L/AF-L link than the candidate ring-record accessor currently has, but
+the candidate's dispatcher also explicitly admits logical ID 13. The
+mask-to-ID table and candidate ID gate therefore align; the remaining source
+gap is whether its paired ring-record fields are produced from that same
+physical input route. The private candidate adds the verified “Subject
+tracking” label to the AE-L/AF-L assignment list as value 77, writes that
+value to setting `0x1184`, and routes it through native action 45. This
+verifies the intended menu/action mapping in the candidate layout, not that
+it has been shown or saved by a camera. A memory-only QEMU probe sent
+synthetic event `0x27e`
+through dispatcher `0x103ce96e`; it reached generic dispatch lookup but no
+registered callback, action 45, or AF-area setter was observed. A separate
+prior probe of event `0x28b` likewise observed no downstream action. These
+are simulator-path limits, not evidence that the real firmware lacks the
+callback. The current private candidate adds “Subject tracking” to the
+AE-L/AF-L assignment menu as value 77 and routes it to native action 45. Its
+logical-ID-13 admission matches the AE-L/AF-L input table, so the remaining
+physical source uncertainty is covered by the owner's recorded device-test
+disposition after all other gates pass. No complete candidate-side
+start/held/release/second-edge cycle has been verified; no camera access.
+Static hash-verified
+input-map review and pinned-QEMU synthetic dispatcher probe, 2026-10-18; high
+confidence for table/callback relationships, low confidence for simulator
+event reachability, no claim about physical press or cycle behavior. No
+firmware bytes/dumps in the repository.
+
+F-230. A sequential memory-only QEMU probe exercised the private AE-L/AF-L
+candidate with fresh, held, release, and second-fresh records. The two fresh
+edges each passed the candidate guard and completed the adapter with exactly
+one call to Nikon's native action helper `0x10368b6e` (selector 45); held and
+release records were rejected with no action call. The probe also exercised
+the candidate's dispatch-finish cleanup block using a constructed caller
+frame, and the recorded ABI save/restore cases passed. This verifies edge
+arbitration and request dispatch in that constructed candidate context. It
+does **not** verify that the first native call starts tracking or that the
+second stops it: the AF consumer is unmodeled, the complete context dispatch
+was not naturally traversed, and the guest candidate was applied through
+debugger memory writes rather than loaded as a private overlay. The hook's
+natural physical-button admission, camera-load executable mapping, worst-case
+stack margin, and full-image acceptance remain open. Thus the sequence closes
+the bounded dispatch-control check only; it does not make the candidate
+camera-testable. Read-only pinned-QEMU run with hash-verified stock image and
+private candidate, 2026-10-18; high confidence for the observed guard,
+adapter calls, and constructed cleanup block, no claim about consumer state
+or natural input. No firmware bytes/dumps in the repository and no camera
+access.
+
+F-231. Continued the action-45 state trace through the native AF snapshot
+producer. Mapper `0x1044dc5a` reads snapshot bytes `+0x61` and `+0x62`; the
+producer copies these from internal AF-context bytes `+0x364` and `+0x365`
+of the structure rooted at `0xc237c7b4`. The context builder
+`0x101925ee` constructs its `+0x2b8` subcontext from the live AF object, and
+`0x101914ae` populates state slots corresponding to global offsets `+0x364`
+and `+0x365` from mode-dependent branches. In one branch the state byte is
+copied from an AF subcontext field at `+0x25`; other branches initialize it
+to zero or set the companion discriminator byte. These instructions establish
+that the action mapper consumes a real AF-context state tuple, but neither
+the state byte nor its values is named as tracking-active/inactive in the
+decoded code. They do not label a branch as tracking start or cancel.
+
+A separate disposable-QEMU probe called native Auto-area setter
+`0x1042b2d8` with encoding 600 and read back properties `0x0c2b == 6` and
+`0x0c3d == 0`; it also set the state property read by the AF snapshot builder
+to 6 and the native Fn assignment to 77. Despite these successful property
+readbacks, action 45's mapper returned state 5 on each of three Fn-handler
+calls, and no Auto-area helper path was reached. The stock simulator fixture
+therefore does not populate the native AF snapshot consistently with those
+menu properties and cannot verify the start/cancel transition. The manual's
+assigned-control cycle and the candidate's two fresh action-45 dispatches
+remain consistent with the intended design, but neither substitutes for an
+observed consumer transition. Read-only hash-verified Thumb decode using
+LLVM disassembly plus pinned-QEMU guest-RAM calls, 2026-10-18; high confidence
+for the observed snapshot copy and setter/readback/mapper results, no
+confidence assigned to start/cancel labels. No firmware bytes/dumps in the
+repository and no camera access.
+
+F-232. Rebuilt the private AE-L/AF-L Subject-tracking candidate with the
+installed LLVM assembler/disassembler, bypassing the unavailable local
+Capstone Python package. The link/layout audit placed 964 code bytes in the
+planned 1,408-byte code regions, checked 24 relocations, all 15 four-byte
+hook windows, and 45 total edits; the candidate remains private. QEMU's
+generic loader loaded 35 merged overlay regions before guest resume, and
+read-back matched every overlay byte. The stock firmware hash and pinned-QEMU
+checkout remained unchanged. A pinned-QEMU sequence through the loaded
+candidate then accepted synthetic fresh ID-13-shaped records and dispatched
+native action 45 exactly once per fresh edge; held/release records dispatched
+nothing. Constructed cleanup and ABI controls passed. These results validate
+candidate assembly/layout and no-debugger-write overlay loading in QEMU, not
+the camera's executable mapping, natural physical-button admission, AF
+consumer start/cancel semantics, or worst-case stack headroom. The candidate
+is still not ready for a camera test. Private pinned-QEMU run, 2026-10-18;
+high confidence for assembly/layout and observed simulator behavior, no claim
+about the native tracking cycle or real camera. No firmware bytes/dumps in
+the repository and no camera access.
+
+F-233. Rechecked executable mapping after F-232 using the current startup and
+task-table state. The startup TTBR0 table at `0x10030000` maps candidate code
+VA section `0x10000000` with a valid section descriptor and XN clear (ARMv7-A/R
+short-descriptor rules). A full LLVM ARM/Thumb scan also found later TTBR0
+writers: scheduler context paths load an optional table pointer from task
+context offset `+0xc0`, and a context-switch helper can replace TTBR0 while
+temporarily disabling the MMU. In pinned QEMU, the candidate task's `+0xc0`
+override was zero, while the active TTBR0 was a runtime table in RAM. A
+read-only `ATS1CPR` probe reported the candidate VA resolving outside the
+simulator's modeled RAM, although the same loader-based overlay executed from
+that VA in QEMU. The simulator result therefore does not establish the
+camera's runtime physical backing or load-time executability; the reset table
+alone is insufficient because runtime TTBR0 can differ. The executable
+mapping gate remains open pending static tracing of the task's inherited
+runtime table setup. Read-only original-image decode and pinned-QEMU register
+probe, 2026-10-18; high confidence for the listed instructions/register
+results and reset-table descriptor, low confidence that the simulator's
+ATS/MMU result models camera physical mapping. No firmware bytes/dumps in the
+repository and no camera access.
+
+F-235. Repeated the private pinned-QEMU stack watermark with the validated
+loaded-overlay and fresh-edge/action setup. The worker TCB reports an
+11,264-byte stack. With a 2,048-byte canary below the constructed action-call
+SP, first-fresh dispatched native action 45 once and changed 1,364 canary
+bytes; held and release dispatched no action; second-fresh dispatched action
+45 once and changed 1,324 bytes. The candidate adapter returned with context
+restored, constructed cleanup passed, and the bounded sequence completed.
+This gives a measured watermark only for the constructed path and does not
+establish worst-case headroom under natural worker admission, all interrupt/
+scheduling conditions, or a fully modeled AF consumer. It reduces uncertainty
+but leaves the stack gate open. This corrects the harness failure in F-234;
+that first run remains invalid. Private output stayed outside the repository,
+2026-10-18; high confidence for observed bounded QEMU canary/action behavior,
+no claim about worst-case camera stack use. No camera access or firmware bytes
+in the repository.
+
+F-236. Static Thumb disassembly traced the action-45 AF-state consumer. Caller
+`0x1044dcbe` invokes mapper `0x1044dc5a` and continues to helper `0x1045a21c`
+only when the mapper returns numeric state 2. State 2 requires snapshot byte
+`+0x44 == 6`, `+0x61 == 1`, and `+0x62 == 0`; this mode value matches the
+Auto-area base mode in F-215/F-231. The QEMU mapper result 5 takes the native
+reject branch, explaining why its action-45 probe never reached the helper.
+The accepted helper calls `0x10230866`, which invokes stateful routine
+`0x100775c6`, then forms an event-code `0x3d` request via `0x1046296e`; that
+target is a return-only stub in the verified image. The fields and stateful
+routine have no tracking-active/inactive labels in available evidence. This
+identifies a real AF-state precondition and static route, not proof of Subject-
+tracking start/cancel or event delivery. Candidate edge controls do not
+override the native state gate. Read-only LLVM Thumb disassembly,
+2026-10-18; high confidence for numeric comparisons and call edges, no
+confidence assigned to start/cancel semantics. No camera access or firmware
+bytes in the repository.
+
+
+F-237. Scope correction to F-236: `0x1044dcbe` is a separate caller of mapper
+`0x1044dc5a`, not the principal action-45 selector `0x10368b6e`. The
+state-2-only condition and tuple (`+0x44 == 6`, `+0x61 == 1`, `+0x62 == 0`)
+apply only to the separate caller's route to `0x1045a21c`. The main selector
+continues to handle mapped states 0-3 as recorded in F-221/F-222; in Auto-area
+submodes 0/2, states 0/1 route to `0x1045a1ae`. QEMU's observed state 5
+rejects its current path but does not establish state 2 as the sole accepted
+action-45 state. F-237 supersedes that overbroad interpretation while
+preserving F-236's separate-call-site condition. Read-only LLVM Thumb
+cross-check, 2026-10-18; high confidence in caller separation and documented
+branch map, no confidence assigned to action start/cancel. No camera access or
+firmware bytes in the repository.
+
+F-238. Corrected and exercised the AE-L/AF-L snapshot rising-edge candidate.
+The shared updater's four-byte instruction begins at `0x102f0d30`; the earlier
+prototype's `0x102f0d32` address lands on its second halfword and is not a
+valid hook boundary. The corrected private candidate replaces the aligned
+instruction, compares the current and previous snapshot's `0x2000` bit, checks
+assignment value 77, and enters Nikon's native action 45 only on a rising
+edge. LLVM assembly/link validation checked 27 relocations, 16 hook windows,
+and 47 edits in the private manifest. A pinned-QEMU private-loader run
+read back 39 overlay regions and drove synthetic fresh/held/release/fresh
+snapshots; action 45 was entered once, zero, zero, and once. The test used a
+private return trampoline after the shim, so it did not execute the native
+snapshot-update tail. The updater has seven direct callers, and their task
+stack/context suitability for an inline native action remains unresolved.
+This verifies synthetic edge arbitration and dispatch, not physical button
+admission, camera-load mapping, worst-case stack, native tracking
+start/cancel, or full-image acceptance. Read-only Thumb review, LLVM candidate
+link, and pinned-QEMU synthetic records, 2026-10-18; high confidence for the
+aligned hook boundary and observed test sequence, no claim about physical
+input or tracking state. No camera access or firmware bytes in the repository.
+
+F-239. Narrowed the plain Auto-area action helper without assigning toggle
+semantics. The main action-45 selector routes plain Auto-area states through
+`0x1045a1ae`; it clears an AF-related object field at `+0x40` and calls
+`0x10230832`. That wrapper reads an input byte and passes it to `0x1019596e`,
+which has several readiness/status checks and writes byte 6 for input 0 or
+byte 7 for input 1 at an AF-related object offset `+0x38` before its remaining
+update calls. The helper then forms event `0x3b` through `0x1046296e`, a
+return-only stub in this image. These are real state mutations and gates, but
+available static labels do not identify the field as Subject-tracking state
+or establish whether the two values mean inactive/active. Thus action 45's
+plain Auto-area start/second-press cancel cycle remains unproved. Read-only
+LLVM Thumb control/data-flow review, 2026-10-18; high confidence for the
+branch and writes, no confidence assigned to feature meaning. No camera
+access or firmware bytes in the repository.
+
+F-240. The shared snapshot updater's seven direct callers are not equivalent
+hook contexts. Paired-record builder `0x102f199a` calls the updater twice,
+first with `sp` and later with `sp+0x18c`, after reserving a `0x31c`-byte
+local frame. An inline action-45 hook at the common updater therefore adds
+the native action stack to more than one caller context, including this
+already-deep frame. Callback `0x102f2eae` is one of seven callers. The other
+small wrappers have only 8-16 bytes of explicit frame in the reviewed windows,
+but their task/thread identities and available stack are not established. A
+callback-only hook is narrower but may miss an edge if another caller updates
+the shared previous snapshot first. This leaves an unresolved tradeoff between
+edge completeness and known stack context; no site is yet camera-testable.
+Read-only LLVM Thumb call-site review, 2026-10-18; high confidence for direct
+call shapes and builder frame size, task context remains open. No camera
+access or firmware bytes in the repository.
+
+F-241. Reinspection of the configurable-function switch identifies a more
+direct remap hypothesis than the shared snapshot updater. Dispatcher
+`0x10301f36` switches on a function-code argument; its code `0x2d` branch
+calls Fn1 handler `0x1036957c`, which reads Fn1 assignment property `0x1150`
+and calls native Subject-tracking action 45 when the value is 77. Its
+AE-L/AF-L handler `0x10369468` reads assignment properties `0x1184` or
+`0x1187`, but its reviewed branches recognize 25 and 42 and do not accept 77.
+This suggests extending the AE-L/AF-L handler to route value 77 to action 45,
+or mapping its function-code branch through the existing Fn1 handler. The
+dispatcher also assembles a status mask, and this review does not establish
+that the switch is entered exactly once per physical fresh press or that
+reusing the Fn1 handler preserves AE-L/AF-L context. Therefore neither
+variant is selected as a patch yet. The immediate build decision is to trace
+the dispatcher caller's input/code semantics and compare the handlers'
+arguments, side effects, and return contract; retain the snapshot-edge
+candidate only as fallback. Read-only LLVM Thumb disassembly, 2026-10-18; high
+confidence for the numeric switch and handler branches, no claim for physical
+press semantics or Subject-tracking cycle. No camera access or firmware bytes
+in the repository.
+
+F-242. A private pinned-QEMU probe tested the narrow AE-L/AF-L handler
+extension proposed in F-241. A temporary guest-memory branch at
+`0x103694a4` sent assignment value 77 through a helper that preserves the
+existing 42 and default branches and calls `0x10368b6e` for value 77. A
+constructed call to handler `0x10369468` observed action-45 entry for 77;
+values 42 and 25 reached their original handlers (`0x103691fc` and
+`0x1036845a`). The hook and helper bytes were restored before QEMU exited;
+the verified firmware file and pinned simulator checkout hashes/state were
+unchanged. This proves a synthetic handler-level branch and preservation of
+these two sampled alternatives, not that function code 13 is invoked by a
+fresh physical AE-L/AF-L press, that held input does not repeat, or that
+action 45 toggles tracking off on a second press. Read-only source review,
+temporary memory-only QEMU probe, 2026-10-18; high confidence for observed
+synthetic branch behavior, no physical-input or cycle claim. No camera access
+or firmware bytes in the repository.
+
+F-243. The configurable-function dispatcher does not yet provide a proven
+physical-button route to the remap. A full-image Thumb BL/B.W immediate scan
+found only one direct caller of `0x10301f36`, at `0x10302270`. Its enclosing
+callback `0x10302220` admits only input values `0x1a`, `0x1b`, and `0x1c`
+before passing the value to the dispatcher. In the dispatcher's first TBB,
+AE-L/AF-L handler `0x10369468` is index 13 and Fn1 handler `0x1036957c` is
+index 45; the admitted 26/27/28 values map to other handlers. A second
+high-range table also contains an AE-L/AF-L status call, but is not reachable
+through the observed direct caller's admitted values. No literal function
+pointer to dispatcher `0x10301f36` was found in the image, although computed
+or runtime registration paths are not excluded. Therefore F-241/F-242 prove
+only a handler-level implementation route, not its connection to the physical
+AE-L/AF-L button. Next identify the producer/registration for callback
+`0x10302220` and search for other indirect invocations of the dispatcher; if
+that cannot connect code 13 to an AE-L/AF-L edge, return to the input-chain
+edge source. Read-only immediate scan and TBB index decode, 2026-10-18; high
+confidence for direct callsites and table indices, no claim that the runtime
+callback table is exhaustive. No camera access or firmware bytes in the repo.
+
+F-244. A bounded direct-call attempt to execute registered snapshot callback
+`0x102f2eae` in pinned QEMU did not complete. The probe supplied a synthetic
+396-byte record with AE-L/AF-L mask `0x2000` and observed no native action-45
+entry before the thread-aware call timed out. The synthetic record's validity
+and callback's scheduling/return contract are not established, so this is
+not evidence that the real callback fails or that the action route is absent.
+The disposable QEMU process exited, the private firmware identity was
+unchanged, and the simulator checkout remained clean. Do not repeat this
+same direct-call setup; use static registration/call-context tracing or a
+natural simulator event only if it can inform the named hook decision.
+Temporary memory-only QEMU diagnostic, 2026-10-18; high confidence for the
+timeout and absence of observed action entry in this attempt, no inference
+about natural callback behavior. No camera access or firmware bytes in repo.
+
+F-245. The shooting-view OK/J route remains screen-specific and runtime-bound.
+In the generic key filter, event `0x27e` is offered to key-to-function lookup
+`0x10460ba2` with table base `0xc183d150` and count four. The lookup scans
+`(key, callback)` entries and invokes a matching non-null
+callback through `blx r3`; it does not encode a static Subject-tracking
+target. Separately, label routine `0x103edc2e` formats the `3D-TRACKING` text
+through output helper `0x1027f3cc`, while the selectable AF-area table remains
+the eight-entry table at `0x1074a688`; Auto-area setter `0x1042b2d8` stores
+mode 6 and submode 0 for value 600. Therefore AF-area selection supplies an
+eligibility state but does not activate tracking. A synthetic stock-QEMU
+shooting-view `0x27e` dispatch reached the generic screen dispatcher, but no
+callback-table lookup or native action 45 was
+observed. The runtime callback target and its connection to action 45 remain
+unresolved, so this trace does not displace the native action-45 remap
+hypothesis for AE-L/AF-L. Read-only Thumb disassembly plus the bounded
+synthetic QEMU probe, 2026-10-18; high confidence for the static lookup shape
+and AF-area/label distinction, no claim for the runtime callback target,
+physical J delivery, or tracking cycle. No camera access or firmware bytes in
+the repository.
+
+F-246. A follow-up read-only QEMU observation sampled the runtime key callback
+table at `0xc183d150` after the standard simulated live-view setup. Its four
+entries were keys `0x161b`, `0x23e4`, `0x1536`, and `0x14c2`; their callback
+targets were respectively `0x104e2e85`, `0x104e2ea1`, `0x104e2ec7`, and
+null. The three decoded callback bodies perform state checks and populate
+small response records; none directly calls native action 45. A fresh
+synthetic event `0x27e` through dispatcher `0x103ce96e` stopped at generic
+screen handler `0x103ce804`; breakpoints on key filter `0x104e2cbc`, lookup
+`0x10460ba2`, all three table callbacks, and action 45 did not fire. This
+confirms that this simulator input does not reach the active callback lookup,
+not that the camera lacks a J action. No competing static J hook was
+identified, so action 45 remains the stronger remap target for AE-L/AF-L.
+Read-only guest-RAM inspection and breakpoint observation in pinned QEMU,
+2026-10-18; high confidence for sampled table contents and observed stops,
+limited to this simulated screen setup. No firmware bytes/dumps in the repo
+and no camera access.
+
+F-247. The two AE-L/AF-L trigger implementations must not be combined without
+shared edge arbitration. The newer private production overlay installs both
+`0x102f0d30` (`snapshot_edge_hook`) and `0x102f14b2` (`copy_hook`). On a fresh
+`0x2000` snapshot edge with assignment 77, the first path calls action 45
+inline on the shared-updater caller. The second path captures a ring-record
+edge and reaches action 45 through the worker adapter. F-238 and F-230/F-235
+test these paths independently; no integrated test proves that one physical
+press cannot traverse both. If it does, the native toggle may receive two
+requests. The common updater also has seven callers, including the
+`0x31c`-frame builder, so its inline action retains the F-240 stack/context
+risk. Select the worker-mediated `0x102f14b2` design as the sole patch
+candidate and omit the common-updater action hook. This preserves the
+constructed fresh/held/release/fresh behavior and measured worker-path stack
+watermark while making the physical input source an explicit device-test
+item. The candidate is still not testable until executable mapping, full
+image/layout acceptance, and the required hardware-readiness checks are
+closed. Static comparison of the two private manifests and hook bodies,
+2026-10-18; high confidence for independent action paths and potential
+double-dispatch, no claim that natural camera input traverses both. No camera
+access or firmware bytes in the repository.
+
+F-248. Audited the selected worker-only accessor hook's return contract. At
+`0x102f14b2`, stock code loads the mutex address and adds `0x20` before its
+unlock call; the latter `ADDS` defines flags consumed by the continuation.
+The candidate performs the same address load and addition after its checks,
+so the continuation sees the stock return pointer and NZCV result. The hook
+restores `r0-r3`, `r5-r7`, and LR around its probe, leaves `r4` and `r8-r11`
+untouched, restores SP, then reaches the original unlock/return tail. This
+closes the local call-site register/flag/return review for the worker hook,
+not a complete ABI audit of all 15 hooks or worst-case task-stack proof. The
+worker-only overlay has separate loader-based QEMU execution evidence (F-232,
+F-235); `guest_execution: false` in its generated build manifest is a
+pre-execution default, not the final run status. Camera-load mapping and
+complete-image acceptance remain open. Read-only Thumb disassembly, candidate
+assembly review and existing private QEMU reports, 2026-10-18; high
+confidence for the reviewed hook boundary and continuation contract, no
+claim for natural key delivery or camera execution. No camera access or
+firmware bytes in the repository.
+
+F-249. A bounded follow-up to the runtime mapping question found a later
+ARM-mode MMU setup sequence: `0x11c9e784` disables the MMU, `0x11c9e788`
+loads a literal whose value is `0xc11f8000`, and `0x11c9e78c` writes it to
+TTBR0 before the sequence reenables the MMU. The translation table is in RAM
+outside the captured firmware module, so its descriptor for candidate VA
+`0x1002d000` cannot be read from this module. The independent scheduler path
+can also install a per-task TTBR0 table from context offset `+0xc0` (F-233).
+This narrows the mapping blocker but does not prove whether this later setup
+is the table inherited by the camera's worker or whether its candidate-page
+mapping is executable. Further simulator translation probes cannot supply
+the missing table contents. Read-only full-image ARM disassembly and literal
+decode, 2026-10-18; high confidence for the MMU/TTBR write sequence and
+literal value, no claim about the runtime table descriptor or camera task
+mapping. No camera access or firmware bytes in the repository.
+
+F-250. Checked for a direct executable-cave alternative in the 1 MiB address
+sections containing the candidate's trigger, action and menu hook sites
+(`0x10200000`, `0x10300000`, `0x10400000`). The verified module contains no
+zero-filled run of even 32 bytes in those sections; the candidate needs about
+964 bytes of code. This rules out a simple relocation into an existing empty
+span in those hook-related sections, not every possible reuse of dead code.
+The current candidate's only reviewed capacity remains in section
+`0x10000000`, whose runtime descriptor is unavailable (F-249). Moving code
+into existing functions would be a new redesign with additional behavioral
+and ABI risk. Read-only zero-span scan of the verified module, 2026-10-18;
+high confidence for the checked intervals and threshold, no claim that all
+nonzero code spans are live. No camera access or firmware bytes in the repo.
+
+F-251. Added an isolated QEMU 10.2.4 read-only diagnostic for the runtime
+translation used by the candidate VA page. The display machine's modeled RAM
+already covers the firmware's table address at `0xc11f8000`. After the
+standard assisted live-view diagnostic setup, a probe read the current TTBR0/TTBCR and
+the computed L1 entry for `0x1002d000`; it decoded as a valid section mapping
+with XN clear. The target falls in modeled display RAM, and the entry agrees
+with an `ATS1CPR` translation of `0x1002da00` with no translation fault. The
+diagnostic routine executed from the same candidate VA page and returned with
+its caller context restored. This run used the current diagnostic task, not a
+verified tracking-worker context, so it does not close the worker-specific
+mapping question or establish camera equivalence. Read-only CP15 observation
+and QEMU physical-memory inspection with the original C1.20 firmware loaded,
+2026-10-18; high confidence for this QEMU configuration, no claim for the
+physical camera. No firmware bytes/dumps in the repository and no camera
+access.
+
+F-252. Repeated the tracking-worker breakpoint check after the standard
+assisted live-view setup using a thread-aware, read-only QEMU wait. The guest
+ran for 20 seconds without reaching worker entry `0x102f7448`; the check
+therefore did not capture worker registers or its active TTBR0 descriptor.
+This is consistent with F-213's finding that the simulator did not exercise
+the worker entry/cleanup path. It does not establish that the real firmware
+worker is unreachable or that its camera mapping is invalid. No QEMU source
+was changed. This closes the current simulator-only attempt; further
+scheduler/fidelity work has no new build-relevant evidence unless a specific
+new worker stimulus becomes available. Private pinned-QEMU run, 2026-10-18;
+high confidence for the bounded timeout, no inference about camera scheduling
+or memory mapping. No camera access or firmware bytes in the repository.
+
+F-253. Re-ran the read-only CP15 mapping probe in the standard assisted
+live-view QEMU context and recorded the active TTBR0 base as `0xc2ad4000`.
+Its entry for candidate VA `0x1002d000` is a valid executable section mapping
+to modeled display RAM, consistent with the `ATS1CPR` result. A GDB write
+watchpoint on that exact entry did not fire during an eight-second post-setup
+window, so this run observed no subsequent change to the diagnostic task's
+entry. This is a different runtime table from the later static setup path at
+`0xc11f8000` (F-249); the result still does not identify the tracking worker's
+context or camera mapping. No more simulator scheduling work is justified
+without a new worker stimulus. Isolated pinned-QEMU run with read-only CP15
+and memory observations, 2026-10-18; high confidence for the reported QEMU
+context only. No camera access or firmware bytes in the repository.
+
+F-254. Added a bounded USB identity/capability probe that sends only standard
+PTP GetDeviceInfo (`0x1001`, transaction ID zero) to the Z 30 USB ID. It
+reports manufacturer, model, device version and advertised operation codes;
+it does not call any Nikon vendor operation or request memory, properties,
+objects or images. The operation list can guide a later source review, but it
+is not permission to invoke an unknown operation and does not expose runtime
+TTBR0. Synthetic parser/container tests pass; no camera was connected or
+queried. The implementation stops if the PTP interface cannot be claimed and
+does not detach a driver or change a USB configuration. CIPA PTP-IP operation
+rules permit transaction ID zero for GetDeviceInfo; local source review and
+synthetic tests, 2026-10-18; high confidence for the command generated by the
+tool, no hardware/driver claim. No camera access or firmware bytes in the
+repository. See `camera-readonly-identity-method.md`.
+
+F-255. The new tool's host-side libusb initialization and USB descriptor
+enumeration succeeded, and found zero devices matching the Z 30 USB ID. The
+check did not open any device or send a PTP request. This verifies the local
+enumeration path and matches the owner's report that the camera is not yet
+connected; it does not test the camera interface or PTP transaction. Read-only
+local USB enumeration, 2026-10-18; high confidence for this host snapshot,
+no camera contact or firmware data. See F-254.
+
+F-256. The ctypes layouts used to inspect libusb device, endpoint, interface,
+and configuration descriptors match the installed libusb C header on this
+host: sizes 18, 32, 40, 16, and 40 bytes, with the accessed field offsets
+matching the C ABI. This reduces descriptor-parsing ABI risk in the prepared
+GetDeviceInfo preflight, but does not verify the USB transport against a
+camera. Local Python ctypes/C compiler comparison against the installed
+libusb header, 2026-10-18; high confidence for this host's ABI. No camera
+contact or firmware data.
+
+F-257. With the owner reporting the camera plugged in, macOS IORegistry showed
+a Nikon Z 30 USB device (`04b0:0452`, USB release `0x0120`). The reviewed PTP
+probe and a separate native C program using installed libusb 1.0.30 each
+enumerated zero devices. Running the documented probe stopped at device
+selection before opening a handle or sending a PTP command. This establishes
+a host transport mismatch, not camera PTP support or firmware version. Read-
+only IORegistry metadata and libusb enumeration, 2026-10-18; high confidence
+for this host snapshot. No serial number, camera command, or firmware data.
+
+F-258. Re-ran the documented `--read-device-info` probe with host USB access
+after the sandboxed libusb path failed. Its sole request, standard PTP
+GetDeviceInfo (`0x1001`), succeeded and reported Nikon Corporation, model
+Z 30, device version V1.20, and the advertised operation list; the serial was
+not returned or saved. The list contains familiar Nikon property, live-view,
+and object operations covered by the prior review, plus `0x9535`, which is
+not identified in the local reviewed references. Do not invoke `0x9535` or
+any other unreviewed vendor operation. This confirms a working host-access
+path for identity and capability inventory, not live-memory access. Reviewed
+probe run, 2026-10-18; high confidence for the returned identity and list,
+no claim about unknown-operation semantics. No response dump or firmware
+data retained. See `camera-readonly-identity-method.md`.
+
+F-259. A follow-up search of project research notes, source and tests, plus
+the installed libgphoto2 PTP documentation and headers, found no local
+mapping for advertised operation `0x9535` and no reviewed PTP operation that
+reads runtime memory or the tracking worker's active translation table.
+The identity probe remains the only camera method established as safe and
+reviewed. Do not invoke the unknown operation. This closes the local-source
+lookup branch; it does not prove no such interface exists. Read-only local
+reference search, 2026-10-18; high confidence for the searched sources, no
+camera contact or firmware data.
+
+F-260. In a paused-QEMU, memory-only diagnostic, the tracking candidate routed
+one fresh mode-0 decision with assignment `0x1184=77` and a constructed
+Auto-area status record `(area=6, pair=0,0)` through the native start request,
+changing the tracking pair to `(1,0)`. A second fresh decision with constructed
+active status `(area=6, pair=1,0)` reached the native stop request and cleared
+it to `(0,0)`; a held/no-decision control called neither path. This verifies
+candidate call routing and the native request cycle only under the constructed
+status contract. It does not verify natural camera status production, physical
+button delivery, subject acquisition, or asynchronous completion. Private
+paused-QEMU run summary, 2026-10-17; high confidence for the tested synthetic
+path, no hardware contact or firmware data retained.
+
+F-261. Owner-run test on the stock Nikon Z 30, firmware V1.20, with Fn1
+assigned to Subject tracking: pressing and releasing Fn1 once displayed the
+tracking target; holding Fn1 also displayed it, and the target remained after
+release. A second Fn1 tap ended tracking; holding behaved like tapping. The
+owner reports tracking did not activate until shutter half-press, after which
+the target began following the subject. This supports a toggle-like native
+control, a shutter half-press activation gate, and successful acquisition in
+this scenario; it does not establish AE-L/AF-L delivery to the candidate
+hook. Owner-run observation, 2026-10-18; no assistant camera command or
+firmware data.
+
+F-262. Repeated the pre-approved standard PTP GetDeviceInfo query after
+verifying the Z 30 was present in the host USB registry. Sandboxed libusb
+enumeration returned no matching device; the same identity-only query with
+host USB access succeeded, reporting Nikon Corporation, Z 30, firmware V1.20.
+The advertised operations include standard OpenSession and CloseSession
+(`0x1002`/`0x1003`), which the separately documented event monitor requires.
+The serial was omitted from probe output. This verifies present-day connection
+and transport availability, not button events or runtime memory. Read-only
+identity probe, 2026-10-18; no vendor operation or write.
+
+F-263. The owner approved the documented 15-second PTP event monitor. Its
+single attempt stopped during descriptor preflight because it did not find
+exactly one default PTP interface with the required interrupt-IN endpoint.
+The selector runs before device open, interface claim, OpenSession, or any
+transfer, so no PTP command or event poll occurred. This shows only that the
+active descriptors did not satisfy the probe's precondition; it does not
+prove the camera lacks an event endpoint. A descriptor-only USB inspection is
+prepared as a separate proposed method and awaits approval. No event data,
+firmware bytes, or camera state was read; no setting was changed.
+
+F-264. The owner approved the descriptor-only USB inspection. It found one
+default Still Image PTP interface (class 6/subclass 1/protocol 1) with bulk-IN,
+bulk-OUT, and interrupt-IN endpoints. The event endpoint advertises an
+8-byte maximum packet, so the monitor's old minimum-12-byte check—not a
+missing interface or event endpoint—caused F-263's preflight stop. Descriptor
+inspection opened/claimed no device interface and sent no PTP data. The
+monitor has been revised offline to request a full 24-byte event container
+across smaller USB packets; this changed transfer behavior requires fresh
+method-specific approval before another camera attempt. USB descriptor
+inspection, 2026-10-18; no event data or firmware bytes.
+
+F-265. The revised PTP monitor found the approved interface and endpoint,
+opened a standard PTP session, and began interrupt-IN polling. The first
+successful interrupt transfer returned zero payload bytes, which the then-
+current code treated as malformed and used to stop early; no PTP event
+container was received. The cleanup path attempted standard CloseSession, but
+its acknowledgement was not reported. The owner authorized the same bounded
+method to be rerun without renewed permission, with a warning before the
+15-second window and an explicit start signal from the owner. The monitor was
+updated so zero-byte transfers count as idle polls within that same time bound.
+No event payload, property, image, or firmware data was obtained.
+
+F-266. After the owner gave the requested start signal, the revised bounded
+15-second PTP event monitor completed successfully on the connected Nikon Z
+30. During the window the owner pressed AE-L/AF-L four times. The monitor
+reported exactly four standard event containers, each code `0x4006`, each
+with one parameter `0x501c`; no other event was reported and the 128-event
+limit was not reached. PTP defines `0x4006` as DevicePropChanged, whose first
+parameter is a device-property code; the PTP property table identifies
+`0x501c` as FocusMeteringMode. The four-for-four temporal match is strong
+correlation between those button presses and notifications for this property,
+but does not prove that the event is a raw key event or explain the property
+value transition. PIMA 15740 describes this UINT16 property as selecting the
+automatic focus mechanism; it does not name Nikon's mode-specific values. The
+monitor used only standard OpenSession/CloseSession and
+interrupt-IN event polling; no property query, vendor operation, write, raw
+packet, image, or firmware data was collected. Read-only bounded camera
+observation, 2026-10-18; high confidence for event and reported button count,
+moderate confidence for correlation, no claim about transition semantics.
+
+F-267. In a second approved-method 15-second PTP event-monitor window, the
+owner pressed AE-L/AF-L three times. The monitor completed normally and
+reported two events, both `DevicePropChanged` (`0x4006`) for property
+`0x501c` (`FocusMeteringMode`). No other event was reported and the event
+limit was not reached. This confirms repeated notifications for the same
+property during a second button sequence, but the two-for-three count means
+the monitor does not expose a reliable one-event-per-press mapping. Combined
+with F-266, it supports an association between AE-L/AF-L activity and changes
+to the focus-metering-mode property, without identifying the exact state
+transition, proving causality, or establishing the firmware input hook. The
+run used only standard PTP session commands and interrupt-IN polling; no
+property query, vendor operation, write, raw packet, image, or firmware data
+was collected. Read-only bounded camera observation, 2026-10-18; high
+confidence for the event result and reported count, moderate for association.
+
+F-268. After offline review, the owner authorized one standard PTP
+GetDevicePropDesc query for property `0x501c` on the connected Z 30. The
+bounded probe opened a standard PTP session, sent only that descriptor request,
+and received standard response `0x200A` (`DeviceProp Not Supported`) on
+transaction 1. The response identifies `FocusMeteringMode` as unavailable
+through this standard descriptor operation on this camera; it does not negate
+the earlier `DevicePropChanged` event carrying `0x501c` (F-266/F-267), nor
+reveal the property's value. The probe issued no property write, vendor
+command, event poll, image/storage request, or firmware operation; it retained
+no raw response. The response-status diagnostic reports numeric PTP
+container/code/transaction fields only. Read-only PTP query, 2026-10-18; high
+confidence for the returned status and command path. No inference about
+tracking state or firmware hook.
+
+F-269. Cross-checked the AF-related byte values from F-239 against the
+people/animal Auto-area submode routes from F-221/F-222. The setter represents
+plain Auto-area, people, and animal selection as base mode 6 with submodes 0,
+1, and 2. Action 45 routes people submode 1 through separate configuration
+helpers; plain Auto-area and animal submode 2 share the helper that calls
+`0x1019596e`. That caller supplies input 0, which selects byte value 6;
+`0x1019596e` selects 7 only when given input 1. Therefore the observed 6/7
+choice follows that helper argument, not the people-versus-animal submode.
+This does not establish what the byte means, and the separate people helpers
+remain semantically unnamed. Read-only synthesis of F-218/F-221/F-222/F-239,
+2026-10-18; high confidence in route/argument comparison, no conclusion on
+feature semantics. No camera access or firmware bytes/dumps.
+
+F-270. Re-audited action selector `0x10368b6e` against the verified image
+and a four-case pinned-QEMU diagnostic. For selector 45 (`r7 == 0x2d`),
+mapped states 0/1 call `0x1045a1ae`, while states 2/3 call `0x1045a21c`.
+Helper `0x1045a1e6` belongs to the separate selector-27 (`r7 == 0x1b`)
+branch, not action 45. In QEMU, tuples `(base=6, byte61=0, byte62=0/1)`
+mapped to states 1/0 and both took `0x1045a1ae`; tuples `(6,1,0/1)` mapped
+to states 2/3 and took `0x1045a21c` -> `0x10230866` -> `0x100775c6`.
+This supersedes F-221/F-222's attribution of `0x1045a1e6` to action 45.
+The tuple was injected at the mapper's stack snapshot boundary; it does not
+prove natural Auto-area-to-tuple production. Verified-image Thumb decode and
+four bounded QEMU runs, 2026-10-18; high confidence in action dispatch under
+the supplied tuples, no claim about natural AF-state mapping. No camera access
+or firmware bytes/dumps.
+
+F-271. A disposable-QEMU diagnostic identified and exercised the native AF
+status-copy bridge. Firmware routine `0x101925b0` copies two bytes from its
+argument to context bytes `+0x61/+0x62` at `0xc237c7b4`; its caller at
+`0x10076300` reads those bytes from the AF configuration object at
+`0xc259ff0c+0x38/+0x39`. Starting from a synthetic mapper tuple `(6,0,0)`,
+native action 45 called the plain Auto-area helper chain and changed the
+configuration state to `(1,0)`. Calling the native bridge made the next
+action snapshot `(6,1,0)`; that call took `0x1045a21c` -> `0x10230866` ->
+`0x100775c6` and changed the configuration state back to `(0,0)`. Calling the
+bridge again and action 45 a third time returned to the plain helper chain.
+This verifies a software state cycle through native routines when the initial
+tuple is constructed and the bridge is diagnostically invoked. It does not
+verify that QEMU naturally schedules the status producer, that the UI reticle
+appears, or that AF acquires a subject. Pinned QEMU 10.2.4, stock image,
+memory-only guest instrumentation, 2026-10-18; high confidence in the observed
+calls and state bytes, no camera or firmware modification.
+
+F-272. A temporary loader overlay was assembled to test automatic arming at
+the live-view-ready call and Auto-area setter continuation, with a one-shot
+latch and the native status bridge. All five overlay regions loaded into the
+disposable pinned-QEMU process, but the simulator halted during normal startup
+before shooting-view setup: the display profile reported an unmodeled write
+to `0x10000aaa` from `0xc2b1065a`. Enabling the documented no-lens test peer
+did not change that result. The overlay never executed, so this run provides
+no evidence about its hook behavior, readiness, or tracking. Stop this
+simulator-fidelity branch rather than add a broad peripheral model; continue
+with build-relevant static analysis of native AF state and hook contract.
+Disposable pinned-QEMU attempt, 2026-10-18; high confidence in loader
+placement and startup failure, no camera access, no firmware modification,
+and no claim that the overlay is testable.
+
+F-273. A static Thumb-call scan found one direct call to the native AF status
+bridge `0x101925b0`, at `0x10076314`, inside update routine `0x10076268`.
+That routine is directly reached from two sites: `0x10156ba0` passes input 0,
+and `0x10159092` passes input 1. In the input-0 route, the bridge runs only
+after the routine's AF-state comparison and callback checks; it is not a
+per-frame refresh. This explains why the QEMU cycle needed an explicit bridge
+call after the action changed the configuration pair. A live-view auto-arm
+hook cannot assume the mapper snapshot updates itself; it needs a reliable
+one-shot latch or a reviewed explicit refresh before using the snapshot as a
+guard. The two event routes' precise relationship to native AF readiness and
+the safety of either hook remain unproved. Verified-image decode and bounded
+direct-call scan, 2026-10-18; high confidence in the direct-call sites and
+control flow, no inference about undocumented indirect callers or hardware
+timing.
+
+F-274. Corrects F-272's QEMU startup diagnosis. The first temporary live-view
+wrapper was 44 bytes, but only 24 bytes at its chosen address had been
+verified as zero-filled; it overwrote the following 20 bytes of firmware.
+Therefore the startup write failure at `0x10000aaa` was produced with a
+corrupted disposable guest and is not evidence of a QEMU peripheral-model
+limit. A replacement overlay placed all code within a separately verified
+512-byte zero-filled cave, and normal QEMU startup reached live-view setup.
+With a synthetic Auto-area tuple, the known ready callback entered native
+action 45; its internal return was observed with `r0 == 1`, followed by the
+explicit status-bridge call. The enclosing callback did not return within the
+20-second diagnostic window and later observations were repeated AF-mapper
+breakpoints, so this does not verify callback completion, a persistent
+reticle, or subject acquisition. The previous F-272 stop-simulator-fidelity
+conclusion is withdrawn. Next isolate the callback's completion/worker
+interaction or test the wrapper through a normal guest-driven ready event;
+keep any overlay temporary and simulator-only. Disposable pinned-QEMU run,
+2026-10-18; high confidence in the cave-size correction and observed action
+return, unresolved outer callback and user-visible behavior. No camera access,
+firmware modification, or repository firmware bytes/dumps.
+
+F-276. Refines the F-274/F-275 QEMU diagnosis. With the corrected 512-byte
+cave and the stock live-view object's type-2 dispatcher (`0x104b912c`), the
+overlay reached the selector-1 ready call, native action 45, and its internal
+success return (`r0 == 1`). The QEMU device log then recorded an unmodeled
+halfword write to `0x10000aaa`, value `0xaa`, from runtime code at
+`0xc2b1065a`; the emulator pauses globally on that access. A private
+diagnostic build accepted only that exact write as a no-op and immediately
+stopped on a second halfword write from the same PC, `0x10000554 = 0x55`.
+The `0xAAA/0x554` addresses and `0xAA/0x55` values are consistent with a
+NOR-flash unlock sequence, but that interpretation is not confirmed. This
+shows the corrected live-view test is blocked by an unmodeled MMIO/flash-like
+sequence; the earlier overflowing wrapper still invalidates F-272's original
+startup run, while F-274's broader claim that the unknown-write issue was not
+a QEMU gap is superseded here. A single no-op does not model the command
+protocol, and the dispatcher did not complete. Do not add guessed responses;
+drop this simulator-fidelity branch unless static evidence identifies a
+correct device contract that directly gates the named auto-arm build
+decision. No reticle, acquisition, or testable patch was established.
+Disposable QEMU with one exact-address diagnostic shim, 2026-10-18; high
+confidence in both observed writes and the pause, medium-to-low confidence in
+the flash-protocol interpretation. No camera access or repository firmware
+bytes/dumps.
+
+
+
+F-275. A focused rerun of the corrected F-274 overlay watched only native
+action-45 entry, its internal return point, and the AF status bridge. The
+guest loaded all overlay regions; firmware identity remained unchanged and
+the pinned QEMU checkout stayed clean. The ready-path diagnostic reached
+action 45 with selector 45, reached its internal return with `r0 == 1`, and
+then called bridge `0x101925b0` with the expected configuration-source
+pointer. The enclosing direct call to handler `0x102f57e2` still timed out
+after 20 seconds, with one ignored stop reported by the thread-aware
+diagnostic. Thus repeated mapper breakpoints were not required to produce the
+timeout. This still does not establish whether the synthetic direct handler
+call is waiting on its normal task-dispatch context or whether another
+completion condition is missing; no reticle or acquisition was observed.
+Next resolve the stock live-view task's type-2 dispatch arguments and run the
+same overlay through that route, rather than directly invoking the handler.
+Disposable pinned-QEMU run, 2026-10-18; high confidence in the three observed
+native points and timeout, callback cause unresolved. No camera access,
+firmware modification, or repository firmware bytes/dumps.
+
+F-277. Cross-reference of the corrected auto-arm run with F-159 identifies
+the stop more narrowly. F-159 mapped runtime code around `0xc2b10656` to the
+shared cached flash identity/geometry initializer at `0xc2b1012c`; its LR
+`0xc2b1013f` matches the LR captured at the F-276 stop. F-276's PC
+`0xc2b1065a` is inside that same helper. F-159 found that information-getter
+and erase/program wrappers share the initializer, but the outer caller and
+operation were not captured; the stop does not identify an update, setting
+write, or tracking-owned flash operation. The `0xAA/0x55` writes are
+consistent with discovery-command setup, but no response or completion was
+observed. Further flash-response modeling was already retired under F-159;
+F-276 does not justify reopening it. Resume with the real-firmware tracking
+hook/state contract, not a guessed flash device. Hash-verified static
+cross-reference and bounded QEMU stop records, 2026-10-18; high confidence in
+the PC/LR match and shared initializer attribution, outer caller and actual
+flash operation unresolved. No camera access or repository firmware bytes.
+
+F-278. A read-only decode cross-checks the AF byte written by `0x1019596e`.
+The routine stores its input-selected 6 or 7 at the same absolute AF-object
+byte later read by `0x1018cd9c`. That consumer proceeds only when the byte is
+1, and only under additional context/flag conditions; it does not branch on
+Auto-area people/animal submode. This confirms the byte participates in
+broader AF state handling but gives no semantic label to values 6/7 and no
+tracking-ready signal. The standard USB event monitor cannot expose this
+internal byte; the earlier `FocusMeteringMode` events and unsupported standard
+descriptor query do not identify it. Hash-verified static Thumb decode,
+2026-10-18; high confidence for the same-address access and value comparison,
+no conclusion on tracking semantics. No camera access or firmware bytes/dumps.
+
+F-279. Traced one real-firmware writer of the native AF status pair used by
+the mapper snapshot. Routine `0x10078aa0` writes `(1,0)` to the source bytes
+at `0xc259ff0c+0x38/+0x39` and updates adjacent AF configuration fields. Its
+direct caller is `0x10073ed2` at `0x1007445c`; that updater is reached through
+`0x10078b50` and a bit-31 branch of event dispatcher `0x100746dc`. The path
+to the pair writer additionally requires the event object's state checks at
+`0x100743a6`-`0x100743bc`; no evidence ties those checks to Auto-area selection
+or Subject tracking. This is a candidate natural producer of mapper input
+`(1,0)`, not a named ready-state signal. Static Thumb call/data-flow scan,
+2026-10-18; high confidence for the write and direct path, no conclusion on
+event meaning or tracking semantics. No camera access or firmware bytes/dumps.
+
+F-280. Corrected F-279's event-mask bit description and tested the traced
+callback in pinned QEMU. At `0x100746dc`, the `lsls r0,r4,#0x1f` test selects
+input bit 0, not bit 31. A bounded diagnostic call with synthetic mask 1
+entered `0x10074492`, then followed the early path: the service check returned
+1 at `0x100744bc`, and `r4` remained zero at `0x1007450e`, branching to
+`0x100745f4`. The call completed with the mapper source pair still `(0,0)`;
+the downstream updater and `0x10078aa0` pair writer were not reached. This
+shows that the dispatcher is callable in QEMU but the synthetic input lacks
+the native AF object context needed to test the producer. It does not prove a
+QEMU peripheral gap or identify tracking readiness. Pinned-QEMU call from the
+InitTask checkpoint, 2026-10-18; high confidence for the observed route and
+unchanged pair, no conclusion on the event's real producer. No camera access
+or firmware bytes/dumps.
+
+F-281. Strengthened the F-269 route comparison for the people/animal
+hypothesis. In the action-45 selector `0x10368b6e`, the Auto-area state-0/1
+branch explicitly clears a local byte at `0x10368bc2` before calling
+`0x1045a1ae`. That helper passes the byte through `0x10230832`, which reads
+the byte and calls `0x1019596e`; the latter writes 6 for input 0 and 7 only
+for input 1. The selector chooses this same route for Auto-area submodes 0
+and 2; people submode 1 follows separate helpers. Thus the action-45 route
+uses 6 in both plain Auto-area and animal mode, so 6/7 is not the People vs
+Animals selection in that selector path. A separate caller at `0x10458dfe`
+does pass 1, but only after checking an AF record byte at `+4` for 2 or 3,
+along with configuration and native-helper gates. The record producer and
+the meaning of values 2/3 remain unresolved; that separate path could still
+represent an AF category. A standard USB PTP event window cannot expose the
+stack byte or AF record, so repeating that test would not resolve this
+question. Hash-verified static Thumb control/data-flow review, 2026-10-18;
+high confidence for both caller arguments and their guards, no
+feature-semantic conclusion. No camera access or firmware bytes/dumps.
+
+F-282. Repeated the bounded event-dispatch QEMU test after the normal
+synthetic live-view setup and after calling the native Auto-area setter with
+value 600. The setter returned success, but the callback at `0x100746dc`
+still entered `0x10074492` with the service result at `0x100744bc` equal to 1
+and `r4 == 0` at `0x1007450e`; it exited through `0x100745f4`. The mapper
+source pair at `0xc259ff0c+0x38/+0x39` remained `(0,0)`, and the AF updater
+and pair writer were not reached. This shows the current synthetic live-view
+and Auto-area stimuli do not create the AF object needed by this callback in
+this QEMU setup. It does not show that the native callback or state writer is
+unreachable on the camera. The test used a QEMU binary and custom machine
+sources matching their private build manifest; the original firmware
+identity check passed and the camera was not contacted. Next useful QEMU work
+requires tracing a native AF-object constructor/registration path and using
+it as the fixture; do not invent an EXMCU/ISP response. Bounded pinned-build
+QEMU diagnostic, 2026-10-18; high confidence for the observed callback state
+and unchanged pair, no conclusion on camera behavior. No firmware
+bytes/dumps.
+
+F-283. Re-read the native event dispatcher `0x100746dc` and tested the
+combined mask `0x801`: bit 11 invokes initializer `0x10078c50`, then bit 0
+invokes AF callback `0x10074492`. The hash-verified pinned-QEMU run completed
+the synthetic live-view fixture and native Auto-area setter (value 600);
+the initializer ran before the callback, but the service check at
+`0x100744bc` still returned 1, the AF object at `0x1007450e` remained null,
+and the source pair stayed `(0,0)`. The callback returned normally without
+reaching the updater or pair writer. Thus the dispatcher's own initialization
+bit does not supply the missing AF-object context in this fixture. This is a
+bounded simulator result, not evidence about the camera. It narrows the next
+useful trace to the object-list producer/registration consumed by
+`0x101885e8`; do not add guessed peripheral behavior. QEMU binary, custom
+source, and firmware identity checks passed; no USB/camera access and no
+firmware bytes/dumps.
+
+F-284. Rebuilt the private auto-arm overlay with an additional eligibility
+check requiring base AF mode 6 and submode 1 (People) or 2 (Animal). The
+submode guard is candidate logic only; the bounded QEMU type-2 live-view
+callback did not return from the candidate wrapper during the diagnostic
+window, and no observation showed the helper or native action entry. Thus the
+run did not test the new gate, one-shot behavior, reticle or acquisition. The
+owner states QEMU cannot establish complete camera readiness and has approved
+testing a prepared patch on the connected camera. This result supports
+stopping repeated full-callback QEMU attempts, not treating the candidate as
+ready: it is still only a loader overlay, lacks a proven stills-only guard,
+and has no installable-image audit. The next decision point is after an exact
+camera-format candidate, static layout/ABI review, independent exact-edit
+audit, and recorded recovery plan exist; unresolved reticle/acquisition and
+runtime mapping can then be assigned to a bounded owner-run camera test under
+the hardware gate. Candidate build and QEMU diagnostic, 2026-10-18; high
+confidence for the bounded run's observations, no conclusion on camera
+behavior. No camera write or firmware bytes/dumps.
+
+F-285. Composed that private auto-arm overlay into a standalone Z 30 C 1.20
+EG candidate using the verified original and a four-span exact-edit manifest:
+the 512-byte code cave and three same-length hook branches. The project
+builder accepted the pinned source and regenerated the native CRC. A separate
+read-back audit found no body changes outside those spans, unchanged file
+length, matching expected/replacement digests, valid stored CRC and zero CRC
+residue. Independent Thumb disassembly verified the three branch destinations;
+manual ABI review found 16-byte-aligned wrapper frames, saved callee-saved
+registers/LR and preserved native setter return values. This makes the
+candidate concrete, not hardware-validated: QEMU still did not reach the
+helper/action entry, runtime executable mapping and worst-case live-view stack
+remain unmeasured, and reticle/acquisition remain device-test items. [Nikon's
+official Z 30 update instructions](https://downloadcenter.nikonimglib.com/en/download/fw/556.html)
+describe the outer package on a camera-formatted SD card; [same-camera C 1.20
+build documentation](https://github.com/WonderLantern/wonder-lantern-z30/blob/main/docs/build.md)
+records the standalone EG as an installable format, but this exact candidate
+has not been accepted by the camera updater. The camera enumerates at USB
+level, but gphoto2 did not open a PTP session and no card is mounted; no
+transfer or device write occurred.
+Private candidate build and independent audit, 2026-10-18; high confidence in
+exact edits/CRC and branch decode, no conclusion on updater/runtime behavior.
+No firmware bytes/dumps.
+
+F-286. Corrects F-285's transport status and sets the next risk threshold.
+The camera was detected by gphoto2 at the PTP layer, and read-only summary
+and storage listing calls completed; the storage reported was the removable
+memory card. The private candidate has a local card-test copy, but no file was
+uploaded, no updater was started, and no camera write occurred. The earlier
+statement that gphoto2 could not open a PTP session and no card was available
+is stale. Candidate construction and exact-span/CRC integrity checks are
+complete, but QEMU did not prove the candidate's live-view callback returns,
+and the worst-case callback stack remains unmeasured. Runtime mapping,
+updater acceptance, reticle and acquisition are also unknown. Therefore the
+right hardware-test threshold has not yet been met: resolve stack/context
+headroom from a bounded static call-chain review, or have the owner explicitly
+waive that named residual at the camera-test stage, and record the accepted
+recovery risk and bounded test scope. Current AGENTS.md instructions prohibit
+camera contact, so this is a decision record only; no hardware step was taken.
+Observed historical PTP reads and private artifact audit, 2026-10-18; high
+confidence for the reported operations and current repository rule, no
+conclusion about camera behavior. No firmware bytes/dumps.
+
+F-287. The owner explicitly overrode the current no-camera-contact rule and
+approved one exact PTP card-copy operation. On gphoto2 2.5.32, the first
+approved command using logical folder `/` failed before transfer because the
+camera requires a `/store_...` folder. A read-only folder listing identified
+`/store_00010001` as the card root. Retrying the same single-file copy to that
+root failed with `PTP Specification Of Destination Unsupported`. Both
+attempts exited before a file transfer; no candidate reached the card and
+the updater was not started. `diskutil list external physical` could not use
+DiskManagement in this host environment, and `/Volumes` showed only the
+system and recovery volumes, so no card-reader volume is currently mounted.
+The practical transfer route remains a card reader. The exact standalone-EG
+candidate remains local and unchanged. The owner authorization covers the
+attempted PTP card-copy purpose; it does not make updater acceptance, the
+open stack/context review, or installation readiness pass. Owner-directed
+PTP write attempts and host volume check, 2026-10-18; high confidence in the
+reported command results and absence of transfer, no conclusion about
+updater/runtime behavior. No firmware bytes/dumps in the repository.
+
+F-288. Re-decoded live-view handler `0x102f57e2` from the hash-verified
+Z 30 C 1.20 module using its mapped base. Its load at `0x102f57fc` reads
+global byte `0xc181b4b4`, tests bit 6, and conditionally calls `0x104bd3c0`;
+both paths rejoin before the live-view selector setter `0x104b9116` at
+`0x102f5810`. This local test does not gate the common live-view transition
+and does not establish still-photo eligibility. No still/movie semantic
+mapping was found for the byte or its bit. The private auto-arm candidate is
+unchanged and still lacks a proven still-photo guard. Hash-verified offline
+Thumb decode, 2026-10-18; high confidence in local control flow, unknown
+meaning of the global bits/helper. No firmware bytes/dumps.
+
+F-289. Re-validation of the `0x102f2990` mode-entry callback added no new
+build evidence: F-089 already records its argument comparisons, lack of
+direct callers, and pointer-table dispatch, while later decoding confirms
+additional branches without resolving the dispatcher or mapping values to
+still/movie semantics. Do not treat this repeated inspection as progress or
+use the values as a patch guard. The still-photo eligibility gap in F-288
+remains open. Hash-verified static Thumb decode, 2026-10-18; high confidence
+in the repeated control-flow observations, unknown producer and semantics.
+No firmware bytes/dumps.
+
+F-290. The APPLV task creation record requests `0x2000` bytes (8 KiB) for
+its stack. In the captured creation call for object `0xc1821d44` and entry
+`0x10235577`, the request descriptor at `r2` has `0x2000` at offset `+8`;
+native wrapper `0x10219876` loads that field and forwards it in the scheduler
+creation arguments to `0x10035fdc`. This resolves the configured stack-size
+input, not peak usage or available headroom: the current candidate calls
+property accessors and action 45 inline from a live-view callback, and its
+worst-case combined native/candidate stack depth has not been bounded. The
+candidate remains NO-GO. Captured native task-creation arguments and
+hash-verified Thumb decode, 2026-10-18; high confidence in the forwarded
+request value, scheduler allocation semantics inferred from the wrapper
+contract, peak stack use unknown. No firmware bytes/dumps.
+
+F-291. Corrects F-288's bit number and rejects its byte as an Auto-area or
+still-photo guard. At `0x102f57fc`, the handler loads byte `0xc181b4b4`,
+then shifts it left by 25 and branches on the sign flag, testing bit 7 (not
+bit 6). Static call sites in unrelated subsystem routines also read this
+same byte, test different bit positions, and conditionally call
+`0x104bd3c0` before continuing their ordinary operation. The repeated
+cross-subsystem pattern is consistent with a shared instrumentation/filter
+gate, not a camera shooting-mode predicate; its exact purpose remains
+unresolved. Both branches still reach the live-view selector setter. Do not
+use this byte as the stills/Auto-area eligibility condition. Hash-verified
+Thumb decode and cross-reference sample, 2026-10-18; high confidence in the
+bit number and repeated call pattern, inferred instrumentation role, no
+photo/movie semantics established. No firmware bytes/dumps.
+
+F-292. The candidate on the owner's SD card was verified to match
+`EG209020-autoarm-test-01.BIN`, with size 33,939,514 bytes and SHA-256
+`6a31dc39264fa73459d68605f9ce3a1f69c9017de4f2c99f980c7bdfe6fc52de`.
+Despite the intact copy, the Z 30 Firmware version screen showed only Done
+and Delete firmware update files; it offered no Update option and no update
+began. This candidate is not installable as presented. It preserves the
+original C 1.20 module-version metadata and the camera is on C 1.20, so a
+same-version eligibility rejection is plausible, but the exact refusal rule
+has not been established. Do not rename or bypass updater eligibility.
+Observed card identity and owner-reported menu result, 2026-10-18; high
+confidence that no update was offered or started, inferred same-version
+cause. No firmware bytes/dumps.
+
+F-293. The upstream Wonder Lantern Z 30 C 1.20 project reports that its
+standalone `EG209020.BIN` was installed on a Z 30 running C 1.20. This
+weakens the hypothesis that the base camera/module version alone prevents
+same-version standalone EG installation. It does not establish whether that
+upstream image changed the eight-byte version-like metadata at offset `0x24`,
+or whether its other edits affect eligibility. Compare its documented build
+spans and then trace the native selector callback for this field before
+changing our candidate. Upstream project build and verification documentation,
+checked 2026-10-18; high confidence for the maintainer's published report,
+no independent validation of our candidate. No firmware bytes/dumps.
+([build guide](https://github.com/WonderLantern/wonder-lantern-z30/blob/main/docs/build.md),
+[verification record](https://github.com/WonderLantern/wonder-lantern-z30/blob/main/docs/verification.md))
+
+F-294. Read-only decode of post-CRC checker `0x101ce324` confirms that it
+loads a runtime selector, bounds it to a 16-entry range after subtracting 6,
+and dispatches through a Thumb table branch. The selected cases call distinct
+policy handlers; several construct or format version-like data through
+`0x101d3f14`. This is consistent with a policy decision controlling whether
+the parsed EG is offered for update, but the selector's producer/value on the
+standalone-EG route and the relevant handler's acceptance condition are not
+yet traced. Do not infer that offset `0x24` alone is the cause or change it
+without resolving this path. Hash-verified static Thumb decode, 2026-10-18;
+high confidence in the dispatch structure and called handlers, unknown
+runtime selector and eligibility semantics. No firmware bytes/dumps.
+
+F-295. Cross-checking checker `0x101ce324` against the selector getter
+`0x101cf8cc` shows its selector is the shared discovery-type byte at the
+updater record: `0x101cf8cc` returns the encoded-header flag only for type 4,
+and `0x101ce324` reads the same byte before its table branch. The standalone
+EG discovery row is type 2, so subtracting 6 underflows the unsigned selector
+and takes the default path, bypassing the 16-entry policy table whose some
+handlers format version-like metadata. F-294's relevance to the missing
+Firmware-version menu option is therefore superseded: this post-CRC dispatch
+does not reject the standalone EG on those metadata callbacks. The earlier
+parser and menu eligibility decision remain the target. Hash-verified static
+Thumb decode plus F-140's discovery-type mapping, 2026-10-18; high confidence
+in selector identity and type-2 fallback, menu-offer cause still unknown. No
+firmware bytes/dumps.
+
+F-296. The standalone type-2 parser `0x101cd3cc` rejects oversized files,
+failed reads and, conditionally, a four-byte compatibility-field mismatch.
+For the candidate, the compatibility field at `0x10` is preserved from the
+same C 1.20 source module, so that check should pass whether the character
+class gate runs or skips it. The parser then reads eight bytes at `0x24`,
+formats them through `0x101cd13e`, and proceeds to set execution type 3 and
+component count 1; the formatter result is not used as a success predicate.
+Combined with F-295, this finds no static same-version rejection in the
+standalone parser or the post-CRC type-2 path. The candidate should reach
+the parser's success return if the camera opens and reads the card file
+normally. The missing Update option therefore remains unexplained in the
+card discovery/UI path or an untraced gate. Hash-verified static Thumb decode
+and candidate protected-field audit, 2026-10-18; high confidence in observed
+control flow, inferred expected pass for preserved compatibility bytes,
+unknown camera-side discovery result. No firmware bytes/dumps.
+
+F-297. A fresh host check on 2026-10-18 found no Z 30: `gphoto2
+--auto-detect` listed no camera, and the previously approved descriptor-only
+USB probe found zero matching devices. This establishes only that the camera
+was not visible to the host during this check; it does not establish power,
+cable, card-format, or updater-menu state. No PTP command or camera write was
+attempted. Observed read-only host enumeration, 2026-10-18; high confidence
+for device absence from these host interfaces at that moment. No firmware
+bytes/dumps.
+
+F-298. Hash-verified static Thumb control-flow through firmware-menu wrapper
+`0x10234274` and scanner `0x101ce206` resolves the standalone discovery
+result contract. The wrapper passes zero to the scanner for the all-row
+search. The scanner iterates eleven discovery rows; the standalone EG row
+uses the filename-match path and calls parser `0x101cd3cc` only after a match.
+Parser result 1 registers the parsed record and takes the scanner's zero
+return path; exhausted or non-success rows take its return value 3. The menu
+wrapper branches on this result, taking a separate helper path only for zero.
+This narrows the missing Update symptom to file discovery/open/name match,
+parser rejection, or a later UI condition; it does not reveal which occurred
+on the camera or prove the helper path is the visible Update row. Hash-verified
+static Thumb decode of the verified original, 2026-10-18; high confidence in
+the control flow, no camera runtime observation. No firmware bytes/dumps.
+
+F-299. Following the scanner wrapper one caller higher resolves the menu
+callback's two outcomes. Callback `0x10594c1c` calls `0x10234274`; a nonzero
+return exits through the callback's success return, while zero stores a separate
+message state and calls message helper `0x1033c88c`. The wrapper's nonzero
+outcome is reached only when the scanner returns zero after a successful
+type-2 parser result; in that case it copies a fixed-size descriptor template
+into the caller's output buffer. This makes the reported absence of Update
+consistent with the no-accepted-file/fallback-message branch. The camera's
+actual callback result and exact visible string remain unobserved; this does
+not prove which filesystem or parser condition failed. Hash-verified static
+Thumb decode, 2026-10-18; high confidence in branch structure, no runtime
+observation. No firmware bytes/dumps.
+
+F-300. Static decode of the standalone row's filename matcher `0x101ce106`
+shows that media-state bits select one of two directory-path candidates; the
+updater then opens/enumerates entries through filesystem helpers and compares
+entry names against the row pattern, including wildcard characters. A match
+is required before scanner `0x101ce206` invokes the standalone parser. This
+makes card/volume selection and root-file visibility the next pre-parser
+checks; no runtime path or directory listing was observed. Hash-verified
+static Thumb decode, 2026-10-18; high confidence in control flow and matcher
+behavior, path-string semantics not independently decoded. No firmware
+bytes/dumps.
+
+F-301. The owner confirms that the SD card carrying the candidate was
+formatted in the Z 30 before the updater-menu test. A fresh host check after
+this clarification still found no camera via `gphoto2 --auto-detect` or the
+approved descriptor-only probe. The format precondition is therefore known by
+owner report, but the camera's current menu state and whether it is presently
+powered/connected remain unknown. Owner report and read-only host check,
+2026-10-18; high confidence in the report and host result, no independent
+card-filesystem inspection. No firmware bytes/dumps.
+
+F-302. A bounded pointer-resolution pass on the standalone filename matcher
+`0x101ce106` found that its two directory-path choices are loaded indirectly
+through runtime RAM pointer locations; the static image does not embed the
+resolved path values at those references. This pass did not locate the
+runtime producers or establish which value denotes the SD-card root. It
+therefore does not resolve why the camera did not offer Update. The owner
+confirms the card was camera-formatted, but the next useful evidence remains
+a fresh Firmware-version menu result and, if Update is still absent, a direct
+check that the candidate is at the selected card root. Hash-verified static
+Thumb pointer analysis, 2026-10-18; high confidence in the indirect runtime
+lookup, unresolved path semantics and camera-side selection. No firmware
+bytes/dumps.
+
+F-303. Using the verified original's standalone discovery row (type 2), the
+native filename wildcard pattern was compared in memory with the candidate's
+canonical card filename `EG209020.BIN`; it matches. This rules out a mismatch
+between that canonical filename and the standalone row pattern. It does not
+prove that the camera selected the SD-card root, enumerated that entry, opened
+or parsed it, or offered Update. The next useful evidence remains the fresh
+Firmware-version menu result; if Update is still absent, verify root-file
+visibility on the selected card path. Hash-verified row/pattern comparison,
+2026-10-18; high confidence in the match, no runtime discovery or parser
+observation. No firmware bytes/dumps.
+
+F-304. The owner reports that the camera is reading the SD-card root. This
+closes the selected-root question by owner observation, but does not by itself
+confirm that `EG209020.BIN` is visible as an updater entry, opened, accepted by
+the standalone parser, or surfaced as an Update option. At the time of this
+entry the earlier screen offered only Done and Delete firmware update files;
+F-305 records the owner's confirmation that this remains the current result.
+Owner report, 2026-10-18; high confidence as a report, not independently
+verified. No firmware bytes/dumps.
+
+F-305. The owner confirms the Firmware version screen still offers no Update
+option, after clarifying that the camera is reading the card root. This
+confirms the candidate is still not offered for installation; it does not
+distinguish whether the exact filename is absent from the updater's file list,
+the file cannot be opened/read, the parser rejects it, or a later UI gate
+filters it. Do not ask the owner to repeat the menu check or attempt install.
+The next work is a bounded offline trace of the directory enumeration/open,
+parser return, and menu-row construction conditions, limited to finding a
+concrete candidate-specific gate or documenting that the updater's runtime
+result is required. Owner report, 2026-10-18; high confidence as a report, no
+firmware bytes/dumps.
+
+F-306. A fresh bounded decode of callback `0x10594c1c` corrects F-299's
+description of the accepted-file path. When the scanner reports an accepted
+file, the callback skips the fallback-message helper, but continues into a
+second helper at `0x102342a6`, passing it a pointer to a callback-local stack
+buffer. That helper runs additional setup calls, populates a descriptor-like
+record and returns status; the callback then branches on status before
+returning. Thus parser acceptance does not directly establish that the
+Firmware-version UI exposes Update. The helper's exact role, descriptor
+fields and status meanings are not yet resolved. This identifies a concrete
+post-scan menu-record path worth one bounded trace of its input record, return
+values and consumer. Hash-verified Thumb control-flow and call-argument decode,
+2026-10-18; high confidence in the call/record flow, semantics unconfirmed.
+No firmware bytes/dumps.
+
+F-307. The post-scan path is now narrowed to a record-construction helper.
+After the accepted-file branch, callback `0x10594c1c` passes a local stack
+buffer to `0x102342a6`. The helper has guarded setup calls; on its construction
+path it writes a status/type byte at record offset `+4` and copies fixed-size
+fields into the record beginning at `+5` and `+0xf`. The callback then checks
+the helper's return status through multiple branches. These fields and return
+codes are not yet mapped to Firmware-version menu actions, so this does not
+identify why Update is absent. Next, trace those record fields/status values
+to their consumer, bounded to finding whether a UI eligibility check can hide
+an otherwise accepted standalone EG. Hash-verified Thumb call-context and
+write-offset analysis, 2026-10-18; high confidence in offsets and control
+flow, semantic mapping unknown. No firmware bytes/dumps.
+
+F-308. The callback's status consumer has been decoded one step further. After
+`0x102342a6` returns, `0x10594c1c` reads the first word of the local record
+and distinguishes values 1, 2, 4 and 8. Value 1 writes callback result 4;
+values 2, 4 and 8 take separate branches; all other values write result 3
+and use a common reporting helper. This confirms the post-scan record controls
+distinct callback outcomes, but the meanings of those outcomes and their
+visible Firmware-version menu effects remain unknown. The next bounded step
+is to trace the record's producer and the callback's result consumer to a menu
+action/label or prove that the chain remains runtime-only. Hash-verified Thumb
+branch/field flow, 2026-10-18; high confidence in tested values and assignments,
+semantics unknown. No firmware bytes/dumps.
+
+F-309. An exact pointer-reference scan finds the callback pointer for
+`0x10594c1c` once, inside a contiguous five-entry Thumb callback table. The
+surrounding descriptor includes property key `0xc181a0d8`; four neighboring
+callbacks are at `0x10594bf4`, `0x10594c3e`, `0x10594cb4`, and `0x10594ce2`.
+This places the callback in a registered callback family, but does not by
+itself identify the property's meaning or the Firmware-version menu consumer.
+Exact direct references to the table's nearby addresses were not found, so
+the registration-table owner remains unresolved. Next trace the table's
+dispatcher/registration path once; if it does not connect to a menu action,
+stop the static updater branch and retain runtime visibility as the unresolved
+issue. Hash-verified pointer-table read and exact-reference scan, 2026-10-18;
+high confidence in table membership, semantic role unknown. No firmware
+bytes/dumps.
+
+F-310. Reviewing the actual private auto-arm source found that candidate 01
+was explicitly a diagnostic variant: it omitted the native status-copy bridge
+after action 45. F-271 shows that bridge `0x101925b0` copies the AF pair into
+the context bytes used by the tracking path, and F-273 shows the normal
+producer is event-driven rather than a per-frame refresh. A separate private
+candidate 02 now copies configuration bytes `+0x38/+0x39` to an aligned
+two-byte stack pair and calls that bridge after action 45 succeeds. The
+candidate was rebuilt from the verified original with four exact spans;
+independent builder read-back reports unchanged length (33,939,514 bytes),
+254 changed bytes, valid native CRC, and candidate SHA-256
+`f5a392d3e347f5afdb111cec55f7fc5fedc5ed26e5d94e94752f74ded176abd1`. A
+separate static check verifies all three hook branch destinations and the
+bridge/config literals. The targeted QEMU call timed out
+without usable observations, so it does not show whether the bridge or action
+completed in that run. Candidate 02 is private and has not been copied to the
+SD card; the owner's latest no-Update report predates it and is not acceptance
+evidence for candidate 02. It is not ready for installation or a camera test,
+and it does not establish reticle/acquisition behavior. Build/audit output and
+bounded QEMU attempt, 2026-10-18; high confidence in the exact edit and static
+checks, no runtime conclusion. No firmware bytes/dumps.
+
+F-311. Static ABI review of candidate 02's native status bridge call confirms
+that its argument and alignment match the stock caller. The candidate saves
+`r4-r6,lr` (16 bytes), reserves an aligned 8-byte local area, copies the
+configuration pair from `0xc259ff0c+0x38/+0x39`, and passes that area's address
+in `r0`. Native bridge `0x101925b0` saves `r4,lr` (8 bytes), calls the same
+pre-copy helper used by the stock caller, copies the two bytes to tracking
+context `+0x61/+0x62`, restores `r4,lr`, then branches to its stock cleanup
+helper. The native action's observed plain Auto-area route adds a 24-byte
+action frame, a 24-byte state-operation frame, a 16-byte state-helper frame,
+and a 32-byte event/state helper frame. Its conditional continuation reaches
+additional 8-byte helper frames on separate branches. The live-view callback
+itself saves 48 bytes. On the bridge path, the pre-copy helper tail-branches
+to an 8-byte synchronization frame and then calls a native dispatcher; the
+post-copy cleanup helper tail-branches to another native dispatcher. Candidate
+wrappers preserve their saved registers and keep SP 8-byte aligned at calls.
+One decoded event-helper branch returns through `0x1022fbf4` into
+`0x10225012`, whose explicit frame is 48 bytes; with the candidate and live
+callback frames, this gives a 224-byte lower bound along that possible
+action/state route, before its indirect callee and other omitted frames. The
+bridge path separately reaches native synchronization dispatchers. These
+observations do not bound the transitive native event/state and synchronization
+helpers or the complete callback peak against APPLV's requested 8 KiB stack.
+Static disassembly cannot establish that peak, and the focused QEMU attempt
+remains inconclusive. Candidate 02
+therefore remains NO-GO for a camera test pending a defensible full call-chain
+stack bound or a specifically accepted stack-risk waiver. Hash-verified
+original Thumb disassembly and private candidate source review, 2026-10-18;
+high confidence in local ABI/frame observations, incomplete peak-stack proof.
+No camera access or firmware bytes/dumps.
+
+F-312. The bounded stack trace reaches an indirect dispatch on the native
+Auto-area action path. State helper `0x10230832` calls owner-check helper
+`0x1019596e`; a conditional continuation calls `0x1022fbf4` with a pointer to
+a two-word record. On its accepted branch, `0x1022fbf4` loads both words and
+tail-branches to `0x10225012`. That routine makes an indirect call through a
+register derived from the supplied record. The dispatch frame itself saves
+48 bytes, producing a 224-byte explicit-frame lower bound when combined with
+the candidate, live-view callback, action and observed state frames. The
+record's runtime producer and indirect callee are not resolved in the static
+trail, so the callee's frame and further call depth cannot be bounded from
+these observations. This is the specific remaining stack-analysis blocker;
+candidate 02 stays NO-GO for a camera test under the current readiness gate.
+Hash-verified original Thumb disassembly and call-argument trace, 2026-10-18;
+high confidence in the argument and indirect-call flow, unknown runtime
+callback target. No camera access or firmware bytes/dumps.
+
+F-313. Corrects F-312's interpretation of the action-path record. Caller
+`0x10230832` explicitly stores zero to both words of its local record before
+passing it to `0x1022fbf4`; on the accepted owner branch, `0x10225012` receives
+zero and branches around its initial indirect callback at `0x1022502c`.
+It then continues into a table-driven event-processing body with
+state-dependent direct calls across `0x102250a6`–`0x1022568a`. Thus the
+record's callback producer is not missing on this path; the callback is
+intentionally null. The remaining stack question is the exact event-dispatch
+branch and its transitive callees under the live-view task context. The body
+has many direct calls and conditional table routes; a complete peak bound is
+not established here. This preserves the NO-GO status but narrows the next
+static task to the zero-record event-dispatch path. Hash-verified original
+Thumb disassembly and argument flow, 2026-10-18; high confidence in the zero
+record and skipped first callback, event branch and peak stack unresolved. No
+camera access or firmware bytes/dumps.
+
+F-314. The zero-record dispatcher path is gated by a runtime mask word.
+After `0x10225012` skips its null initial callback, it calls `0x10066714`,
+which returns 0 and takes the early-exit branch when word `0xc18a7540` is
+nonzero; zero returns 1 and enters event processing. Helpers `0x1006670a` and
+`0x100666f8` set and clear bits in this word using OR/AND operations, and the
+full image contains direct callers with masks including `0x1`, `0x2`, `0x4`,
+`0x8`, `0x10`, `0x20`, `0x80`, `0x100`, `0x200` and `0x400`. This is a shared
+runtime bitfield, not a pointer. The branch in the candidate's live-view
+context depends on which operations currently hold bits; that runtime value
+and its feature-level meaning are unknown. Candidate 02 remains NO-GO because
+the zero-mask event path's transitive stack is not bounded. Hash-verified
+original Thumb disassembly, helper caller scan and exact global-word
+reference scan, 2026-10-18; high confidence in bit operations and observed
+caller masks, unknown runtime mask and semantics. No camera access or firmware
+bytes/dumps.
+
+F-315. One action-45 state-handler branch reaches the zero-record event
+dispatcher. Handler `0x1045a1ae` calls `0x10230832` after clearing an
+AF-related object field and before posting its internal event. `0x10230832`
+checks the AF-record type and service state, then passes a zeroed pair through
+`0x1022fbf4` to `0x10225012`; that dispatcher gates its large event body on
+the shared mask word `0xc18a7540`. Observed callers of `0x1045a1ae` include
+`0x10368bc6` (event-code route) and `0x10458dfe` (record-callback route).
+Neither this helper nor those caller slices directly set or clear the mask.
+Thus the gate's runtime value remains ambient and unresolved; this trace
+neither proves the deep body is skipped nor bounds its stack. This is the
+action/state chain, distinct from candidate 02's separate status-copy bridge
+`0x101925b0`, whose synchronization calls also remain unbounded. Candidate 02
+remains NO-GO. Hash-verified full Thumb disassembly and direct-call
+comparison, 2026-10-18; high confidence in reviewed direct edges and lack of
+local mask mutation, unknown ambient state. No camera access or firmware
+bytes/dumps.
+
+F-316. A bounded structural scan of the event-processing body in
+`0x10225012` (`0x102250a6`–`0x1022568a`) found 103 direct call sites to 70
+distinct routines. No register-indirect call or table-branch instruction is
+present in that body range, but the direct callees' transitive call paths are
+not bounded by this scan. The previously measured dispatcher/candidate local
+frames therefore do not establish peak stack use against APPLV's 8 KiB
+allocation. Candidate 02 remains NO-GO absent a transitive bound or a named
+owner waiver. Hash-verified full Thumb disassembly, call-instruction scan,
+2026-10-18; high confidence in the bounded body-level count, no inference
+about transitive stack use. No camera access or firmware bytes/dumps.
+
+F-317. The two synchronization calls in candidate 02's separate status-copy
+bridge resolve to fixed ARM-mode service stubs. Bridge `0x101925b0` calls
+`0x10197c76`, which tail-branches through `0x10199bc6` to ARM entry
+`0x100361e8`; after copying the AF pair, its cleanup helper reaches
+`0x10199baa` and the ARM entry `0x100364e0`. Each stub saves `r4` and `lr`
+(8 bytes total), issues SVC #6, restores them, and returns; neither stub makes
+a further firmware call. This bounds the visible firmware-side wrapper frames
+on this bridge path, but not the implementation or stack behavior behind SVC
+#6. It does not resolve the separate action-45 state-handler path through
+`0x10225012`, whose deep event body remains unbounded. Candidate 02 remains
+NO-GO. Hash-verified module disassembly in ARM mode, 2026-10-18; high
+confidence in stub instructions and local frames, SVC internals unresolved.
+No camera access or firmware bytes/dumps.
+
+F-318. The zero-mask event body's completion path has a conditional runtime
+callback beyond its 70 direct callees. After the event loop, `0x10225012`
+calls `0x10062a6a` with value `0x3f` at `0x10225670`. That helper checks bit
+63 in a related runtime bitset via `0x100624d2`; when set, it clears the bit,
+then may invoke the callback pointer stored at runtime address `0xc23a63b4`
+through `bx r12`. Neither the bit state nor pointer value is established by
+static contents. Thus the dispatcher has a live state-dependent tail whose
+callee frame/depth is not bounded by F-316; this does not prove the callback
+is taken on the camera. Trace the bit-63 setter and callback-slot producer if
+they are statically recoverable. Candidate 02 remains NO-GO. Hash-verified
+full Thumb disassembly and direct data-flow trace, 2026-10-18; high confidence
+in the condition and indirect branch, runtime state/target unknown. No camera
+access or firmware bytes/dumps.
+
+F-319. Correction to F-318: `0xc23a63b4` is passed to the synchronization
+service at `0x10199bc6` with timeout `0x3e8`; it is not the callback slot.
+When `0x10062a6a` finds bit 63 set, it loads the callback pointer from the
+runtime field at `0xc18a748c` (derived from the singleton address
+`0xc18a74a8`) and invokes it indirectly through `bx r12`. The tested bitset
+uses the data pointer field at `0xc18a74a4`. The generic set-bit helper
+`0x1006248e` has one direct call site, in `0x10062998`; that routine loops
+over byte IDs supplied at runtime and sets them in a different bitset based
+at `0xc18a74b0`. Static evidence does not show that this list includes 63 or
+that it writes the tested bitset. The callback field's producer and runtime
+value remain unknown, so the transitive stack remains unbounded and candidate
+02 remains NO-GO. This supersedes F-318's identification of the callback
+address. Hash-verified full Thumb disassembly and local data-flow/xref review,
+2026-10-18; high confidence in the corrected address arithmetic and direct
+call-site count, runtime list and callback unresolved. No camera access or
+firmware bytes/dumps.
+
+F-320. A full-image static word-reference scan finds only the helper's own
+literal reference to singleton base `0xc18a74a8`; it finds no absolute word
+reference to computed callback-field address `0xc18a748c`. The generic
+set-bit wrapper `0x10062998` likewise has no direct call-site or static
+function-pointer reference in the linked image; its entry path and the
+runtime byte list it consumes are unresolved. This narrows the missing
+producer to a computed/pointer-based registration or runtime initialization
+path, but does not exclude aliases or indirect dispatch. No static callback
+target or peak-stack bound is established; candidate 02 remains NO-GO. The
+next useful static pass is to follow the registered callback-table/initializer
+path for this synchronization domain once, then pivot away if its runtime
+registration cannot be identified. Private linked-image xref scan and
+hash-verified disassembly, 2026-10-18; high confidence for exact absolute-word
+and direct-call xref absence, no conclusion about computed references. No
+camera access or firmware bytes/dumps.
+
+F-321. The conditional callback in F-319 has a statically recoverable
+initializer and bounded target path. Initialization routine `0x1006516c`
+loads callback target `0x1006499b` and calls setter `0x100628de`; the setter
+stores that value in field `0xc18a748c`. The same initializer passes the
+callback to registration helper `0x10060e6a`. On the `0x10062a6a` dispatch
+path, `r0` is loaded from the fixed literal at `0x10062bfc` and `r1` receives
+the bit index. The callback entry `0x1006499a` copies `r0` to its selector,
+initializes the return value to zero, and returns immediately for selectors
+at least 5; the fixed selector on this path exceeds that limit. It makes no
+call and allocates no stack, so this conditional callback adds no target-frame
+depth. This corrects F-319/F-320's unresolved callback-producer/target
+assessment. The action path's remaining direct callees and peak stack are
+still unbounded by F-316, so candidate 02 remains NO-GO. Hash-verified full
+Thumb disassembly and literal/data-flow review, 2026-10-18; high confidence
+in registration, fixed selector and early-return path. No camera access or
+firmware bytes/dumps.
+
+F-322. Corrects F-321's callback-target decode. The initializer literal points
+to Thumb target `0x10064a9b` (entry `0x10064a9a`), not `0x1006499b`. At the
+`0x10062a6a` call site, the fixed first argument is `0x04100004`; the target
+transforms it to selector 3 and enters switch case 3 at `0x10064aee`. That
+case saves 16 bytes and calls `0x10060ecc`, `0x10060cde`, `0x10061aa6`, and
+`0x100660f2`, so its transitive stack is unresolved. F-321's claim of a
+no-call, zero-frame callback is withdrawn; candidate 02 remains NO-GO. This
+also corrects F-319/F-320's set-bit helper accounting: `0x1006248e` has two
+static call sites (`0x100628a0` and `0x100629b6`); `0x1006289a` tail-branches
+to it for fixed IDs, while `0x10062998` loops over a runtime byte list. The
+tested bitset and that list consumer use different bases. Hash-verified full
+Thumb disassembly and literal/case data-flow review, 2026-10-18; high
+confidence in target, selector and direct callees, transitive stack unresolved.
+No camera access or firmware bytes/dumps.
+
+F-323. Traces the actual selector-3 callback branch found in F-322. Its local
+path is: `0x10064a9a` (16-byte frame), table mapper `0x10060ecc` (selector
+and event byte 63; returns without a call), `0x10060cde` (receives byte 4 and
+takes its state-check path), `0x10061aa6` (8-byte frame, calls `0x10061930`),
+then `0x100660f2` (24-byte frame). The last helper loops over a runtime
+listener count at `0xc18a74d5` and function-pointer entries beginning at
+`0xc18a7520`; each entry is called through `0x10061072`, which tail-dispatches
+the generated event code. The table/count have no statically decoded contents,
+so subscriber callback frames and total peak remain unknown. The 40-byte local
+frame in `0x10061930` is on a preceding registration/service call path, not
+simultaneous with the later listener loop. This gives a precise unresolved
+callback risk rather than treating the whole 70-callee body as opaque.
+Candidate 02 remains NO-GO. Hash-verified Thumb control-flow and global-base
+trace, 2026-10-18; high confidence in call order, local frames and runtime
+table accesses; dynamic listener contents unresolved. No camera access or
+firmware bytes/dumps.
+
+F-324. Continued the F-323 listener-table trace by following the shared base
+`0xc18a74d4` through its literal-pool references. The broadcast helper
+`0x100660f2` itself is read-only with respect to the listener count and
+pointer array: it uses the count byte at `+1`, then reads pointers from `+0x4c`
+and dispatches them. The first-pass base-reference sweep did not identify a
+statically traceable subscriber-registration writer; the other inspected
+references belong to adjacent state/configuration paths. This does not prove
+there is no computed or external registration path, so callback stack depth
+remains unresolved. Stop this listener-table branch and pivot to a direct
+AF-ready/reticle hook search. Candidate 02 remains NO-GO. Hash-verified
+Thumb disassembly and bounded base-reference review, 2026-10-18; high
+confidence in the broadcast's read-only behavior, moderate confidence in the
+bounded search disposition. No camera access or firmware bytes/dumps.
+
+F-325. Reviewed candidate 02's private source against the owner's persistent
+auto-arm behavior. Its helper requires the native live-view-ready flag, base
+AF-area mode 6, and People/Animal submode 1 or 2. The submode-setter hook calls
+that helper after the native setter when live view is already active; the
+live-view-ready hook calls it when that transition occurs after the AF mode
+selection. The mode hook clears the one-shot latch when leaving mode 6. On an
+eligible transition, the helper skips a duplicate action when its latch or
+the copied AF status byte says tracking is already armed; otherwise it calls
+native action 45, copies the native AF status pair through `0x101925b0`, then
+sets the latch on success. This source-level structure covers the two
+transition orderings in the requested behavior, so no new trigger point was
+identified in this pass. It does not prove correct native timing, completed
+dispatch, reticle visibility, or half-press acquisition; the focused QEMU call
+timed out, and dynamic callback stack remains unresolved. Candidate 02 stays
+NO-GO. Private source review, 2026-10-18; high confidence in stated branch
+structure, no runtime conclusion. No camera access or firmware bytes/dumps.
+
+F-326. A stock pinned-QEMU startup populated the runtime event-listener table
+with one stable callback target, Thumb entry `0x1022adee` (three consecutive
+samples). Static control flow from the action-45 state-handler selector-3
+case emits event `0xB5` through the shared broadcast, which passes the event
+code and payload to that listener list. The listener's frame is 88 bytes
+(28-byte saved-register frame plus 60 bytes of locals); its `0xB5` switch arm
+reaches setting/value translation helpers and a further native notification
+helper. This replaces the prior claim that the listener target itself was
+unknown, but does not establish that a normal QEMU action-45 run completed
+this callback or bound the helper/SVC tail. The complete transitive stack,
+reticle visibility, half-press acquisition, and candidate behavior remain
+unverified; candidate 02 stays NO-GO. Runtime table sampling plus
+hash-verified Thumb control-flow trace, 2026-10-18; high confidence in the
+sampled target and static branch, moderate confidence that this closes the
+runtime dispatch target under normal table stability. No camera access or
+firmware bytes/dumps.
+
+F-327. Followed F-326's target through the actual stock event path in pinned
+QEMU: after standard assisted startup, a diagnostic call to the native
+selector handler with selector event `0x04100004` and payload 1 emitted
+`0xB5`, entered listener `0x1022adee`, and returned to the diagnostic
+sentinel. Breakpoints across the branch observed a lowest SP of
+`0xc2bacf30` from an entry SP of `0xc2bacfe0` (176 bytes sampled). The
+conditional nested notification callback at `0x1022c4b8` and its dispatch
+site `0x10062344` were not reached; their enable mask was zero at ordinary
+post-startup. This closes callback completion for this constructed payload
+and QEMU context, but 176 bytes is not a worst-case bound and the diagnostic
+ran on InitTask, not the candidate's APPLV worker. It does not establish
+candidate action completion, reticle visibility, or half-press acquisition.
+Candidate 02 remains NO-GO. Read-only stock-QEMU trace, 2026-10-18; high
+confidence for the observed event, return and sampled stack delta; no claim
+about other payloads, worker context or camera behavior. No camera access or
+firmware bytes/dumps.
+
+F-328. Re-audited the QEMU callback's alleged missing AF-object context.
+`0x101885e8` is a generic linked-list pop-front helper: it reads the head
+node's payload, unlinks the node, decrements the list count, and returns that
+payload. In `0x10074492`, the list at `0xc259e920+0x70` is first checked for
+emptiness; when nonempty, its head is inspected, popped, and moved to a second
+list at `0xc259e920+0x90`. Thus the QEMU observation that `r4 == 0` at
+`0x1007450e` means the first queue was empty in that fixture. It does not
+mean an AF object lookup failed, and `0x101885e8` is not evidence of an
+AF-object registry. This supersedes the object-lookup interpretation in
+F-280/F-282/F-283 and retires the proposed search for a constructor or
+registration feeding `0x101885e8`. The queue's producer and semantic relation
+to tracking remain unknown; continue with the direct AF-ready/reticle hook or
+the producer only if its identification can change that hook decision.
+Hash-verified Thumb decode and direct call-site review, 2026-10-18; high
+confidence in the list operation and empty-queue interpretation, no claim on
+queue purpose or tracking behavior. No camera access or firmware bytes/dumps.
+
+F-329. A pinned-QEMU probe set AF-area values 601 and 602 through native
+setter `0x1042b2d8`; property getters read back base mode 6 with People
+submode 1 and Animal submode 2. The action-45 state mapper still returned
+state 5 in both cases. A synthetic enable of the separate boolean gate at
+`0xc23a51a8+5` did not change the mapper result or reach any state-operation
+helper; the source pair remained `(0,0)`. The mapper's snapshot is copied from
+the AF context by `0x104b9348`/`0x101925ce`, and its `+0x61/+0x62` bytes are
+the pair copied by bridge `0x101925b0` from the source pair at
+`0xc259ff0c+0x38/+0x39`. Thus ordinary QEMU mode selection does not populate
+the native AF state required for action 45, even when the separate boolean
+gate is enabled. This does not show that the same rejection occurs on the
+camera or disprove the auto-arm design; it means QEMU cannot verify candidate
+activation from this setup. The camera-side reticle and half-press behavior
+remain unverified. Read-only pinned-QEMU probe plus hash-verified Thumb data
+flow, 2026-10-18; high confidence in property readback, state-5 return, and
+snapshot copy path; no claim about real-camera state or UI behavior. No camera
+access or firmware bytes/dumps.
+
+F-330. Hash-verified static Thumb tracing narrowed the source-pair transition
+layer. Routine `0x1007756e`, reached by a tail-dispatch entry at `0x10162f14`,
+passes the native lock gate and, when the source state byte at
+`0xc259ff0c+0x10` is exactly 1, writes state 4, source pair `(1,1)` at
+`+0x38/+0x39`, and related status fields. Sibling entry `0x10162f18` reaches
+`0x100775c6`, which has separate state-dependent clearing paths. This is a
+concrete candidate for the native state transition layer, but static code
+does not identify the dispatch entries as the Auto-area tracking command or
+prove that calling `0x1007756e` produces the reticle or half-press acquisition.
+The known `(1,0)` writer `0x10078aa0` remains on an event-driven callback path
+through `0x1007445c`; its relation to the `(1,1)` transition is unresolved.
+Next trace the dispatcher input/registration and the observed half-press
+consumer before selecting a call site. Candidate 02 remains NO-GO. No camera
+access or firmware bytes/dumps. High confidence in the decoded writes and
+branch targets; no confidence claim on user-visible tracking semantics.
+
+F-331. Follow-up control-flow analysis connects F-330 to action 45. Native
+pair `(1,1)` with Auto-area base-mode byte 6 maps through `0x1044dc5a` to
+state 3. The principal action-45 selector routes states 2/3 through
+`0x1045a21c`, which calls bridge `0x10230866`; that bridge calls dispatch
+entry `0x10162f18` and thus `0x100775c6`. In its current-source-state-4 case,
+`0x100775c6` clears the source state and pair to zero. Therefore, after
+`0x1007756e` has established source state 4 and `(1,1)`, replaying action 45
+can follow a native clear transition. This is consistent with a toggle/cancel
+path and makes action 45 a poor direct substitute for the desired persistent
+ready state. It does not establish reticle visibility, shutter half-press
+acquisition, or the semantic label for source state 4. Next trace the actual
+native entry that first reaches `0x1007756e` in camera control flow and its
+caller conditions. Read-only hash-verified static decode; high confidence in
+the call chain and state-dependent writes, no claim about UI behavior. No
+camera access or firmware bytes/dumps.
+
+F-332. The only branch to the F-330 arming transition traces through a
+native AF callback. `0x1028f200` calls the local return-only request stub
+with code `0x33`, then tail-branches to `0x102bdbb4`. That routine
+copies the AF context and calls `0x1045a1e6` with argument 1 only when the
+snapshot has Auto-area base byte `+0x44 == 6`, source pair `+0x61/+0x62 ==
+(1,0)`, and byte `+0x415 == 0`. The downstream `0x1007756e` transition also
+requires source state byte `0xc259ff0c+0x10 == 1`; state 0 takes its no-write
+branch. With state 1, `0x1045a1e6 -> 0x10230856 -> 0x10162f14 ->
+0x1007756e` sets source state 4 and pair `(1,1)`. This is a real
+mode-conditioned native path into the pair/state already observed to map to
+action-45 state 3. The extra byte's meaning and the runtime registration or
+trigger for `0x1028f200` remain unknown; no evidence says it runs on AF-mode
+selection or produces the visible reticle. Next trace the runtime callback
+dispatch or a statically recoverable caller that controls this AF method.
+Hash-verified static Thumb review; high confidence in the guard and call
+chain, no claim on trigger timing or UI behavior. No camera access or
+firmware bytes/dumps.
+
+F-333. A pinned stock-QEMU probe corrected F-330's overly broad state gate and
+executed the native callback with synthetic context. The state initializer
+`0x100774f4` moved source state 0 to state 1 and pair `(1,0)`. With that
+state, the wrapper `0x1028f200` left the pair unchanged for wrong Auto-area
+mode, wrong AF-context pair, or nonzero context byte `+0x415`. For mode 6,
+context pair `(1,0)`, byte `+0x415 == 0`, and source state 1, the callback
+reached `0x1045a1e6 -> 0x10230856 -> 0x10162f14 -> 0x1007756e` and returned
+with source state 4 and pair `(1,1)`. An earlier case with source state 0 did
+not transition, confirming `0x1007756e` writes only from state 1. The original
+firmware hash and QEMU checkout were unchanged. This validates the native
+state transition and guards under constructed QEMU state only; it does not
+prove that state 1 displays the reticle, that the wrapper is the physical
+half-press callback, or that real camera timing supplies these values. The
+next patch decision is to produce ready state 1 on Auto-area activation while
+preserving the native guarded state-4 transition for half-press. High
+confidence in the observed QEMU state changes and guard behavior, no claim on
+camera UI behavior. No camera access or firmware bytes/dumps.
+
+F-334. Candidate generation was premature relative to the evidence and the
+project's camera-readiness gate. Candidate 02 did not establish the requested
+Auto-area People/Animal ready state on a camera, visible reticle, or
+half-press acquisition; the camera displayed no Update action and did not
+begin installation. The candidate remains NO-GO and must not be presented as
+ready to install or test. F-333's QEMU result validates only native state
+writes under constructed conditions. Continue with hook selection and
+behavior evidence; do not make another installable image until the hook and
+all project gates are resolved. Review of current handoff and camera report,
+2026-10-18; high confidence in candidate status, no claim on updater's exact
+rejection reason. No camera access or firmware bytes/dumps.
+
+F-335. A full-image direct-Thumb-call and exact-word-reference sweep using
+the private read-only xref tool found two direct callers of Auto-area setter
+`0x1042b2d8` (`0x1042bac2`, `0x10430c6c`), and two direct callers of ready
+helper `0x1045a1ae` (`0x10368bc6`, `0x10458dfe`). The state-1 writer
+`0x100774f4` is reached by tail branch `0x10162f10`; the guarded state-4
+writer `0x1007756e` is reached by tail branch `0x10162f14`. The wrapper
+`0x1028f200` has no direct branch or exact literal-pointer reference in this
+sweep; its only observed branch is its tail to `0x102bdbb4`. This leaves the
+wrapper's trigger indirect or runtime-registered and does not prove a physical
+half-press connection. The setter is a better candidate reconciliation point
+because its two known callers centralize mode writes, but its full ABI,
+return-time context and unobserved indirect callers still require review.
+Read-only xref scan of the hash-verified local original, 2026-10-18; high
+confidence in the bounded call/reference results, no completeness claim for
+computed dispatch. No camera access or firmware bytes/dumps.
+
+F-336. A pinned stock-QEMU sequence used synthetic Auto-area AF context to
+establish native state 1/pair `(1,0)`, copy that pair into the AF context,
+and run the guarded callback into state 4/pair `(1,1)`. Reapplying native
+ready helper `0x1045a1ae` after that transition completed its normal helper
+chain but left source state 4 and pair `(1,1)` unchanged. This shows that the
+helper does not reset those source bytes when repeated after the constructed
+active transition; it does not prove that its other side effects preserve
+camera tracking, that state 4 means acquisition is active, or that the
+callback is driven by shutter half-press. The QEMU firmware identity and
+checkout remained unchanged. Read-only pinned-QEMU probe with constructed
+state, 2026-10-18; high confidence in the sampled state bytes and call chain,
+no claim about reticle or camera behavior. No camera access or firmware
+bytes/dumps.
+
+F-337. After standard simulated shooting-view setup, native setter calls with
+encodings 601 and 602 returned successfully and standard properties read back
+base mode 6 with submodes 1 and 2. The AF context at `0xc237c7b4` still had
+base-mode byte `+0x44 == 0` and pair `+0x61/+0x62 == (0,0)` after each setter
+call. This repeats the known simulator disconnect between property selection
+and the AF snapshot in a read-only context sample; it does not prove the real
+camera's context remains stale or that setter continuation is unsafe. Stop
+repeating this QEMU setup. The real-firmware question is which AF-context
+producer populates base mode and what native callback follows that update.
+Pinned stock-QEMU property setter/readback and guest-memory observation,
+2026-10-18; high confidence in the sampled simulator values, no claim about
+camera context. No camera access or firmware bytes/dumps.
+
+F-338. A follow-up pinned-QEMU test captured the actual stack snapshot used
+by guarded callback `0x1028f200`, without writing the AF-context mode byte.
+For both native setter encodings 601 and 602, the property getters returned
+base mode 6 and submode 1/2. Native ready helper `0x1045a1ae` plus bridge
+`0x101925b0` established source/context pair `(1,0)`, and the extra guard byte
+was zero; however, the callback's constructed snapshot at stack offsets
+`+0x44`, `+0x61/+0x62`, and `+0x415` was `(0, (1,0), 0)`. It therefore did
+not call `0x1045a1e6`, and source state remained 1 for both People and Animal.
+This directly confirms that the stock QEMU property setter does not produce
+the mode byte required by this callback through the exercised setup. It does
+not show the camera has the same context gap. This refines F-337: the global
+context sample was not itself the callback snapshot; the stack snapshot is
+the decisive observation. Trace the actual AF-context producer and its event
+ordering rather than retrying this setter sequence. Original firmware hash
+and simulator checkout remained unchanged. Read-only pinned-QEMU test with
+synthetic state and stack sampling, 2026-10-18; high confidence in sampled
+snapshot and control path, no claim about real-camera behavior. No camera
+access or firmware bytes/dumps.
+
+F-339. Static tracing of the callback snapshot builder identifies the source
+of its mode guard. `0x101925ee` copies a 0x6c-byte range from the live AF object
+at `*(root + 0x144) + 0x40` into the constructed context at `+0x44`; this
+supplies the byte later tested by the callback at snapshot offset `+0x44`.
+The same builder reads the live object's `+0x40` field in a mode-dependent
+branch. By contrast, Auto-area setter `0x1042b2d8` decomposes its encoded input
+and writes public properties `0x0c2b` and, for base modes 4/6, `0x0c3c` or
+`0x0c3d`; it has no direct write to the live AF object or the copied context.
+This explains why the exercised QEMU setter path can read back People/Animal
+properties while the callback snapshot mode byte remains zero, and weakens the
+public setter as an immediate ready-state hook unless the downstream AF-object
+update has already completed. The next useful trace is the writer/update path
+for live AF-object offset `+0x40`, then the timing of its context snapshot.
+This is static data-flow evidence only: it does not prove real-camera timing,
+reticle visibility, or half-press acquisition. Hash-verified Thumb decode,
+2026-10-18; high confidence in the copy source/destination and setter property
+writes, no claim about camera behavior. No camera access or firmware
+bytes/dumps.
+
+F-340. The Auto-area setter's generic property-write path is synchronous
+through a runtime observer dispatcher. Setter `0x1042b2d8` calls property
+writer `0x10465990`, which tail-routes to `0x1021a0c6`; after storing the
+property, that routine calls `0x10132f8c` with the property ID and new value
+before returning. The dispatcher searches runtime callback records and invokes
+a matching function pointer when present; if its cached target is empty, it
+uses a resolver path. Thus a post-return hook could run after a property
+observer has updated AF state, but the callbacks for `0x0c2b` and `0x0c3d`
+and any write they make to live AF-object `+0x40` remain unidentified. This
+qualifies F-339: the setter has no direct object write, while its downstream
+observer path may still update the object synchronously. Next trace the
+registration/resolution path for these property IDs and determine whether its
+handler populates the live AF object's mode field. Hash-verified Thumb decode
+and bounded callback-dispatch review, 2026-10-18; high confidence in the
+setter-to-dispatch call chain and indirect callback mechanism, no resolved
+observer target or camera behavior. No camera access or firmware bytes/dumps.
+
+F-341. A focused pinned-QEMU probe observed property IDs `0x0c2b` (base mode)
+and `0x0c3d` (People/Animal submode) enter dispatcher `0x10132f8c` after
+native setter encodings 601/602. The dispatcher did not reach its indirect
+callback-call site or its fallback resolver for either property in this
+shooting-view fixture. Property getters still returned base mode 6 and
+submodes 1/2. Thus this QEMU setup has no observed callback route that updates
+the live AF-object mode field; this refines, but does not replace, F-337/F-338.
+It does not show that the real camera lacks these runtime registrations. The
+original firmware hash and pinned simulator checkout remained unchanged. A
+new probe recorded only setter/dispatcher registers and did not call the ready
+helper or tracking callback; 2026-10-18, high confidence in the observed
+QEMU path and property readback, no claim about camera registrations or UI
+behavior. No camera access or firmware bytes/dumps. Next trace the property
+observer registration/initialization path statically and find the AF-object
+`+0x40` writer.
+
+F-342. Static review of both direct callers of Auto-area setter
+`0x1042b2d8` found no direct call to the ready/action helpers or the AF-context
+builder after the property write. Caller `0x1042bac2` returns immediately
+after the setter. Caller `0x10430c6c` continues through property-to-menu
+mapping helper `0x10430b46` and selection-adjustment helper `0x1042d6de`, then
+returns success; these caller slices do not write live AF-object `+0x40`.
+Together with F-340/F-341, this makes the setter a clear property-selection
+boundary but not a proven AF-object update or tracking-ready hook. The object
+update may occur through dynamic observers or another AF lifecycle path. Next
+trace the producer/writer for AF-object `+0x40` outside these two setter
+callers, and identify when it becomes visible to builder `0x101925ee`.
+Hash-verified Thumb call-chain review, 2026-10-18; high confidence in the two
+direct caller continuations, no completeness claim for indirect dispatch and
+no camera behavior. No camera access or firmware bytes/dumps.
+
+F-343. Reviewed the hash-verified Thumb consumer at `0x10489832`, one of the
+static readers of Auto-area base property `0x0c2b`. It branches on the base
+mode, reads `0x0c3d` for People/Animal when base mode is 6, maps those values
+to menu-label identifiers, and emits the corresponding UI updates. This path
+does not write the live AF-object mode byte or build the tracking callback
+context, so it is a display/menu consumer rather than the missing AF-context
+producer. The direct writer for live AF-object `+0x40` and the runtime update
+ordering remain unresolved; broad `STRB [register,#0x40]` matches cannot be
+identified as that field without proving the base pointer. Hash-verified
+Thumb decode, 2026-10-18; high confidence in this consumer's property reads
+and UI mapping, no claim about the camera's runtime observer or tracking
+behavior. No camera access or firmware bytes/dumps.
+
+F-344. Followed the only direct caller of snapshot builder `0x101925ee` at
+`0x101613b2`. It belongs to handler entry `0x1016139e`, which is referenced
+as a Thumb callback pointer in the static table at `0x10161a44`. On the
+handler's matching branch it passes the live-view context at `[r1+0x428]` to
+the snapshot builder, then reads AF-object fields including `+0x40` for
+subsequent decisions; the reviewed caller slice contains no store to that
+field. This identifies an event-driven snapshot consumer, not the missing
+AF-object mode producer, and leaves the callback's dispatcher/event meaning
+unresolved. Hash-verified Thumb decode and direct-call/reference review,
+2026-10-19; high confidence in the call/data flow, no claim about runtime
+event delivery or camera behavior. No camera access or firmware bytes/dumps.
+
+F-345. Followed the Auto-area base-property notification path one layer past
+the setter. Property-batch processor `0x104579a0` passes each changed property
+ID to classifier `0x104575d0`; the `0x0c2b` case returns mask `0x04000000`.
+The processor then obtains the shared notification context and posts event
+`0x56` with that mask through `0x10462894` and the native queue helper. This
+proves Auto-area base-property changes enter a specific asynchronous
+notification route, but does not identify its receiver or show a write to
+live AF-object `+0x40`, tracking-ready state, or reticle state. Continue from
+the event-`0x56` receiver/queue consumer and determine whether it updates the
+AF object before the registered snapshot callback runs. Hash-verified
+Thumb-only static trace, 2026-10-19; high confidence in the property-to-mask
+and event-post path, no runtime timing or camera conclusion. No camera access
+or firmware bytes/dumps.
+
+F-346. Correction to F-345: the `0x56` argument at `0x104628c8` is passed
+to `0x1046296e`, which is a return stub; it is not the queued notification
+event. After that call, `0x10462894` loads the shared handle and mask and
+tail-calls wrapper `0x10199e04`, which forwards them to platform primitive
+`0x10036334`. Thus the established edge is that Auto-area base-property
+changes set mask `0x04000000` on a shared event-flag-like object. The waiting
+consumer and its relationship to live AF-object `+0x40` remain unknown. Trace
+the handle initialization/wait path to identify that consumer before choosing
+a patch hook. Hash-verified Thumb call/data-flow review, 2026-10-19; high
+confidence in the stub and handle/mask path, no runtime timing or camera
+conclusion. No camera access or firmware bytes/dumps. Supersedes F-345's
+description of `0x56` as a queued event.
+
+F-347. Traced the shared-handle initialization reached from the mode-3 branch
+at `0x10595840`. It creates three synchronization objects through
+`0x10462840`, `0x1046285e`, and `0x1046287c`; their returned handles are stored
+in adjacent slots based at `0xc181e4e4`. That same initializer then registers
+seven callbacks through `0x101e1c04`, including targets in `0x104650f8` and
+`0x104bd422`–`0x104bd4da`. The callback implementations update separate
+bit-packed/shared state records, but this trace does not associate their
+registration keys or effects with Auto-area property mask `0x04000000`, the
+live AF-object `+0x40` byte, or the snapshot callback `0x1016139e`. The image
+contains many generic wait-wrapper call sites; the bounded direct-call review
+did not identify a unique consumer for these three handles. This rules out
+the simple local waiter-xref route, not indirect consumers or runtime
+registration. Next inspect the callback registry keys and the callers of the
+registered targets, then connect only a proven key/state update to the AF
+snapshot path. Hash-verified Thumb decode and direct-call review, 2026-10-19;
+medium confidence in the initialization and callback target list, no runtime
+timing or camera conclusion. No camera access or firmware bytes/dumps.
+
+F-348. Decoded the registration wrapper used by the F-347 initializer.
+`0x101e1c04` swaps the caller's key pointer and callback pointer before
+entering `0x101e1b86`; that routine hashes a zero-terminated key (rejecting
+keys longer than 16 bytes), selects a bucket, compares existing keys, and
+stores a callback pointer, an auxiliary value, and the caller's opaque
+pointer in the registration record. At the seven call sites, the key pointer
+comes from a nearby address and the callback pointer from a literal pool;
+their key contents have not been semantically identified. This establishes
+that the F-347 registrations are keyed callback subscriptions, not proof that
+they consume the Auto-area event mask. Next map the seven key contents to
+other key producers/dispatch sites and follow only a matching callback toward
+AF-object `+0x40` or snapshot handler `0x1016139e`. Static Thumb review,
+2026-10-19; high confidence in the local argument and record flow, no
+runtime delivery or camera conclusion. No camera access or firmware
+bytes/dumps.
+
+F-349. Connected registered handler `0x1016139e` to its runtime callback
+filter and snapshot event. Initialization stores its Thumb pointer in shared
+callback slot `0xc1885f30`; dispatcher `0x1021dfa0`/`0x1021dee4` can route into
+that slot. The generic `0x041a0040` dispatch branch does not satisfy the
+handler's event filter. The handler proceeds to snapshot live-view AF context
+`[r1+0x428]` only for event ID `0x0002fe3d`; another accepted ID takes a
+separate path. The `0x0002fe3d` route is therefore a concrete event-to-AF-
+snapshot edge, but its producer is not yet linked to Auto-area property
+`0x0c2b`/submode `0x0c3d` or to the tracking-ready helper. Next trace the
+producer of `0x0002fe3d` and test whether its ordering follows the AF-context
+update; only then can this callback be evaluated as an auto-arm hook.
+Hash-verified Thumb and literal-pool data-flow review, 2026-10-19; high
+confidence in the local callback filter and snapshot call, no runtime timing,
+reticle, or camera conclusion. No camera access or firmware bytes/dumps.
+
+F-350. Bounded the visible static source chain for F-349's callback. The
+outer callback `0x1021dfa0` is installed in a shared callback slot and its two
+located indirect call sites supply event ID `0x041a0081`; the AF handler
+`0x1016139e` rejects that ID before building the AF snapshot. A full-image
+literal search found no occurrence of accepted snapshot event `0x0002fe3d`.
+Thus the visible static caller chain does not explain the accepted snapshot
+event or link it to Auto-area changes. This does not exclude runtime-generated
+IDs, indirect producers outside the located slot, or an event whose value is
+assembled from fields. The callback is not a selected hook. Pivot to the live
+AF-context producer/event ordering and retain the snapshot callback only if a
+new source link is found. Full-image Thumb disassembly, literal-reference and
+byte-pattern scans, 2026-10-19; medium confidence in the bounded static
+inventory, no runtime or camera conclusion. No camera access or firmware
+bytes/dumps.
+
+F-351. Reviewed the strongest offset-only candidates from a bounded scan for
+stores near the live AF object's `+0x40` field. `0x135762` allocates and
+initializes the object whose pointer is installed at root `+0x144`; its stores
+to object `+0x40` are zero-initialization. `0x143718` is a reusable reset
+routine that clears the same object fields, including `+0x40`. The other
+matches write either a stack-built record, a separate global record, or
+nested components reached through unrelated offsets. None is evidence of the
+Auto-area People/Animal mode producer. This rules out these prominent
+offset-only matches, not every possible indirect or byte-sized writer. The
+next useful static step is to trace non-initialization readers and writers
+from the root `+0x144` object using the exact pointer provenance; if that does
+not reveal a mode update, report the static hook unresolved and require a
+runtime AF-context observation before another patch. Thumb disassembly and
+bounded candidate classification, 2026-10-19; medium confidence in the
+classified sites, no runtime or camera conclusion. No camera access or
+firmware bytes/dumps.
+
+F-352. Correction to F-339/F-351: rereading snapshot builder
+`0x101925ee` at the instruction level shows its copied context input in `r5`;
+the mode byte used by its mode-6 guard is loaded from `[r1 + 0x40]` after
+`r1 = [r5]`. Thus the relevant mode object is the pointer at context offset
+`+0`, plus `+0x40`. The separate pointer at context `+0x144` supplies other
+snapshot fields and is not the direct source of this mode byte. The earlier
+`0x135762` and `0x143718` offset-only candidates therefore were not shown to
+initialize/reset the mode object; F-351's claimed AF-object classification is
+withdrawn. A bounded instruction-level taint scan from `ldr reg,[base,#0x144]`
+found no immediate same-register byte writer to `+0x40`; one word store at
+`0x307bec` targets that different `+0x144` subobject. Next trace the pointer
+stored at context `+0` and its own `+0x40` writers from the callback's actual
+context root. No hook or patch is established. Hash-verified Thumb review,
+2026-10-19; high confidence in the local source-pointer correction, no runtime
+or camera conclusion. No camera access or firmware bytes/dumps. Supersedes
+F-339's pointer expression and F-351's object classification.
+
+F-353. The corrected context-pointer search finds a concrete writer family at
+section offsets `0x1d84c28` and `0x1e0a9f4` (duplicated code paths). Each takes
+a state record, loads its first pointer, scans eight four-byte table entries,
+derives a 0/1 value from entry flags/counts, and stores that byte at pointed
+object `+0x40`; the first variant then sends the inverse value to a follow-up
+helper. Located callers of `0x1d84c28` include `0x1d86396`, `0x1d86528`,
+`0x1d86a6c`, and `0x1d87abe`; reviewed call sites include a zero second
+argument and are within a larger AF-like event-processing routine. This is a
+real writer to the pointer-at-context-`+0` field but writes a table-derived
+boolean, not the Auto-area mode value 6, and no reviewed guard ties it to
+properties `0x0c2b`/`0x0c3d` or the native ready helper. Treat it as a state
+consumer/update path, not the auto-arm hook. Next identify the table's producer
+and the event/registration semantics of the callers; stop if no Auto-area or
+ready-state link appears. Hash-verified Thumb review, 2026-10-19; high
+confidence in the local dataflow, low confidence in feature semantics, no
+runtime or camera conclusion. No camera access or firmware bytes/dumps.
+
+F-354. Followed the table input one edge upstream. In the nearby state-update
+path, caller record fields are copied into a local five-word tuple; its
+third/fourth fields are then installed at state-record offsets `+0x268` and
+`+0x26c` (store sites `0x1d6cde`/`0x1d6cd6`, with a parallel path at
+`0x1d6d6c`/`0x1d6d64`). In the first path, the `+0x26c` value originates
+from `[r5 + 8]` in the caller-provided record. That is the pointer later
+scanned by the `+0x40` boolean writer family in F-353. The bounded slice does
+not identify the record's producer or event type, and does not link it to
+Auto-area properties or tracking readiness. Next trace the caller-provided
+record from update entry `0x1d6ba30` and its call path; stop unless it reaches
+AF-area selection or the native ready helper. Thumb dataflow review,
+2026-10-19; medium confidence in local field provenance, no feature/runtime/
+camera conclusion. No camera access or firmware bytes/dumps.
+
+F-355. Correction to F-354's proposed next address: section offset `0x1d6ba30`
+is inside a ring-buffer helper beginning at `0x1d6ba22` (it scans indexed
+records and updates a cursor); it is not the caller-record producer or the
+state-update entry described in F-354. The cited `0x1d6cd6` region also
+decodes as unrelated counter/table iteration, so the previous address list
+does not establish stores to state-record `+0x268/+0x26c`. Withdraw F-354's
+specific store-site and producer-address claims pending revalidation. Keep
+only the earlier F-353 finding that a table-derived boolean is written
+through the context-first pointer at `+0x40`; the table provenance is
+unresolved. Pivot to the direct callers of native ready helper `0x1045a1ae`
+(section offsets `0x348bc6` and `0x438dfe`) and trace their enclosing
+dispatcher/input sources before assigning button or tracking semantics.
+Hash-verified Thumb re-decode, 2026-10-19; high confidence that the proposed
+`0x1d6ba30`/`0x1d6cd6` interpretation is unsupported, no feature/runtime/
+camera conclusion. No camera access or firmware bytes/dumps. Supersedes
+F-354's store-site and next-address claims.
+
+F-356. Inspected the two direct callsites of native ready helper
+`0x1045a1ae`. The callsite at section offset `0x348bc6` is reached from an
+event-like handler that switches on incoming codes `0x0b`, `0x19`, `0x1b`,
+`0x28`, `0x2c`, and `0x2d`; for code `0x1b`, result values 0/1 call the ready
+helper with byte 0, value 2 calls clear helper `0x1045a1e6`, and value 3 calls
+active-transition helper `0x1045a21c` before possibly looping to ready. Other
+branches use the same helper family, but their event-code producer and
+semantics are unresolved. The second callsite at `0x438dfe` is inside a
+record-driven dispatcher: it checks input flags, property/key `0x188c`,
+record byte `+4` equal to 2 or 3, and successful returns from helpers
+`0x1045a258`/`0x1045a21c` before calling ready with byte 1. These are real
+ready-state routes, but neither local slice links its input to Auto-area
+People/Animal selection, OK, Fn1, or the requested automatic behavior. Next
+trace the outer dispatchers and source records for these two paths; stop if
+no AF-area or tracking-state connection appears. Hash-verified Thumb
+disassembly, 2026-10-19; high confidence in local control flow, no confidence
+in feature semantics, no runtime or camera conclusion. No camera access or
+firmware bytes/dumps.
+
+F-357. Traced the ready-helper callers one level into their surrounding
+dispatch. The event-like caller `0x348b6e` is reached from configurable-action
+helpers that query settings including `0x1170`, `0x1141`, `0x1173`, and
+`0x1144`, then branch on action values such as `0x19`, `0x2a`, and `0x4d`.
+The known AE-L/AF-L stills assignment is setting `0x1184`, so these local
+reads do not identify the AE-L/AF-L input or Auto-area transition. The other
+ready-helper caller remains guarded by generic record fields and key
+`0x188c`, with no AF-area link. Treat both routes as unassigned generic
+state/action machinery, not as the automatic-arm hook. The key `0x188c` and
+setting IDs have not been mapped to named AF properties. Resume from the
+Auto-area base/submode notification consumer or another proven AF-context
+producer, and evaluate whether it can call the idempotent ready-state path
+without routing through toggle action 45. Hash-verified Thumb call-chain
+review and cross-check against the named setting table, 2026-10-19; high
+confidence in the local call paths and setting-ID distinction, no feature
+semantics or runtime/camera conclusion. No camera access or firmware
+bytes/dumps.
+
+F-358. Bounded the event-source follow-up for F-353's table-derived AF-context
+writer. The writer at `0x1d84c28` is called from the processing routine at
+`0x1d85b44`; that routine has four direct callers at section offsets
+`0x1d8551a`, `0x1d860c4`, `0x1d86302`, and `0x1d87570`. The reviewed call
+slices pass internal object/record pointers into the same processing family,
+but do not expose Auto-area properties `0x0c2b`/`0x0c3d`, the setter
+`0x1042b2d8`, or ready helper `0x1045a1ae`. This does not rule out a dynamic
+event producer or computed dispatch, but the bounded static caller path does
+not connect this writer to the requested arm behavior. Stop extending this
+branch absent a new cross-reference. Resume with the Auto-area notification
+consumer only through a candidate event/dispatcher that can be tied to the
+three initialized handles; generic wait-wrapper enumeration alone has not
+identified a consumer. Hash-verified Thumb disassembly and direct-call sweep,
+2026-10-19; high confidence in the listed direct callers and local data flow,
+no feature/runtime/camera conclusion. No camera access or firmware
+bytes/dumps.
+
+F-359. Resolved the semantic domain of the callback registrations made by
+initializer `0x10595840`. Its seven key strings name GUI debug/log controls:
+debug logging, interface logging, category/task selection, log skipping, and
+debug-mode get/set. The property-batch processor's Auto-area case signals the
+second of the three handles initialized by this routine through the shared
+flag setter. This ties the `0x0c2b` notification to a GUI/property-notification
+route, but the registered debug-command callbacks are not evidence of an AF
+context consumer or tracking-ready transition. Retire the callback-key branch;
+do not infer tracking behavior from this shared GUI notification mechanism.
+Next find the AF engine's application/update path from the Auto-area setter or
+another positively identified AF lifecycle callback. Hash-verified Thumb
+disassembly and local key-string classification, 2026-10-19; high confidence
+in the registered key domain and slot usage, no proof of runtime receiver,
+reticle, half-press, or camera behavior. No camera access or firmware
+bytes/dumps.
+
+F-360. Reviewed a candidate property handler at `0x1008955c` because it
+compares Auto-area base/submode IDs `0x0c2b`, `0x0c3c`, and `0x0c3d`. Its
+local effect is to gather property values into a change record and pass that
+record to `0x1008945c`, which merges it into a generic cached-property table.
+It does not locally call the native ready helper, write the AF-context mode
+byte, or invoke the tracking action. A bounded direct-call and literal-pointer
+scan found no static registration/reference to this entry, so its role as an
+observer callback is unproven; computed or runtime registration remains
+possible. Do not use this routine as the auto-arm hook. The useful next step
+is to identify the actual AF-application callback reached after setter
+`0x1042b2d8`, or a runtime observer resolver target for `0x0c2b`/`0x0c3d`,
+and follow it to the live context and ready-state writer. Hash-verified Thumb
+review and bounded xref sweep, 2026-10-19; high confidence in the local
+property-record behavior and absence of direct static references, no proof of
+runtime reachability or AF semantics. No camera access or firmware
+bytes/dumps.
+
+F-361. The generic property observer dispatcher `0x10132f8c` scans a
+200-record registration table initialized by `0x10132eac`. Initialization
+copies each record's fixed property ID from the static table at `0x115db4ec`
+into runtime table storage, then performs the record's service setup. A
+bounded scan of all 200 static IDs found no entries for Auto-area base
+property `0x0c2b` or submode properties `0x0c3c`/`0x0c3d`. The dispatcher's
+remaining local fallback branches also do not match these IDs. The resolver
+`0x10132e66` is directly called only from this table initializer and from the
+dispatcher when a matching record lacks a cached handler; neither path
+supplies a static Auto-area registration. Therefore this observer system is
+not the missing AF-application callback on the reviewed static path. Runtime
+code outside these direct paths could still affect AF context, so this does
+not prove that no AF update occurs elsewhere. Retire the generic resolver
+branch and trace AF-specific application/lifecycle code. Hash-verified
+original-module Thumb decode, static-table scan, and bounded direct-call
+sweep, 2026-10-19; high confidence for the fixed table contents and reviewed
+dispatch paths, no claim about other runtime mechanisms or camera behavior.
+No camera access or firmware bytes/dumps.
+
+F-362. Followed the AF-like configuration callback at `0x1036c066` because
+it queries Auto-area properties through helper `0x1036bff0` and reaches
+`0x1045a47e`. The helper's selectors read properties `0x0c2a`/`0x0c2b`
+(or alternate IDs `0x56c`/`0x56d`) to build generic property records; the
+callback compares two configuration structures and updates cached status
+bytes. Its call to `0x1045a47e` is a status query: that wrapper returns the
+boolean from `0x102240ac`, which reads a global state byte, and performs no
+ready-state write or tracking action. The branch is gated by an internal
+configuration byte equal to 5, with no proven mapping to Auto-area
+People/Animal or the requested ready state. This is an AF-adjacent
+configuration reconciler, not the auto-arm hook. It narrows the search but
+does not identify a patch point; resume at a proven live-context mode writer
+or a native ready-state caller whose source is tied to Auto-area. Hash-
+verified Thumb dataflow review, 2026-10-19; high confidence in the local
+property reads, cached-state writes, and status-query contract, no runtime,
+feature-semantic, reticle, or camera conclusion. No camera access or firmware
+bytes/dumps.
+
+F-363. Re-traced the live-view snapshot consumer `0x101925ee` from its
+registered caller `0x1016139e`. Before the extended mode-specific snapshot
+path, it reads byte `+0` and mode byte `+0x40` from the object pointer at
+context `+0`; that path runs only when the bytes are respectively 1 and 6
+and local snapshot flags at output `+0x364`/`+0x365` are clear. It then builds
+additional snapshot data through `0x101914ae` and continues copying fields
+from the separate context `+0x144` object. The reviewed builder reads these
+mode/context fields and writes its snapshot output; it does not set the
+source object's mode byte or enter the native ready helper. This is a
+downstream consumer gate, not an auto-arm hook, and it establishes only that
+the snapshot has a mode-6-specific branch. Next trace the producer that
+installs the object pointer at live-view context `+0` and updates its
+`+0x40` byte before this callback. Hash-verified Thumb review, 2026-10-19;
+high confidence in the local gate and snapshot-copy path, no proof of runtime
+event ordering, tracking semantics, reticle, half-press, or camera behavior.
+No camera access or firmware bytes/dumps.
+
+F-364. Resumed F-243's open search for callback `0x10302220`'s registration.
+A full-image Thumb-pointer scan finds one static function pointer to that
+callback at file offset `0x1f8af58`, in a table whose neighboring entries
+are other callbacks in the same configurable-function subsystem. The callback
+itself gates entry through `0x10485b50`, accepts only input codes `0x1a`,
+`0x1b`, or `0x1c`, and then invokes dispatcher `0x10301f36`. The dispatcher's
+first table routes those inputs to handlers other than AE-L/AF-L handler
+index 13; the setting-`0x1184` check inside handler `0x10369468` therefore
+does not establish physical AE-L/AF-L delivery to that route. This confirms
+the callback's static-table presence but does not identify its table
+initializer or a physical-key source. Do not use this dispatcher as the
+one-button tracking hook. The physical input edge remains unresolved under
+offline-only project rules. Hash-verified Thumb decode and full-image
+pointer scan, 2026-10-19; high confidence in the pointer occurrence, callback
+gate, and input-code routing, no physical-input or camera conclusion. No
+camera access or firmware bytes/dumps.
+
+F-365. Rechecked the proposed Auto-area setter boundary and native action
+entry using the hash-verified original. Setter `0x1042b2d8` decodes its input
+as base mode and submode, writes `0x0c2b`, then writes the People/Animal
+submode to `0x0c3d` when base mode is 6; it returns without calling the
+tracking-ready helper. Its two known callers are a setting-commit path
+(`0x1042bac2`) and a mode-table application path (`0x10430c6c`), not a proven
+AF-context lifecycle callback. Native ready helper `0x1045a1ae` takes a
+pointer to a byte, clears a shared state word, and delegates through
+`0x10230832` to state/configuration logic; its call alone is not evidence of
+a visible reticle. Selector 45 (`0x10368b6e`) first maps a live AF snapshot and
+chooses different helpers for mapped states 0/1 versus 2/3, so an unconditional
+selector-45 call on every property update is not a safe auto-arm design. This
+narrows the build question: a setter hook could catch explicit mode changes,
+but the startup/live-view trigger and a People/Animal-ready precondition remain
+unresolved. Next evaluate a disposable QEMU-only setter-hook prototype for
+native state side effects, while separately tracing the AF-context lifecycle
+needed when Auto-area is already selected. Candidate 02 remains NO-GO; no
+camera access or installation workflow. Hash-verified Thumb decode and
+caller-path review, 2026-10-19; high confidence in the local setter and helper
+contracts, no proof of reticle, half-press behavior, natural context ordering,
+or camera behavior. No firmware bytes/dumps.
+
+F-366. Built a throwaway setter-hook overlay in `/private/tmp`, booted the
+verified stock image in the pinned QEMU, then applied only the hook and stub
+to guest RAM. Diagnostic calls to setter `0x1042b2d8` with encoded values 601
+and 602 traversed the new tail-call stub, called native ready helper
+`0x1045a1ae`, and reached the downstream state write with value 6. Value 600
+traversed the stub but did not call the ready helper. The sampled AF-context
+window around mode byte `+0x40` remained unchanged in all three cases. This
+proves the prototype's local branch and native helper path in constructed
+QEMU calls only; it does not show a natural menu selection reaching the hook,
+that byte 6 produces the intended reticle, or half-press acquisition. It also
+shows the public setter plus helper does not populate the sampled live AF
+context in this simulator fixture. Next trace the AF-context producer and
+view-entry lifecycle; keep the setter hook as a partial mode-change path, not
+a complete auto-arm implementation. Candidate 02 remains NO-GO. Pinned-QEMU
+guest-RAM overlay, 2026-10-19; high confidence in the observed branch,
+helper-call, and state-write values, no natural event, camera, reticle, or
+half-press conclusion. No firmware bytes/dumps in the repository and no
+camera access.
+
+F-367. Follow-up xrefs do not connect the pair accessors near AF status root
+`0xc237c7b4` to the live-view mode object used by snapshot builder
+`0x101925ee`. Getter `0x10197828` reads root bytes `+0x414/+0x415`; setter
+`0x10197c3c` writes those bytes, with the located setter caller at
+`0x102222aa`. They are separate from the live-view callback's context pointer
+at `[r1+0x428]`, whose pointed object supplies mode byte `+0x40`. A read-only
+stock-QEMU boot sample found context-root `+0` null at the InitTask checkpoint;
+this is before simulated stills-view entry and says nothing about camera-time
+state. A full-image displacement scan for `#0x428` produced many unrelated
+structures and only re-observed the known callback loads at `0x101613ac` and
+`0x101613b8`; it did not identify a unique object installer. Retire the
+`+0x414/+0x415` accessor as a tracking-hook lead. Next trace the owner and
+initializer of the live-view event context passed to `0x1016139e`, then its
+context `+0` object and mode `+0x40` writer. Candidate 02 remains NO-GO. This
+is static Thumb review plus a simulator boot-state read only; no camera,
+reticle, or half-press conclusion. 2026-10-19; high confidence in the local
+accessor offsets and sampled boot value, no feature-level conclusion. No
+firmware bytes/dumps in the repository.
+
+F-368. Continued the callback-owner trace from F-367. The short routine at
+`0x10161642` passes two ADR-derived data addresses near the static callback
+data to queue setup helper `0x1021cce8`; a separate nearby registration at
+`0x101617e4` calls keyed registry `0x101e1c04`. These local setup calls do not
+identify an AF-context installer. Generic event dispatcher `0x1021dee4`
+receives a payload pointer, reads payload fields `+0x42c` and `+0x428`, then
+uses the context pointer at `payload+0x428` (including its byte `+0xe`) before
+forwarding an event ID and payload to the registered callback. Its ordinary
+event `0x041a0040` does not pass the AF handler's `0x0002fe3d` filter. A
+full-image Thumb scan found neither `MOVW #0xfe3d` nor `MOVT #2`; computed or
+table-derived sources remain possible. This confirms the handler is an
+event consumer, not a demonstrated Auto-area mode-object installer or arm
+hook. Stop extending this callback branch absent a newly identified producer
+for the accepted event. Return to the live AF object's context `+0`
+installation and `+0x40` writer, correlating the pointer by proven data flow
+rather than the `+0x428` displacement alone. Candidate 02 remains NO-GO.
+Hash-verified Thumb and relative-table review, 2026-10-19; high confidence in
+the local dispatcher and setup edges, no accepted-event source, reticle,
+half-press, or camera conclusion. No firmware bytes/dumps in the repository.
+
+F-369. Ran the project's standard pinned-QEMU stills-view setup with a
+breakpoint on AF snapshot callback `0x1016139e`. Setup completed, but the
+callback was never reached and status-root `0xc237c7b4 + 0` remained null.
+This fixture therefore cannot expose the camera-time AF context producer;
+do not repeat the same simulated view-entry sequence. A separate full-image
+Thumb scan found no simple same-register sequence that moves immediate 6
+directly into a `STRB [register,#0x40]` within the preceding 12 decoded
+instructions. This does not exclude loaded constants, register copies,
+indirect stores, or computed values. Continue static work on the proven
+live-object pointer and writer; do not infer a hook from displacement-only
+matches. Candidate 02 remains NO-GO. Pinned-QEMU diagnostic and targeted
+Thumb scan, 2026-10-19; high confidence in the bounded observations, no
+camera or feature-behavior conclusion. No firmware bytes/dumps in the repo.
+
+F-370. Re-decoded setter caller `0x10430c6c` in its enclosing routine
+`0x10430baa`. That routine reads the current AF base/submode properties
+`0x0c2b` and `0x0c3d`, maps the selected AF-area table entry, calls setter
+`0x1042b2d8`, then updates selection state and menu UI through
+`0x10430b46`/`0x1042d6de`. It is the explicit AF-area menu-selection path,
+not a stills-view entry or live AF-object lifecycle callback. Thus a setter
+hook covers a user changing AF-area in the menu but cannot by itself arm
+tracking when Auto-area was already selected on entry. Keep searching for the
+stills-view/AF-application path that has the live context pointer. Candidate
+02 remains NO-GO. Hash-verified Thumb decode of the enclosing caller,
+2026-10-19; high confidence in local menu dataflow, no reticle, half-press,
+or camera conclusion. No firmware bytes/dumps in the repository.

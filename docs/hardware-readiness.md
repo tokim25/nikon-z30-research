@@ -1,8 +1,178 @@
 # Hardware-readiness checkpoint
 
-Reviewed 2026-10-16. **NO-GO for hardware testing or installation.**
-Personal build-phase authorization does not grant permission to connect,
-flash or install on the owner's camera. No installable firmware was produced.
+## Lane 3 auto-arm: NO CAMERA-TEST CANDIDATE READY (2026-10-18, F-316)
+
+F-326 updates the unresolved-stack evidence: stock pinned QEMU sampled one
+stable listener callback target (`0x1022adee`), and the static action-45
+selector-3 branch sends event `0xB5` through that listener broadcast. The
+callback's local frame is 88 bytes and its matching event arm reaches further
+native state/value and notification helpers. The complete transitive stack,
+including the nested notification/SVC tail, remains unbounded. This adds a
+concrete trace target but does not change candidate status or prove reticle
+visibility/acquisition; candidate 02 remains NO-GO.
+
+F-327 then exercised the exact selector-to-`0xB5` callback route in stock
+QEMU with a constructed event payload. It entered `0x1022adee`, returned, and
+showed 176 bytes between event-handler entry and the lowest sampled SP; the
+conditional nested callback stayed disabled in ordinary startup state. This
+is a bounded sample on InitTask, not a worst-case bound for candidate code on
+APPLV, and it supplies no reticle or half-press evidence. Candidate 02 remains
+NO-GO.
+
+The earlier private Z 30 C 1.20 candidate `EG209020-autoarm-test-01.BIN` was
+the diagnostic variant and omitted the native AF status-copy bridge after
+action 45. Its previous SD-card copy produced no Update option; it must not be
+treated as a test-ready build. A second private candidate now includes the
+bridge and passes exact-span/CRC and hook-target checks, but its focused QEMU
+call timed out without usable observations. Candidate 02 has not been copied
+to the SD card or accepted by the updater. The owner's latest no-Update report
+is from the prior card state and is not acceptance evidence for candidate 02.
+Neither candidate is ready for a camera test. Do not rename or bypass updater
+eligibility.
+
+Scope: still-photo Auto-area AF People/Animal. Expected behavior is an
+automatically visible Subject-tracking reticle and acquisition beginning on
+shutter half-press. Movie behavior is outside scope. Stop after a failed or
+ambiguous first result. Recovery by reinstalling stock firmware is the
+owner's stated plan, but has not been verified; failure may require Nikon
+service or be unrecoverable.
+
+The updated private candidate remains an experimental build, not a safety
+claim or successful feature result. F-311 resolves the status bridge's local
+ABI, argument, return and alignment contract. F-313 corrects F-312: the
+action/state caller passes a zeroed pair, so the first indirect callback is
+skipped. F-314 shows the dispatcher enters its large event body only if shared
+mask word `0xc18a7540` is zero; native helpers set and clear bits in it, but
+the camera-time mask is unknown. F-315 follows an action-45 state-handler
+branch into the gated dispatcher and finds no local mask mutation in that
+helper or two observed caller slices; the gate's value remains unresolved
+ambient state. This is distinct from the candidate's status-copy bridge.
+F-317 resolves its two visible synchronization wrappers to ARM-mode SVC #6
+stubs with 8-byte local frames and no further firmware call; SVC internals are
+not bounded. F-322 corrects F-321's callback target: initializer
+`0x1006516c` stores Thumb target `0x10064a9b` at `0xc18a748c`; its selector-3
+branch reaches a runtime listener broadcast in `0x100660f2`. F-323 locates
+the dynamic listener count/list at `0xc18a74d5` and `0xc18a7520`, leaving
+subscriber stacks unresolved. F-324's bounded shared-base reference pass did
+not identify a static subscriber-registration writer. The candidate's action
+dispatcher path and peak stack remain unbounded. The camera-load mapping for
+its code page and worst-case stack/context of the inline action remain
+unproved.
+The APPLV task requests an 8 KiB stack; a related constructed QEMU path
+measured about 1.3 KiB but did not exercise this complete callback chain. The
+latest focused QEMU call timed out without usable observations. Candidate 02
+therefore remains NO-GO pending a defensible complete call-chain stack bound
+or an explicitly accepted stack-risk waiver. Reticle visibility and
+half-press acquisition remain unverified.
+The candidate preserves the original module-version metadata and the camera
+is already on C 1.20, but F-293's report of an upstream standalone EG
+installation on C 1.20 weakens same-version rejection as the explanation.
+F-295/F-296 find no same-version rejection in the standalone parser or
+type-2 post-CRC route. F-298/F-299 map the static filename-scan/parser return
+contract, but do not establish the camera's runtime branch or visible UI
+mapping. F-300/F-302 show that the directory choices resolve through runtime
+RAM pointers; the selected path is not available from static strings alone.
+F-303 confirms candidate 01's canonical filename matches the standalone row's
+wildcard pattern. The owner confirms camera-format and reports the camera is
+reading the card root (F-304). The owner reported no Update option for that
+card state (F-305). Candidate 02 was built later, has not been copied to the
+card, and has no updater-acceptance evidence. F-306 through F-309 trace the
+callback but do not explain the missing menu option. This status
+applies to Lane 3 only;
+it does not make the XPan or combined-feature build ready.
+
+Reviewed 2026-10-16. Overall project status remains NO-GO for other features
+or combined installation.
+
+## Lane 3 auto-arm candidate, 2026-10-18 (F-285)
+
+A private standalone EG candidate for Auto-area People/Animal auto-arm now
+exists. The verified-original builder and an independent exact-span/CRC
+audit pass; static review covers the three branch sites, wrapper return
+values, callee-saved registers and aligned stack frames. The candidate has
+not been accepted by the camera updater or run on hardware. QEMU did not
+observe the helper/action entry, so its reticle/acquisition result remains an
+approved hardware-test objective per the owner's direction that QEMU cannot
+fully establish readiness. Runtime executable mapping and worst-case
+live-view stack remain residual risks. The body has no dedicated still/movie
+mode predicate; movie behavior is unmeasured, while the required first test is
+still-photo Auto-area People/Animal. The Z 30 is visible on the USB bus, but
+gphoto2 has no PTP session and no card is mounted. Nikon's official update
+instructions use a camera-formatted card, and the same-version standalone-EG
+method has upstream Z 30 C 1.20 installation precedent; this exact image is
+still untested. Recovery is the owner's stated plan to reinstall stock
+firmware; that procedure is not verified and failure may require Nikon
+service or may be unrecoverable. **Status remains NO-GO** until a supported
+card transfer path and the named bounded test record are ready. See F-285
+and the [Codex handoff](handoff-codex.md).
+
+## Lane 3 risk threshold, 2026-10-18 (F-286) -- NO-GO
+
+The candidate image and independent exact-span/CRC audit now exist. Historical
+read-only gphoto2 summary and storage-list operations opened PTP and saw the
+removable card; the candidate remains only on the owner's local machine and
+was not uploaded. No firmware update or camera write occurred. The current
+candidate still lacks a worst-case live-view callback stack/context bound,
+and the modified callback did not complete in QEMU. Runtime mapping, updater
+acceptance, reticle and half-press acquisition are unmeasured. The threshold
+for taking that risk is: resolve stack/context headroom with a bounded static
+review, or explicitly record the owner's waiver of that named residual; state
+the accepted service-or-total-loss recovery risk and bounded photo-mode
+test; then obtain the required exact-step authorization under the active
+project rules. The supplied `AGENTS.md` currently prohibits all camera
+contact, so this checkpoint remains NO-GO and no transfer/install step may be
+taken under the current instructions. See F-286 and the
+[Codex handoff](handoff-codex.md).
+
+## Lane 3 PTP transfer result, 2026-10-18 (F-287) -- NO-GO
+
+The owner explicitly overrode the no-camera-contact prohibition and approved
+one exact PTP copy of the candidate. gphoto2 2.5.32 enumerated the card root,
+but the camera rejected PTP upload with `PTP Specification Of Destination
+Unsupported`; no file transferred and the updater was not started. The host
+has no card-reader volume mounted. This is a transport limitation, not a
+firmware result. Continue only through a camera-formatted card reader, with
+an exact path and operation reviewed before any card write. Worst-case
+callback stack/context, updater acceptance, reticle and acquisition remain
+open; hardware stays NO-GO. See F-287 and the [Codex handoff](handoff-codex.md).
+
+## Lane 3 still-photo guard review, 2026-10-18 (F-288) -- NO-GO
+
+The candidate's live-view hook has no proven still-photo predicate. Its
+nearby global-byte bit test controls only an optional helper call; both
+branches reach the same selector setter. A card copy alone would not address
+this feature gap, nor the unresolved stack/context and runtime-mapping risks.
+The candidate is unchanged and is not ready to install. See F-288 and the
+[Codex handoff](handoff-codex.md).
+
+## Lane 3 owner scope correction, 2026-10-18
+
+The owner clarified that movie behavior is irrelevant because the Z 30 is
+never used for movies. A still/movie exclusion is not part of this feature's
+acceptance criteria; F-288/F-289's missing-guard conclusion is therefore not
+a remaining blocker. The target is still-photo Auto-area AF People/Animal,
+with the Subject-tracking reticle automatically ready and shutter half-press
+starting acquisition. This scope change does not establish the private
+candidate's runtime code mapping, worst-case callback stack/context, card
+identity, updater acceptance, or camera behavior. Those remain separate
+readiness questions. The owner has accepted them for a bounded Lane 3
+experiment, but the camera did not offer an Update action for this candidate.
+The candidate is therefore not installable as presented; see F-292 and the
+current status above.
+
+F-289 records that re-inspection of callback `0x102f2990` repeated F-089
+without identifying its dispatcher or mapping inputs to photo/movie. It adds
+no usable guard and does not change NO-GO status.
+
+F-290 establishes the APPLV task's requested stack allocation as 8 KiB. The
+candidate/native peak stack depth within the live-view callback remains
+unbounded, so allocated size alone does not establish adequate headroom or
+change the NO-GO decision.
+
+F-291 corrects F-288's bit number: the live-view handler tests bit 7 of
+`0xc181b4b4`. Its repeated use by unrelated routines as a gate for the same
+helper makes it unsuitable as the still-photo/Auto-area guard. No valid
+eligibility predicate is established; status remains NO-GO.
 
 Current XPan update (2026-10-17): a private offline standalone-EG candidate
 exists and passes independent exact-edit, layout, length and native-CRC

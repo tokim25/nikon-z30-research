@@ -24,6 +24,14 @@ preview-table effects in playback, movie or warning contexts remain accepted
 and unmeasured. This does not waive lifecycle condition 1 or authorize a
 camera write; hardware remains NO-GO.
 
+**F-204 capture-path limit:** no new-still-exclusive hook or unchanged
+playback/editor output path has been proven. The area-4 table edit may affect
+playback/editor object construction or refresh; those effects have not been
+measured. F-201's waiver covers possible playback/movie/warning effects only.
+The owner directs keeping the waiver as scoped; editor outputs remain outside
+it and outside accepted test scope. Lifecycle condition 1 remains unmet and
+hardware stays NO-GO.
+
 ## Exact-firmware identity: version level only
 
 - Relayed by the session manager (owner update, 2026-10-17): a read-only USB
