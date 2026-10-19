@@ -6304,3 +6304,23 @@ stills-view/AF-application path that has the live context pointer. Candidate
 02 remains NO-GO. Hash-verified Thumb decode of the enclosing caller,
 2026-10-19; high confidence in local menu dataflow, no reticle, half-press,
 or camera conclusion. No firmware bytes/dumps in the repository.
+
+F-371. External recovery checks on the owner's Z 30 found an early-boot loop:
+the LCD stayed black, the rear activity light and lens initialization repeated
+about every 15 seconds, the loop continued with the lens and SD card removed,
+and no Nikon/PTP/alternate USB identity appeared during repeated macOS USB
+checks. Battery removal, `MENU` startup, and `OK` startup produced no change.
+This is a camera-time observation, not a simulator result; it identifies an
+early body-boot failure but not the failed storage region or component. See
+`field-recovery-and-service-research-2026-10-19.md`. 2026-10-19; high
+confidence in the reported symptoms, no board-level diagnosis.
+
+F-372. Public Nikon documentation for the Z 30 specifies a menu-based firmware
+update through `Setup > Firmware version` and does not document an automatic
+SD-card recovery mode or user-accessible emergency bootloader. Nikon's public
+Z 30 repair manual documents main-PCB replacement but does not publish a
+Z 30 SWD/JTAG/UART pinout or factory reprogramming protocol. This bounds the
+non-disassembly recovery options; it does not prove that Nikon service cannot
+reprogram the board with private equipment. See
+`field-recovery-and-service-research-2026-10-19.md`. 2026-10-19; high
+confidence in the cited public documentation.
