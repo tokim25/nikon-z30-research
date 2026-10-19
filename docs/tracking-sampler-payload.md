@@ -109,6 +109,28 @@ invoke the dispatcher as a substitute for native live-view input.
 
 Written by Codex in collaboration with Tony Kim, with independent Codex subagent review.
 
+### Candidate ring predicate follow-up (2026-10-18, F-225)
+
+The mask fields tested by the private AE-L/AF-L candidate are consistent with
+the first 20-byte difference record produced by `0x102f199a`. Helper
+`0x101dd502` writes `(input1, input2, input1 XOR input2, input1-only,
+input2-only)` at offsets 0, 4, 8, 12 and 16. The candidate sees this block
+starting at ring-record offset +4. In this caller, the helper receives
+`input1 | input2` and `input2`; the candidate's bit checks therefore mean
+that `0x2000` exists only in the first input. This is a coherent one-sided
+change shape, not an impossible simultaneous condition.
+
+That interpretation does not identify the inputs as old/new physical switch
+states or connect the mask to AE-L/AF-L. The two direct callers found for the
+builder, `0x1039e1d4` and `0x1046497e`, still require tracing to their source
+records. The separate facts that logical ID 41 maps to `0x2000` and that a
+debug name table labels the same SW0 mask `AEAF_LOCK` do not close this gap.
+The current candidate action remains native Subject tracking action 45; the
+remaining trigger question is physical admission, not AF-area selection.
+
+Method: read-only Thumb data-flow review; addresses and field offsets only.
+No firmware bytes/dumps recorded, no image written and no camera access.
+
 ---
 
 ## 2026-10-15: Live-view event data and the path into state 1

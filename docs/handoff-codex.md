@@ -1,5 +1,353 @@
 # Codex handoff
 
+## Current Lane 3 direction, 2026-10-19 (F-370)
+
+Candidate 02 remains NO-GO. F-369 confirms the standard QEMU stills-view
+fixture does not reach AF snapshot callback `0x1016139e` or install the
+status-root pointer. Do not repeat it. F-370 confirms setter caller
+`0x10430c6c` belongs to the explicit AF-area menu routine `0x10430baa`: it
+reads `0x0c2b/0x0c3d`, maps the selected option, invokes setter `0x1042b2d8`,
+and updates the menu. A setter hook catches explicit selection but not
+Auto-area already selected on view entry. Continue static tracing for the
+stills-view/AF-application path that receives the live context pointer and
+updates its mode; require pointer provenance. Do not repeat the setter probe,
+status-pair branch, or QEMU view fixture. No reticle, half-press, or camera
+behavior is proved. Analysis stays offline and raw output remains private.
+See F-368–F-370.
+
+## Current Lane 3 direction, 2026-10-19 (F-369)
+
+Candidate 02 remains NO-GO. F-368 retired the generic snapshot event queue as
+a demonstrated arm hook. F-369's standard pinned-QEMU stills-view setup never
+reached callback `0x1016139e`; the status-root pointer at `0xc237c7b4 + 0`
+remained null. Do not repeat that simulator setup. A targeted full-image scan
+also found no simple same-register immediate-6 store to `+0x40`; this does
+not exclude loaded/copied or indirect values. Resume with static pointer
+provenance for the live object and its writer, and trace the actual
+Auto-area-application path only where it reaches that object. Do not use
+offset-only matches or return to the retired status-pair/event callback
+branches. No reticle, half-press, or camera behavior is proved. Analysis
+stays offline; firmware bytes/raw output stay outside the repo. See F-369.
+
+## Current Lane 3 direction, 2026-10-19 (F-368)
+
+Candidate 02 remains NO-GO. F-367 retired the status-root pair accessors as
+unrelated to the live-view mode object. F-368 followed the snapshot callback
+table into queue setup helper `0x1021cce8` from routine `0x10161642`, then
+through dispatcher `0x1021dee4`. A nearby keyed-registry registration is a
+separate path. The dispatcher forwards event IDs and payloads; its ordinary
+`0x041a0040` path is rejected by callback `0x1016139e`, which snapshots only
+for accepted event `0x0002fe3d`. No direct `MOVW #0xfe3d` or `MOVT #2` was
+found; computed sources remain possible. Retire this callback as a patch hook
+unless a new accepted-event producer is identified. Continue with the live
+AF object's context `+0` installation and `+0x40` writer, requiring pointer
+provenance rather than offset-only matches. Do not repeat the setter-hook or
+status-pair probes. No reticle, half-press, or camera behavior is proved.
+Analysis stays offline; firmware bytes/raw output stay outside the repo. See
+F-368 and `tracking-input-chain.md`.
+
+## Current Lane 3 direction, 2026-10-19 (F-367)
+
+Candidate 02 remains NO-GO. F-366's setter-hook QEMU prototype reached a
+native state write but did not update the sampled live AF context. F-367
+retires the nearby `0xc237c7b4 + 0x414/+0x415` pair accessors: they do not
+identify the live-view mode object read by `0x101925ee`. A stock-QEMU InitTask
+sample found status-root `+0` null before simulated stills-view entry. A
+full-image `+0x428` displacement scan produced many unrelated structures and
+did not find a unique installer for the pointer loaded by callback
+`0x1016139e`. Continue on the actual firmware side: identify the owner and
+initializer of the event context passed in `r1` to `0x1016139e`, then follow
+its `+0x428` object and the object's `+0x40` mode writer. Do not repeat the
+pair-accessor or setter-hook probe. Keep candidate 02 NO-GO; no reticle or
+half-press behavior is proved. Analysis stays offline and firmware bytes/raw
+output stay outside the repository. See F-367 and `tracking-input-chain.md`.
+
+## Current Lane 3 direction, 2026-10-19 (F-366)
+
+Candidate 02 remains NO-GO and is not ready for installation or testing. The
+target remains stills-mode Auto-area AF with People/Animal detection, an
+automatically visible tracking reticle, and acquisition on shutter half-press.
+F-359 through F-364 retired the generic GUI notification, property-cache,
+observer-table, configuration-reconciler, snapshot-consumer, and known
+configurable-function callback leads as complete hooks.
+
+F-366's throwaway guest-RAM QEMU prototype calls native helper `0x1045a1ae`
+from the Auto-area setter for encodings 601/602 and reaches its state write of
+value 6; encoding 600 skips the helper. The sampled live AF context remains
+unchanged. This was a constructed setter call, not natural menu dispatch or
+view-entry testing, so it proves only the local helper route. The setter is a
+partial mode-change candidate, not the full implementation. Do not call
+selector 45 unconditionally; it depends on mapped AF state. The next step is
+to trace who installs the object at live-view context `+0` and updates its
+`+0x40` mode, including the path when Auto-area is already selected on stills
+view entry. Then test a valid context-triggered ready transition in the pinned
+QEMU. Analysis stays offline; do not access the camera or card, and keep
+firmware bytes/raw output outside the repository.
+
+## Candidate status and hook direction, 2026-10-18 (F-334/F-335)
+
+The standalone candidate was generated before the requested behavior had been
+verified. That was premature: exact-span/CRC and hook-target checks do not
+prove Auto-area People/Animal readiness, a visible reticle, or shutter
+half-press acquisition. The camera displayed no Update action, and no update
+began. The candidate remains NO-GO; do not describe or share it as ready to
+install or test. F-333 provides only constructed QEMU evidence for native
+state writes. F-335's xref sweep finds two direct callers of mode setter
+`0x1042b2d8`, but no direct call/reference to guarded wrapper `0x1028f200`.
+Review the setter ABI and whether its post-set state can safely establish
+native ready state; keep the wrapper's trigger unresolved. Do not produce a
+new installable image yet. See F-333/F-334/F-335.
+
+F-336 adds a bounded QEMU check: after the synthetic callback moved source
+state to 4/pair `(1,1)`, another call to ready helper `0x1045a1ae` left those
+bytes unchanged. This is useful for evaluating duplicate ready callbacks,
+but does not prove preservation of camera acquisition or reticle behavior.
+Next review setter return/argument contracts and test the setter-first and
+view-ready-first orders with a disposable simulator overlay only. Keep the
+candidate NO-GO.
+
+F-337's standard simulated shooting-view setup still leaves AF context mode
+byte `+0x44` at zero after setter values 601/602, even though the public
+properties read back correctly. This is a simulator snapshot-population gap,
+not a real-camera conclusion. Do not repeat the setup. Trace the native AF
+context producer for `+0x44` and the callback after that update; this settles
+whether the setter is an immediate hook or only one side of a two-trigger
+design.
+
+F-338 directly sampled the callback's stack snapshot after setter 601/602,
+ready helper and status bridge. It contained mode 0, pair `(1,0)`, and extra
+guard 0, so the callback skipped the active-state transition for both modes.
+This is a bounded simulator result, not a camera conclusion. The setter alone
+does not complete the callback preconditions in QEMU. Next trace the AF-context
+producer that supplies snapshot mode `+0x44`; do not repeat this sequence.
+
+F-339 now identifies that snapshot field's direct source: builder `0x101925ee`
+copies the live AF object's `+0x40` field into context `+0x44`, while setter
+`0x1042b2d8` only writes public mode/submode properties. The public setter is
+therefore not a proven immediate arm hook; a downstream AF-object update must
+populate the source field first. Next trace the writer/update path for live AF
+object `+0x40` and when the snapshot runs relative to it. Do not repeat the
+property-setter QEMU test or create another installable image. Candidate 02
+remains NO-GO and must not be presented as ready to install or test. See F-339.
+
+F-340 narrows the setter timing: the generic property-write path calls runtime
+observer dispatcher `0x10132f8c` synchronously before returning. A post-setter
+hook could therefore run after a registered observer update, but the handlers
+for properties `0x0c2b`/`0x0c3d` and their effect on AF-object `+0x40` are not
+identified. Next trace those observer registrations/resolution and the live
+field writer. Candidate 02 remains NO-GO; do not create an installable image.
+See F-340.
+
+F-341 observed both properties enter `0x10132f8c` in stock QEMU, but neither
+reached an indirect listener or fallback resolver in the shooting-view
+fixture. Property values read back correctly; the simulator has no observed
+observer to update live AF-object `+0x40`. This is not evidence that the real
+camera lacks the callback. Next inspect static observer registration and the
+live-field writer; do not repeat this simulator sequence. Candidate 02 remains
+NO-GO. See F-341.
+
+F-342 finds neither direct setter caller writes the AF object's mode field or
+calls a ready/action helper after the property write. One returns immediately;
+the other performs menu-value mapping and selection adjustment only. This
+confirms the setter is a property boundary, not a proven tracking hook. Next
+trace the AF-object `+0x40` writer outside those callers and its timing before
+snapshot builder `0x101925ee`. Candidate 02 remains NO-GO. See F-342.
+
+F-343 retires another apparent property consumer: `0x10489832` reads
+`0x0c2b`/`0x0c3d` and maps Auto-area People/Animal values to menu labels and
+UI updates; it does not populate the live AF object's `+0x40` mode byte or
+tracking snapshot. Generic `STRB [register,#0x40]` hits are not enough to
+identify the writer because their base pointers differ. Continue with the AF
+object's lifecycle/registration and the callback that consumes snapshot
+`+0x44`; do not repeat the property-setter probe. Candidate 02 remains NO-GO.
+See F-343.
+
+F-344 follows the snapshot builder to its only direct caller: event handler
+`0x1016139e` calls `0x101925ee` with live-view context `[r1+0x428]`, then
+reads AF fields including `+0x40`. Its Thumb pointer appears in a static
+callback table at `0x10161a44`; the reviewed handler path does not write the
+mode byte. This is a snapshot consumer, not the missing producer or arm hook.
+Next trace the live AF object's lifecycle/registration upstream and identify
+the handler's dispatcher and event semantics. Candidate 02 remains NO-GO.
+See F-344.
+
+## Lane 3 scope correction, 2026-10-18
+
+The owner has clarified that movie behavior is irrelevant because this camera
+is never used for movies. The feature target is still-photo Auto-area AF:
+People/Animal mode automatically enters the native Subject-tracking ready
+state, shows its reticle, and shutter half-press begins acquisition. A
+still/movie exclusion guard is not a requirement and must not consume more
+research time. F-288/F-289's control-flow observations remain valid, but
+their missing-guard conclusion is superseded as a feature blocker.
+
+This scope correction does not prove candidate behavior or clear the other
+test gates. Candidate 01 was copied to the card and the camera offered only
+Done and Delete firmware update files; no update began. Review then found
+candidate 01 was the diagnostic source that omitted the native AF status-copy
+bridge. Candidate 02 now includes that bridge and passes exact-edit/CRC plus
+hook-target checks, but its focused QEMU call timed out without observations.
+It remains private, is not on the card, and has no updater-acceptance or
+camera-behavior evidence. Do not treat it as ready for copying or installation;
+do not rename an image or bypass updater eligibility.
+Same-version rejection is a weak hypothesis: upstream Wonder Lantern reports
+installing a standalone EG on a Z 30 C 1.20, but that precedent does not
+validate either candidate. F-295/F-296
+show the type-2 standalone parser does not branch on version-like metadata at
+`0x24`, and preserves/accepts the candidate's unchanged compatibility field at
+`0x10`; the post-CRC type-2 path also skips the version-formatting handlers.
+No static same-version rejection is found. The unexplained failure is earlier
+card discovery/UI eligibility or an untraced gate. F-298 through F-300 map
+the scanner and callback: media-state-selected directory enumeration and
+wildcard filename match precede the standalone parser; a successful parser
+result takes a distinct callback path from the fallback message. The reported
+no-Update screen is consistent with that fallback, but the actual camera
+branch and failed filesystem/parser condition remain unobserved. The owner
+confirms the card was camera-formatted (F-301) and now reports that the camera
+is reading its root (F-304). This closes the selected-root question by owner
+observation. F-303 confirms that the canonical `EG209020.BIN` name matches
+the standalone row's wildcard pattern. Neither fact proves that this file
+appears in the updater list, is opened or accepted by the parser, or causes an
+Update option. The latest known menu offered only Done and Delete firmware
+update files, and the owner has confirmed that remains the current result
+(F-305). Do not ask for the same menu check again or attempt installation.
+F-306 through F-309 correct F-299: scanner acceptance skips the fallback
+message, but the callback passes a local menu-like record through helper
+`0x102342a6`. It fills fields at `+4`, `+5` and `+0xf`; the callback then
+dispatches record status values 1, 2, 4 and 8 into distinct outcomes (unknown
+values take a report path). Next, trace the record/status producer and callback
+result consumer to a menu action or label. F-309 locates this callback in a
+five-entry property callback table but not its dispatcher; trace that registry
+path once to see whether it reaches the menu result. If no concrete gate
+emerges, record that runtime filesystem/parser observation is required and
+stop. F-311 completes the local bridge ABI/relocation review: candidate 02
+passes the two-byte pointer contract, preserves aligned SP and returns through
+the native cleanup helper. F-312's interpretation of the action/state record
+is corrected by F-313: `0x10230832` passes a zeroed pair, skipping the first
+indirect callback in `0x10225012`. F-314 identifies `0xc18a7540` as a shared
+mask word; setters and clearers update its bits, and `0x10066714` enters event
+processing only when the word is zero. The camera-time mask and its
+feature-level meaning remain unknown. F-315 follows one action-45
+state-handler branch through `0x1045a1ae` into the mask-gated dispatcher;
+neither that helper nor its observed callers mutates the mask, so the gate's
+value is ambient and unresolved. This action chain is distinct from
+candidate 02's status-copy bridge `0x101925b0`. F-317 resolves its two
+firmware-side synchronization wrappers to ARM-mode SVC #6 stubs, each with an
+8-byte local frame and no further firmware call; the SVC implementation's
+stack is outside this bound. F-316's bounded body scan found 103 direct call
+sites to 70 routines and no register-indirect call or table-branch instruction
+inside the event body. F-319 corrects F-318: `0xc23a63b4` is the
+synchronization object passed to the lock service, while bit-63 dispatch loads
+the callback from `0xc18a748c`. F-321 found its initializer at `0x1006516c`;
+F-322 corrects the target to Thumb entry `0x10064a9a`. Its fixed selector
+enters case 3, which calls `0x10061aa6` and then broadcasts through
+`0x100660f2`. F-323 traces that broadcast: it walks the runtime listener count
+at `0xc18a74d5` and dispatches function pointers from `0xc18a7520`. F-324
+followed the shared base references once; the broadcast reads the table, and
+the bounded reference sweep did not expose a statically traceable subscriber
+writer. This leaves callback stack depth unresolved. Candidate 02 stays
+NO-GO. Stop listener-table tracing and pivot to a direct AF-ready/reticle hook
+search for a build alternative. F-325's source review confirms candidate 02
+already joins both transition orders: Auto-area People/Animal selected before
+live view, or selected while live view is open. It uses a one-shot latch and
+the native AF status-copy bridge, but the focused QEMU callback timed out, so
+there is still no proof of reticle or half-press behavior. Do not invent a
+second trigger or repeat the same QEMU run; the unresolved build decision is
+whether the action-45 dispatch can be bounded or observed through a valid
+native route. Do not revisit root, filename or parser checks. See F-292 through F-325 and
+`hardware-readiness.md`.
+
+**F-326 correction and next step:** stock pinned QEMU showed one stable
+listener target, `0x1022adee`, across three post-startup samples. Static
+selector-3 control flow emits event `0xB5` through the listener broadcast, so
+this is now the concrete callback target for the action-45 event branch; the
+previous statement that listener targets were unknown is superseded. Its
+0xB5 arm has an 88-byte local frame and proceeds through state/value
+translation and a native notification helper. The remaining build decision
+is to bound this callback's transitive stack and the nested notification/SVC
+tail, or identify an AF-ready/reticle hook that avoids this action path.
+Candidate 02 remains NO-GO: no completed candidate runtime, visible reticle,
+or half-press acquisition is established. Do not repeat the timed-out full
+callback run. See F-326 and `hardware-readiness.md`.
+
+**F-327 callback probe:** in disposable stock QEMU, the native selector
+handler with selector event `0x04100004` and payload 1 emitted `0xB5`, entered
+`0x1022adee`, and returned. Breakpoint sampling measured 176 bytes from
+handler entry to the lowest observed SP. The nested callback at
+`0x1022c4b8` was not reached because its enable mask was zero in ordinary
+post-startup state. This is useful completion evidence for the constructed
+event path, not a worst-case stack bound: it ran on InitTask, and the candidate
+uses APPLV. No candidate action completion, reticle, or half-press result was
+observed. F-328 corrects the earlier F-280/F-282/F-283 interpretation:
+`0x101885e8` is a generic list pop, and the null at `0x1007450e` means that
+the callback's work queue was empty, not that an AF object was missing. Drop
+the proposed object-constructor/registration search. Next pursue the direct
+AF-ready/reticle hook against the real firmware; trace the queue producer only
+if identifying it could change the chosen hook. Keep candidate 02 NO-GO. See
+F-327/F-328 and `hardware-readiness.md`.
+
+**F-329 state check:** native Auto-area setter values 601 and 602 read back
+correctly as base mode 6/submodes 1 and 2, but action 45's mapper still
+returns reject state 5 in stock QEMU. Setting the separate boolean gate in
+synthetic guest memory does not supply the missing AF context. The mapper
+copies the AF context fields that bridge `0x101925b0` updates, so this run
+does not test candidate activation. The only useful continuation is to trace
+the real producer of that AF source pair or a direct ready-state hook; do not
+repeat the same QEMU setup. Candidate 02 remains NO-GO, and reticle and
+half-press behavior are unverified. See F-329.
+
+**F-330 native transition lead:** static Thumb tracing found `0x1007756e`,
+reached from dispatch entry `0x10162f14`, which passes a lock and writes state
+4 and source pair `(1,1)` only when the current source state is exactly 1;
+sibling `0x10162f18` to
+`0x100775c6` follows state-dependent clearing paths. The existing `(1,0)`
+writer `0x10078aa0` remains in the event-driven updater. These are concrete
+state-transition routines, but their external command semantics and visible
+reticle/half-press effects are not established. Next identify the dispatch
+input/registration and half-press consumer; do not select or invoke a routine
+by its writes alone. Candidate 02 remains NO-GO and is not installable. No
+camera access. See F-330 and `tracking-input-chain.md`.
+
+**F-331 action-45 toggle implication:** with Auto-area byte 6, source pair
+`(1,1)` maps to state 3. Action 45 routes state 3 through
+`0x1045a21c -> 0x10230866 -> 0x10162f18 -> 0x100775c6`; when the source state
+is 4, that routine clears the state and pair. This is consistent with
+replaying the native toggle canceling a state established by `0x1007756e`.
+Do not use action 45 as the auto-arm operation. Next trace the native caller
+that first reaches `0x1007756e` and its guards. Reticle and shutter half-press
+behavior remain unverified, and Candidate 02 remains NO-GO. See F-331.
+
+**F-332 mode-conditioned arming path:** wrapper `0x1028f200` branches to
+`0x102bdbb4`, which checks an AF snapshot for base mode 6, source pair `(1,0)`,
+and byte `+0x415 == 0`; the downstream transition additionally requires the
+current source state to be exactly 1 before setting state 4 and pair `(1,1)`.
+This appears to be a native AF callback conditioned on
+Auto-area state, but its runtime trigger/registration and the extra byte's
+meaning are unknown. Next trace that callback dispatch or a recoverable caller
+to determine whether AF-area selection reaches it. It does not yet prove
+reticle visibility or half-press acquisition. Candidate 02 remains NO-GO.
+See F-332 and `tracking-input-chain.md`.
+
+**F-333 QEMU state-cycle confirmation:** the native helper `0x1045a1ae` with
+a synthetic zero-byte argument produced source state 1 and pair `(1,0)` via
+`0x10230832 -> 0x1019596e -> 0x10162f10 -> 0x100774f4`. After bridge
+`0x101925b0` copied the pair into AF context, the synthetic guarded callback
+`0x1028f200` changed it to state 4 and pair `(1,1)` only for Auto-area mode 6,
+context pair `(1,0)`, byte `+0x415 == 0`, and source state 1. Negative guard
+cases and source state 0 did not arm. This is a native state result in stock
+QEMU, not reticle rendering or proof that the wrapper is the physical
+half-press callback. The next patch candidate should establish native state 1
+on People/Animal Auto-area selection and preserve the guarded active
+transition. Candidate 02 remains NO-GO. See F-333.
+
+**Current host check, 2026-10-18 (F-297):** the approved descriptor-only USB
+probe found zero matching Z 30 devices, and `gphoto2 --auto-detect` listed
+none. This establishes only that the camera was not visible to this host; it
+does not establish whether the camera is powered, cable-connected, or what
+the card format is. No PTP command or write was attempted. Resume the menu
+check after the camera is visible again and the card-format condition is
+known. Do not treat this transport observation as a firmware result.
+
 ## Current continuation, 2026-10-17
 
 ### F-198/F-199 current state
@@ -73,6 +421,78 @@ provide or point to an already-authorized, bytes-free decode of those edges;
 until then keep preview changes blocked. A guarded override with stock
 fallback is only a design constraint, not a proven hook. No firmware artifact
 or hardware was accessed in this continuation.
+
+### F-207 bounded runtime registration result
+
+The verified initializer registers callback `0x1021d9e3` through generic
+registry ID `0x1003a`; its initialized runtime record is labeled `BACKEND`.
+A pinned stock-QEMU run through the standard assisted live-view startup
+sequence observed one callback entry with flags `0x10`, not bit 20. This was
+not correlated to a particular setup call and says nothing about capture
+provenance. It confirms the route is a generic backend callback, not a proven
+capture-only hook. The bit-20 producer/semantics and current/nested record
+origins remain the exact blockers. Do not use the table-only candidate under
+the still-only requirement. The next useful evidence is a bounded decode of
+the backend event producer and record source; do not broaden into unrelated
+backend tracing. Simulator output remained under `/private/tmp`; no camera or
+candidate was touched.
+
+### F-208 bit-20 producer and hook disposition
+
+The bit-20 branch's producer is now statically connected: setter `0x10220fd6`
+stores a supplied object in the module's `+0x60` current-object slot only when
+empty, then posts `0x100000` through `0x10199cdc`. This is the event bit tested
+by callback `0x1021d9e2` before it rebuilds a preview object. Two direct calls
+to the setter were found (`0x1015672c`, `0x103e5d1c`); the latter receives a
+stack-built descriptor from a generic backend worker path. Neither decoded
+route has a still-capture predicate, and indirect callers remain possible.
+The event is current-object assignment, not a verified new-still signal. The
+specific event hook is therefore not safe for the still-only requirement, and
+the shared area-4 table candidate remains incompatible. Further work should
+only proceed by tracing the runtime-object source at `0x1015672c` and the
+queued bit-24 producer feeding `0x103e5e88`, then proving both routes exclude
+playback/editor at every relevant preview edit. If those edges do not provide
+that proof, defer the preview patch. Full detail is in F-208 and the caller
+map. No candidate or camera was accessed.
+
+### F-209/F-210 producer continuation and disposition
+
+The queued bit-24 edge is traced through `0x103e5e70` to descriptor builder
+`0x103e5bdc`, which reads shared backend state, builds a multi-record
+descriptor and calls setter `0x10220fd6`. The event notifier `0x103e89c2` is
+reached through branch stub `0x1056a636` from shared helper `0x1055f834`.
+A full-image cross-reference sweep found multiple callers of that helper in
+state-management and cleanup/invalidation paths; it carries no capture
+argument or local capture predicate. This strengthens the determination that
+bit 24/bit 20 describe shared current-object state, not a still-only boundary.
+The record's ultimate origin and playback/editor exclusion remain unproven.
+
+A bounded pinned-stock-QEMU run observed no hits at the notifier, descriptor
+builder, setter or preview callback during assisted live-view startup and
+ordinary up/down/back/OK navigation. This closes only that simulator sequence;
+it does not show the route is unreachable on-camera. The stock firmware hash
+and QEMU checkout remained unchanged. Do not treat this simulator absence as
+capture evidence. No safe still-only hook is established, so the preview
+candidate stays blocked under the current requirement. Next useful progress
+must identify an actual callsite that proves new-still provenance and
+playback/editor exclusion; otherwise defer the patch. No camera or candidate
+was accessed.
+
+### F-211 runtime-object source route
+
+The other direct setter caller is routine `0x10156714`. It passes a
+base-derived object pointer only when two shared table counters satisfy
+`r1 < r0`, then walks state-indexed entries and reads several backend values
+while building descriptors. No capture-origin predicate is visible there.
+A full-image direct-BL sweep and exact halfword-aligned pointer-word scan
+found no direct caller/reference to the routine; computed/registered dispatch
+remains possible. The bounded stock-QEMU startup/navigation run also did not
+hit this routine or the setter. These are bounded absences, not proof of
+camera unreachability. No still-only gate has been found. Next static progress
+requires identifying the routine's inbound dispatcher and semantics for the
+shared table counters, then proving any specific route excludes
+playback/editor. Keep the preview patch blocked until that proof exists. No
+camera or candidate was accessed.
 
 ## Historical research log (superseded where it conflicts with F-198/F-199)
 
@@ -1409,10 +1829,1006 @@ Do not restart from the Bluetooth lead or from `0x10379d5a`'s
 registration search -- both are exhausted by direct static method in
 `tracking-input-chain.md`. Start from option 1 or 2 above.
 
-## Rules, unchanged
+**Historical one-button candidate (2026-10-18): native action route validated;
+candidate not ready for a camera test.** The
+`0x2021` consumer search and simulator post breakpoint are historical; they
+did not identify the tracking action. The current first-patch priority is a
+single-button Subject tracking action. Static decoding identifies native UI
+action enum 77 and a shared configurable-action route, while the AE-L/AF-L
+assignment handler omits that enum and rejects logical input ID 13. Thus a
+menu-value-only change is not a viable bridge. The proposed private candidate
+uses a fresh AE-L/AF-L press edge at the input-record accessor return site
+`0x102f14b2`, then routes through native action call sites
+`0x103020b4`/`0x10302108`; it preserves stock behavior outside the guarded
+context. Protect is a separate SW1 input and playback setting, so its key
+icon is not evidence for the AE-L/AF-L route.
 
-Offline/simulator only. Never touch a real camera. Never commit firmware
-bytes, dumps, or patched images, anywhere, ever — this applies doubly to
+The candidate's constructed-context guard/ABI test now passes in the pinned
+QEMU (F-212): register/flag and stack preservation, cleanup, and reject
+controls for held/release/other-context/other-mode/wrong-owner/consumed cases.
+F-213 adds a separate memory-only QEMU diagnostic: the worker task existed
+before a native object notification and its saved stack pointer changed after
+that notification, but the worker entry/cleanup probes did not fire. This
+still does not prove natural key delivery or worker admission through the
+hook; no complete modified firmware image exists. F-214 compared the
+candidate adapter against the native Fn Subject tracking handler in pinned
+QEMU: both reach helper `0x10368b6e` with action 45. F-221 corrects its
+request-service attribution: `0x1045a47e` is a boolean gate, and the reported
+request tuple at that address is unconfirmed. Action 45 nevertheless
+delegates into Nikon's native state-dependent handler. The official manual says the assigned
+control starts tracking in Auto-area AF modes and a second press ends it.
+QEMU's action object is not modeled, so its state transition cannot be
+observed there.
+
+This one-button behavior is no longer the requested first-patch outcome. The
+owner now wants tracking always armed in shooting mode, with a persistent
+reticle and shutter half-press acquisition. The previous action-45 work stays
+useful as the native activation mechanism, but the trigger moves to the
+already-researched live-view-ready path; see the owner target update below.
+
+**Update (2026-10-18, F-215): AF-area menu and tracking entry are distinct.**
+The AF-area options include Auto-area AF and people/animal variants, but no
+selectable 3D-TRACKING row. F-218 clarifies that `0x103edda0` is a text-label
+catalog that includes a 3D-TRACKING string; the label-selection case at
+`0x103edc2e` is output formatting, not an option or activation callback.
+The distinct selectable table at `0x1074a688` maps Auto-area values 600/601/602
+to base mode 6 and submode 0/1/2; this establishes eligibility, not activation.
+The generic menu OK/J dispatcher invokes the active screen object's registered
+callback; the AF-area callback stores a mode selection. Nikon documents subject
+tracking as a separate live-view J operation (reticle, then start, then end)
+or a control assigned to native Subject tracking. F-214's action-selector
+comparison remains evidence that the candidate and native Fn handler both
+enter selector 45; F-221 corrects its earlier request-service attribution.
+The
+F-219 further traces the label-selection case to a status renderer: descriptor
+byte `[r4+0x83] == 8` selects the 3D-TRACKING text and sends it to
+`0x1027f3cc`; its producer remains unknown. Auto-area selection stores mode
+6/submode 0 through `0x1042b2d8` and has no direct Subject-tracking action
+call. For J event `0x27e`, filter `0x104e2cbc` first consults runtime
+key-to-function lookup `0x10460ba2`, which can invoke a registered callback.
+A separate matching screen-context path calls generic input handler
+`0x102f1e10`. The handler's direct flow compares input/status state, with no
+direct branch to action 45. The callback table is runtime-backed, so an
+indirect J-to-action edge remains unresolved; the earlier powered synthetic
+QEMU event hit only the dispatcher entry.
+
+**Build decision:** the research supports routing AE-L/AF-L into Nikon's
+native Subject-tracking action rather than changing AF-area selection or
+adding a new state machine. The private candidate still lacks proven natural
+hook admission. F-217 verifies the candidate assembled and linked in memory,
+with all 45 planned edits applied to a hash-verified stock
+QEMU guest; two calls from a constructed worker context completed, restored
+context, and issued the native action request. The 72-byte navigation table
+is included at an additional candidate region. This resolves layout
+arithmetic and exercises candidate composition, but natural hook admission,
+camera-load executable mapping, worst-case stack headroom, full image
+acceptance, and the consumer's actual start/cancel transition remain
+unverified. No firmware image was written. The next real-firmware trace is
+resolving the runtime active-screen J callback and comparing its target with
+the native action-45 handler; continue only if it could change the selected
+patch hook. Then close executable-mapping and stack-headroom proof and the
+candidate-side start/stop test-readiness gap. Do not touch the camera or
+publish firmware-derived bytes/artifacts. See Nikon's [focus
+manual](https://onlinemanual.nikonimglib.com/z30/en/05-01.html)
+and [f2 custom-controls manual](https://onlinemanual.nikonimglib.com/z30/en/09-05-40.html).
+
+**Update (2026-10-18, F-221): action 45 directly consults AF state.** The
+state mapper `0x1044dc5a`, called by `0x10368b6e`, snapshots the AF subsystem
+and branches on base mode 6, submode, and a state byte. In base mode 6,
+submodes 0 and 2 map state bytes 0/2 to internal state 1 and byte 1 to state
+0; submode 1 maps byte 0 to state 2 and bytes 1/2 to state 3. Action 45
+routes these states to three distinct native helpers. `0x1045a47e` is a
+boolean gate, not a request service; the alleged event-post destination
+`0x1046296e` is only a return stub. Downstream helper semantics do not yet
+identify start versus stop. This gives a direct real-firmware reason to
+retain Auto-area AF and route to action 45, but does not verify a tracking
+cycle.
+
+**Update (2026-10-18, F-222): downstream helper semantics remain unresolved.**
+Plain Auto-area and animal submodes both reach `0x1019596e` with input 0;
+people submode dispatches to two shared configuration-state routines,
+`0x1007756e` or `0x100775c6`, depending on the mapped AF state. Those paths
+mutate internal state but have no decoded start/stop labels. The manual
+specifies the expected cycle, but constructed-context QEMU calls cannot
+observe the unmodeled AF consumer. The readiness criterion requires one
+fresh start, no repeats while held, and a native cancellation on a fresh
+second edge; the present simulator evidence does not meet it. Do not call the
+candidate testable until natural hook admission, executable mapping, stack
+headroom, and that cycle check are resolved or explicitly assigned to a
+permitted device test.
+
+**Owner's current operating choice:** keep AF-area mode on Auto-area AF and
+map the native Subject-tracking action to AE-L/AF-L. This fixes the manual's
+mode precondition and keeps the first patch focused on the button remap; the
+`3D-TRACKING` string is not a selectable AF-area row. F-221 further traces
+action 45's AF-state-dependent helper routing, but cannot assign start/end
+semantics to those helpers. F-222 traces the helper callees: plain/animal
+routes converge on one AF state operation, while people mode selects between
+two shared state routines. Neither path has start/stop labels. The decisive remaining build question is natural AE-L/AF-L
+press admission at the candidate hook `0x102f14b2`, followed by the already
+listed camera-load mapping and stack proof. Do not spend more time resolving
+the J callback unless new evidence suggests it could replace the validated
+action-45 route. The present evidence supports the design choice to delegate
+every fresh press to native action 45, but it does not validate the current
+candidate's full one-button cycle. Readiness also requires no duplicate while
+held and native cancellation on a fresh second edge; constructed-context
+QEMU cannot observe the unmodeled consumer. The candidate remains not
+testable pending those checks and the hook/build proofs above.
+
+**Correction (2026-10-18, F-223): physical input route is less established
+than previously stated.** Reinspection shows `0x103a3f9e` consumes queued
+logical-ID/operation records and updates staging word `0xc18c9a68`; it does
+not read a live SW-bank word at `0x115c694c`. The logical table maps ID 41 to
+mask `0x2000`, while a separate debug naming table labels that mask AEAF_LOCK,
+but no reviewed edge proves physical AE-L/AF-L delivery to ID 41 or to the
+candidate's input-record accessor hook `0x102f14b2`. Do not describe the physical
+detection hook as confirmed. The action-45 comparison is still the best
+action-side evidence, but candidate natural admission and all listed
+build-readiness gates remain open. The next useful task is to resolve the
+candidate hook's exact source fields against a live physical-switch producer
+in static firmware code, only if that can affect the candidate trigger. F-224
+places `0x102f14b2` at the common exit of record accessor `0x102f1412`: it
+unlocks the record mutex, then returns the selected pointer in `r0`. The
+accessor returns either a ring record or the separate snapshot record,
+depending on mode. It is an accessor-return site, not a copy or physical
+button handler. See F-223/F-224 and the correction in
+`firmware-map-deep-2026-10-17.md`.
+
+**Update (2026-10-18, F-225): candidate edge fields decoded, source still
+open.** The private guard's `0x2000` test at ring-record offsets +4/+8/+12/+16
+maps to the first paired-mask difference block created by `0x102f199a`.
+After accounting for the block's +4 placement, those conditions describe a
+bit present only in the first input, so the predicate is structurally
+consistent. This corrects any interpretation that the fields were mutually
+exclusive. It still does not establish that either builder input is a
+physical AE-L/AF-L sample: the two direct builder callers are `0x1039e1d4`
+and `0x1046497e`, while the candidate is evaluated from the live-view
+consumer context at `0x102f751c`. Next, trace these inputs back only far
+enough to prove or reject physical AE-L/AF-L provenance and whether the
+candidate's rising-edge test is valid for that source. Keep Auto-area AF as
+the operating precondition and retain native action 45 as the selected
+action-side design. No camera access.
+
+**Correction and remap route (2026-10-18, F-226):** the Fn1 configurable
+action handler `0x1036957c` accepts setting value 77 and calls native Subject
+tracking action `0x10368b6e`; the AE-L/AF-L handler `0x10369468` does not.
+Calls at `0x103020b4`/`0x10302108` query handler status and assemble a mask,
+so they are not physical-key action hooks. Do not patch those sites as the
+remap. The required behavior is still feasible as a design: keep Auto-area AF,
+detect a fresh AE-L/AF-L press, and dispatch action 45 so Nikon owns the
+toggle. But no verified physical press source or complete test image exists.
+Next trace the real AE-L/AF-L action path and determine whether a direct
+action bridge or configurable-handler extension is the smaller safe patch;
+keep the record accessor candidate on hold until its input provenance is
+proven. Do not call this camera-testable yet. See F-226 and
+`tracking-input-chain.md`.
+
+**Update (2026-10-18, F-234): stack measurement did not run through the
+candidate.** A constructed QEMU canary attempt returned from the adapter but
+observed zero native action calls and no candidate/native path. Its one
+64-byte canary change is attributable to synthetic call setup, so this is not
+stack-depth evidence and the stack gate remains open. The probe did not check
+every restoration write; the disposable QEMU process exited and original
+image hash and simulator checkout remained unchanged. Next, repair the
+constructed action-path setup and require native action entry before using a
+watermark; independently trace the candidate task's inherited runtime TTBR0
+table and the `0x1002d000` entry. Neither gate is closed and the candidate is
+not camera-testable. Keep Auto-area AF with Subject tracking assigned to
+AE-L/AF-L; this adds an assignment and does not disable the stock OK/J route.
+No camera contact. See F-234 and the last section of `tracking-input-chain.md`.
+
+**Update (2026-10-18, F-235): corrected stack probe now observes the native
+path.** Reusing the loaded overlay and validated fresh-edge context, the
+candidate dispatched native action 45 once on each fresh edge, zero times on
+held/release, and returned with context restored. A 2,048-byte canary below
+the constructed action SP changed 1,364 bytes on first-fresh and 1,324 on
+second-fresh. The worker TCB reports an 11,264-byte allocation. This is a
+bounded constructed-path watermark, not worst-case stack proof: natural
+admission, interrupt/scheduler interleavings, and the full AF consumer are not
+covered. F-235 corrects the invalid setup in F-234 but does not close stack
+headroom. Continue by proving the stack bound for the real worker call chain
+and tracing runtime TTBR0 setup for candidate page `0x1002d000`; start/cancel
+semantics remain unmodeled. The candidate is still not camera-testable. Keep
+Auto-area AF and additive AE-L/AF-L Subject tracking; preserve stock OK/J.
+See F-235 and the last section of `tracking-input-chain.md`.
+
+**Update (2026-10-18, F-236): action 45 has a specific AF-state gate.**
+Native caller `0x1044dcbe` continues only when mapper `0x1044dc5a` returns 2,
+which requires snapshot mode byte `+0x44 == 6`, byte `+0x61 == 1`, and byte
+`+0x62 == 0`. QEMU reports state 5 and therefore correctly takes the native
+reject path. Accepted state 2 calls helper `0x1045a21c`, which reaches a
+stateful routine at `0x100775c6` before referring event code `0x3d` to
+return-only stub `0x1046296e`. Static evidence does not label the state or
+prove toggle semantics/event delivery. This explains the simulator's failure
+more precisely but does not close start/cancel. Next determine whether
+`0x100775c6`'s object-state transitions can be identified from its writers and
+callers, without extending QEMU fidelity. Runtime executable mapping and
+worst-case stack remain open; the candidate is not camera-testable. See F-236.
+
+
+**Correction (2026-10-18, F-237):** `0x1044dcbe` is a separate caller of the
+AF-state mapper, not the principal action-45 selector at `0x10368b6e`. Its
+state-2-only route to `0x1045a21c` must not be generalized to all action-45
+calls; the main selector routes mapped states 0-3 as F-221/F-222 describe.
+QEMU state 5 is rejected, but F-236 did not establish state 2 as the only
+accepted action state. For plain Auto-area AF, continue with the semantics of
+`0x1019596e` and its AF-related field; also trace the per-button rising edge
+around callback `0x102f2eae` as the stronger physical input seam. The
+candidate's ring producer remains unproved. No camera-testable patch yet. See
+F-237.
+
+**F-228 corrects one F-226 conclusion:** `0x103020b4`/`0x10302108` are in the
+same input/action dispatcher family as Fn1's configured handler, which does
+call action 45 for setting 77. The combined return mask does not prove this
+is only a status query. Keep the shared dispatcher and its AE-L handler in
+scope as possible remap seams; trace how its cases are selected from physical
+input. The AE-L handler itself still has no action-45 path, and the snapshot
+callback still needs an AE-L-specific edge guard. Auto-area AF remains the
+intended setup; no camera-testable patch exists.
+
+**F-229 input-map result:** the live-view mask table maps AEAF_LOCK mask
+`0x2000` to logical ID 13 and the UI table maps ID 13 to the AE-L/AF-L event
+`0x28b`. Snapshot callback `0x102f2eae` tests that same bit and handles the
+current AF-ON assignment. This is the strongest static AE-L/AF-L input
+boundary so far. The candidate dispatcher also admits logical ID 13, matching
+the input map; its paired ring-record producer is still unlinked. Synthetic
+QEMU `0x27e` reaches the OK/J generic dispatcher
+but no action callback; synthetic `0x28b` also yields no downstream action.
+Treat those as simulator limitations. The `3D-TRACKING` string is a status
+label, not an AF-area choice. Keep Auto-area AF and target Subject-tracking
+action 45 on AE-L/AF-L. The private candidate already adds the verified
+“Subject tracking” label to
+the AE-L/AF-L assignment list, stores value 77 in `0x1184`, and routes it to
+action 45. Treat this as a concrete candidate design, not a camera-validated
+menu. Do not discard it for the unresolved ring-record producer alone: the
+candidate accepts logical ID 13, which the input table maps to AE-L/AF-L;
+physical press admission is assigned to the later device test. The blocker
+that still must be closed before that test is candidate-side sequential
+fresh/held/release/second-edge action and cleanup control, stack, and image
+acceptance. The callback hook at `0x102f2eae` remains an alternate if the
+candidate's record path fails, but it needs its own per-button latch and must
+preserve AF-ON behavior.
+
+**F-227 advances the hook search:** registered callback `0x102f2eae` reads
+the snapshot's `0x2000` AE-L/AF-L bit and, for setting `0x1184 == 9` (AF-ON),
+posts event `0x14`. This gives a direct native AE-L route, but the callback
+first receives a broad “snapshot changed” result and tests current bit state;
+it has no demonstrated per-button rising-edge guard. If reused for action 45,
+unrelated input changes during a held AE-L press could retrigger it. Next
+trace the callback's current/previous snapshot fields and isolate the
+AE-L-specific rising edge. Retain Auto-area AF and native action 45; no
+testable overlay yet.
+
+**Update (2026-10-18, F-230): sequential edge/control gate partly passes.**
+The private memory-only QEMU probe ran fresh, held, release, fresh in sequence.
+Each fresh record produced one completed candidate adapter call to action 45;
+held and release produced none. The dispatch-finish cleanup code block and
+ABI save/restore cases passed using constructed context. This proves the
+candidate's synthetic edge arbitration and native action dispatch, not the
+tracking state transition: QEMU's AF consumer remains unmodeled, so second
+press cancellation is still unverified. This run also used debugger writes,
+not a private overlay, and did not naturally traverse the full context
+dispatcher. Do not label the candidate testable yet. Next concrete gates are
+private-overlay load without debugger writes, executable mapping at camera
+load, worst-case stack headroom, and full-image/layout acceptance; physical
+press admission and native start/end outcomes remain assigned to the later
+device test under the existing owner disposition. Keep Auto-area AF and the
+action-45 remap. No camera access. See F-230 in `facts.md` and the latest
+section of `tracking-input-chain.md`.
+
+**Update (2026-10-18, F-231): AF state byte provenance narrowed.** The native
+snapshot maps bytes `+0x61/+0x62` from AF context `+0x364/+0x365`; the builder
+and mode-dependent subcontext writer are now traced. The state byte comes
+from a live AF subcontext field under some branches and is initialized under
+others, but it has no decoded tracking-active name and does not identify
+start versus cancel. The stock simulator remains unable to validate that
+cycle: after invoking native Auto-area setter 600 and confirming base mode 6,
+submode 0 and Fn setting 77 by property readback, action 45 still sees mapper
+state 5 and never takes an Auto-area helper path. Do not extend simulator
+fidelity work. Preserve the native action-45 remap; next build-readiness work
+is private-overlay loading without debugger writes, then executable mapping,
+stack proof and full-image acceptance. Candidate is still not camera-testable.
+See F-231 and the last section of `tracking-input-chain.md`.
+
+**Update (2026-10-18, F-232): LLVM-linked loader overlay exercised.** The
+private AE-L/AF-L Subject-tracking candidate now assembles and links using the
+installed LLVM tools despite Capstone being unavailable. The link/layout pass
+placed 964 code bytes in the planned 1,408-byte space, checked 24
+relocations, all 15 hook windows, and 45 edits. QEMU's generic loader loaded
+35 merged overlay regions before guest resume; every region was read back
+byte-for-byte. The stock firmware hash and simulator checkout remained
+unchanged. With the overlay loaded, synthetic fresh/held/release/fresh
+records passed edge arbitration and dispatched native action 45 once per
+fresh edge, with cleanup and ABI controls passing. This closes the
+no-debugger-write overlay-loading gate in QEMU, not camera-load executable
+mapping or full native UI dispatch. The AF consumer is still unmodeled, so
+start/second-press cancellation remain unverified; physical press is assigned
+to the later device test, and worst-case stack headroom is still open. Keep
+Auto-area AF and the Subject-tracking assignment on AE-L/AF-L. The candidate
+remains not camera-testable. Next, complete a bounded worst-case stack proof
+for the candidate worker and assess whether the simulator can check camera
+load mapping; do not extend simulator-fidelity work if it cannot. See F-232
+and the last section of `tracking-input-chain.md`.
+
+**Correction (2026-10-18, F-233): runtime mapping is still unproved.** The
+candidate cave is in the reset table's XN-clear section, but scheduler paths
+can install a different TTBR0. In pinned QEMU the candidate task has no
+per-task TTBR0 override and inherits the active table. `ATS1CPR` reports its
+candidate VA translating outside modeled RAM while the loader-based code
+still executes there, exposing a simulator address-map mismatch. Do not treat
+the reset descriptor or QEMU's translation output as proof of camera-load
+execution. Next, trace the runtime page-table setup used by the tracking task
+and identify the `0x1002d000` entry; then complete the stack-headroom proof.
+The candidate remains not camera-testable. See F-233 and the last section of
+`tracking-input-chain.md`.
+
+**Update (2026-10-18, F-238): corrected rising-edge hook passes a synthetic
+QEMU dispatch check.** The shared snapshot updater hook is aligned at
+`0x102f0d30`; `0x102f0d32` bisected a 32-bit instruction and was invalid. The
+corrected private prototype compares old/new AE-L/AF-L bit `0x2000`, checks
+assignment value 77, and calls native action 45 only on a fresh edge. Its
+LLVM link audit passes; a private QEMU loader test produced action-45 entry
+counts 1/0/0/1 for fresh/held/release/fresh snapshots. The test returned
+through a test-only trampoline before the native snapshot-update tail. The
+shared updater has seven direct callers, so inline action call context and
+stack are not yet established. Next inspect those callers and determine
+whether the callback-specific seam at `0x102f2eae` can preserve the rising
+edge without executing on unrelated stacks. Keep Auto-area AF and preserve
+stock OK/J. This is not a camera-testable patch: physical input, runtime
+executable mapping, worst-case stack, native start/cancel, and full-image
+acceptance remain open. No camera contact. See F-238.
+
+**Update (2026-10-18, F-239): plain Auto-area action path is stateful but
+still unnamed.** Action 45's `0x1045a1ae` helper clears an AF-related field,
+then reaches `0x1019596e` through `0x10230832`. The routine writes 6 or 7 to
+an AF-related object byte after readiness checks and performs more update
+calls. Its event `0x3b` target is the return-only stub `0x1046296e`. Static
+evidence does not name the fields or values as Subject-tracking state. The
+cycle question remains reserved for behavior testing after build gates. The
+immediate research next step is to inspect the seven updater callers for
+execution context/stack suitability and compare the common-site hook against
+the callback-specific seam. No camera access. See F-239.
+
+**Update (2026-10-18, F-240): common-site stack risk is concrete.** The
+paired-record builder `0x102f199a` calls the snapshot updater twice with stack
+buffers after reserving `0x31c` bytes. The other wrappers, including registered
+callback `0x102f2eae`, have smaller visible frames, but their task stack owners
+are not identified. A callback-only hook can miss an edge if another caller
+updates the global snapshot first; a common-site action can run on the
+builder's deeper stack. Next map caller task identities and stack budgets, or
+design a pending-edge handoff to the known action worker. Keep Auto-area AF,
+AE-L/AF-L assignment and stock OK/J. The current common-site prototype is not
+camera-testable. See F-240.
+
+**Update (2026-10-18, F-241): prioritize the configurable-handler route.**
+Dispatcher `0x10301f36` sends function code `0x2d` to Fn1 handler
+`0x1036957c`, which calls action 45 for assignment 77. AE-L/AF-L handler
+`0x10369468` reads properties `0x1184`/`0x1187` but only handles values 25
+and 42. The likely remap point is its handler, with Fn1-handler reuse as a
+secondary hypothesis. The dispatcher also assembles a status mask; its
+physical-edge cadence and handler argument/return equivalence are unproved.
+Next trace its caller and compare those contracts. Do not patch the status
+mask call sites. Keep Auto-area AF and stock OK/J. No camera contact. See
+F-241.
+
+**Update (2026-10-18, F-242): handler-extension branch passes a synthetic
+QEMU test.** A temporary value-77 branch in AE-L/AF-L handler `0x10369468`
+reached action 45; assignments 42 and 25 reached their existing branches.
+All guest writes were restored and firmware/simulator identities were
+unchanged. This proves handler-level feasibility only. The function-code 13
+producer, physical fresh-press cadence, held-repeat behavior, native
+second-press cancellation, and full-image/runtime mapping/stack gates remain
+open. Next trace the handler's runtime registration/producer. Do not return to
+the snapshot updater unless the per-button event route requires it. Keep
+Auto-area AF, native action 45 and stock OK/J. No camera contact. See F-242.
+
+**Update (2026-10-18, F-243): dispatcher call path narrows the remap
+claim.** The only direct dispatcher caller found is callback `0x10302220`;
+it forwards only codes 26/27/28, which select other handlers. AE-L/AF-L and
+Fn1 are switch entries 13 and 45. No literal dispatcher function pointer was
+found, though runtime/computed routes remain possible. F-242 therefore
+validates the handler branch only, not button delivery. Next trace callback
+registration/producer and indirect dispatch; if code 13 cannot be tied to an
+AE-L/AF-L edge, return to the input-chain edge source. Do not treat the
+handler extension as testable yet. See F-243.
+
+**Update (2026-10-18, F-244):** a direct synthetic call to callback
+`0x102f2eae` timed out before return and produced no action-45 observation.
+The constructed record/callback context is unvalidated, so this does not
+falsify the natural route. Do not repeat that same call. Next trace the
+callback's registration/call context statically and resolve stack/runtime
+gates for the common rising-edge hook already tested with synthetic records.
+No camera contact. See F-244.
+
+**Update (2026-10-18, F-245):** followed the suggested Auto-area AF → OK/J →
+3D-TRACKING path to its actual boundary. The AF-area option setter establishes
+mode 6/submode 0; `3D-TRACKING` is only a formatted status label. Shooting-
+view J lookup `0x10460ba2` searches a runtime key/callback table and invokes
+the selected callback indirectly. The bounded QEMU `0x27e` event did not
+reach a callback or action 45. Callback identity remains unresolved, and the
+trace does not change the preferred native action-45 remap to AE-L/AF-L.
+Retain Auto-area AF. Continue only with a callback-table producer trace if it
+can yield a concrete competing action hook; otherwise prioritize the
+candidate's runtime mapping/stack and image-acceptance gates. The candidate
+remains not camera-testable. See F-245.
+
+**Update (2026-10-18, F-246):** sampled the filter table in the simulator.
+It holds three callbacks (`0x104e2e85`, `0x104e2ea1`, `0x104e2ec7`) and one
+empty slot; those callback bodies do not directly call action 45. Synthetic
+`0x27e` hit only generic dispatcher/screen-handler entries, not the filter,
+table callbacks, or action 45. This is a simulator-path limit and does not
+identify the camera's physical J callback. No stronger J-side patch hook
+emerged; keep action 45 as the remap target. Continue build-readiness work on
+the AE-L/AF-L candidate and preserve the open cycle claim. See F-246.
+
+**Update (2026-10-18, F-247):** the combined private production overlay
+installs two independent action-45 paths: common snapshot updater hook
+`0x102f0d30` calls inline, while ring-record hook `0x102f14b2` queues through
+the worker. Their tests were separate; no integrated test rules out two
+requests from one press if it reaches both. Drop the common updater action
+hook from the test candidate because it also runs in seven caller contexts,
+including the deep paired-record builder. Retain the worker-mediated route
+as the sole candidate; its physical record provenance is reserved for the
+owner's later device test. This resolves the design choice, not readiness:
+mapping, full-image acceptance, and hardware-readiness records remain open.
+See F-247.
+
+**Update (2026-10-18, F-248):** a local ABI review of the selected
+`0x102f14b2` worker hook confirms it restores the stock mutex argument,
+returned record pointer, NZCV result, callee-saved registers and SP before
+the original unlock/return tail. This closes that insertion's continuation
+contract only; it does not change the manifest's incomplete full-candidate
+ABI review or the open worst-case stack claim. The worker-only overlay's
+`guest_execution: false` manifest field is build-time metadata; F-232/F-235
+record its separate loader-based QEMU execution. Remaining candidate gates
+are camera-load executable mapping and complete-image acceptance, followed
+by the existing owner hardware-readiness process. See F-248.
+
+**Update (2026-10-18, F-249):** one later MMU setup path disables translation,
+loads TTBR0 from a literal pointing to RAM at `0xc11f8000`, then reenables
+translation. That page table is outside the captured firmware module, so its
+entry for candidate code VA `0x1002d000` cannot be statically inspected here.
+The scheduler's optional per-task table is another independent path. The
+specific worker's inherited camera mapping and executable permission remain
+unproved; simulator ATS results cannot supply the missing table. Stop
+simulator-mapping work and treat camera-load mapping as an unresolved build
+gate unless the owner already has a read-only source for that runtime table.
+See F-249.
+
+**Update (2026-10-18, F-250):** no simple relocation cave was found. The
+1 MiB sections containing the trigger/action/menu hooks have no all-zero run
+of 32 bytes or more, while candidate code needs about 964 bytes. Reusing an
+existing nonzero function block would be a separate redesign and ABI/behavior
+review. Keep the candidate in its reviewed code cave for now, but leave its
+runtime mapping unresolved. Next useful evidence is the runtime TTBR0 entry
+for `0x1002d000` from an existing read-only source; otherwise an alternate
+placement requires a new design, not more simulator mapping probes. See
+F-250.
+
+**Follow-up: runtime mapping access and simulator route (2026-10-18).** The
+owner authorized exploring camera connection, but approved rules still
+require an exact memory-read method review, recovery plan, and approval of
+that method. Existing PTP review found no documented Nikon command that reads
+live RAM; identity/property, live-view and card-file reads do not expose
+TTBR0 contents, and `gphoto2` is not read-only as shipped. Do not probe with
+generic vendor commands. The source map distinguishes the simple
+`nikon-z30` profile, whose RAM begins at `0xc1800000`, from the display profile,
+whose mapped RAM already includes the TTBR0 table address `0xc11f8000`.
+An isolated QEMU 10.2.4 build and read-only guest diagnostic in the display
+profile read the active TTBR0 entry for VA `0x1002d000`: it was a valid section
+mapping with XN clear, the translation had no fault and its physical page was
+inside the modeled map. The diagnostic code ran from the same VA section and
+returned with its caller context restored. This sample ran in the diagnostic
+task, not a verified tracking-worker context; it narrows but does not close
+the worker-specific mapping question or prove camera runtime equivalence.
+F-252 attempted a worker-entry capture with a thread-aware wait, but the
+simulator did not reach the worker. No repo simulator source changed. The
+camera remains gated on a specific reviewed read method and its exact
+approval.
+
+**F-252 closes the current worker-context simulator probe:** after the
+standard assisted live-view setup, a thread-aware QEMU wait held a breakpoint
+at worker entry `0x102f7448` for 20 seconds, but the entry was not reached.
+No worker CP15 state or descriptor was captured. This agrees with F-213's
+bounded non-hit and is a simulator-scheduling limit, not camera evidence.
+Do not spend another session trying to make this same setup schedule the
+worker. Resume only with a new, build-relevant real-firmware source for the
+runtime descriptor or a specifically reviewed camera-read method; the
+existing gphoto2 route remains unapproved and no camera is currently
+enumerated over USB. See F-252 and the last section of
+`tracking-input-chain.md`.
+
+**F-253 refinement:** the standard diagnostic task's read-only CP15 probe
+reports active TTBR0 `0xc2ad4000`, with a valid executable section entry for
+`0x1002d000` into modeled display RAM. A watchpoint on that actual entry saw
+no write during an eight-second post-setup window. This is distinct from the
+later static MMU setup at `0xc11f8000`; neither result establishes the
+tracking worker's camera mapping. The worker-entry non-hit remains the
+simulator limit. Do not extend this path without a new worker stimulus; the
+camera remains pending connection, and any memory read still needs a
+specific reviewed method and approval. See F-253.
+
+**F-254 camera-connect preflight:** a local direct-libusb probe is now
+implemented at `src/nikon_z30_research/ptp_device_info.py`. Its only PTP
+request is standard GetDeviceInfo (`0x1001`, transaction ID zero); it returns
+identity and advertised operation codes, omits the serial number, and stops
+if it cannot claim the active PTP interface. It does not invoke vendor
+operations or retrieve live RAM, so it may identify a firmware-advertised
+candidate but cannot itself resolve the worker's TTBR0. Six synthetic tests
+pass; the camera was not connected or queried. When it is connected, use only
+the command in `docs/camera-readonly-identity-method.md`; review any
+advertised unknown operation separately before considering it. Do not resume
+the failed simulator scheduling path without a new worker stimulus. See
+F-254.
+
+**F-255 host check:** libusb initializes and enumerates successfully, with
+zero matching `04b0:0452` devices. The check read USB descriptors only; it
+did not open a device or send a PTP operation. The camera remains pending
+connection. This confirms host discovery is available, not camera PTP support
+or a live-memory path. See F-255.
+
+**F-256 descriptor ABI check:** compared the Python `ctypes` descriptor
+structures used by the preflight with the installed libusb C header and
+compiler ABI. Sizes and accessed field offsets match for the device,
+endpoint, interface, alternate-setting, and configuration descriptors. This
+reduces a host-layout risk before the camera is connected; it is not a
+hardware transport result. The next step remains the single documented
+GetDeviceInfo preflight after the owner connects the camera. Do not resume the
+QEMU worker scheduling path without a new stimulus. See F-256.
+
+**F-257 transport mismatch:** after the owner connected the camera,
+IORegistry exposed the Z 30 USB identity, but both Python and native C
+libusb 1.0.30 enumeration returned zero devices. The exact documented PTP
+preflight stopped at its one-device check; it opened no handle and sent no
+PTP command. The descriptor's USB release `0x0120` is not a camera firmware
+version. Next, resolve why the host registry sees the device while libusb
+does not, using only reviewed host-side/read-only methods; do not try
+`gphoto2`, vendor operations, or memory reads. See F-257.
+
+**F-258 resolves the identity transport:** after the owner connected the
+camera, the documented probe succeeded when run with host USB access. It sent
+only standard GetDeviceInfo (`0x1001`) and returned Nikon Corporation, Z 30,
+device version V1.20, and the supported-operation list; serial was omitted.
+The familiar property, live-view, and card-object families match the bounded
+local review. `0x9535` is advertised but unresolved by local references, so
+do not invoke it. This proves the identity/inventory route works, not a
+live-memory route or the worker's TTBR0. The local-source lookup is now
+complete under F-259; do not repeat it absent a newly available source. See
+F-258 and F-259.
+
+**F-259 local-source lookup complete:** searched project notes, source and
+tests and the installed libgphoto2 PTP documentation/headers for `0x9535` and
+candidate runtime-memory operations. No mapping or reviewed memory-read
+operation was found. This closes the local lookup branch, not the possibility
+of an undocumented interface. Do not invoke `0x9535`. At the time of F-259,
+only identity access was approved. The owner has since authorized read/write
+experiments in principle and named stock-firmware reinstallation as the
+recovery plan; this does not replace the project's exact-method review and
+approval requirement for a camera read or write. The identity run therefore
+does not resolve the active tracking-worker table. Keep the tracking patch at
+its existing NO-GO gates; resume with useful static evidence or a specifically
+reviewed camera method. Do not repeat the closed QEMU worker-scheduling trace
+without a new stimulus. See F-259 and `camera-readonly-identity-method.md`.
+
+**F-260 native cycle control:** a corrected paused-QEMU diagnostic using the
+status record consumed by action 45 routed a fresh decision to native start,
+a second fresh decision to native stop, and held/no-decision to neither path.
+This verifies the candidate/native request cycle under constructed Auto-area
+status; it does not establish that the camera naturally creates that status,
+that AE-L/AF-L reaches the candidate, that a subject is acquired, or that
+asynchronous completion works. Do not repeat this constructed QEMU test.
+
+The owner has offered human-run testing. First use the stock camera's existing
+Fn1 Subject-tracking assignment in Auto-area AF as a reference for the real
+native action: record first-press response, tracking acquisition, release and
+hold behavior, and whether a fresh second press cancels. This can resolve the
+native action's real start/stop behavior; it cannot validate the AE-L/AF-L
+candidate hook. Runtime executable mapping remains the major patch gate. Any
+direct assistant access beyond the identity query still requires an exact
+reviewed method and recovery plan under the camera rules. See F-260.
+
+**Owner-provided recovery plan (2026-10-18):** for a future camera write, the
+owner identifies reinstalling stock firmware as the recovery route. This is
+recorded as the owner's stated plan, not as a verified recovery procedure;
+before any assistant-performed camera write, the exact operation and restore
+procedure still need review and explicit step approval.
+
+**F-261 stock-camera result:** owner tested stock Z 30 V1.20 with Fn1 assigned
+to Subject tracking. Tap/release and hold both display the tracking target;
+it persists after release. A second tap ends tracking; hold behaves like tap.
+The owner reports that tracking does not activate until a shutter half-press,
+after which the target began following the subject. This establishes
+successful native acquisition in the reported scenario, but not AE-L/AF-L
+admission to the candidate. See F-261 and `tracking-input-chain.md`.
+
+**Next step:** ask the owner to approve the revised exact monitor procedure in
+`camera-ptp-event-monitor-method.md`. It opens one standard PTP session,
+listens for 15 seconds, and requests enough transfer space for a complete
+event container over the observed 8-byte endpoint. If approved, run the same
+bounded button sequence. A no-event result is inconclusive. Do not run the
+revised method or another camera operation before approval. It may correlate
+physical controls with PTP events but cannot prove the candidate hook.
+Runtime executable mapping and physical AE-L/AF-L delivery remain patch gates.
+
+**F-262 connection refresh:** the host USB registry sees the camera and the
+pre-approved GetDeviceInfo probe again reports Z 30 V1.20 when run with host
+USB access; sandboxed libusb sees no device. The operation list includes
+standard OpenSession/CloseSession needed by the event monitor. This confirms
+transport readiness only. See F-262 and `camera-readonly-identity-method.md`.
+
+**F-263 event-monitor preflight:** owner approved the exact PTP event monitor,
+but its only attempt stopped before opening/claiming the device or sending a
+PTP command. The active descriptors did not satisfy the unique default PTP
+interface plus interrupt-IN endpoint selector. This is not evidence that no
+event endpoint exists; no press test occurred. A separate descriptor-only
+inspection is prepared in `camera-usb-descriptor-method.md` and needs separate
+approval. Do not retry the monitor or try another interface under the earlier
+approval. See F-263.
+
+**F-264 descriptor result and current approval gate:** descriptor-only
+inspection found a unique standard PTP interface and an 8-byte interrupt-IN
+endpoint. F-263 was a tool threshold bug: it assumed one packet must hold the
+entire 12-byte header. The revised monitor requests up to 24 bytes so USB
+packets may be collected into one PTP event container. This is a changed
+transfer method and requires the owner's exact approval before retry. The
+revised monitor has synthetic endpoint tests but no camera run. See F-264.
+
+**F-265 empty-transfer result:** the revised monitor opened the PTP session,
+then stopped on a successful zero-byte interrupt-IN transfer before any event
+container arrived. Its cleanup path attempted CloseSession; acknowledgement
+was not exposed. The same bounded method now treats zero-byte transfers as
+idle polls and continues through the 15-second limit. The owner says not to
+ask permission again for this same method. Before another run, warn the owner
+and wait for an explicit “start” signal. Do not begin the next window until
+then. See F-265.
+
+**F-266/F-267 PTP property-event correlation:** two approved bounded monitor
+windows completed on the stock camera. With four AE-L/AF-L presses, the first
+reported four `DevicePropChanged` (`0x4006`) events for standard property
+`0x501c` (`FocusMeteringMode`). With three presses, the second reported two
+events for the same property. This is real-camera evidence that the control
+sequence coincides with changes/signals for the focus-metering mode, but it
+rules out assuming one event per press and does not identify a physical-key
+event or prove the firmware hook. Next review offline a single-property,
+read-only standard PTP descriptor/current-value query for `0x501c`; use no
+vendor operation or write. Do not run it until its exact method and approval
+boundary are settled. If repeating the existing event monitor, warn before
+the 15-second window and wait for the owner's explicit “start.” See F-266,
+F-267, and `tracking-input-chain.md`.
+
+**Owner's latest target:** whenever Auto-area AF is active, Subject tracking
+must remain in the native ready/reticle state without a button press, and
+shutter half-press should begin acquisition. The lifecycle point was already
+researched: selector-1 live-view-ready site `0x102f5810` inside `0x102f57e2`
+is reused from the XPan hook work, so do not repeat broad lifecycle discovery.
+Its simulator validation covered display-mask behavior, not AF readiness or
+action-45 call safety. A view-entry-only hook also misses Auto-area AF being
+selected while shooting view is already open. The specific design task is to
+reconcile both known transitions—Auto-area selection (`0x1042b2d8`) and
+shooting-view readiness—against native tracking state, then issue exactly one
+action-45 start request when the condition becomes true. The action is
+stateful and a second request can stop tracking (F-260), so a reliable armed-
+state check or transition latch must prevent duplicate calls and reset when
+the condition ends. Existing research does not establish the live armed-state
+signal, setter continuation safety, or AF-ready timing; these are the remaining
+gaps. The read-only PTP descriptor query in
+`camera-focus-mode-descriptor-method.md` was run once after owner
+authorization. The camera returned `0x200A` (`DeviceProp Not Supported`) for
+`0x501c`; it did not expose the property's current value or tracking armed
+state. Do not retry that standard query or substitute a vendor operation
+without a newly reviewed method. Resume with the focused firmware-state and
+QEMU candidate proof. See F-260/F-261/F-268 and Lane 3 in
+`tracking-input-chain.md`.
+
+**Human-run native-action reference scenario (completed; F-261):** on stock Z 30
+V1.20 in still-photo mode, Auto-area AF/AF-C and Fn1 assigned to Subject
+tracking, a tap/release displayed a persistent target; hold behaved like tap;
+a second tap ended it. The target began following after a shutter half-press.
+This tests the native Subject-tracking action on hardware; it does not verify
+AE-L/AF-L delivery to the candidate hook or camera-load executable mapping.
+
+**F-269 narrows the 6/7 hypothesis:** those byte values do not directly
+classify people versus animals. People submode 1 takes separate configuration
+routes; animal submode 2 shares the plain Auto-area path, whose action-45
+caller passes input 0 and therefore writes 6. The routine writes 7 only for
+input 1. The byte meaning is still unknown. Keep the continuous Auto-area
+goal; the next useful firmware trace is to identify the AF object/state that
+the common and people-specific helpers modify and whether a native ready-state
+signal can support exactly-once arming across both mode selection and
+shooting-view readiness. See F-269 in `facts.md` and
+`tracking-input-chain.md`.
+
+**F-270/F-271 simulator result and correction:** action 45 (`0x10368b6e`,
+selector `0x2d`) routes mapper states 0/1 through `0x1045a1ae` and states 2/3
+through `0x1045a21c` -> `0x10230866` -> `0x100775c6`. The earlier
+`0x1045a1e6` attribution is corrected: it belongs to selector 27. In the
+disposable pinned-QEMU run, supplying initial tuple `(6,0,0)` and explicitly
+calling native bridge `0x101925b0` between action calls produced a native
+software cycle: first call to the plain helper, bridge to tuple `(6,1,0)`,
+second call to `0x100775c6`, bridge back to `(6,0,0)`, then the plain helper
+again. This is stronger simulator evidence than the earlier constructed
+candidate-only test, but still does not prove natural AF-state production,
+visible reticle, or subject acquisition. Next, integrate the status bridge
+into a disposable live-view-ready auto-arm overlay and test one-shot behavior
+across repeated ready callbacks plus Auto-area changes while view is open.
+Keep this QEMU-only; original firmware and QEMU checkout stayed unchanged.
+See F-270/F-271.
+
+**F-272 auto-arm test disposition:** a temporary overlay targeted the known
+live-view-ready call and Auto-area setter continuation. It included an
+Auto-area check, one-shot latch, and the native status bridge. All loader
+regions were placed in the disposable guest, but startup halted before live
+view on an unmodeled write at `0x10000aaa` from `0xc2b1065a`. The documented
+no-lens simulator peer did not resolve it. The overlay never ran; do not cite
+this as ABI, readiness, one-shot, reticle, or tracking evidence. Stop the
+simulator-fidelity branch. The next build-relevant step is static analysis of
+native AF state writers/readers and action-45 call contract to decide whether
+a one-shot hook is viable. No patch is testable yet. See F-272.
+
+**F-273 narrows the status guard:** `0x101925b0` has one direct call site,
+inside event-driven update routine `0x10076268`, reached directly from
+`0x10156ba0` (input 0) and `0x10159092` (input 1). It is not a per-frame
+refresh, which explains the stale snapshot in QEMU after action 45. A
+candidate must use a reliable one-shot latch or explicitly refresh status
+before treating the mapper tuple as an armed-state guard. Next trace the event
+routes' relationship to AF readiness and review the exact action-45 call
+contract at both known triggers; do not spend more time extending QEMU's
+peripheral model. No patch is testable yet. See F-273.
+
+**Correction (F-274):** the F-272 QEMU startup failure was caused by an
+undersized verified cave: the 44-byte temporary wrapper crossed a 24-byte
+zero span and overwrote firmware. Withdraw the conclusion that an unmodeled
+write proves a QEMU peripheral gap. The corrected overlay fits a verified
+512-byte zero cave, starts normally, reaches live-view setup, and calls
+native action 45 from the ready path; the action's internal return reports
+success, followed by the explicit status bridge. The outer live-view callback
+still times out in the diagnostic run amid repeated AF-mapper stops. No
+reticle, acquisition, or completed callback is established. Next isolate the
+callback/worker interaction or drive the ready event through normal guest
+execution, then verify exactly-once and mode-transition behavior. Keep the
+experiment disposable and simulator-only. See F-274.
+
+**F-275/F-276 identify the corrected test path and stop:** the stock
+live-view object's type-2 dispatcher is `0x104b912c([object, 2, 0])`. Through
+that route the corrected overlay reaches native action 45 and its successful
+return, then QEMU pauses on unknown halfword write `0x10000aaa = 0xaa` from
+runtime code `0xc2b1065a`. A private exact-address no-op reveals the next
+write `0x10000554 = 0x55` from the same code. These values are consistent
+with a NOR-flash unlock sequence, but the device contract is not confirmed.
+Do not guess a response or extend the simulator branch. No-op handling does
+not complete dispatch; no reticle/acquisition or testable patch exists. The
+F-272 run remains invalid because its wrapper overflowed the verified cave;
+the same unknown-write family is independently reproduced by the corrected
+overlay. See F-274 through F-276.
+
+**F-277 cross-references the stop to F-159:** the captured PC/LR
+(`0xc2b1065a`/`0xc2b1013f`) match the shared cached flash identity/geometry
+initializer at `0xc2b1012c`. Its information-getter and erase/program callers
+are known, but the outer caller and operation in this run are not. The access
+is not attributable to tracking or a firmware update. Further flash-response
+modeling was retired; return to the tracking action's real-firmware hook/state
+contract. See F-159 and F-277.
+
+**F-278 AF-byte cross-check:** the byte written as 6/7 by `0x1019596e` is
+also read by `0x1018cd9c`, whose guarded path proceeds only when that byte is
+1. This confirms it participates in wider AF state handling but does not
+identify 6/7 as people/animal classes or a native ready state. A standard USB
+event monitor cannot report this internal field; previous `FocusMeteringMode`
+events were not one-per-action and its standard descriptor query was
+unsupported. Continue with offline tracing for the native AF-ready signal
+and exactly-once auto-arm contract. No camera contact. See F-278.
+
+**F-279 identifies a native state-pair producer:** `0x10078aa0` writes
+`(1,0)` to the mapper source pair at `0xc259ff0c+0x38/+0x39`. Its direct
+caller is `0x10073ed2` inside an event-driven updater reached from the
+`0x100746dc` event-mask dispatcher. The triggering object-state checks are
+not yet tied to Auto-area or Subject tracking. Next useful simulator work is
+a bounded QEMU test that drives this callback with constructed context and
+observes whether the native pair update occurs; this can test a real producer
+without modeling the retired flash path. No reticle/acquisition or ready-state
+claim follows from the static trace. See F-279 and F-271.
+
+**F-280 corrects the event bit and bounds the QEMU path:** dispatcher
+`0x100746dc` selects input bit 0 (`lsls #31`). With synthetic mask 1, QEMU
+entered `0x10074492` but returned through `0x100745f4` because the service
+check returned 1 and no AF object was present (`r4 == 0`). The mapper source
+pair stayed `(0,0)` and the producer was not reached. A valid live AF context
+or a guest-driven event after live-view initialization is still needed; do
+not infer a hardware or peripheral failure from this diagnostic. See F-280.
+
+**F-281 clarifies the 6/7 field:** the action-45 Auto-area state-0/1 branch
+clears the helper input byte before calling the routine that writes 6/7; this
+route serves plain Auto-area and animal submode. A different direct caller
+passes 1 after checking an AF record byte `+4` is 2 or 3 under additional
+configuration/native-helper gates. The alternate record's producer and those
+values' meanings are unknown, so a broader AF-category role remains
+possible. A standard USB PTP window cannot read that internal record and is
+low value for this uncertainty. If continuing this trace, first establish
+whether the alternate record producer touches the native ready state or the
+auto-arm hook contract; otherwise prioritize that direct hook/state
+decision. See F-281 and the last section of `tracking-input-chain.md`.
+
+**F-282 bounds the QEMU AF-context test:** the hash-verified local QEMU run
+completed synthetic live-view setup and the native Auto-area setter returned
+success for value 600. The following callback still saw service check 1 and
+`r4 == 0`, exited before the AF updater, and left source pair `(0,0)`. Thus
+live-view setup plus Auto-area selection do not create the required AF object
+in this QEMU fixture. Do not model guessed EXMCU/ISP behavior. A next
+simulator test is justified only after tracing a native AF-object constructor
+or registration path that can populate this context; otherwise this remains a
+simulator-only blocker and not evidence of camera-side absence. See F-282.
+
+**F-283 tests the dispatcher's own initialization sequence:** event mask
+`0x801` invokes bit-11 initializer `0x10078c50` before bit-0 AF callback
+`0x10074492`. In hash-verified QEMU, the callback still found no AF object
+after live-view setup and Auto-area selection; service check returned 1 and
+the status pair remained `(0,0)`. The initializer alone is not the missing
+context. Next trace the producer/registration for the object list consumed by
+`0x101885e8`; use a QEMU fixture only if this identifies a native setup path.
+This narrows a named auto-arm state test and does not justify guessed device
+responses. See F-283.
+
+**F-284 sets the hardware-test threshold:** the owner says QEMU cannot fully
+establish readiness and has approved testing a prepared patch on the connected
+camera. The private auto-arm overlay now gates on Auto-area base mode 6 and
+People/Animal submode 1/2, but the diagnostic QEMU callback did not return
+from the wrapper or show the helper/action entry. The run establishes neither
+the new gate nor reticle/acquisition behavior. Stop repeating this full
+callback test. The candidate remains a loader overlay, has no proven
+stills-only guard, and has not been composed/audited as a camera-format
+image. The correct point for the bounded camera test is after that exact
+candidate exists, its instruction layout/register/stack/return contracts are
+reviewed, an independent exact-edit and integrity audit passes, and the stock
+recovery path/risk is recorded. At that point use hardware for the native
+reticle, half-press acquisition and camera-runtime mapping questions QEMU
+cannot settle. Keep the test scoped to still-photo Auto-area People/Animal;
+hardware readiness remains NO-GO until the candidate and preflights are
+complete. See F-284 and `hardware-readiness.md`.
+
+**F-285 composes and audits the first concrete auto-arm image:** the private
+Z 30 C 1.20 standalone EG candidate was built from the hash-verified original
+with a four-span plan (the 512-byte code cave plus three same-length hook
+branches). The in-repository builder regenerated the native component CRC;
+an independent reread verified each expected/replacement span, no unplanned
+body change, unchanged length, valid stored CRC and zero residue. Thumb decode
+verified branches to the intended three wrappers. Static review found
+16-byte-aligned wrappers, callee-saved/LR preservation and native setter
+return-value preservation. QEMU still did not observe helper/action entry,
+reticle or acquisition; the active trigger’s runtime mapping and worst-case
+stack remain camera risks. Nikon's official update instructions use a
+camera-formatted SD card with the outer package; the same-firmware Z30 C 1.20
+WonderLantern build docs independently document installing a standalone EG.
+This exact candidate has not been accepted by the updater. The Z 30 enumerates
+over USB at the OS level, but gphoto2 opened no PTP session and no card is
+mounted; no transfer or camera write occurred. The next step is to place the
+reviewed private EG on the camera-formatted card through a supported card
+reader, then run the bounded still-photo People/Animal test under the owner's
+existing approval. Do not invent or try an undocumented USB update command.
+The hardware-readiness status remains NO-GO until the final named test record
+and scope are entered. See F-285 and `hardware-readiness.md`.
+
+**F-286 corrects the transport record and names the risk threshold.** The
+historical read-only gphoto2 summary and storage-list calls did open PTP and
+reported the removable memory card; F-285's “no PTP session/no card” statement
+is stale. The private card-test copy remains local and was never uploaded.
+There was no camera write or updater attempt. The candidate and independent
+exact-span/CRC audit are complete, but worst-case callback stack/context
+headroom is unmeasured and the QEMU callback did not return. The correct
+decision point is after a bounded static stack/context review, or an explicit
+owner waiver of that named residual, with the recovery risk and bounded test
+scope recorded. The current `AGENTS.md` explicitly requires offline analysis
+and prohibits camera contact; do not transfer or install the candidate under
+that rule. No further simulator-fidelity retry is warranted. See F-286 in
+`facts.md` and `hardware-readiness.md`.
+
+**F-287 owner decision and transfer result:** the owner explicitly overrode
+the no-camera-contact rule and approved a one-file PTP copy. gphoto2 2.5.32
+reported the card root as `/store_00010001`; the upload operation to that path
+returned `PTP Specification Of Destination Unsupported`. The initial `/`
+attempt also failed before transfer. No file was written and the updater was
+not started. No external card-reader volume is mounted on the host. Use a
+card reader for any future transfer; the exact candidate stays local. This
+does not waive the open worst-case stack/context review or establish updater
+acceptance. See F-287 in `facts.md` and `hardware-readiness.md`.
+
+**F-288 still-photo guard trace:** hash-verified decode of `0x102f57e2`
+shows the bit-6 test on `0xc181b4b4` only conditionally calls `0x104bd3c0`;
+both paths rejoin before the live-view selector setter. This does not provide
+a still-photo boundary for auto-arm. The existing candidate is unchanged and
+lacks the requested stills-only guard. Next, trace an actual photo/movie
+predicate and its writer only if the state/value can be proved to dominate
+the reticle-arm path; do not infer the guard from live-view selector 1 or
+this unknown global bit. Hardware remains NO-GO. See F-288 in `facts.md` and
+`hardware-readiness.md`.
+
+**F-289 mode-entry re-check:** re-inspection of `0x102f2990` repeated F-089's
+pointer-table and callback findings but did not identify the dispatcher or
+prove still/movie meanings for its inputs. This adds no build evidence; do
+not spend another pass re-decoding the same routine. The candidate still
+lacks a proven still-photo guard, and the direct APPLV callback's stack/context
+bound is unresolved. Candidate unchanged; no firmware edit or camera write;
+hardware remains NO-GO. See F-288/F-289 in `facts.md` and `hardware-readiness.md`.
+
+**F-290 APPLV stack request:** the captured creation descriptor for APPLV
+requests `0x2000` bytes (8 KiB), forwarded by `0x10219876` to scheduler
+creation. This resolves configured size only; current action-45 call depth
+from the candidate live-view callback is not bounded. Next, statically bound
+the new wrapper/helper frames and native call chain against this allocation,
+including indirect calls and error/retry paths, or identify a safe shallower
+native dispatch boundary. Do not treat the current candidate as install-ready;
+the stills/shooting eligibility and runtime behavior gates also remain open.
+See F-290 in `facts.md`.
+
+**F-291 eligibility-byte correction:** `0x102f57fc` tests bit 7 of byte
+`0xc181b4b4` (F-288 incorrectly said bit 6). Unrelated subsystems use that
+same byte with other bit tests before the same `0x104bd3c0` helper, consistent
+with shared instrumentation/filter gating. It is not a defensible
+still-photo/Auto-area predicate. Continue searching for a semantically
+identified state at the AF-area setter or shooting-state producer; do not
+add this byte to the candidate. Candidate remains unchanged and NO-GO. See
+F-291 in `facts.md`.
+
+**F-345 Auto-area notification route:** property-batch processor
+`0x104579a0` maps base-mode property `0x0c2b` to notification mask
+`0x04000000` through `0x104575d0`. F-346 corrects the notification detail:
+discriminator `0x56` reaches return stub `0x1046296e`; the actual next edge
+sets the mask on a shared event-flag-like handle through `0x10199e04` and
+platform primitive `0x10036334`. The waiting consumer and its relationship
+to AF-object `+0x40` remain unknown. Next trace initialization of this handle
+and its waiters, then compare their update order with registered callback
+`0x1016139e`. Candidate 02 remains NO-GO; do not repeat the earlier setter-only
+QEMU probe or touch the camera. See F-345/F-346 in `facts.md`.
+
+**F-347 shared-handle initialization:** the mode-3 branch at `0x10595840`
+creates three synchronization objects through `0x10462840`, `0x1046285e`,
+and `0x1046287c`, storing handles in adjacent slots based at `0xc181e4e4`.
+It then registers seven callbacks through `0x101e1c04` (targets include
+`0x104650f8` and `0x104bd422`–`0x104bd4da`). Their registration keys and
+state effects have not been tied to Auto-area mask `0x04000000`, AF-object
+`+0x40`, or snapshot callback `0x1016139e`. There are many unrelated generic
+wait-wrapper call sites, and direct xrefs did not identify a unique consumer.
+Next inspect the registry's key/data contract and trace only callback targets
+whose keys or state flow can connect to the Auto-area notification or AF
+snapshot. Do not repeat the setter-only QEMU probe or touch the camera.
+Candidate 02 remains NO-GO. See F-347.
+
+**F-348 registry contract:** `0x101e1c04` swaps key and callback arguments
+and enters keyed registry `0x101e1b86`. The registry hashes zero-terminated
+keys up to 16 bytes, compares existing entries, and stores callback and
+auxiliary fields. The seven keys passed by the mode-3 initializer remain
+unidentified; the registry's existence alone does not connect those callbacks
+to Auto-area mask `0x04000000`. Next map those keys to other dispatch sites or
+key producers, then follow a matched callback toward AF-object `+0x40` and
+snapshot handler `0x1016139e`. Candidate 02 remains NO-GO. See F-348.
+
+**F-349 snapshot callback filter:** initialization stores the Thumb pointer
+for `0x1016139e` in shared callback slot `0xc1885f30`. The related dispatcher
+`0x1021dfa0`/`0x1021dee4` can route into the slot, while the handler itself
+only snapshots live-view AF context `[r1+0x428]` for event `0x0002fe3d` (the
+generic `0x041a0040` branch is rejected). The producer of `0x0002fe3d` and its
+ordering relative to Auto-area property/context updates are still unknown.
+Trace that producer and compare it with `0x0c2b`/`0x0c3d` and the tracking
+ready helper. Do not treat this as a proven hook or repeat setter-only QEMU
+work. Candidate 02 remains NO-GO. See F-349.
+
+**F-350 callback source bound:** the two located indirect call sites for
+`0x1021dfa0` pass event `0x041a0081`, which is rejected by `0x1016139e` before
+the AF snapshot path. A full-image literal search found no occurrence of the
+accepted snapshot event `0x0002fe3d`. This bounds the visible static route but
+does not exclude runtime-generated or indirect sources. Do not select the
+callback as a patch hook from F-349 alone. Pivot to the live AF-context
+producer and its order relative to Auto-area property changes; keep Candidate
+02 NO-GO. See F-350.
+
+## Rules
+
+Research is offline/simulator-only by default. A camera read beyond the
+pre-approved model/version identification requires a specific read method,
+review for write paths, a recovery plan, and the owner's approval of that exact
+method before use. No unreviewed memory access or firmware-update route.
+Any camera write needs separate approval for that exact step and the applicable
+readiness gates. Never commit firmware bytes, dumps, or patched images,
+anywhere, ever — this applies doubly to
 any work on "a safe place to add instructions" (Lane 1), since that
 research must stay entirely descriptive (addresses, offsets, constraints)
 and never include an actual patch or binary diff. Each PR: fresh branch
@@ -1435,3 +2851,50 @@ paste the output back — that unblocked this exact kind of work for Claude
 repeatedly this session.
 
 Written by Claude (Sonnet 5.5) and Codex in collaboration with Tony Kim.
+
+**F-353 writer lead:** F-352 corrects the mode source to `*(context + 0) +
+0x40`; context `+0x144` is separate. The earlier F-351 object classification
+is withdrawn. A concrete writer family at section offsets `0x1d84c28` and
+`0x1e0a9f4` sets the pointed object's `+0x40` byte to a table-derived 0/1
+after scanning eight entries. Its callers are in an AF-like event-processing
+routine, but no Auto-area property or ready-helper link is established. Next
+trace the table producer and event/registration semantics; do not patch this
+writer as the arm hook. Candidate 02 remains NO-GO. See F-353.
+
+F-355 correction and next trace: withdraw F-354's state-record store
+addresses and proposed producer. Section offset `0x1d6ba30` is inside a
+ring-buffer helper, and `0x1d6cd6` is unrelated counter/table iteration; they
+do not substantiate the claimed `+0x268/+0x26c` writes. Keep F-353's narrower
+verified result only: a table-derived boolean is written through the
+context-first pointer at `+0x40`, but its table producer is unresolved. The
+best next trace is native ready helper `0x1045a1ae`'s direct callers at
+section offsets `0x348bc6` and `0x438dfe`. Follow their containing dispatchers
+and input sources; these callsites do not yet identify OK, Fn1, or tracking.
+Candidate 02 remains NO-GO and the card being formatted does not change that.
+No camera or card access under current project rules. See F-355.
+
+F-357 retires the direct ready-helper caller lead as the automatic-arm hook:
+one route belongs to configurable-action helpers that query settings
+`0x1170`/`0x1141`/`0x1173`/`0x1144`, not the verified AE-L/AF-L setting
+`0x1184`; the other is guarded by generic key `0x188c` and record state.
+Neither is tied to Auto-area. Return to the Auto-area notification consumer
+or a proven AF-context producer, and evaluate the idempotent ready-state path
+without toggle action 45. Candidate 02 remains NO-GO. No camera/card access
+under current project rules. See F-355–F-357.
+
+F-358 bounded the F-353 table-writer lead through processing routine
+`0x1d85b44` and its four direct callers (`0x1d8551a`, `0x1d860c4`,
+`0x1d86302`, `0x1d87570`). No reviewed call path locally connects the writer
+to Auto-area properties, setter `0x1042b2d8`, or ready helper `0x1045a1ae`.
+Stop this branch absent a new cross-reference. Resume from the Auto-area
+notification route only through a candidate dispatcher tied to the three
+initialized handles; generic waiter enumeration has not identified its
+consumer. Candidate 02 remains NO-GO. See F-358.
+
+F-359 identifies the three-handle initializer's seven registrations as GUI
+debug/log controls. The Auto-area property-batch path signals the second
+handle, but that does not identify an AF-context consumer. Retire this
+callback-key/waiter branch. Resume from the Auto-area setter's AF-application
+path or another positively identified AF lifecycle callback; do not treat
+the shared GUI notification mechanism as the arm hook. Candidate 02 remains
+NO-GO. See F-359.

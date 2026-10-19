@@ -365,3 +365,66 @@ only from an existing, owner-authorized static decode of the missing producer
 and record provenance; otherwise keep preview changes blocked. A future
 caller-guarded override with stock fallback is a design constraint, not an
 established hook. No new firmware access or hardware contact occurred.
+
+## Backend registration probe (F-207)
+
+The verified initializer `0x1021dac2` passes registry ID `0x1003a` through
+lookup helper `0x10218832` before registering callback `0x1021d9e3`. The
+helper indexes a runtime table at 28-byte intervals. A read-only probe of the
+initialized table in the pinned QEMU labels ID `0x1003a` as `BACKEND`. During
+the standard assisted live-view startup sequence, the callback was observed
+once with input flags `0x10`; bit 20 did not appear in that observed entry.
+The startup procedure includes explicit simulator setup API calls, and this
+single event was not correlated with an individual call. The `BACKEND` label
+and startup sample do not reveal the producer/meaning of bit 20 or the current
+and nested record provenance. Treat this as a generic backend callback, not a
+still-capture hook. No hook or candidate is approved by this observation.
+
+## Current-object event producer (F-208)
+
+The bit-20 edge is now statically connected to setter `0x10220fd6`. The
+callback's bit-20 branch reads the module current-object slot at `+0x60` and
+calls `0x1021d946`; the setter fills that slot only if empty, then posts
+`0x100000` through `0x10199cdc`. A bounded direct-call sweep found callers at
+`0x1015672c` and `0x103e5d1c`. The latter passes a stack-built descriptor
+from a generic backend worker path entered at `0x103e5e88` on a queued bit-24
+branch. No new-still predicate is present in those decoded paths, and indirect
+callers are not excluded by this sweep. This identifies a current-object
+assignment event, not a capture-origin gate; playback/editor exclusion remains
+unproved. A hook here would still be unsafe under the owner's still-only
+requirement.
+
+## Bit-24 source and scope (F-209/F-210)
+
+The queued bit-24 branch is the first branch in worker `0x103e5e70`; it calls
+descriptor builder `0x103e5bdc`, which reads shared backend state, builds a
+multi-record descriptor and passes it to setter `0x10220fd6`. Its notifier
+`0x103e89c2` is reached through branch stub `0x1056a636`, called by shared
+helper `0x1055f834`. A full-image direct-call scan found multiple callers of
+that helper across state-management paths, including cleanup/invalidation
+routes. The helper carries no capture argument and does not test a
+capture-origin predicate. This closes the previously missing direct source
+edge but makes the event less suitable as a still-only hook: it is a shared
+current-object invalidation/update path, not a verified new-still boundary.
+The descriptor's ultimate source and playback/editor exclusions are still
+unproven.
+
+A bounded stock-QEMU observation watched the notifier, descriptor builder,
+setter and preview callback during assisted live-view startup and ordinary
+up/down/back/OK navigation. None fired. The firmware hash and pinned QEMU
+checkout remained unchanged. This is a simulator-sequence limitation only;
+it says nothing about camera reachability. Do not use absence in QEMU as
+capture-path evidence.
+
+## Runtime-object setter caller (F-211)
+
+The other direct caller of setter `0x10220fd6` is routine `0x10156714`. It
+supplies a base-derived object pointer only when two shared table counters
+satisfy `r1 < r0`, then iterates state-indexed entries and reads several
+backend values while building descriptors. No capture-origin predicate is
+visible in that routine. A full-image direct-BL sweep and exact
+halfword-aligned pointer-word scan found no direct caller/reference to its
+entry; computed or registered dispatch remains possible. A bounded pinned
+stock-QEMU startup/navigation run did not hit the routine or setter. This does
+not prove camera unreachability, and neither the table semantics nor any
+still-capture provenance is established.

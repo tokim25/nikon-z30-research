@@ -107,6 +107,12 @@ register words — is still being traced.
 
 ## SW-register read path and the live scan
 
+**Superseded by correction F-223 below:** the queued-input consumer does not
+read a live SW-bank word at `0x115c694c`; the earlier bullets in this
+subsection incorrectly joined unrelated paths. Treat the corrected queued-
+input data flow and the unresolved physical-input connection below as
+authoritative.
+
 - The named-switch table is consumed only by an isolated registrar/naming
   module (fn 0x1033ce76): debug naming, not the live input scan.
 - The live read path for AE-L/AF-L, by confirmed index edges: handler
@@ -116,8 +122,8 @@ register words — is still being traced.
   fact; that handler body is MOVW/register-indirect and was not re-decoded.
 - The input-map consumer (fn 0x10459342, map 0x1073b400) is a parallel
   translator whose junction with this path is not established.
-- **Cleanest AE-L/AF-L hook candidate:** the ID-41 handler/dispatcher pair
-  operating on the SW-bank word 0x115c694c.
+- The ID-41 handler/dispatcher pair is a queued logical-input route, not a
+  proven physical-switch hook. See correction F-223 below.
 - Writers: fn 0x103a3df6 only initializes the bank pointer (store at
   0x103a3e58), not the bits. The bit-source writer was not found via plain
   literal/pointer references; the live bits arrive through register-indirect
@@ -157,11 +163,12 @@ Revised action-half questions for the Codex lane:
    dispatch: whether an option engages 3D-TRACKING / AF-ON-with-tracking — the
    hook that turns an AE-L/AF-L press into subject tracking.
 
-**Bottom line for one-button tracking:** the detection hook is confirmed
-(ID-41 / SW-bank word 0x115c694c); the action target is now correctly located
-(AF-area 3D-TRACKING mode), replacing the mistaken Bluetooth candidate; the
-exact set function and the button-option mapping remain for the Codex address
-pass.
+**Bottom line for one-button tracking:** the queued logical mapping and the
+native action-45 route are established separately, but a physical AE-L/AF-L
+detection hook joining them is not confirmed. Auto-area AF is the eligibility
+mode; the `3D-TRACKING` text is not a selectable AF-area row. The fresh-edge
+adapter remains the candidate design, subject to its admission and build
+readiness gates.
 
 ## Open leads, by weight
 
@@ -175,6 +182,35 @@ pass.
 3. **Bars fan-out entry.** How screen fan-out fn 0x10595844 is entered
    (indirect).
 
-Leads 2 and 3, and the SW-register writer in lead 1, all require resolving
+Leads 2 and 3, and the physical-input connection in lead 1, require resolving
 MOVW/MOVT-built or base-register addresses — the one pass this work did not do
 and which belongs to the Codex lane.
+
+## Correction, 2026-10-18 (F-215/F-218)
+
+The action-half interpretation above is superseded. `0x103edda0` is a text
+label catalog that contains a 3D-TRACKING string; it is not the selectable
+AF-area option table. The actual option table at `0x1074a688` contains eight
+choices, including Auto-area AF and its people/animal variants, but no
+3D-TRACKING row. Selecting Auto-area stores a mode/submode and supplies an
+eligibility condition. Nikon documents Subject tracking as a separate
+shooting-view J action or assigned control. The live-view J callback remains
+unidentified; the candidate's native action-45 route is the stronger hook
+evidence (F-214). See [tracking-input-chain.md](tracking-input-chain.md) and
+[facts.md](facts.md) F-215/F-218.
+
+## Correction, 2026-10-18 (F-223)
+
+Direct reinspection of `0x103a3f9e` shows that it reads queued records, looks
+up each logical ID in the selected map, applies the resulting mask to staging
+word `0xc18c9a68`, and calls `0x101e383a` on change. The `0x115c694c` value
+belongs to the surrounding module's object/initialization path. No static edge
+reviewed here proves that AEAF_LOCK's hardware bit produces logical ID 41 or
+reaches the candidate accessor-return hook. Therefore physical-input admission is
+unresolved; the earlier "confirmed detection hook" and "live scan"
+descriptions are withdrawn. The action-45 route is a separate design finding
+and remains the candidate action target.
+
+Method: bounded reinspection of hash-verified Thumb disassembly around
+`0x103a3d14`–`0x103a400c`; addresses and data-flow description only. No bytes,
+dumps, image writes, or camera access.
