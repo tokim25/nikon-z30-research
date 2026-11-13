@@ -1,5 +1,9 @@
 # Subject tracking on the Z30: manual vs. our firmware route (cross-reference)
 
+> Correction, 2026-11-13: the Z30 does have an AE-L/AF-L button. The owner
+> pressed it during the PTP monitor runs (F-266, F-267). The headline below is
+> wrong. See [one-button-tracking-plan.md](one-button-tracking-plan.md).
+
 2026-10-18. Claude, read-only. Manual lookup plus a read of the repo's existing
 static analysis. No simulator run (the simulator is on the owner's machine, not
 in this session, and the record shows it cannot press these buttons or start
