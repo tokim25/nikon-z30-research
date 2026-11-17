@@ -78,6 +78,17 @@ typedef void (*time_fn)(uint64_t *out);
 #define STATE_BYTES 0x18Cu
 #define OK_BIT 0x1u                     /* key word 2 */
 #define SETTLE 2u                       /* idle ticks before a press (~100 ms) */
+#ifdef BUILTIN
+/* BUILTIN (2026-11-17): copied out of the EG and started at power-on by the
+ * upstream builder's auto-arm option (features/auto_arm.py). It reads the photo
+ * shooting menu row "Auto tracking box" (0 Enable, 1 Disable) about once a
+ * second through api->get_property(AUTOARM_KEY), never disarms and keeps no log. */
+#if !defined(REMAP) || !defined(DIRECT) || defined(DIAG)
+#error "BUILTIN needs REMAP and DIRECT, without DIAG"
+#endif
+#define AUTOARM_KEY 0x41524D31u        /* 'ARM1', upstream features/auto_arm.py KEY */
+#define CHOICE_EVERY 20u               /* ticks between menu reads (~1 s) */
+#endif
 #ifdef DIRECT
 #ifndef REMAP
 #error "DIRECT needs REMAP"
@@ -122,7 +133,11 @@ _Static_assert(sizeof(struct rec) == 28, "rec");
 #define BOX_EVENT_FLAG 0x10u            /* record written when the box-shown word changes */
 #else
 _Static_assert(sizeof(struct rec) == 12, "rec");
+#ifdef BUILTIN
+#define CAP 64u                         /* no log is ever saved */
+#else
 #define CAP 8192u
+#endif
 #endif
 #define POOL_BYTES (HDR + CAP * sizeof(struct rec))
 
@@ -139,6 +154,10 @@ static struct {
     uint32_t count, ticks, presses, idle_run, waiting, file_no, held[4], state[STATE_BYTES / 4];
     uint32_t hold, pend;                /* REMAP: ticks until OK goes up; log index + 1 of that press */
     uint32_t away, last_shown;          /* left photo live view since the last press; box word last tick */
+#ifdef BUILTIN
+    const struct z30_module_api *api;   /* BUILTIN: for the menu choice */
+    uint32_t enabled;                   /* BUILTIN: menu row says Enable */
+#endif
     uint64_t t0;
     volatile uint32_t on, busy;
 } G;
@@ -199,6 +218,10 @@ static void tick(uint32_t stock_result)
 #endif
     if (!G.on) goto out;
     G.ticks++;
+#ifdef BUILTIN
+    if (G.ticks % CHOICE_EVERY == 0u) G.enabled = G.api->get_property(AUTOARM_KEY) == 0u;
+    if (!G.enabled) { G.idle_run = 0; G.away = 1; goto out; }   /* first read after ~1 s */
+#endif
     uint32_t phase = *UI_PHASE, area = *AF_AREA, shown = RD(BOX_SHOWN);
     struct rec scratch;                 /* sink once the log is full */
 #ifdef DIAG
@@ -247,6 +270,7 @@ out:
     barrier(); G.busy = 0;
 }
 
+#ifndef BUILTIN                         /* saving the log: SD module builds only */
 static int shared_clean(const void *p, uint32_t n)
 {
     volatile uint32_t *smp = (volatile uint32_t *)0xC2ABC8B8u;
@@ -270,6 +294,7 @@ static int write_all(int32_t fd, const uint8_t *p, uint32_t n)
     }
     return 1;
 }
+#endif
 
 static void put_u(char **p, uint32_t v)
 { char b[10]; int n = 0; do { b[n++] = (char)('0' + v % 10u); v /= 10u; } while (v); while (n) *(*p)++ = b[--n]; }
@@ -282,6 +307,7 @@ static uint32_t say(const struct z30_module_api *api, struct context *c, const c
     return api->set_text(c->text);
 }
 
+#ifndef BUILTIN
 static uint32_t save(const struct z30_module_api *api, struct context *c)
 {
     G.on = 0; barrier();
@@ -311,6 +337,7 @@ static uint32_t save(const struct z30_module_api *api, struct context *c)
     if (!ok) return say(api, c, "Save failed ", (uint32_t)fd, 1);
     return say(api, c, "Saved, presses ", G.presses, 1);
 }
+#endif
 
 static uint32_t module_run(const struct z30_module_api *api, void *vctx)
 {
@@ -321,14 +348,21 @@ static uint32_t module_run(const struct z30_module_api *api, void *vctx)
         if (!G.pool) return say(api, c, "No memory", 0, 0);
         G.log = (struct rec *)(G.pool + HDR);
     }
+#ifdef BUILTIN
+    G.api = api;
+    if (G.on) return 1;                 /* built in: stays armed until power off */
+#else
     if (G.on) return save(api, c);
+#endif
     if (*HOOK_CELL && *HOOK_CELL != (uint32_t)tick) return say(api, c, "IMU hook in use", 0, 0);
     G.count = G.ticks = G.presses = G.idle_run = G.waiting = 0; G.t0 = time_us();
     G.away = 1; G.last_shown = RD(BOX_SHOWN);
     barrier();
     *HOOK_CELL = (uint32_t)tick;
     G.on = 1; barrier();
-#ifdef DIRECT
+#ifdef BUILTIN
+    return say(api, c, "Auto-arm built in", 0, 0);
+#elif defined(DIRECT)
     return say(api, c, "Auto-arm direct, Run=save", 0, 0);
 #elif defined(REMAP)
     return say(api, c, "Auto-arm on, Run=save", 0, 0);
