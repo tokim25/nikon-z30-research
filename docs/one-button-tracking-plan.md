@@ -161,3 +161,25 @@ a camera. LZQS1 answered with commit `2a8f83f`. Points that affect this plan:
   so do the log-only run before the remap run.
 - The reviewer saw module size change with the compiler version. The module
   README now records the version used here.
+
+## Owner direction, 2026-11-17: AE-L/AF-L acts as OK
+
+The owner accepts making AE-L/AF-L count as an OK press as the goal, provided
+it gets the 3D tracking behavior when that is turned on. That replaces the
+action-45 route above as the route to build first. Upstream's 3D tracking
+works on tracking started with OK, so an OK press from AE-L/AF-L gets the
+same face and animal switching.
+
+To build both together, `modules/ael_ok` moved from the detection hook to the
+IMU-task hook. The detection hook is the one 3D tracking uses, and upstream
+refuses to build the two together. Upstream's working OK press (version 6 of
+its handover research) ran from the IMU task. The IMU tick also runs outside
+the shooting screen, so the module adds a UI phase check (shooting screen
+only) next to the Auto-area check. Upstream's `log` research build supplies
+the right combination: `full` without gyro-evr, plus the module host and the
+IMU hook, with 3D tracking included. Gyro-evr only affects video, which this
+project does not use. Build and test steps are in `modules/ael_ok/README.md`.
+
+Still unverified: the AE-L/AF-L button bit, the UI phase check during
+overlays such as the i menu, and whether the combined build behaves on a
+camera.

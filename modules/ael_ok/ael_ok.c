@@ -6,8 +6,11 @@
  * (F-261). This module reuses only pieces that Wonder Lantern has run on a
  * Z30 C 1.20 (upstream PR #36, docs/af-tracking-research.md):
  *
- *   - the detection-result hook cell 0xC1832D40 (face_hook at 0x101944B0,
- *     called about 10-20 times a second in live view);
+ *   - the IMU-task hook cell 0xC1832D48 (imu_hook, one call per stock IMU
+ *     tick, about every 50 ms). The v6 OK below worked from this task. This
+ *     hook, unlike the detection hook, can be built together with 3d-tracking
+ *     (upstream tools/build_af_log.py --module log: full without gyro-evr, plus
+ *     the module host and the IMU hook);
  *   - the input ring 0xC2008EA0 (16 entries of 0x190 bytes; next write slot
  *     in the low bits of 0xC182004C). Each entry holds four key words at +4,
  *     +0x18, +0x2C, +0x40, each as cur, prev, changed, pressed, released;
@@ -15,7 +18,10 @@
  *     "no change" except key word 2 bit 0 (OK), and pass it to the stock input
  *     writer 0x102F0D14 then 0x102F1844, once down and once up.
  *
- * The OK is sent only when the AF-area mode byte 0xC237C7F8 is 6 (Auto-area),
+ * The IMU tick also runs in menus and playback, where OK means something else,
+ * so the OK is sent only on the shooting screen (UI phase byte 0xC181F6FC is 1
+ * or 2, the check upstream's 3d-tracking box drawing uses) and only when the
+ * AF-area mode byte 0xC237C7F8 is 6 (Auto-area),
  * read the way upstream PR #36 revision 6 reads it (stock 0x1039CC14); in
  * other modes the stock OK does other things (zoom by default). This is the
  * field F-339 traces into snapshot +0x44.
@@ -49,7 +55,8 @@ typedef int32_t (*input_fn)(void *state);
 typedef void (*time_fn)(uint64_t *out);
 #define TIME_US ((time_fn)0x101D8301u)
 
-#define FACE_CELL ((volatile uint32_t *)0xC1832D40u)
+#define HOOK_CELL ((volatile uint32_t *)0xC1832D48u)   /* imu_hook */
+#define UI_PHASE ((const volatile uint8_t *)0xC181F6FCu)
 #define RING 0xC2008EA0u
 #define RING_IDX 0xC182004Cu
 #define RING_N 16u
@@ -63,7 +70,7 @@ typedef void (*time_fn)(uint64_t *out);
 
 struct rec {                            /* 24 bytes, one per new real ring entry */
     uint32_t t_ms;
-    uint8_t slot, flags, area, pad;     /* flags: bit 0 AE-L pressed, bit 1 OK sent, bits 2-3 writer results; area: AF-area mode */
+    uint8_t slot, flags, area, phase;   /* flags: bit 0 AE-L pressed, bit 1 OK sent, bits 2-3 writer results */
     uint32_t kw1_cur, kw1_pressed, kw2_cur, kw2_pressed;
 };
 _Static_assert(sizeof(struct rec) == 24, "rec");
@@ -111,9 +118,9 @@ static uint32_t press_ok(uint32_t src, int down)
 
 static uint32_t ms(void) { return (uint32_t)((time_us() - G.t0) / 1000u); }
 
-static void tick(const void *result, const int16_t *xy, const int16_t *wh)
+static void tick(uint32_t stock_result)
 {
-    (void)result; (void)xy; (void)wh;
+    (void)stock_result;                 /* the stock accel read; never changed */
     G.busy = 1; barrier();
     if (!G.on) goto out;
     G.ticks++;
@@ -124,7 +131,7 @@ static void tick(const void *result, const int16_t *xy, const int16_t *wh)
         uint32_t e = RING + s * RING_STRIDE;
         uint32_t pressed = RD(e + 0x10);
         struct rec scratch, *r = G.count < CAP ? &G.log[G.count++] : &scratch;
-        r->t_ms = ms(); r->slot = (uint8_t)s; r->area = *AF_AREA; r->pad = 0;
+        r->t_ms = ms(); r->slot = (uint8_t)s; r->area = *AF_AREA; r->phase = *UI_PHASE;
         r->flags = pressed & AEL_BIT ? 1u : 0u;
         r->kw1_cur = RD(e + 4); r->kw1_pressed = pressed;
         r->kw2_cur = RD(e + 0x18); r->kw2_pressed = RD(e + 0x24);
@@ -132,7 +139,7 @@ static void tick(const void *result, const int16_t *xy, const int16_t *wh)
     }
     G.last = idx;
 #ifdef REMAP
-    if (press && press->area == AUTO_AREA) {   /* one OK per tick, Auto-area AF only */
+    if (press && press->area == AUTO_AREA && (press->phase == 1u || press->phase == 2u)) {
         uint32_t newest = RING + ((idx - 1u) & 0xFu) * RING_STRIDE;
         G.held[0] = RD(newest + 4); G.held[1] = RD(newest + 0x18) & ~OK_BIT;
         G.held[2] = RD(newest + 0x2C); G.held[3] = RD(newest + 0x40);
@@ -217,10 +224,10 @@ static uint32_t module_run(const struct z30_module_api *api, void *vctx)
         G.log = (struct rec *)(G.pool + HDR);
     }
     if (G.on) return save(api, c);
-    if (*FACE_CELL && *FACE_CELL != (uint32_t)tick) return say(api, c, "Detection hook in use", 0, 0);
+    if (*HOOK_CELL && *HOOK_CELL != (uint32_t)tick) return say(api, c, "IMU hook in use", 0, 0);
     G.count = G.ticks = G.ael = G.oks = G.primed = 0; G.t0 = time_us();
     barrier();
-    *FACE_CELL = (uint32_t)tick;
+    *HOOK_CELL = (uint32_t)tick;
     G.on = 1; barrier();
 #ifdef REMAP
     return say(api, c, "AE-L to OK armed, Run=save", 0, 0);
