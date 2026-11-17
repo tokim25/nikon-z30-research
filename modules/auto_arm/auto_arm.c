@@ -7,8 +7,11 @@
  * or the user backs out, the module brings the reticle back right away.
  *
  * It sends one OK press when all of these hold on an IMU tick:
- *   - shooting screen: UI phase byte 0xC181F6FC is 1 or 2 (upstream's
- *     3d-tracking box drawing uses this check);
+ *   - photo live view with nothing open over it: UI phase byte 0xC181F6FC is
+ *     1 or 2, UI state byte 0xC18292AC is 0 (3 while the i menu is open) and
+ *     the photo backend word 0xC181B278 is 1. Upstream's portrait UI and
+ *     aspect mask use this same context check, confirmed on a camera
+ *     (docs/portrait-ui.md, upstream 8715c25);
  *   - Auto-area AF: AF-area mode byte 0xC237C7F8 is 6 (upstream PR #36 rev 6);
  *   - idle: 0xC237F680 (AF working: tracking or half-press), 0xC237F684
  *     (tracking box shown, screen 1) and 0xC237F688 (tracking) are all 0
@@ -25,10 +28,10 @@
  *     released) to "no change" except key word 2 bit 0 (OK), and pass it to
  *     0x102F0D14 then 0x102F1844, once down and once up.
  *
- * Unverified: that the phase byte is not 1/2 while the i menu or another
- * overlay is open, and that an OK sent at live-view entry is accepted. Build
- * without -DREMAP first: it logs every tick on which it would press, with the
- * state bytes, and presses nothing.
+ * Unverified: that overlays other than the i menu also change the UI state,
+ * and that an OK sent at live-view entry is accepted. Build without -DREMAP
+ * first: it logs every tick on which it would press, with the state bytes,
+ * and presses nothing.
  *
  * Run 1: arm.  Run 2: disarm and write A:\Z30\ARnnnnnn.BIN.  Power off disarms.
  * File: "AUTOARM1", u32 count, u32 presses, u32 ticks, u32 rec_bytes (12),
@@ -55,6 +58,8 @@ typedef void (*time_fn)(uint64_t *out);
 
 #define HOOK_CELL ((volatile uint32_t *)0xC1832D48u)   /* imu_hook */
 #define UI_PHASE ((const volatile uint8_t *)0xC181F6FCu)
+#define UI_STATE ((const volatile uint8_t *)0xC18292ACu)
+#define PHOTO_BACKEND 0xC181B278u
 #define AF_AREA ((const volatile uint8_t *)0xC237C7F8u)
 #define AUTO_AREA 6u
 #define AF_BUSY 0xC237F680u
@@ -71,8 +76,8 @@ typedef void (*time_fn)(uint64_t *out);
 
 struct rec {                            /* 12 bytes, one per (would-be) press */
     uint32_t t_ms;
-    uint8_t phase, area, flags, pad;    /* flags: bit 0 OK sent, bits 2-3 writer results */
-    uint32_t pad2;
+    uint8_t phase, area, flags, ui_state;   /* flags: bit 0 OK sent, bits 2-3 writer results */
+    uint32_t backend;                   /* photo backend word */
 };
 _Static_assert(sizeof(struct rec) == 12, "rec");
 #define HDR 32u
@@ -129,14 +134,15 @@ static void tick(uint32_t stock_result)
         G.idle_run = 0;
         goto out;
     }
-    int idle = (phase == 1u || phase == 2u) && area == AUTO_AREA &&
+    int idle = (phase == 1u || phase == 2u) && *UI_STATE == 0u && RD(PHOTO_BACKEND) == 1u &&
+               area == AUTO_AREA &&
                !RD(AF_BUSY) && !shown && !RD(TRACKING);
     G.idle_run = idle ? G.idle_run + 1u : 0u;
     if (G.idle_run < SETTLE) goto out;
     G.idle_run = 0;
     struct rec scratch, *r = G.count < CAP ? &G.log[G.count++] : &scratch;
     r->t_ms = (uint32_t)((time_us() - G.t0) / 1000u);
-    r->phase = (uint8_t)phase; r->area = (uint8_t)area; r->flags = 0; r->pad = 0; r->pad2 = 0;
+    r->phase = (uint8_t)phase; r->area = (uint8_t)area; r->flags = 0; r->ui_state = *UI_STATE; r->backend = RD(PHOTO_BACKEND);
     G.presses++;
     G.waiting = WAIT;
 #ifdef REMAP

@@ -218,3 +218,20 @@ uses. The PR stays blocked until 3D tracking works again.
 
 Effect here: wait for a fixed PR #36 commit before testing auto-arm with 3D
 tracking. The dry run does not depend on 3D tracking, so it can go ahead.
+
+## Update, 2026-11-17: PR #36 revision 7
+
+LZQS1 rebased PR #36 onto upstream `106be92` and pushed `8715c25`. 3D
+tracking revision 7 reads the Auto-area submode from `0xC3D` (photo) or
+`0x58C` (movie) and truncates it with `uxtb`. The `0xC3D` key came from the
+owner's PR comment, based on F-215/F-231/F-329/F-343. LZQS1 traced
+`0xC3C`/`0x58B` to the Wide-area L submodes. Camera confirmation of
+revision 7 is still pending. The rename to "Subject handover" is deferred
+until then.
+
+The rebase also brought upstream's portrait i-menu work, which answers
+auto-arm's main open question. Upstream's camera-confirmed photo live-view
+check is UI phase 1 or 2, UI state `0xC18292AC` = 0 and photo backend
+`0xC181B278` = 1. Opening the i menu changes the UI state to 3 and leaves
+the phase alone, so a phase-only check would have pressed OK inside the i
+menu. `modules/auto_arm` now uses the full check and logs all three values.

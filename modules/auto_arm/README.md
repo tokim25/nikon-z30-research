@@ -17,8 +17,9 @@ produced a different module size, so record the version you build with.
 
 About every 50 ms it checks that the camera is:
 
-- on the shooting screen (UI phase byte 1 or 2, the check upstream's 3D
-  tracking boxes use);
+- in photo live view with nothing open over it: UI phase 1 or 2, UI state 0
+  (the i menu sets it to 3) and the photo backend active. Upstream's portrait
+  UI and aspect mask use this same check, confirmed on a camera;
 - in Auto-area AF (AF-area mode byte 6);
 - idle: not focusing, not tracking, and the tracking box not already shown.
 
@@ -30,11 +31,10 @@ choice). To stop it, Run it again to disarm, leave Auto-area AF, or power off.
 
 ## Build (on the Mac, with the stock firmware)
 
-Use upstream PR #36 at a commit after `2a8f83f` that its reviewer confirms
-fixes 3D tracking. On 2026-11-17 the reviewer found that `2a8f83f` stops 3D
-tracking from switching to faces on a camera. The earlier `c01e7ca` switches
-correctly but has the grey-box bug that froze a camera. The module itself
-does not depend on 3D tracking working, so a dry run can use either. Its `log` research build is
+Use upstream PR #36 at `8715c25` or later. That commit reads the Auto-area
+submode from `0xC3D` to fix the 3D tracking regression in `2a8f83f`, but the
+fix has not been confirmed on a camera yet. The module itself does not
+depend on 3D tracking working, so a dry run can go ahead either way. Its `log` research build is
 `full` without gyro-evr, plus the module host and the IMU-task hook this
 module uses. It includes 3D tracking. Gyro-evr is left out because it owns
 the same hook; it only affects video.
@@ -50,8 +50,8 @@ arm. Run again to disarm and save `Z30/ARnnnnnn.BIN`. Power off disarms.
 ## Test order
 
 1. Dry run (no `-DREMAP`): presses nothing. While idle on the shooting screen
-   it logs a "would press" entry about every 1.6 seconds, with the screen
-   phase and AF-area mode. Spend time on the shooting screen, in the i menu,
+   it logs a "would press" entry about every 1.6 seconds, with the UI phase,
+   UI state, photo backend and AF-area mode. Spend time on the shooting screen, in the i menu,
    in the menus, in playback, and in another AF-area mode, noting the times.
    Entries should only appear for the shooting screen in Auto-area AF.
 2. Only then the `-DREMAP` build. Check that the tracking box appears on its
