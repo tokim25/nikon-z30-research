@@ -119,3 +119,25 @@ says the Z30 may have no AE-L/AF-L button. The owner pressed it during the PTP
 monitor runs (F-266, F-267), so the button exists.
 
 Written by Claude in collaboration with Tony Kim.
+
+## Update, 2026-11-17: upstream PR #36
+
+Upstream pull request `WonderLantern/wonder-lantern-z30#36` (commits `3bb8474`
+and `c01e7ca`, not yet merged as far as this repo knows) adds `3d-tracking`,
+`gyro-evr` and `af-frame-colour`, plus AF research modules. Two parts matter here:
+
+- Calling `0x1045A1AE` with a zero argument puts a real Z30 on the
+  tracking-ready screen. This repo found that function only in the simulator
+  (F-333, F-366). It is a possible simpler trigger than action 45, but it may
+  not end tracking on a second press, so action 45 stays the plan's choice.
+- Upstream's research modules read the camera's button input buffer and
+  produce an OK press that the camera accepted. That suggests a second route:
+  turn an AE-L/AF-L press into an OK press, which in Auto-area AF starts
+  Subject tracking the stock way.
+
+A draft module for that route is in `modules/ael_ok/`. It is untested: it
+compiles, nothing more. It assumes AE-L/AF-L is bit `0x2000` of the first
+button word (F-227, F-229), which no camera test has confirmed. Build it
+without `-DREMAP` first so it only logs presses, and confirm the press count
+before trying the remap. None of PR #36's code touches the addresses this
+plan hooks.
