@@ -141,3 +141,23 @@ button word (F-227, F-229), which no camera test has confirmed. Build it
 without `-DREMAP` first so it only logs presses, and confirm the press count
 before trying the remap. None of PR #36's code touches the addresses this
 plan hooks.
+
+## Update, 2026-11-17: PR #36 review
+
+The upstream reviewer (RealCaCl2) requested changes on PR #36 and tested it on
+a camera. LZQS1 answered with commit `2a8f83f`. Points that affect this plan:
+
+- `3d-tracking` misbehaved with plain Auto-area AF: a face crossing the
+  tracking box ended tracking. It now only arms with Auto-area AF (people)
+  or (animals). That matches this project's target settings, but nobody has
+  tested our AE-L/AF-L route together with `3d-tracking`.
+- The fix reads the AF-area mode byte at `0xC237C7F8` (6 = Auto-area), the
+  field F-339 traces into snapshot `+0x44`. `modules/ael_ok` now uses the same
+  check, so it only sends OK in Auto-area AF. Its log records the mode for
+  each press.
+- A bug in upstream's grey-box drawing wrote past the end of a buffer and froze
+  a camera until the battery was pulled. The module keeps its log writes
+  inside its buffer, but the lesson stands: a module bug can hang the camera,
+  so do the log-only run before the remap run.
+- The reviewer saw module size change with the compiler version. The module
+  README now records the version used here.

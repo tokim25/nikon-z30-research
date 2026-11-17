@@ -15,6 +15,11 @@
  *     "no change" except key word 2 bit 0 (OK), and pass it to the stock input
  *     writer 0x102F0D14 then 0x102F1844, once down and once up.
  *
+ * The OK is sent only when the AF-area mode byte 0xC237C7F8 is 6 (Auto-area),
+ * read the way upstream PR #36 revision 6 reads it (stock 0x1039CC14); in
+ * other modes the stock OK does other things (zoom by default). This is the
+ * field F-339 traces into snapshot +0x44.
+ *
  * Unverified, and the reason the log exists: that AE-L/AF-L appears as bit
  * 0x2000 of key word 1. This repository maps mask 0x2000 to logical input 13,
  * "AE-L/AF-L button" (F-229), and reads it at record +4 (F-227); upstream
@@ -52,11 +57,13 @@ typedef void (*time_fn)(uint64_t *out);
 #define STATE_BYTES 0x18Cu
 #define AEL_BIT 0x2000u                 /* key word 1, inferred (F-227, F-229) */
 #define OK_BIT 0x1u                     /* key word 2, upstream camera-verified */
+#define AF_AREA ((const volatile uint8_t *)0xC237C7F8u)   /* AF display block +0x44 */
+#define AUTO_AREA 6u
 #define RD(a) (*(const volatile uint32_t *)(a))
 
 struct rec {                            /* 24 bytes, one per new real ring entry */
     uint32_t t_ms;
-    uint8_t slot, flags, pad[2];        /* flags: bit 0 AE-L pressed, bit 1 OK sent, bits 2-3 writer results */
+    uint8_t slot, flags, area, pad;     /* flags: bit 0 AE-L pressed, bit 1 OK sent, bits 2-3 writer results; area: AF-area mode */
     uint32_t kw1_cur, kw1_pressed, kw2_cur, kw2_pressed;
 };
 _Static_assert(sizeof(struct rec) == 24, "rec");
@@ -117,7 +124,7 @@ static void tick(const void *result, const int16_t *xy, const int16_t *wh)
         uint32_t e = RING + s * RING_STRIDE;
         uint32_t pressed = RD(e + 0x10);
         struct rec scratch, *r = G.count < CAP ? &G.log[G.count++] : &scratch;
-        r->t_ms = ms(); r->slot = (uint8_t)s; r->pad[0] = r->pad[1] = 0;
+        r->t_ms = ms(); r->slot = (uint8_t)s; r->area = *AF_AREA; r->pad = 0;
         r->flags = pressed & AEL_BIT ? 1u : 0u;
         r->kw1_cur = RD(e + 4); r->kw1_pressed = pressed;
         r->kw2_cur = RD(e + 0x18); r->kw2_pressed = RD(e + 0x24);
@@ -125,7 +132,7 @@ static void tick(const void *result, const int16_t *xy, const int16_t *wh)
     }
     G.last = idx;
 #ifdef REMAP
-    if (press) {                        /* one OK per tick, after the newest real entry */
+    if (press && press->area == AUTO_AREA) {   /* one OK per tick, Auto-area AF only */
         uint32_t newest = RING + ((idx - 1u) & 0xFu) * RING_STRIDE;
         G.held[0] = RD(newest + 4); G.held[1] = RD(newest + 0x18) & ~OK_BIT;
         G.held[2] = RD(newest + 0x2C); G.held[3] = RD(newest + 0x40);
