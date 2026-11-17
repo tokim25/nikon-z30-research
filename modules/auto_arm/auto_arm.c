@@ -1,40 +1,38 @@
-/* AE-L/AF-L to OK (research SD module for the Wonder Lantern module host).
+/* Auto-arm (research SD module for the Wonder Lantern module host).
  *
- * Goal: one press of AE-L/AF-L behaves like one press of OK. In Auto-area AF
- * the stock OK starts Subject tracking (reticle; half-press acquires; OK again
- * ends), which is the behavior the owner measured for Fn1 = Subject tracking
- * (F-261). This module reuses only pieces that Wonder Lantern has run on a
- * Z30 C 1.20 (upstream PR #36, docs/af-tracking-research.md):
+ * Goal (owner, 2026-11-17): on the shooting screen in Auto-area AF the camera
+ * sits in the tracking-ready screen (the reticle OK brings up) without any
+ * button press, so a half-press starts tracking and upstream's 3D tracking
+ * can hand it to a face or animal. No button is remapped. When tracking ends
+ * or the user backs out, the module brings the reticle back right away.
  *
- *   - the IMU-task hook cell 0xC1832D48 (imu_hook, one call per stock IMU
- *     tick, about every 50 ms). The v6 OK below worked from this task. This
- *     hook, unlike the detection hook, can be built together with 3d-tracking
- *     (upstream tools/build_af_log.py --module log: full without gyro-evr, plus
- *     the module host and the IMU hook);
- *   - the input ring 0xC2008EA0 (16 entries of 0x190 bytes; next write slot
- *     in the low bits of 0xC182004C). Each entry holds four key words at +4,
- *     +0x18, +0x2C, +0x40, each as cur, prev, changed, pressed, released;
- *   - the v6 OK synthesis: copy the newest real entry, set every key word to
- *     "no change" except key word 2 bit 0 (OK), and pass it to the stock input
- *     writer 0x102F0D14 then 0x102F1844, once down and once up.
+ * It sends one OK press when all of these hold on an IMU tick:
+ *   - shooting screen: UI phase byte 0xC181F6FC is 1 or 2 (upstream's
+ *     3d-tracking box drawing uses this check);
+ *   - Auto-area AF: AF-area mode byte 0xC237C7F8 is 6 (upstream PR #36 rev 6);
+ *   - idle: 0xC237F680 (AF working: tracking or half-press), 0xC237F684
+ *     (tracking box shown, screen 1) and 0xC237F688 (tracking) are all 0
+ *     (upstream af-tracking-research, camera logs);
+ *   - those held for SETTLE consecutive ticks, and no OK is still pending.
+ * After a press it waits until the tracking box shows or WAIT ticks pass.
  *
- * The IMU tick also runs in menus and playback, where OK means something else,
- * so the OK is sent only on the shooting screen (UI phase byte 0xC181F6FC is 1
- * or 2, the check upstream's 3d-tracking box drawing uses) and only when the
- * AF-area mode byte 0xC237C7F8 is 6 (Auto-area),
- * read the way upstream PR #36 revision 6 reads it (stock 0x1039CC14); in
- * other modes the stock OK does other things (zoom by default). This is the
- * field F-339 traces into snapshot +0x44.
+ * Pieces reused from upstream, run on a Z30 C 1.20 (PR #36):
+ *   - the IMU-task hook cell 0xC1832D48 (imu_hook, about every 50 ms), which
+ *     builds together with 3d-tracking (tools/build_af_log.py --module log);
+ *   - the input ring 0xC2008EA0 (16 x 0x190; next slot in 0xC182004C) and the
+ *     v6 OK press made from the IMU task: copy the newest real entry, set every
+ *     key word (+4 / +0x18 / +0x2C / +0x40: cur, prev, changed, pressed,
+ *     released) to "no change" except key word 2 bit 0 (OK), and pass it to
+ *     0x102F0D14 then 0x102F1844, once down and once up.
  *
- * Unverified, and the reason the log exists: that AE-L/AF-L appears as bit
- * 0x2000 of key word 1. This repository maps mask 0x2000 to logical input 13,
- * "AE-L/AF-L button" (F-229), and reads it at record +4 (F-227); upstream
- * reads key word 1 at the same offset. Build without -DREMAP first, press
- * AE-L/AF-L a counted number of times, and check the log.
+ * Unverified: that the phase byte is not 1/2 while the i menu or another
+ * overlay is open, and that an OK sent at live-view entry is accepted. Build
+ * without -DREMAP first: it logs every tick on which it would press, with the
+ * state bytes, and presses nothing.
  *
- * Run 1: arm.  Run 2: disarm and write A:\Z30\AEnnnnnn.BIN.  Power off disarms.
- * File: "AELOK1\0\0", u32 count, u32 ael_presses, u32 ok_presses, u32 ticks,
- *       u32 rec_bytes (24), u32 flags (bit 0 = REMAP build), then count x rec.
+ * Run 1: arm.  Run 2: disarm and write A:\Z30\ARnnnnnn.BIN.  Power off disarms.
+ * File: "AUTOARM1", u32 count, u32 presses, u32 ticks, u32 rec_bytes (12),
+ *       u32 flags (bit 0 = REMAP build), u32 0, then count x rec.
  */
 #include <stdint.h>
 #include "z30_module_api.h"
@@ -57,23 +55,26 @@ typedef void (*time_fn)(uint64_t *out);
 
 #define HOOK_CELL ((volatile uint32_t *)0xC1832D48u)   /* imu_hook */
 #define UI_PHASE ((const volatile uint8_t *)0xC181F6FCu)
+#define AF_AREA ((const volatile uint8_t *)0xC237C7F8u)
+#define AUTO_AREA 6u
+#define AF_BUSY 0xC237F680u
+#define BOX_SHOWN 0xC237F684u
+#define TRACKING 0xC237F688u
 #define RING 0xC2008EA0u
 #define RING_IDX 0xC182004Cu
-#define RING_N 16u
 #define RING_STRIDE 0x190u
 #define STATE_BYTES 0x18Cu
-#define AEL_BIT 0x2000u                 /* key word 1, inferred (F-227, F-229) */
-#define OK_BIT 0x1u                     /* key word 2, upstream camera-verified */
-#define AF_AREA ((const volatile uint8_t *)0xC237C7F8u)   /* AF display block +0x44 */
-#define AUTO_AREA 6u
+#define OK_BIT 0x1u                     /* key word 2 */
+#define SETTLE 2u                       /* idle ticks before a press (~100 ms) */
+#define WAIT 30u                        /* ticks to wait for the box (~1.5 s) */
 #define RD(a) (*(const volatile uint32_t *)(a))
 
-struct rec {                            /* 24 bytes, one per new real ring entry */
+struct rec {                            /* 12 bytes, one per (would-be) press */
     uint32_t t_ms;
-    uint8_t slot, flags, area, phase;   /* flags: bit 0 AE-L pressed, bit 1 OK sent, bits 2-3 writer results */
-    uint32_t kw1_cur, kw1_pressed, kw2_cur, kw2_pressed;
+    uint8_t phase, area, flags, pad;    /* flags: bit 0 OK sent, bits 2-3 writer results */
+    uint32_t pad2;
 };
-_Static_assert(sizeof(struct rec) == 24, "rec");
+_Static_assert(sizeof(struct rec) == 12, "rec");
 #define HDR 32u
 #define CAP 8192u
 #define POOL_BYTES (HDR + CAP * sizeof(struct rec))
@@ -88,7 +89,7 @@ static uint64_t time_us(void) { uint64_t t = 0; TIME_US(&t); return t; }
 
 static struct {
     uint8_t *pool; struct rec *log;
-    uint32_t count, ticks, ael, oks, last, primed, file_no, held[4], state[STATE_BYTES / 4];
+    uint32_t count, ticks, presses, idle_run, waiting, file_no, held[4], state[STATE_BYTES / 4];
     uint64_t t0;
     volatile uint32_t on, busy;
 } G;
@@ -116,40 +117,34 @@ static uint32_t press_ok(uint32_t src, int down)
 }
 #endif
 
-static uint32_t ms(void) { return (uint32_t)((time_us() - G.t0) / 1000u); }
-
 static void tick(uint32_t stock_result)
 {
     (void)stock_result;                 /* the stock accel read; never changed */
     G.busy = 1; barrier();
     if (!G.on) goto out;
     G.ticks++;
-    uint32_t idx = RD(RING_IDX) & 0xFu;
-    if (!G.primed) { G.last = idx; G.primed = 1; goto out; }
-    struct rec *press = 0;
-    for (uint32_t s = G.last; s != idx; s = (s + 1u) & 0xFu) {
-        uint32_t e = RING + s * RING_STRIDE;
-        uint32_t pressed = RD(e + 0x10);
-        struct rec scratch, *r = G.count < CAP ? &G.log[G.count++] : &scratch;
-        r->t_ms = ms(); r->slot = (uint8_t)s; r->area = *AF_AREA; r->phase = *UI_PHASE;
-        r->flags = pressed & AEL_BIT ? 1u : 0u;
-        r->kw1_cur = RD(e + 4); r->kw1_pressed = pressed;
-        r->kw2_cur = RD(e + 0x18); r->kw2_pressed = RD(e + 0x24);
-        if (r->flags & 1u) { G.ael++; if (r != &scratch) press = r; }
+    uint32_t phase = *UI_PHASE, area = *AF_AREA, shown = RD(BOX_SHOWN);
+    if (G.waiting) {                    /* an OK was sent: let it land */
+        if (shown || --G.waiting == 0) G.waiting = 0;
+        G.idle_run = 0;
+        goto out;
     }
-    G.last = idx;
+    int idle = (phase == 1u || phase == 2u) && area == AUTO_AREA &&
+               !RD(AF_BUSY) && !shown && !RD(TRACKING);
+    G.idle_run = idle ? G.idle_run + 1u : 0u;
+    if (G.idle_run < SETTLE) goto out;
+    G.idle_run = 0;
+    struct rec scratch, *r = G.count < CAP ? &G.log[G.count++] : &scratch;
+    r->t_ms = (uint32_t)((time_us() - G.t0) / 1000u);
+    r->phase = (uint8_t)phase; r->area = (uint8_t)area; r->flags = 0; r->pad = 0; r->pad2 = 0;
+    G.presses++;
+    G.waiting = WAIT;
 #ifdef REMAP
-    if (press && press->area == AUTO_AREA && (press->phase == 1u || press->phase == 2u)) {
-        uint32_t newest = RING + ((idx - 1u) & 0xFu) * RING_STRIDE;
-        G.held[0] = RD(newest + 4); G.held[1] = RD(newest + 0x18) & ~OK_BIT;
-        G.held[2] = RD(newest + 0x2C); G.held[3] = RD(newest + 0x40);
-        uint32_t down = press_ok(newest, 1), up = press_ok(newest, 0);
-        press->flags |= (uint8_t)(2u | down << 2 | up << 3);
-        G.oks++;
-        G.last = RD(RING_IDX) & 0xFu;   /* skip the two entries just written */
-    }
-#else
-    (void)press;
+    uint32_t newest = RING + ((RD(RING_IDX) - 1u) & 0xFu) * RING_STRIDE;
+    G.held[0] = RD(newest + 4); G.held[1] = RD(newest + 0x18) & ~OK_BIT;
+    G.held[2] = RD(newest + 0x2C); G.held[3] = RD(newest + 0x40);
+    uint32_t down = press_ok(newest, 1), up = press_ok(newest, 0);
+    r->flags = (uint8_t)(1u | down << 2 | up << 3);
 #endif
 out:
     barrier(); G.busy = 0;
@@ -200,9 +195,9 @@ static uint32_t save(const struct z30_module_api *api, struct context *c)
 #else
     uint32_t flags = 0;
 #endif
-    uint32_t h[8] = { 0x4F4C4541u, 0x0000314Bu, G.count, G.ael, G.oks, G.ticks, sizeof(struct rec), flags };
+    uint32_t h[8] = { 0x4F545541u, 0x314D5241u, G.count, G.presses, G.ticks, sizeof(struct rec), flags, 0 };
     memcpy(G.pool, h, HDR);
-    char path[24] = "A:\\Z30\\AE000000.BIN";
+    char path[24] = "A:\\Z30\\AR000000.BIN";
     uint32_t sec = (uint32_t)(time_us() / 1000000u) + G.file_no++;
     for (int i = 14; i >= 9; i--) { path[i] = (char)('0' + sec % 10u); sec /= 10u; }
     uint32_t bytes = HDR + G.count * sizeof(struct rec);
@@ -211,7 +206,7 @@ static uint32_t save(const struct z30_module_api *api, struct context *c)
     int ok = fd >= 0 && write_all(fd, G.pool, bytes);
     if (fd >= 0) FS_CLOSE(fd);
     if (!ok) return say(api, c, "Save failed ", (uint32_t)fd, 1);
-    return say(api, c, "Saved, AE-L presses ", G.ael, 1);
+    return say(api, c, "Saved, presses ", G.presses, 1);
 }
 
 static uint32_t module_run(const struct z30_module_api *api, void *vctx)
@@ -225,14 +220,14 @@ static uint32_t module_run(const struct z30_module_api *api, void *vctx)
     }
     if (G.on) return save(api, c);
     if (*HOOK_CELL && *HOOK_CELL != (uint32_t)tick) return say(api, c, "IMU hook in use", 0, 0);
-    G.count = G.ticks = G.ael = G.oks = G.primed = 0; G.t0 = time_us();
+    G.count = G.ticks = G.presses = G.idle_run = G.waiting = 0; G.t0 = time_us();
     barrier();
     *HOOK_CELL = (uint32_t)tick;
     G.on = 1; barrier();
 #ifdef REMAP
-    return say(api, c, "AE-L to OK armed, Run=save", 0, 0);
+    return say(api, c, "Auto-arm on, Run=save", 0, 0);
 #else
-    return say(api, c, "AE-L log armed, Run=save", 0, 0);
+    return say(api, c, "Auto-arm dry run, Run=save", 0, 0);
 #endif
 }
 
@@ -240,7 +235,7 @@ __attribute__((section(".text.entry"), used))
 uint32_t module_init(const struct z30_module_api *api, void *ctx)
 {
     struct context *c = ctx;
-    char *p = c->text; put_s(&p, "AE-L to OK ready"); *p = 0;
+    char *p = c->text; put_s(&p, "Auto-arm ready"); *p = 0;
     api->set_text(c->text);
     return api->set_run_handler(module_run);
 }

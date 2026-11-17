@@ -183,3 +183,24 @@ project does not use. Build and test steps are in `modules/ael_ok/README.md`.
 Still unverified: the AE-L/AF-L button bit, the UI phase check during
 overlays such as the i menu, and whether the combined build behaves on a
 camera.
+
+## Owner correction, 2026-11-17: tracking box up by default, buttons untouched
+
+The previous section misread the owner. The goal is that, with 3D tracking
+on, the camera sits in the tracking-ready screen (as if OK had been pressed)
+without any button press, and AE-L/AF-L keeps its normal job. This is the
+always-armed target from 2026-10-18, now built from pieces upstream has run
+on a camera. It supersedes the AE-L/AF-L sections of this plan.
+
+The owner chose an SD add-on over changing upstream's 3D tracking code, and
+chose to bring the box back right away when tracking ends or is backed out
+of. `modules/ael_ok` became `modules/auto_arm`. It no longer reads the
+AE-L/AF-L button. On the IMU tick it sends one OK press when the camera is
+on the shooting screen, in Auto-area AF, and idle (not focusing, not
+tracking, box not shown), then waits for the box to appear.
+
+What remains unverified: whether the phase check excludes the i menu and
+other overlays, and whether an OK sent right at live-view entry is
+accepted. The dry-run build logs where it would press without pressing,
+which answers the first question before anything is pressed. Build and test
+steps are in `modules/auto_arm/README.md`.
