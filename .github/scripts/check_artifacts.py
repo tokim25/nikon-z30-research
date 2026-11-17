@@ -5,7 +5,7 @@ import subprocess
 import sys
 
 
-ALLOWED_SUFFIXES = {".py", ".md", ".toml", ".yml", ".yaml", ".txt", ".json"}
+ALLOWED_SUFFIXES = {".py", ".md", ".toml", ".yml", ".yaml", ".txt", ".json", ".c", ".h", ".sh", ".ld"}
 ALLOWED_NAMES = {".gitignore", ".gitattributes", "LICENSE"}
 BLOCKED_DIRECTORIES = {
     "firmware", "extracted", "dumps", "patches", "private", "scratch", "work",

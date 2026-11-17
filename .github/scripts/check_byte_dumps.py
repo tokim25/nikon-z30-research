@@ -15,7 +15,7 @@ B64_RUN = re.compile(r"[A-Za-z0-9+/]{60,}={0,2}")
 SPACED_BYTES = re.compile(r"(?:(?<![0-9A-Za-z])[0-9A-Fa-f]{2}(?![0-9A-Za-z])[ :,-]){16,}")
 URL = re.compile(r"https?://\S+")
 IDENTITY_LENGTHS = {40, 64}
-TEXT_SUFFIXES = {".py", ".md", ".toml", ".yml", ".yaml", ".txt", ".json"}
+TEXT_SUFFIXES = {".py", ".md", ".toml", ".yml", ".yaml", ".txt", ".json", ".c", ".h", ".sh", ".ld"}
 
 
 def suspicious_lines(text):
