@@ -30,7 +30,11 @@ choice). To stop it, Run it again to disarm, leave Auto-area AF, or power off.
 
 ## Build (on the Mac, with the stock firmware)
 
-Use upstream PR #36 at commit `2a8f83f` or later. Its `log` research build is
+Use upstream PR #36 at a commit after `2a8f83f` that its reviewer confirms
+fixes 3D tracking. On 2026-11-17 the reviewer found that `2a8f83f` stops 3D
+tracking from switching to faces on a camera. The earlier `c01e7ca` switches
+correctly but has the grey-box bug that froze a camera. The module itself
+does not depend on 3D tracking working, so a dry run can use either. Its `log` research build is
 `full` without gyro-evr, plus the module host and the IMU-task hook this
 module uses. It includes 3D tracking. Gyro-evr is left out because it owns
 the same hook; it only affects video.

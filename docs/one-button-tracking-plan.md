@@ -204,3 +204,17 @@ other overlays, and whether an OK sent right at live-view entry is
 accepted. The dry-run build logs where it would press without pressing,
 which answers the first question before anything is pressed. Build and test
 steps are in `modules/auto_arm/README.md`.
+
+## Update, 2026-11-17: PR #36 re-review
+
+The reviewer re-tested `2a8f83f` on a camera. The grey-box freeze, the gyro
+build mismatch and the menu labels are fixed. But 3D tracking no longer
+switches to a face in Auto-area AF (people); reverting to `c01e7ca` restores
+it. The reviewer blames the new people/animal setting check: it reads a
+setting stock code only uses for another AF-area mode, and compares it
+without the byte truncation stock code applies. Suggested fix: restrict to
+AF-area mode 6 for now, which is the same mode check `modules/auto_arm`
+uses. The PR stays blocked until 3D tracking works again.
+
+Effect here: wait for a fixed PR #36 commit before testing auto-arm with 3D
+tracking. The dry run does not depend on 3D tracking, so it can go ahead.
