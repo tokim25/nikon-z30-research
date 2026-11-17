@@ -47,6 +47,14 @@ the same hook; it only affects video.
 On the camera: Setup → Extensions → SD Modules, Load `CORE.ZMOD`, then Run to
 arm. Run again to disarm and save `Z30/ARnnnnnn.BIN`. Power off disarms.
 
+## Reading the log
+
+    PYTHONPATH=src python3 -m nikon_z30_research.auto_arm_log ARnnnnnn.BIN
+
+Run from the `nikon-z30-research` root. It lists each entry with its state
+values and marks any entry outside photo live view in Auto-area AF as
+UNEXPECTED (exit code 1).
+
 ## Test order
 
 1. Dry run (no `-DREMAP`): presses nothing. While idle on the shooting screen
