@@ -235,3 +235,26 @@ check is UI phase 1 or 2, UI state `0xC18292AC` = 0 and photo backend
 `0xC181B278` = 1. Opening the i menu changes the UI state to 3 and leaves
 the phase alone, so a phase-only check would have pressed OK inside the i
 menu. `modules/auto_arm` now uses the full check and logs all three values.
+
+## Result, 2026-11-17: the box comes up by itself on the camera
+
+The goal works as an SD add-on. In photo live view with Auto-area AF (people),
+the tracking box appears about 0.4 s after the shooting screen opens, and a
+half-press then tracks. It stays out of the i menu, menus, playback, video and
+other AF-area modes, and the camera brings the box back after each tracking.
+None of the day's camera runs froze.
+
+Three things changed on the way, all from camera logs (F-380, F-381):
+
+- The camera was first in Wide-area AF (L-people), which reads as area 4. The
+  add-on's check for 6 was right.
+- Video passed every live-view check, so the add-on now also requires byte
+  `0xC237CBB1` to be 0. Upstream reads that byte the other way round.
+- Upstream's synthetic OK only worked about 1 time in 10 from this screen.
+  The add-on now calls the stock enter-tracking-mode function instead (the
+  `DIRECT` build, the `direct` option of `prepare_mac.sh`).
+
+Known limits: the add-on runs only after Load and Run in SD Modules, and power
+off stops it. One Load showed "Bad module" although the file on the card was
+valid; the likely cause, a second Load in the same power-on session, is not
+confirmed. Next: build it into the firmware so it runs from power-on.

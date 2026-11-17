@@ -1,4 +1,4 @@
-# auto_arm: tracking box up by default (draft, untested)
+# auto_arm: tracking box up by default (working on a camera as an SD add-on)
 
 SD module for Wonder Lantern's research module host. On the shooting screen in
 Auto-area AF, it puts the camera into the tracking-ready screen (the reticle
@@ -8,10 +8,12 @@ With upstream's 3D tracking turned on and AF-area mode set to Auto-area AF
 view. No button is remapped; AE-L/AF-L keeps its normal job. See
 [the plan](../../docs/one-button-tracking-plan.md).
 
-Status: compiles with `arm-none-eabi-gcc 13.2.1 (13.2.rel1)` and passes the
-build script's position-independence check. It has not run in an emulator or
-on a camera. Upstream's review found that a different compiler version
-produced a different module size, so record the version you build with.
+Status, 2026-11-17: the `DIRECT` build works on the owner's Z30 with upstream
+PR #36 `8715c25`. The box appears about 0.4 s after the shooting screen opens,
+and the add-on leaves the i menu, menus, playback, video and other AF-area
+modes alone (F-380, F-381). Built with `arm-none-eabi-gcc` 15.3.1 (Arm GNU
+Toolchain 15.3.Rel2); it was first written against 13.2.1. Upstream's review
+found that compiler versions change the module size, so record yours.
 
 ## How it works
 
@@ -20,12 +22,17 @@ About every 50 ms it checks that the camera is:
 - in photo live view with nothing open over it: UI phase 1 or 2, UI state 0
   (the i menu sets it to 3) and the photo backend active. Upstream's portrait
   UI and aspect mask use this same check, confirmed on a camera;
-- in Auto-area AF (AF-area mode byte 6);
+- in photo, not video: byte `0xC237CBB1` is 0. On the owner's Z30 the photo
+  backend word stays 1 in video, so it cannot tell them apart;
+- in Auto-area AF (AF-area mode byte 6; Wide-area AF (L-people) reads 4);
 - idle: not focusing, not tracking, and the tracking box not already shown.
 
-If all of that holds for two checks in a row, it sends one OK press, using the
-method upstream's research made work on a Z30. It then waits until the tracking
-box appears, or about 1.5 seconds, before checking again. When tracking ends
+If all of that holds for two checks in a row (six after coming back from
+another screen, about 300 ms), the `DIRECT` build calls the stock function
+the OK button uses to enter the tracking mode, `0x1045A1AE`. Builds without
+`DIRECT` send a synthetic OK instead, which brought the box up only about 1
+time in 10 on the camera. It then waits until the tracking box appears, or
+about 1.5 seconds, before checking again. When tracking ends
 or you back out of the tracking box, it brings the box back right away (owner
 choice). To stop it, Run it again to disarm, leave Auto-area AF, or power off.
 

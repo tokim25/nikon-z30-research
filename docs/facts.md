@@ -6324,3 +6324,31 @@ non-disassembly recovery options; it does not prove that Nikon service cannot
 reprogram the board with private equipment. See
 `field-recovery-and-service-research-2026-10-19.md`. 2026-10-19; high
 confidence in the cited public documentation.
+
+F-380. On the owner's Z 30 running upstream PR #36 `8715c25` (`log` research
+build), `modules/auto_arm` diagnostic samples recorded these state values. The
+AF-area byte `0xC237C7F8` read 1 in Single-point AF, 4 in Wide-area AF
+(L-people) and 6 in Auto-area AF (people), matching upstream's base-mode decode
+(4 Wide-area L, 6 Auto-area). AF display block byte `0xC237CBB1` (`+0x3FD`)
+read 0 in photo live view and 1 in movie mode, the reverse of upstream
+tracking3d's reading. The photo backend word `0xC181B278` stayed 1 in movie
+mode, so it does not exclude video. UI phase `0xC181F6FC` read 4 in menus and
+playback and 1 or 2 in live view; UI state `0xC18292AC` read 3 with the i menu
+open. Box-shown `0xC237F684`, AF-working `0xC237F680` and tracking
+`0xC237F688` behaved as upstream documents. Five auto_arm diagnostic camera
+logs, 2026-11-17; high confidence in the values, owner timing notes for which
+screen was open.
+
+F-381. From the idle photo shooting screen, calling the stock
+enter-tracking-mode function `0x1045A1AE` brings up the tracking box reliably;
+upstream's v6 synthetic OK does not. Sent from the IMU task, the synthetic OK
+(a copied input-ring entry through `0x102F0D14` and `0x102F1844`) was accepted
+by the writer every time but brought the box up for about 1 press in 10. That
+held whether down and up were sent together or OK was held about 100 ms, and
+whether presses came every 1.8 s or every 0.75 s. Calling `0x1045A1AE` with a
+pointer to a zero byte, also from the IMU task, brought the box up after 14 of
+16 calls, 0.05 to 0.29 s after each call. Both failures were calls made about
+100 ms after arriving at the screen. With a 300 ms wait after arrival, 7 of 7
+first calls worked, and the box appeared about 0.3 to 0.5 s after arrival. No
+freeze occurred. Six auto_arm camera logs (three pressing runs, three
+direct-call runs), 2026-11-17; high confidence.

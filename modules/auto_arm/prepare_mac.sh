@@ -3,10 +3,12 @@
 # firmware (EG209020.BIN) plus this module as Z30/CORE.ZMOD. Nothing here
 # touches a camera or an SD card.
 #
-# Usage: prepare_mac.sh /path/to/Z_30_0120.bin [WORK_DIR] [--remap]
+# Usage: prepare_mac.sh /path/to/Z_30_0120.bin [WORK_DIR] [--remap] [--diag] [--direct]
 #   WORK_DIR defaults to ~/z30-auto-arm. Firmware and outputs stay there,
 #   outside this repository. --remap builds the version that presses OK;
-#   the default is the dry run, which presses nothing.
+#   the default is the dry run, which presses nothing. --diag adds a state
+#   sample about once a second to the log (see auto_arm.c). --direct (implies
+#   --remap) calls the stock enter-tracking-mode function instead of pressing OK.
 set -eu
 
 PR_MIN=8715c25
@@ -15,13 +17,17 @@ STOCK_SIZE=34496798
 UPSTREAM=https://github.com/WonderLantern/wonder-lantern-z30
 
 here=$(cd "$(dirname "$0")" && pwd)
-[ $# -ge 1 ] || { echo "usage: $0 /path/to/Z_30_0120.bin [WORK_DIR] [--remap]" >&2; exit 2; }
+[ $# -ge 1 ] || { echo "usage: $0 /path/to/Z_30_0120.bin [WORK_DIR] [--remap] [--diag] [--direct]" >&2; exit 2; }
 firmware=$(cd "$(dirname "$1")" && pwd)/$(basename "$1"); shift
 work=$HOME/z30-auto-arm
 remap=
+diag=
+direct=
 for arg in "$@"; do
   case $arg in
     --remap) remap=-DREMAP ;;
+    --diag) diag=-DDIAG ;;
+    --direct) remap=-DREMAP; direct=-DDIRECT ;;
     *) work=$arg ;;
   esac
 done
@@ -71,8 +77,8 @@ else
   (cd "$up" && "$py" tools/build_af_log.py --source "$firmware" --output "$out" --no-zmod)
 fi
 
-step "Building the auto-arm module (${remap:-dry run})"
-sh "$here/build.sh" "$work/auto_arm.bin" $remap
+step "Building the auto-arm module (${remap:-dry run}${direct:+, direct call}${diag:+, diagnostic})"
+sh "$here/build.sh" "$work/auto_arm.bin" $remap $direct $diag
 mkdir -p "$out/Z30"
 rm -f "$out/Z30/CORE.ZMOD"
 (cd "$up" && "$py" tools/prepare_module.py --code "$work/auto_arm.bin" --output "$out/Z30/CORE.ZMOD")
